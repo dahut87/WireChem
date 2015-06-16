@@ -15,6 +15,10 @@ import com.badlogic.gdx.scenes.scene2d.ui.ImageTextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.utils.viewport.FillViewport;
+import com.badlogic.gdx.utils.viewport.FitViewport;
+import com.badlogic.gdx.utils.viewport.ScalingViewport;
+import com.badlogic.gdx.utils.viewport.StretchViewport;
 
 import fr.evolving.worlds.LevelRenderer;
 import fr.evolving.UI.ButtonLevel;
@@ -39,14 +43,16 @@ public class LevelScreen implements Screen {
     private ImageButton Previous,Next,Exit;
 	private TextButton buttonPlay,buttonExit;
 	private Level[] thelevels=new Level[9];
-	private float spaces,sizes;
 	private TextArea TextDescriptive;
-	
-	// This is the constructor, not the class declaration
+	private ScalingViewport viewport;
+
 	public LevelScreen() {
-		float screenWidth = Gdx.graphics.getWidth();
-		float screenHeight = Gdx.graphics.getHeight();
-		Renderer=new LevelRenderer((int)screenWidth,(int)screenHeight,this);
+		if (AssetLoader.stretch)
+			viewport = new StretchViewport(AssetLoader.width,AssetLoader.height);
+		else
+			viewport = new FitViewport(AssetLoader.width,AssetLoader.height);			
+	    viewport.apply();
+		Renderer=new LevelRenderer(this);
 		buttonLevels = new ButtonLevel[10];
 		thelevels= SaveObject.initObject();
 		for (int i = 0;i<thelevels.length;i++) {
@@ -72,9 +78,11 @@ public class LevelScreen implements Screen {
 		TextDescriptive = new TextArea("Descriptif", AssetLoader.Skin_level,"Descriptif");
 		TextDescriptive.setBounds(15, 15, 1009, 130);
 		buttonPlay = new TextButton("Jouer", AssetLoader.Skin_level,"Bouton");
+		buttonPlay.setPosition(120, 170);
 		buttonExit = new TextButton("Quitter", AssetLoader.Skin_level,"Bouton");
+		buttonExit.setPosition(220, 170);		
 		Exit=new ImageButton(AssetLoader.Skin_level,"Exit");
-		Exit.setPosition(900, Gdx.graphics.getHeight()-Exit.getHeight());
+		Exit.setPosition(1000, AssetLoader.height-Exit.getHeight());
 		Exit.addListener(new ClickListener(){
 	        @Override
 	        public void clicked(InputEvent event, float x, float y) {
@@ -82,14 +90,9 @@ public class LevelScreen implements Screen {
 	        }
 		});
 		Next=new ImageButton(AssetLoader.Skin_level,"Next");
-		Next.setPosition(840, 170);
+		Next.setPosition(940, 170);
 		Previous=new ImageButton(AssetLoader.Skin_level,"Previous");
-		Previous.setPosition(920, 170);
-		table.right().top().padTop(100);
-		sizes=(screenWidth-1024.0f)*0.7f;
-		if (sizes>250.0f)
-			sizes=250.0f;
-		spaces=(screenWidth-1024.0f-sizes)/2;
+		Previous.setPosition(1020, 170);
 	}
 
 	@Override
@@ -102,13 +105,12 @@ public class LevelScreen implements Screen {
 
 	@Override
 	public void resize(int width, int height) {
+		viewport.update(width,height);
 	}
 
 	@Override
 	public void show() {
 		Gdx.app.log("Affichage du  LevelScreen","ok");
-        table.add(buttonPlay).size(sizes,60).padRight(spaces).padBottom(20).row();
-        table.add(buttonExit).size(sizes,60).padRight(spaces).padBottom(20).row();
 		for (int i=0;i<10;i++) {
 			if (buttonLevels[i]!=null) {
 				stage.addActor(buttonLevels[i]);
@@ -116,9 +118,10 @@ public class LevelScreen implements Screen {
 		}
         table.setFillParent(true);
         stage.addActor(TextDescriptive);
-        stage.addActor(table);
         stage.addActor(Exit);
         stage.addActor(Next);
+        stage.addActor(buttonPlay);
+        stage.addActor(buttonExit);
         stage.addActor(Previous);
         Gdx.input.setInputProcessor(stage);
 	}

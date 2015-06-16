@@ -29,9 +29,7 @@ public class Laser {
 		overlay=AssetLoader.Skin_level.getAtlas().findRegion("overlay");
 	}
 	
-	public void draw(float x1,float yy1,float x2,float yy2,float maxwidth,float power,boolean active,Color colorsrc,Color colordst) {		
-		float y1=yy1/768.0f*Gdx.graphics.getHeight();
-		float y2=yy2/768.0f*Gdx.graphics.getHeight();
+	public void draw(float x1,float y1,float x2,float y2,float maxwidth,float power,boolean active,Color colorsrc,Color colordst) {		
 		Vector2 vectorall = new Vector2(x2, y2).sub(new Vector2(x1, y1));
 		float length = vectorall.len();
 		Vector2 vectoradd = vectorall.scl(10/length);
@@ -48,9 +46,7 @@ public class Laser {
 		Laser.dispose();
 	}
 		
-	public void drawnotsoold(float x1,float yy1,float x2,float yy2,float maxwidth,float power,boolean active,Color colorsrc,Color colordst) {		
-		float y1=yy1/768.0f*Gdx.graphics.getHeight();
-		float y2=yy2/768.0f*Gdx.graphics.getHeight();
+	public void drawnotsoold(float x1,float y1,float x2,float y2,float maxwidth,float power,boolean active,Color colorsrc,Color colordst) {		
 		ShapeRenderer Laser=new ShapeRenderer();
 		//Laser.begin(ShapeType.Line);
 		Laser.begin(ShapeType.Filled);
@@ -87,9 +83,7 @@ public class Laser {
 	}
 	
 
-	public static void drawold(float x1,float yy1,float x2,float yy2,float maxwidth,float power,boolean active,Color colorsrc,Color colordst) {		
-		float y1=yy1/768.0f*Gdx.graphics.getHeight();
-		float y2=yy2/768.0f*Gdx.graphics.getHeight();
+	public static void drawold(float x1,float y1,float x2,float y2,float maxwidth,float power,boolean active,Color colorsrc,Color colordst) {
 		ShapeRenderer Laser=new ShapeRenderer();
 		//Laser.begin(ShapeType.Line);
 		float adding=0;

@@ -21,8 +21,6 @@ import fr.evolving.screens.LevelScreen;
 public class LevelRenderer {
 	private ShapeRenderer shapeRenderer;
 	private SpriteBatch batcher;
-	int gameWidth;
-	int gameHeight;
 	int scrollx;
 	int scrolly;
 	int dirx;
@@ -32,14 +30,12 @@ public class LevelRenderer {
 	TextureRegion Texture_logobig;
 	TextureRegion Texture_logosmall;
 	
-	public LevelRenderer(int gameWidth, int gameHeight,LevelScreen LevelScreen) {
+	public LevelRenderer(LevelScreen LevelScreen) {
 		this.LevelScreen=LevelScreen;
 		this.scrollx=0;
 		this.scrolly=0;
 		this.dirx=1;
 		this.diry=1;
-		this.gameHeight=gameHeight;
-		this.gameWidth=gameWidth;
 		batcher = new SpriteBatch();
 		shapeRenderer = new ShapeRenderer();
 		Laser=new Laser();
@@ -67,23 +63,34 @@ public class LevelRenderer {
 	public void render(float delta, float runTime) {
 		Gdx.gl.glClearColor(0, 0, 0, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
+		
 		batcher.begin();
 		batcher.setColor(0.25f,0.25f,0.25f,1);
-		batcher.draw(AssetLoader.Texture_fond2, 0, 0, this.scrollx/2, this.scrolly/2, this.gameWidth, this.gameHeight);
+		batcher.draw(AssetLoader.Texture_fond2, 0, 0, this.scrollx/2, this.scrolly/2, AssetLoader.width, AssetLoader.height);
 		batcher.setColor(0.7f,0.7f,0.7f,1);
-		batcher.draw(AssetLoader.Texture_fond, 0, 0, this.scrollx, this.scrolly, this.gameWidth, this.gameHeight);
-
+		batcher.draw(AssetLoader.Texture_fond, 0, 0, this.scrollx, this.scrolly, AssetLoader.width, AssetLoader.height);
 		batcher.setColor(1,1,1,1);
 		Texture_logobig=AssetLoader.Skin_level.getRegion("logo3");
 		Texture_logosmall=AssetLoader.Skin_level.getRegion("logo2");		
-		batcher.draw(Texture_logosmall,20, this.gameHeight-Texture_logobig.getRegionHeight()+Texture_logosmall.getRegionHeight()/2);
-		batcher.draw(Texture_logobig,120, this.gameHeight-Texture_logobig.getRegionHeight());
+		batcher.draw(Texture_logosmall,20, AssetLoader.height-Texture_logobig.getRegionHeight()+Texture_logosmall.getRegionHeight()/2);
+		batcher.draw(Texture_logobig,120, AssetLoader.height-Texture_logobig.getRegionHeight());
 		batcher.end();
-		Gdx.gl.glEnable(GL20.GL_BLEND);
+		
+		Gdx.gl.glEnable(GL20.GL_BLEND);		
 		shapeRenderer.begin(ShapeType.Filled);
 		shapeRenderer.setColor(0.5f, 0.5f, 0.5f, 0.5f);
-		shapeRenderer.rect(10, 10, 1014, 140);
+		shapeRenderer.rect(10, 10, 1114, 140);
+		shapeRenderer.rect(1134, 10, AssetLoader.width-1144, 140);
+		shapeRenderer.rect(1134, 160, AssetLoader.width-1144, 140);
+		shapeRenderer.rect(1134, 310, AssetLoader.width-1144, 300);
+		shapeRenderer.rect(1134, 620, AssetLoader.width-1144, AssetLoader.height-620);
 		shapeRenderer.end();
+		
+		batcher.begin();
+		batcher.draw(AssetLoader.Atlas_game.findRegion("cout"),1150,40);
+		batcher.draw(AssetLoader.Atlas_game.findRegion("tech"),1280,40);
+		batcher.end();
+		
         for (int i=0;i<LevelScreen.buttonLevels.length;i++) {
 			if (LevelScreen.buttonLevels[i]!=null) {
 				for (int[] item : LevelScreen.buttonLevels[i].level.Link)

@@ -18,11 +18,15 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 
 public class AssetLoader {
 	public static Skin Skin_level;
-	public static TextureAtlas Atlas_level;	
+	public static TextureAtlas Atlas_level;
+	public static TextureAtlas Atlas_game;	
 	public static Texture Texture_fond;
 	public static Texture Texture_fond2;
 	public static Texture Texture_logo;
 	public static Sound intro;
+	public static int width=1440;
+	public static int height=960;
+	public static boolean stretch=false;
 	private static Preferences prefs;
 	
 	public static void addstyle(TextureAtlas Atlas_level,String Name) {
@@ -55,6 +59,7 @@ public class AssetLoader {
 		Texture_fond2 = new Texture(Gdx.files.internal("pictures/fond2.png"));
 		Texture_fond2.setWrap(TextureWrap.Repeat, TextureWrap.Repeat);
 		Atlas_level= new TextureAtlas(Gdx.files.internal("textures/level.pack"));
+		Atlas_game = new TextureAtlas(Gdx.files.internal("textures/game.pack"));
 		for(int i=0; i < 5; i++)
 			addstyle(Atlas_level,"leveler"+String.valueOf(i));
 		addstyle(Atlas_level,"arrows");
