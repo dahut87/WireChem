@@ -105,7 +105,7 @@ public class LevelRenderer {
 			        }
 			        if (found!=-1)
 			        {
-			        	Laser.draw(LevelScreen.buttonLevels[i].level.X+20,LevelScreen.buttonLevels[i].level.Y+20,LevelScreen.buttonLevels[found].level.X+20,LevelScreen.buttonLevels[found].level.Y+20,10,0.5f,LevelScreen.buttonLevels[found].Activated,LevelScreen.buttonLevels[i].getLevelcolor(),LevelScreen.buttonLevels[found].getLevelcolor());
+			        	Laser.draw(batcher,LevelScreen.buttonLevels[i].level.X+20,LevelScreen.buttonLevels[i].level.Y+20,LevelScreen.buttonLevels[found].level.X+20,LevelScreen.buttonLevels[found].level.Y+20,10,0.5f,LevelScreen.buttonLevels[found].Activated,LevelScreen.buttonLevels[i].getLevelcolor(),LevelScreen.buttonLevels[found].getLevelcolor());
 			        }
 			    }
 			}

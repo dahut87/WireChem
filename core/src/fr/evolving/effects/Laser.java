@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.Texture.TextureFilter;
 import com.badlogic.gdx.graphics.Texture.TextureWrap;
+import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -29,11 +30,10 @@ public class Laser {
 		overlay=AssetLoader.Skin_level.getAtlas().findRegion("overlay");
 	}
 	
-	public void draw(float x1,float y1,float x2,float y2,float maxwidth,float power,boolean active,Color colorsrc,Color colordst) {		
+	public void draw(Batch Laser,float x1,float y1,float x2,float y2,float maxwidth,float power,boolean active,Color colorsrc,Color colordst) {		
 		Vector2 vectorall = new Vector2(x2, y2).sub(new Vector2(x1, y1));
 		float length = vectorall.len();
 		Vector2 vectoradd = vectorall.scl(10/length);
-		SpriteBatch Laser=new SpriteBatch();
 		Laser.begin();
 		Laser.setColor(colorsrc);
 		Laser.setBlendFunction(GL20.GL_SRC_ALPHA, GL20.GL_ONE);
@@ -43,7 +43,6 @@ public class Laser {
 		Laser.draw(overlay,x1+i*vectoradd.x,y1+i*vectoradd.y,32,0,64,Calcul.getLen(x1+i*vectoradd.x,y1+i*vectoradd.y,x2,y2),1f,1f,(float)Math.toDegrees(Calcul.getAngle(x1,y1,x2,y2)));
 		Laser.draw(overlay,x1,y1,32,0,64,Calcul.getLen(x1+i*vectoradd.x,y1+i*vectoradd.y,x2,y2),1f,1f,(float)Math.toDegrees(Calcul.getAngle(x1,y1,x2,y2)));		
 		Laser.end();
-		Laser.dispose();
 	}
 		
 	public void drawnotsoold(float x1,float y1,float x2,float y2,float maxwidth,float power,boolean active,Color colorsrc,Color colordst) {		
