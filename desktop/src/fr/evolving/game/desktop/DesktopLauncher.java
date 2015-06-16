@@ -2,6 +2,8 @@ package fr.evolving.game.desktop;
 
 import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
+
+import fr.evolving.assets.AssetLoader;
 import fr.evolving.game.main;
 
 public class DesktopLauncher {
@@ -10,9 +12,10 @@ public class DesktopLauncher {
 		//config.fullscreen = true;
 		//config.width = 1920;
 		//config.height = 1080;
+		
 		config.fullscreen = false;
-		config.width = 1280;
-		config.height = 1024;
+		config.width = AssetLoader.width;
+		config.height = AssetLoader.height;
 		new LwjglApplication(new main(), config);
 	}
 }
