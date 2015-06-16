@@ -3,29 +3,33 @@ package fr.evolving.automata;
 import java.io.Serializable;
 
 public class Level implements Serializable{
-	String Name;
-	String Description;
-	String Element;
-	int[] Current;
-	int[] Victory;
-	float X;
-	float Y;
-	int Tech;
-	int Cout;
-	Grid Grid;
-	int Cycle;
-	int Temp;
-	int Rayon;
-	int Nrj;
-	int Maxcycle;
-	int Maxtemp;
-	int Maxrayon;
-	int Maxnrj;
-	boolean Special;
-	String Tuto;
-	int[][] Link;
+	public String Name;
+	public String Description;
+	public String Element;
+	public int[] Current;
+	public int[] Victory;
+	public int aWorld;
+	public int aLevel;
+	public float X;
+	public float Y;
+	public int Tech;
+	public int Cout;
+	public Grid Grid;
+	public int Cycle;
+	public int Temp;
+	public int Rayon;
+	public int Nrj;
+	public int Maxcycle;
+	public int Maxtemp;
+	public int Maxrayon;
+	public int Maxnrj;
+	public boolean Special;
+	public String Tuto;
+	public int[][] Link;
 	
-public Level(String Name,String Description,String Element,int[] Current,int[] Victory,float X,float Y,int Tech,int Cout,Grid World,int Cycle,int Temp,int Rayon,int Nrj,int Maxcycle,int Maxtemp,int Maxrayon,int Maxnrj,String Tuto,boolean Special, int[][] Link){
+public Level(int aWorld, int aLevel,String Name,String Description,String Element,int[] Current,int[] Victory,float X,float Y,int Tech,int Cout,Grid World,int Cycle,int Temp,int Rayon,int Nrj,int Maxcycle,int Maxtemp,int Maxrayon,int Maxnrj,String Tuto,boolean Special, int[][] Link){
+	this.aWorld=aWorld;
+	this.aLevel=aLevel;
 	this.Name=Name;
 	this.Description=Description;
 	this.Element=Element;

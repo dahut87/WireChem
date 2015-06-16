@@ -78,23 +78,27 @@ public class LevelRenderer {
 		Texture_logosmall=AssetLoader.Skin_level.getRegion("logo2");		
 		batcher.draw(Texture_logosmall,20, this.gameHeight-Texture_logobig.getRegionHeight()+Texture_logosmall.getRegionHeight()/2);
 		batcher.draw(Texture_logobig,120, this.gameHeight-Texture_logobig.getRegionHeight());
-		
 		batcher.end();
+		Gdx.gl.glEnable(GL20.GL_BLEND);
+		shapeRenderer.begin(ShapeType.Filled);
+		shapeRenderer.setColor(0.5f, 0.5f, 0.5f, 0.5f);
+		shapeRenderer.rect(10, 10, 1014, 140);
+		shapeRenderer.end();
         for (int i=0;i<LevelScreen.buttonLevels.length;i++) {
 			if (LevelScreen.buttonLevels[i]!=null) {
-				for (int[] item : LevelScreen.buttonLevels[i].Link)
+				for (int[] item : LevelScreen.buttonLevels[i].level.Link)
 				{
 					int found=-1;
 			        for (int j=0;j<LevelScreen.buttonLevels.length;j++)
 			        {
-			        	if ((LevelScreen.buttonLevels[j]!=null) && (LevelScreen.buttonLevels[j].world==item[0]) && (LevelScreen.buttonLevels[j].level==item[1])) {
+			        	if ((LevelScreen.buttonLevels[j]!=null) && (LevelScreen.buttonLevels[j].level.aWorld==item[0]) && (LevelScreen.buttonLevels[j].level.aLevel==item[1])) {
 			        		found=j;
 			        		break;
 			        	}
 			        }
 			        if (found!=-1)
 			        {
-			        	Laser.draw(LevelScreen.buttonLevels[i].xx+20,LevelScreen.buttonLevels[i].yy+20,LevelScreen.buttonLevels[found].xx+20,LevelScreen.buttonLevels[found].yy+20,10,0.5f,LevelScreen.buttonLevels[found].Activated,LevelScreen.buttonLevels[i].getLevelcolor(),LevelScreen.buttonLevels[found].getLevelcolor());
+			        	Laser.draw(LevelScreen.buttonLevels[i].level.X+20,LevelScreen.buttonLevels[i].level.Y+20,LevelScreen.buttonLevels[found].level.X+20,LevelScreen.buttonLevels[found].level.Y+20,10,0.5f,LevelScreen.buttonLevels[found].Activated,LevelScreen.buttonLevels[i].getLevelcolor(),LevelScreen.buttonLevels[found].getLevelcolor());
 			        }
 			    }
 			}
