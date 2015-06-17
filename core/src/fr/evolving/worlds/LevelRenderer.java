@@ -21,6 +21,7 @@ import fr.evolving.screens.LevelScreen;
 public class LevelRenderer {
 	private ShapeRenderer shapeRenderer;
 	private SpriteBatch batcher;
+	private SpriteBatch batcher2;
 	int scrollx;
 	int scrolly;
 	int dirx;
@@ -37,6 +38,7 @@ public class LevelRenderer {
 		this.dirx=1;
 		this.diry=1;
 		batcher = new SpriteBatch();
+		batcher2 = new SpriteBatch();
 		shapeRenderer = new ShapeRenderer();
 		Laser=new Laser();
 	}
@@ -63,6 +65,7 @@ public class LevelRenderer {
 	public void render(float delta, float runTime) {
 		Gdx.gl.glClearColor(0, 0, 0, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
+		//Gdx.gl.glViewport(0, 0, AssetLoader.width, AssetLoader.height);
 		
 		batcher.begin();
 		batcher.setColor(0.25f,0.25f,0.25f,1);
@@ -85,11 +88,12 @@ public class LevelRenderer {
 		shapeRenderer.rect(1134, 310, AssetLoader.width-1144, 300);
 		shapeRenderer.rect(1134, 620, AssetLoader.width-1144, AssetLoader.height-620);
 		shapeRenderer.end();
-		
-		batcher.begin();
-		batcher.draw(AssetLoader.Atlas_game.findRegion("cout"),1150,40);
-		batcher.draw(AssetLoader.Atlas_game.findRegion("tech"),1280,40);
-		batcher.end();
+				
+		batcher2.begin();
+		batcher2.setColor(1f,1f,1f,1f);
+		batcher2.draw(AssetLoader.Atlas_game.findRegion("cout"),1150,40);
+		batcher2.draw(AssetLoader.Atlas_game.findRegion("tech"),1280,40);
+		batcher2.end();
 		
         for (int i=0;i<LevelScreen.buttonLevels.length;i++) {
 			if (LevelScreen.buttonLevels[i]!=null) {

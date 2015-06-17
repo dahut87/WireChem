@@ -3,7 +3,10 @@ package fr.evolving.assets;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Preferences;
 import com.badlogic.gdx.audio.Sound;
+import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.PerspectiveCamera;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.Texture.TextureFilter;
@@ -15,6 +18,9 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.Texture.TextureWrap;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.utils.viewport.FitViewport;
+import com.badlogic.gdx.utils.viewport.ScalingViewport;
+import com.badlogic.gdx.utils.viewport.StretchViewport;
 
 public class AssetLoader {
 	public static Skin Skin_level;
@@ -24,10 +30,12 @@ public class AssetLoader {
 	public static Texture Texture_fond2;
 	public static Texture Texture_logo;
 	public static Sound intro;
-	public static int width=1440;
-	public static int height=960;
+	public static int width;
+	public static int height;
+	public static float ratio;
 	public static boolean stretch=false;
-	private static Preferences prefs;
+	public static Preferences prefs;
+	public static ScalingViewport viewport;
 	
 	public static void addstyle(TextureAtlas Atlas_level,String Name) {
 		AtlasRegion AnAtlasRegion = Atlas_level.findRegion(Name);
@@ -53,7 +61,7 @@ public class AssetLoader {
 	}
 	
 	public static void loadall() {
-		Gdx.app.log("Chargements des éléments multimédia","ok");
+		Gdx.app.debug("AssetLoader","Chargements de tout les éléments multimédia");
 		Texture_fond = new Texture(Gdx.files.internal("pictures/fond.png"));
 		Texture_fond.setWrap(TextureWrap.Repeat, TextureWrap.Repeat);
 		Texture_fond2 = new Texture(Gdx.files.internal("pictures/fond2.png"));
@@ -66,27 +74,48 @@ public class AssetLoader {
 		addstyle(Atlas_level,"arrows2");
 		addstyle(Atlas_level,"exit2");
 		Skin_level = new Skin(Gdx.files.internal("textures/level.json"),Atlas_level);
-		prefs = Gdx.app.getPreferences("WireWorld");
-
-		if (!prefs.contains("resolutionx")) {
-			prefs.putInteger("resolutionx", 0);
+	}
+	
+	public static int setpref() {
+		prefs = Gdx.app.getPreferences("WireWorld - Evolving Games");
+		if (prefs.contains("log"))
+			return prefs.getInteger("log");
+		else
+			return Gdx.app.LOG_INFO;
+	}
+	
+	public static void init() {
+		Gdx.app.debug("AssetLoader","Initialisation de la résolution virtuelle...");
+		int realWidth=Gdx.graphics.getWidth();
+		int realHeight=Gdx.graphics.getHeight();
+		float realRatio=realWidth/(float)realHeight;
+		Gdx.app.debug("AssetLoader","Résolution de "+realWidth+"x"+realHeight+" ratio de "+String.format("%.2f", realRatio)+".");		
+		ratio=1;
+		width=1920;
+		height=1080;
+		if (Math.abs(16f/9f-realRatio)>Math.abs(4f/3f-realRatio)) {
+			ratio=4/3;
+			Gdx.app.debug("AssetLoader","Ratio 4/3, résolution virtuelle : 1920x1440.");
+			height=1440;
 		}
+		else
+			Gdx.app.debug("AssetLoader","Ratio 16/9, résolution virtuelle : 1920x1080.");
+		if (stretch) {
+			viewport = new StretchViewport(realWidth,realHeight);
+			Gdx.app.debug("AssetLoader","Adaptation d'écran maximale, 'Aspect-Ratio' non conservé.");				
+		}
+		else {
+			viewport = new FitViewport(realWidth,realHeight);
+			Gdx.app.debug("AssetLoader","Adaptation d'écran totale, 'Aspect-Ratio' conservé.");					
+		}
+	    viewport.apply();
 	}
 
 	public static void load() {
-		Gdx.app.log("Chargements des éléments minimalistes","ok");
+		Gdx.app.debug("AssetLoader","Chargements des éléments minimalistes");
 		Texture_logo = new Texture(Gdx.files.internal("pictures/logo.png"));
 		Texture_logo.setFilter(TextureFilter.Linear,TextureFilter.Linear);
 		intro = Gdx.audio.newSound(Gdx.files.internal("musics/intro.mp3"));
-	}
-
-	public static void setHighScore(int val) {
-		prefs.putInteger("highScore", val);
-		prefs.flush();
-	}
-
-	public static int getHighScore() {
-		return prefs.getInteger("highScore");
 	}
 
 	public static void dispose() {

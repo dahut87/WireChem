@@ -82,7 +82,7 @@ public class Laser {
 	}
 	
 
-	public static void drawold(float x1,float y1,float x2,float y2,float maxwidth,float power,boolean active,Color colorsrc,Color colordst) {
+	public void drawold(float x1,float y1,float x2,float y2,float maxwidth,float power,boolean active,Color colorsrc,Color colordst) {
 		ShapeRenderer Laser=new ShapeRenderer();
 		//Laser.begin(ShapeType.Line);
 		float adding=0;

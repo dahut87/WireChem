@@ -17,23 +17,23 @@ import fr.evolving.game.main;
 public class SplashScreen implements Screen {
 
 	private main game;	
-	private Stage stage = new Stage();
+	private Stage stage;
 	private Image splashImage;
+	private float scale;
 	
 	public SplashScreen(main game) {
 		this.game = game;
 		AssetLoader.load();
+		stage = new Stage();
 		splashImage = new Image(AssetLoader.Texture_logo);
 	}
 
 	@Override
 	public void show() {
-		float width = Gdx.graphics.getWidth();
-		float height = Gdx.graphics.getHeight();
-		float desiredWidth = width * .7f;
-		float scale = desiredWidth / splashImage.getWidth();
-		splashImage.setSize(splashImage.getWidth() * scale, splashImage.getHeight() * scale);
-		splashImage.setPosition((width / 2) - (splashImage.getWidth() / 2), (height / 2) - (splashImage.getHeight() / 2));
+		Gdx.app.log("****","Affichage du SplashScreen");
+		scale=2;
+		splashImage.setScale(scale);
+		splashImage.setPosition((AssetLoader.width / 2) - (scale * splashImage.getWidth() / 2), (AssetLoader.height / 2) - (scale * splashImage.getHeight() / 2));
 		stage.addActor(splashImage);
         splashImage.addAction(Actions.sequence(Actions.alpha(0),Actions.fadeIn(0.5f),Actions.run(new Runnable() {
         //splashImage.addAction(Actions.sequence(Actions.alpha(0),Actions.run(new Runnable() {
@@ -48,10 +48,9 @@ public class SplashScreen implements Screen {
                 ((Game)Gdx.app.getApplicationListener()).setScreen(new LevelScreen());
             }
         })));
-
+		Gdx.app.debug("AssetLoader","Début dans la bande son \'intro\'");       
 		AssetLoader.intro.setLooping(0, true);
         AssetLoader.intro.play();
-		Gdx.app.log("Affichage du SplashScreen","ok");
 	}
 
 	@Override
@@ -64,6 +63,7 @@ public class SplashScreen implements Screen {
 
 	@Override
 	public void resize(int width, int height) {
+		AssetLoader.viewport.update(width,height);
 	}
 
 	@Override

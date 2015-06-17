@@ -32,26 +32,22 @@ import fr.evolving.effects.Laser;
 
 
 public class LevelScreen implements Screen {
-	protected static final Class<? extends Actor> ButtonLevel = null;
 	public ButtonLevel[] buttonLevels;
 	private LevelRenderer Renderer;
 	private float runTime;
 	private Timer ScrollTimer;
 	private TimerTask ScrollTask;
-    private Stage stage = new Stage();
-    private Table table = new Table();
+    private Stage stage;
+    private Table table;
     private ImageButton Previous,Next,Exit;
 	private TextButton buttonPlay,buttonExit;
-	private Level[] thelevels=new Level[9];
+	private Level[] thelevels;
 	private TextArea TextDescriptive;
-	private ScalingViewport viewport;
 
 	public LevelScreen() {
-		if (AssetLoader.stretch)
-			viewport = new StretchViewport(AssetLoader.width,AssetLoader.height);
-		else
-			viewport = new FitViewport(AssetLoader.width,AssetLoader.height);			
-	    viewport.apply();
+		Gdx.app.debug(getClass().getSimpleName(),"Création des boutons.");
+		stage = new Stage(AssetLoader.viewport);
+		table = new Table();
 		Renderer=new LevelRenderer(this);
 		buttonLevels = new ButtonLevel[10];
 		thelevels= SaveObject.initObject();
@@ -105,12 +101,12 @@ public class LevelScreen implements Screen {
 
 	@Override
 	public void resize(int width, int height) {
-		viewport.update(width,height);
+		AssetLoader.viewport.update(width,height);
 	}
 
 	@Override
 	public void show() {
-		Gdx.app.log("Affichage du  LevelScreen","ok");
+		Gdx.app.log("*****","Affichage du choix des mondes & niveaux.");
 		for (int i=0;i<10;i++) {
 			if (buttonLevels[i]!=null) {
 				stage.addActor(buttonLevels[i]);
