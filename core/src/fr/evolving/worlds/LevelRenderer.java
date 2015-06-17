@@ -41,6 +41,7 @@ public class LevelRenderer {
 		batcher2 = new SpriteBatch();
 		shapeRenderer = new ShapeRenderer();
 		Laser=new Laser();
+		AssetLoader.viewport.apply();
 	}
 	
 	public void evolve() {
@@ -68,6 +69,7 @@ public class LevelRenderer {
 		//Gdx.gl.glViewport(0, 0, AssetLoader.width, AssetLoader.height);
 		
 		batcher.begin();
+		batcher.setProjectionMatrix(AssetLoader.Camera.combined);
 		batcher.setColor(0.25f,0.25f,0.25f,1);
 		batcher.draw(AssetLoader.Texture_fond2, 0, 0, this.scrollx/2, this.scrolly/2, AssetLoader.width, AssetLoader.height);
 		batcher.setColor(0.7f,0.7f,0.7f,1);
@@ -81,12 +83,13 @@ public class LevelRenderer {
 		
 		Gdx.gl.glEnable(GL20.GL_BLEND);		
 		shapeRenderer.begin(ShapeType.Filled);
+		shapeRenderer.setProjectionMatrix(AssetLoader.Camera.combined);
 		shapeRenderer.setColor(0.5f, 0.5f, 0.5f, 0.5f);
-		shapeRenderer.rect(10, 10, 1114, 140);
-		shapeRenderer.rect(1134, 10, AssetLoader.width-1144, 140);
-		shapeRenderer.rect(1134, 160, AssetLoader.width-1144, 140);
-		shapeRenderer.rect(1134, 310, AssetLoader.width-1144, 300);
-		shapeRenderer.rect(1134, 620, AssetLoader.width-1144, AssetLoader.height-620);
+		shapeRenderer.rect(10, 10, 1500, 140);
+		shapeRenderer.rect(1500, 10, AssetLoader.width-1500, 140);
+		shapeRenderer.rect(1500, 160, AssetLoader.width-1500, 140);
+		shapeRenderer.rect(1500, 310, AssetLoader.width-1500, 300);
+		shapeRenderer.rect(1500, 620, AssetLoader.width-1500, AssetLoader.height-620);
 		shapeRenderer.end();
 				
 		batcher2.begin();

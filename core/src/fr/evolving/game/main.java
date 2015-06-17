@@ -12,8 +12,8 @@ public class main extends Game {
 	@Override
 	public void create() {
 		Gdx.app.setLogLevel(AssetLoader.setpref());		
-		//debug();
-		test();
+		debug();
+		//test();
 		Gdx.app.debug(getClass().getSimpleName(), "Récupération de la résolution des préférences.");		
 		if (AssetLoader.prefs.contains("ResolutionX") && AssetLoader.prefs.contains("ResolutionX"))	{
 			try {
@@ -38,8 +38,8 @@ public class main extends Game {
 	}
 	
 	public void debug() {
-		AssetLoader.prefs.putInteger("ResolutionX", 1280);
-		AssetLoader.prefs.putInteger("ResolutionY", 1024);
+		AssetLoader.prefs.putInteger("ResolutionX", 640);
+		AssetLoader.prefs.putInteger("ResolutionY", 200);
 		AssetLoader.prefs.putBoolean("Fullscreen", false);
 		AssetLoader.prefs.putBoolean("VSync", false);
 		AssetLoader.prefs.putInteger("log", Gdx.app.LOG_DEBUG);	
@@ -48,8 +48,8 @@ public class main extends Game {
 	}
 	
 	public void test() {
-		AssetLoader.prefs.putInteger("ResolutionX", 1280);
-		AssetLoader.prefs.putInteger("ResolutionY", 1024);
+		AssetLoader.prefs.putInteger("ResolutionX", 1920);
+		AssetLoader.prefs.putInteger("ResolutionY", 1080);
 		AssetLoader.prefs.putBoolean("Fullscreen", true);
 		AssetLoader.prefs.putBoolean("VSync", true);
 		AssetLoader.prefs.putInteger("log", Gdx.app.LOG_INFO);	

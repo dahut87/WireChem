@@ -36,6 +36,7 @@ public class AssetLoader {
 	public static boolean stretch=false;
 	public static Preferences prefs;
 	public static ScalingViewport viewport;
+	public static OrthographicCamera Camera;
 	
 	public static void addstyle(TextureAtlas Atlas_level,String Name) {
 		AtlasRegion AnAtlasRegion = Atlas_level.findRegion(Name);
@@ -100,12 +101,15 @@ public class AssetLoader {
 		}
 		else
 			Gdx.app.debug("AssetLoader","Ratio 16/9, résolution virtuelle : 1920x1080.");
+		Camera = new OrthographicCamera(width,height);
+		Camera.position.set(width/2, height/2, 0);
+		Camera.update();
 		if (stretch) {
-			viewport = new StretchViewport(realWidth,realHeight);
+			viewport = new StretchViewport(width,height);
 			Gdx.app.debug("AssetLoader","Adaptation d'écran maximale, 'Aspect-Ratio' non conservé.");				
 		}
 		else {
-			viewport = new FitViewport(realWidth,realHeight);
+			viewport = new FitViewport(width,height);
 			Gdx.app.debug("AssetLoader","Adaptation d'écran totale, 'Aspect-Ratio' conservé.");					
 		}
 	    viewport.apply();

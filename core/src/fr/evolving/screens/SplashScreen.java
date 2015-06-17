@@ -24,7 +24,7 @@ public class SplashScreen implements Screen {
 	public SplashScreen(main game) {
 		this.game = game;
 		AssetLoader.load();
-		stage = new Stage();
+		stage = new Stage(AssetLoader.viewport);
 		splashImage = new Image(AssetLoader.Texture_logo);
 	}
 
