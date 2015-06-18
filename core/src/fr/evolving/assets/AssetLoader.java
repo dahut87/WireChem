@@ -68,7 +68,6 @@ public class AssetLoader {
 		Texture_fond2 = new Texture(Gdx.files.internal("pictures/fond2.png"));
 		Texture_fond2.setWrap(TextureWrap.Repeat, TextureWrap.Repeat);
 		Atlas_level= new TextureAtlas(Gdx.files.internal("textures/level.pack"));
-		Atlas_game = new TextureAtlas(Gdx.files.internal("textures/game.pack"));
 		for(int i=0; i < 5; i++)
 			addstyle(Atlas_level,"leveler"+String.valueOf(i));
 		addstyle(Atlas_level,"arrows");
@@ -95,7 +94,7 @@ public class AssetLoader {
 		width=1920;
 		height=1080;
 		if (Math.abs(16f/9f-realRatio)>Math.abs(4f/3f-realRatio)) {
-			ratio=4/3;
+			ratio=1.44f;
 			Gdx.app.debug("AssetLoader","Ratio 4/3, résolution virtuelle : 1920x1440.");
 			height=1440;
 		}

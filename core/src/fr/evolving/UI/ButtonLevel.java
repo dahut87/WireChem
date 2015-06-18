@@ -34,10 +34,10 @@ public class ButtonLevel extends ImageTextButton {
 			Locked=AssetLoader.Skin_level.getAtlas().findRegion("locked");
 		}
 		this.setColor(1f, 0.47f+(float)level.X/1024f*0.529f,0.607f+(float)level.X/768f*0.392f, 1f);
-		this.setBounds(level.X, level.Y, 111, 125);
+		this.setBounds(level.X, level.Y*AssetLoader.ratio, 111, 125);
 		Thelabel=new Label(level.Element, AssetLoader.Skin_level,"Levelshort");
 		Thelabel.setColor(level.X/1024f,level.X/1024f,level.X/1024f,1f);
-		Thelabel.setPosition(level.X+54, level.Y+20, Align.bottom | Align.center);
+		Thelabel.setPosition(level.X+54, level.Y*AssetLoader.ratio+20, Align.bottom | Align.center);
 	}
 	
 	public Color getLevelcolor() {
@@ -48,10 +48,10 @@ public class ButtonLevel extends ImageTextButton {
 	public void draw(Batch batch, float parentAlpha) {
 		super.draw(batch, parentAlpha);
 		if (level.Special) {
-			batch.draw(Finalled,level.X,level.Y);
+			batch.draw(Finalled,level.X,level.Y*AssetLoader.ratio);
 		}
 		if (!Activated) {
-			batch.draw(Locked,level.X+this.getWidth()-Locked.getRegionWidth(),level.Y+this.getHeight()-Locked.getRegionWidth());
+			batch.draw(Locked,level.X+this.getWidth()-Locked.getRegionWidth(),level.Y*AssetLoader.ratio+this.getHeight()-Locked.getRegionWidth());
 		}
 		Thelabel.draw(batch, 1f);
 	}

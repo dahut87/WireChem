@@ -39,7 +39,7 @@ public class LevelScreen implements Screen {
 	private TimerTask ScrollTask;
     private Stage stage;
     private Table table;
-    private ImageButton Previous,Next,Exit;
+    private ImageButton Previous,Next,Exit,cout,tech;
 	private TextButton buttonPlay,buttonExit;
 	private Level[] thelevels;
 	private TextArea TextDescriptive;
@@ -73,12 +73,12 @@ public class LevelScreen implements Screen {
 		ScrollTimer.scheduleAtFixedRate(ScrollTask, 0, 30);
 		TextDescriptive = new TextArea("Descriptif", AssetLoader.Skin_level,"Descriptif");
 		TextDescriptive.setBounds(15, 15, 1009, 130);
-		buttonPlay = new TextButton("Jouer", AssetLoader.Skin_level,"Bouton");
-		buttonPlay.setPosition(120, 170);
-		buttonExit = new TextButton("Quitter", AssetLoader.Skin_level,"Bouton");
-		buttonExit.setPosition(220, 170);		
+		buttonPlay = new TextButton("Connexions", AssetLoader.Skin_level,"Bouton");
+		buttonPlay.setPosition(1500, AssetLoader.height-40);
+		buttonExit = new TextButton("Statistiques", AssetLoader.Skin_level,"Bouton");
+		buttonExit.setPosition(1720, AssetLoader.height-40);		
 		Exit=new ImageButton(AssetLoader.Skin_level,"Exit");
-		Exit.setPosition(1000, AssetLoader.height-Exit.getHeight());
+		Exit.setPosition(1110, AssetLoader.height-Exit.getHeight()-5);
 		Exit.addListener(new ClickListener(){
 	        @Override
 	        public void clicked(InputEvent event, float x, float y) {
@@ -86,9 +86,13 @@ public class LevelScreen implements Screen {
 	        }
 		});
 		Next=new ImageButton(AssetLoader.Skin_level,"Next");
-		Next.setPosition(940, 170);
+		Next.setPosition(1030, 170);
 		Previous=new ImageButton(AssetLoader.Skin_level,"Previous");
-		Previous.setPosition(1020, 170);
+		Previous.setPosition(1110, 170);
+		cout=new ImageButton(AssetLoader.Skin_level,"cout");
+		cout.setPosition(1250, 50);
+		tech=new ImageButton(AssetLoader.Skin_level,"tech");
+		tech.setPosition(1370, 50);		
 	}
 
 	@Override
@@ -119,6 +123,8 @@ public class LevelScreen implements Screen {
         stage.addActor(buttonPlay);
         stage.addActor(buttonExit);
         stage.addActor(Previous);
+        stage.addActor(cout);
+        stage.addActor(tech);
         Gdx.input.setInputProcessor(stage);
 	}
 

@@ -66,37 +66,35 @@ public class LevelRenderer {
 	public void render(float delta, float runTime) {
 		Gdx.gl.glClearColor(0, 0, 0, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
-		//Gdx.gl.glViewport(0, 0, AssetLoader.width, AssetLoader.height);
 		
 		batcher.begin();
 		batcher.setProjectionMatrix(AssetLoader.Camera.combined);
-		batcher.setColor(0.25f,0.25f,0.25f,1);
+		batcher.setColor(0.25f,0.25f,0.25f,1f);
 		batcher.draw(AssetLoader.Texture_fond2, 0, 0, this.scrollx/2, this.scrolly/2, AssetLoader.width, AssetLoader.height);
 		batcher.setColor(0.7f,0.7f,0.7f,1);
 		batcher.draw(AssetLoader.Texture_fond, 0, 0, this.scrollx, this.scrolly, AssetLoader.width, AssetLoader.height);
-		batcher.setColor(1,1,1,1);
+		batcher.end();
+		
+		batcher2.begin();
+		batcher2.setProjectionMatrix(AssetLoader.Camera.combined);
+		batcher2.setColor(Color.WHITE);
 		Texture_logobig=AssetLoader.Skin_level.getRegion("logo3");
 		Texture_logosmall=AssetLoader.Skin_level.getRegion("logo2");		
-		batcher.draw(Texture_logosmall,20, AssetLoader.height-Texture_logobig.getRegionHeight()+Texture_logosmall.getRegionHeight()/2);
-		batcher.draw(Texture_logobig,120, AssetLoader.height-Texture_logobig.getRegionHeight());
-		batcher.end();
+		batcher2.draw(Texture_logosmall,20, AssetLoader.height-Texture_logobig.getRegionHeight()+Texture_logosmall.getRegionHeight()/2);
+		batcher2.draw(Texture_logobig,120, AssetLoader.height-Texture_logobig.getRegionHeight());
+		batcher2.end();
 		
 		Gdx.gl.glEnable(GL20.GL_BLEND);		
 		shapeRenderer.begin(ShapeType.Filled);
 		shapeRenderer.setProjectionMatrix(AssetLoader.Camera.combined);
 		shapeRenderer.setColor(0.5f, 0.5f, 0.5f, 0.5f);
-		shapeRenderer.rect(10, 10, 1500, 140);
-		shapeRenderer.rect(1500, 10, AssetLoader.width-1500, 140);
-		shapeRenderer.rect(1500, 160, AssetLoader.width-1500, 140);
-		shapeRenderer.rect(1500, 310, AssetLoader.width-1500, 300);
-		shapeRenderer.rect(1500, 620, AssetLoader.width-1500, AssetLoader.height-620);
+		shapeRenderer.rect(10, 10, 1190, 140);
+		shapeRenderer.rect(1210, 10, 250, 140);
+		shapeRenderer.rect(1210, 160,250, 140);
+		shapeRenderer.rect(1210, 310,250, 300);
+		shapeRenderer.rect(1210, 620,250, AssetLoader.height-620);
+		shapeRenderer.rect(1470, 10, 440, AssetLoader.height-10);
 		shapeRenderer.end();
-				
-		batcher2.begin();
-		batcher2.setColor(1f,1f,1f,1f);
-		batcher2.draw(AssetLoader.Atlas_game.findRegion("cout"),1150,40);
-		batcher2.draw(AssetLoader.Atlas_game.findRegion("tech"),1280,40);
-		batcher2.end();
 		
         for (int i=0;i<LevelScreen.buttonLevels.length;i++) {
 			if (LevelScreen.buttonLevels[i]!=null) {
@@ -112,7 +110,7 @@ public class LevelRenderer {
 			        }
 			        if (found!=-1)
 			        {
-			        	Laser.draw(batcher,LevelScreen.buttonLevels[i].level.X+20,LevelScreen.buttonLevels[i].level.Y+20,LevelScreen.buttonLevels[found].level.X+20,LevelScreen.buttonLevels[found].level.Y+20,10,0.5f,LevelScreen.buttonLevels[found].Activated,LevelScreen.buttonLevels[i].getLevelcolor(),LevelScreen.buttonLevels[found].getLevelcolor());
+			        	Laser.draw(batcher,LevelScreen.buttonLevels[i].level.X+20,LevelScreen.buttonLevels[i].level.Y*AssetLoader.ratio+20,LevelScreen.buttonLevels[found].level.X+20,LevelScreen.buttonLevels[found].level.Y*AssetLoader.ratio+20,10,0.5f,LevelScreen.buttonLevels[found].Activated,LevelScreen.buttonLevels[i].getLevelcolor(),LevelScreen.buttonLevels[found].getLevelcolor());
 			        }
 			    }
 			}
