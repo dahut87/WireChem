@@ -14,6 +14,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextArea;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageTextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField;
+import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.utils.viewport.FillViewport;
@@ -24,6 +25,7 @@ import com.badlogic.gdx.utils.viewport.StretchViewport;
 import fr.evolving.worlds.LevelRenderer;
 import fr.evolving.UI.ButtonLevel;
 import fr.evolving.UI.Objectives;
+import fr.evolving.game.main;
 import fr.evolving.inputs.InputHandler;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -46,71 +48,68 @@ public class LevelScreen implements Screen {
 	private TextButton buttonPlay,buttonExit;
 	private Level[] thelevels;
 	private TextArea TextDescriptive;
-	public int World;
-	Objectives Victory;
+	public int world;
+	private Objectives Victory;
+	public ButtonLevel selected;
+	
+	public int getMaxWorld() {
+			int max=0;
+			for (Level level :thelevels)
+				if (level!=null && level.aWorld>max)
+					max=level.aWorld;
+			return	max;
+	}
+	
+	public void loadWorld(int aworld) {
+		int i=0;
+		if (buttonLevels!=null)
+		for (int j=0;j<10;j++) {
+			if (buttonLevels[j]!=null) {
+				buttonLevels[j].remove();
+			}
+		}
+		buttonLevels = null;
+		buttonLevels = new ButtonLevel[10];
+		for (Level level :thelevels) {
+			if (level!=null && level.aWorld==aworld) {
+				buttonLevels[i]=new ButtonLevel(level,true);
+				Gdx.app.debug(getClass().getSimpleName(),"Ajout du niveau :"+level.Name+" N°"+String.valueOf(level.aLevel));
+				buttonLevels[i++].addListener(new ClickListener(){
+		        @Override
+		        public void enter(InputEvent event, float x, float y, int pointer, Actor fromActor) {
+		        	ButtonLevel button = (ButtonLevel)event.getListenerActor();
+		        	Gdx.app.debug(getClass().getSimpleName(), "Enter button "+button.level.Name);
+		        	if (!button.isChecked())
+		        		 showlevel(button);
+		        }
+		        public void exit(InputEvent event, float x, float y, int pointer, Actor fromActor) {
+		        	ButtonLevel button = (ButtonLevel)event.getListenerActor();
+		        	Gdx.app.debug(getClass().getSimpleName(), "Enter button "+button.level.Name);
+		        	if (!button.isChecked())
+		        		showlevel(button);
+		        	}
+				});
+			}
+	
+		}
+		for (int j=0;j<10;j++) {
+			if (buttonLevels[j]!=null) {
+				stage.addActor(buttonLevels[j]);
+			}
+		}
+		Gdx.app.debug(getClass().getSimpleName(),"Mise en place du level 0.");
+		world=world;
+		buttonLevels[0].setChecked(true);
+		showlevel(buttonLevels[0]);
+	}
 
 	public LevelScreen() {
-		this.World=0;
-		Gdx.app.debug(getClass().getSimpleName(),"Création des boutons.");
+		this.world=0;
+		Gdx.app.debug(getClass().getSimpleName(),"Création des elements primordiaux du screen (stage, renderer, table)");
 		stage = new Stage(AssetLoader.viewport);
 		table = new Table();
 		Renderer=new LevelRenderer(this);
-		buttonLevels = new ButtonLevel[10];
-		thelevels= SaveObject.initObject();
-		for (int i = 0;i<thelevels.length;i++) {
-			if (thelevels[i] != null)
-				buttonLevels[i]=new ButtonLevel(thelevels[i],true);	
-				buttonLevels[i].addListener(new ClickListener(){
-		        @Override
-		        public void enter(InputEvent event, float x, float y, int pointer, Actor fromActor) {
-		        	ButtonLevel button = (ButtonLevel)event.getListenerActor();		        	
-		        	System.out.println(button.getBackground());
-		        	TextDescriptive.setText(button.level.Description);
-		        	if (button.level.Maxcycle<99999 && button.level.Maxcycle>0) {
-		        		cycle.setText(String.valueOf(button.level.Maxcycle));
-		        		cycle.setVisible(true);
-		        	}
-		        	else
-		        		cycle.setVisible(false);
-		        	if (button.level.Maxtemp<99999 && button.level.Maxtemp>0) {
-		        		temp.setText(String.valueOf(button.level.Maxtemp));
-		        		temp.setVisible(true);
-		        	}
-		        	else
-		        		temp.setVisible(false);
-		        	if (button.level.Maxnrj<99999 && button.level.Maxnrj>0) {
-		        		nrj.setText(String.valueOf(button.level.Maxnrj));
-		        		nrj.setVisible(true);
-		        	}
-		        	else
-		        		nrj.setVisible(false);
-		        	if (button.level.Maxrayon<99999 && button.level.Maxrayon>0) {
-		        		rayon.setText(String.valueOf(button.level.Maxrayon));
-		        		rayon.setVisible(true);
-		        	}
-		        	else
-		        		rayon.setVisible(false);
-		        	if (button.level.Cout>0) {
-		        		cout.setText(String.valueOf(button.level.Cout));
-		        		cout.setVisible(true);
-		        	}
-		        	else
-		        		cout.setVisible(false);
-		        	if (button.level.Tech>=0) {
-		        		tech.setText(String.valueOf(button.level.Tech));
-		        		tech.setVisible(true);
-		        	}
-		        	else
-		        		tech.setVisible(false);
-		        	Victory.setVictory(button.level.Victory);
-		        	
-		        }
-		        public void leave(InputEvent event, float x, float y, int pointer, Actor fromActor) {
-		        	ButtonLevel button = (ButtonLevel)event.getListenerActor();		        	
-		        	button.setBackground("leveler"+String.valueOf(World)+"_over");
-		        }
-			});
-		}
+		Gdx.app.debug(getClass().getSimpleName(),"Mise en place du timer.");
 		ScrollTimer=new Timer();
 		ScrollTask = new TimerTask()
 		{
@@ -121,6 +120,7 @@ public class LevelScreen implements Screen {
 			}	
 		};
 		ScrollTimer.scheduleAtFixedRate(ScrollTask, 0, 30);
+		Gdx.app.debug(getClass().getSimpleName(),"Création des boutons.");
 		TextDescriptive = new TextArea("Descriptif", AssetLoader.Skin_level,"Descriptif");
 		TextDescriptive.setBounds(15, 15, 1185, 100);
 		buttonPlay = new TextButton("Connexions", AssetLoader.Skin_level,"Bouton");
@@ -137,8 +137,28 @@ public class LevelScreen implements Screen {
 		});
 		Next=new ImageButton(AssetLoader.Skin_level,"Next");
 		Next.setPosition(1030, 170);
+		Next.addListener(new ClickListener(){
+	        @Override
+	        public void clicked(InputEvent event, float x, float y) {
+	        	if (world<getMaxWorld()) {
+	        		world++;
+		        	loadWorld(world);
+	        	}
+	    		Gdx.app.debug(getClass().getSimpleName(),"World:"+String.valueOf(world)+" Maxworld:"+String.valueOf(getMaxWorld()));
+	        }
+	     });
 		Previous=new ImageButton(AssetLoader.Skin_level,"Previous");
 		Previous.setPosition(1110, 170);
+		Previous.addListener(new ClickListener(){
+	        @Override
+	        public void clicked(InputEvent event, float x, float y) {
+	        	if (world>0) {
+	        		world--;
+		        	loadWorld(world);
+	        	}
+	    		Gdx.app.debug(getClass().getSimpleName(),"World:"+String.valueOf(world)+" Maxworld:"+String.valueOf(getMaxWorld()));
+	        }
+	     });
 		cout=new ImageTextButton("5",AssetLoader.Skin_level,"cout");
 		cout.setPosition(1250, 48);
 		tech=new ImageTextButton("10",AssetLoader.Skin_level,"tech");
@@ -151,9 +171,13 @@ public class LevelScreen implements Screen {
 		nrj.setPosition(1365, 490);
 		rayon=new ImageTextButton("10",AssetLoader.Skin_level,"rayon");
 		rayon.setPosition(1250, 490);
+		Gdx.app.debug(getClass().getSimpleName(),"Conditions de victoire.");
 		Victory=new Objectives();
 		Victory.setVictory(new int[]{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0});
 		Victory.setPosition(1216, 185);
+		Gdx.app.debug(getClass().getSimpleName(),"Création des boutons de niveau.");
+		thelevels= SaveObject.initObject();
+		loadWorld(0);
 	}
 
 	@Override
@@ -192,6 +216,9 @@ public class LevelScreen implements Screen {
         stage.addActor(rayon);
         stage.addActor(Victory);
         Gdx.input.setInputProcessor(stage);
+		Gdx.app.debug("AssetLoader","Début dans la bande son \'intro\'");       
+		AssetLoader.intro.setLooping(0, true);
+        AssetLoader.intro.play();
 	}
 
 	@Override
@@ -210,5 +237,55 @@ public class LevelScreen implements Screen {
 	public void dispose() {
         stage.dispose();
 	}
+	
+	public void showlevel(ButtonLevel button) {
+		Gdx.app.debug(getClass().getSimpleName(), "Reading button "+button.level.Name);
+		TextDescriptive.setText(button.level.Description);
+		if (button.level.Maxcycle<99999 && button.level.Maxcycle>0) {
+			cycle.setText(String.valueOf(button.level.Maxcycle));
+			cycle.setVisible(true);
+		}
+		else
+			cycle.setVisible(false);
+		if (button.level.Maxtemp<99999 && button.level.Maxtemp>0) {
+			temp.setText(String.valueOf(button.level.Maxtemp));
+			temp.setVisible(true);
+		}
+		else
+			temp.setVisible(false);
+		if (button.level.Maxnrj<99999 && button.level.Maxnrj>0) {
+			nrj.setText(String.valueOf(button.level.Maxnrj));
+			nrj.setVisible(true);
+		}
+		else
+			nrj.setVisible(false);
+		if (button.level.Maxrayon<99999 && button.level.Maxrayon>0) {
+			rayon.setText(String.valueOf(button.level.Maxrayon));
+			rayon.setVisible(true);
+		}
+		else
+			rayon.setVisible(false);
+		if (button.level.Cout>0) {
+			cout.setText(String.valueOf(button.level.Cout));
+			cout.setVisible(true);
+		}
+		else
+			cout.setVisible(false);
+		if (button.level.Tech>=1) {
+			tech.setText(String.valueOf(button.level.Tech));
+			tech.setVisible(true);
+		}
+		else
+			tech.setVisible(false);
+		Victory.setVisible(button.level.Cout>0);
+		Victory.setVictory(button.level.Victory);
+		//for (int i = 0;i<thelevels.length;i++) {
+		//	if (thelevels[i] != null && buttonLevels[i]!=button)
+		//		buttonLevels[i].setChecked(false);
+		if (selected!=null)
+			selected.setChecked(false);
+		selected=button;
+		button.setChecked(true);
+		}
 
 }

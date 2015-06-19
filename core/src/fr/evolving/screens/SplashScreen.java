@@ -48,9 +48,6 @@ public class SplashScreen implements Screen {
                 ((Game)Gdx.app.getApplicationListener()).setScreen(new LevelScreen());
             }
         })));
-		Gdx.app.debug("AssetLoader","Début dans la bande son \'intro\'");       
-		AssetLoader.intro.setLooping(0, true);
-        AssetLoader.intro.play();
 	}
 
 	@Override

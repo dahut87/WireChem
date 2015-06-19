@@ -88,6 +88,7 @@ public class AssetLoader {
 		Typecolors=new Color[]{new Color(0,0,1f,1),new Color(0,0.6f,0,1),new Color(0.196f,0.803f,0.196f,1),new Color(0.5f,0.5f,0.5f,1),new Color(0.8f,0.8f,0.8f,1),new Color(0.6f,0,0,1),new Color(1f,0,0,1),new Color(0,0,0.6f,1),new Color(0,0,0.6f,1),new Color(0,0,0.6f,1),new Color(0,0,0.6f,1),new Color(0.294f,0.466f,0.615f,1),new Color(0.478f,0.192f,0.098f,1)};
 		Typenames=new String[13];
 		Typenames=new String[]{"E-","e-","Ph","e0","E0","e+","E+","K","L","M","N","n","p"};
+		intro = Gdx.audio.newSound(Gdx.files.internal("musics/intro.mp3"));
 	}
 	
 	public static int setpref() {
@@ -132,7 +133,6 @@ public class AssetLoader {
 		Gdx.app.debug("AssetLoader","Chargements des éléments minimalistes");
 		Texture_logo = new Texture(Gdx.files.internal("pictures/logo.png"));
 		Texture_logo.setFilter(TextureFilter.Linear,TextureFilter.Linear);
-		intro = Gdx.audio.newSound(Gdx.files.internal("musics/intro.mp3"));
 	}
 
 	public static void dispose() {

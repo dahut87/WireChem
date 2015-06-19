@@ -46,7 +46,7 @@ public class LevelRenderer {
 		Laser=new Laser();
 		AssetLoader.viewport.apply();
 		font=AssetLoader.Skin_level.getFont("OpenDyslexicAlta-22");
-		font.setColor(AssetLoader.Levelcolors[LevelScreen.World]);
+		font.setColor(AssetLoader.Levelcolors[LevelScreen.world]);
 	}
 	
 	public void evolve() {
@@ -87,11 +87,16 @@ public class LevelRenderer {
 		Texture_logosmall=AssetLoader.Skin_level.getRegion("logo2");		
 		batcher2.draw(Texture_logosmall,20, AssetLoader.height-Texture_logobig.getRegionHeight()+Texture_logosmall.getRegionHeight()/2);
 		batcher2.draw(Texture_logobig,120, AssetLoader.height-Texture_logobig.getRegionHeight());
-		font.draw(batcher2, "Ressources", 1215, 145);
-		font.draw(batcher2, "Descriptif", 15, 145);
+		font.draw(batcher2, LevelScreen.selected.level.Name, 15, 145);
+			if (LevelScreen.selected!=null && LevelScreen.selected.level.Tech>0)
 		font.draw(batcher2, "Récompenses", 1215, AssetLoader.height-15);
-		font.draw(batcher2, "Objectifs", 1215, 295);
-		font.draw(batcher2, "Handicaps", 1215, 605);
+		if (LevelScreen.selected!=null && LevelScreen.selected.level.Cout>0) {
+			font.draw(batcher2, "Ressources", 1215, 145);
+			font.draw(batcher2, "Objectifs", 1215, 295);
+		}
+
+		if (LevelScreen.selected!=null && LevelScreen.selected.level.aWorld>0)
+			font.draw(batcher2, "Handicaps", 1215, 605);
 		font.draw(batcher2, "", 1215, 145);
 		batcher2.end();
 		
@@ -100,21 +105,26 @@ public class LevelRenderer {
 		shapeRenderer.setProjectionMatrix(AssetLoader.Camera.combined);
 		shapeRenderer.setColor(0.5f, 0.5f, 0.5f, 0.5f);
 		shapeRenderer.rect(10, 10, 1190, 140);
-		shapeRenderer.rect(1210, 10, 250, 140);
-		shapeRenderer.rect(1210, 160,250, 140);
-		shapeRenderer.rect(1210, 310,250, 300);
-		shapeRenderer.rect(1210, 620,250, AssetLoader.height-630);
+		if (LevelScreen.selected!=null && LevelScreen.selected.level.Cout>0) {
+			shapeRenderer.rect(1210, 10, 250, 140);
+			shapeRenderer.rect(1210, 160,250, 140);
+		}
+		if (LevelScreen.selected!=null && LevelScreen.selected.level.aWorld>0)
+			shapeRenderer.rect(1210, 310,250, 300);
+		if (LevelScreen.selected!=null && LevelScreen.selected.level.Tech>0)
+			shapeRenderer.rect(1210, 620,250, AssetLoader.height-630);
 		shapeRenderer.rect(1470, 10, 440, AssetLoader.height-20);
 		shapeRenderer.end();
 		
         for (int i=0;i<LevelScreen.buttonLevels.length;i++) {
 			if (LevelScreen.buttonLevels[i]!=null) {
+				
 				for (int[] item : LevelScreen.buttonLevels[i].level.Link)
 				{
 					int found=-1;
 			        for (int j=0;j<LevelScreen.buttonLevels.length;j++)
 			        {
-			        	if ((LevelScreen.buttonLevels[j]!=null) && (LevelScreen.buttonLevels[j].level.aWorld==item[0]) && (LevelScreen.buttonLevels[j].level.aLevel==item[1])) {
+			        	if ((item.length==2) && (LevelScreen.buttonLevels[j]!=null) && (LevelScreen.buttonLevels[j].level.aWorld==item[0]) && (LevelScreen.buttonLevels[j].level.aLevel==item[1])) {
 			        		found=j;
 			        		break;
 			        	}
