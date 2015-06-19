@@ -8,11 +8,13 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 
+import fr.evolving.UI.Objectives;
 import fr.evolving.assets.AssetLoader;
 import fr.evolving.effects.Laser;
 import fr.evolving.inputs.InputHandler;
@@ -30,6 +32,7 @@ public class LevelRenderer {
 	Laser Laser;
 	TextureRegion Texture_logobig;
 	TextureRegion Texture_logosmall;
+	BitmapFont font;
 	
 	public LevelRenderer(LevelScreen LevelScreen) {
 		this.LevelScreen=LevelScreen;
@@ -42,6 +45,8 @@ public class LevelRenderer {
 		shapeRenderer = new ShapeRenderer();
 		Laser=new Laser();
 		AssetLoader.viewport.apply();
+		font=AssetLoader.Skin_level.getFont("OpenDyslexicAlta-22");
+		font.setColor(AssetLoader.Levelcolors[LevelScreen.World]);
 	}
 	
 	public void evolve() {
@@ -82,6 +87,12 @@ public class LevelRenderer {
 		Texture_logosmall=AssetLoader.Skin_level.getRegion("logo2");		
 		batcher2.draw(Texture_logosmall,20, AssetLoader.height-Texture_logobig.getRegionHeight()+Texture_logosmall.getRegionHeight()/2);
 		batcher2.draw(Texture_logobig,120, AssetLoader.height-Texture_logobig.getRegionHeight());
+		font.draw(batcher2, "Ressources", 1215, 145);
+		font.draw(batcher2, "Descriptif", 15, 145);
+		font.draw(batcher2, "Récompenses", 1215, AssetLoader.height-15);
+		font.draw(batcher2, "Objectifs", 1215, 295);
+		font.draw(batcher2, "Handicaps", 1215, 605);
+		font.draw(batcher2, "", 1215, 145);
 		batcher2.end();
 		
 		Gdx.gl.glEnable(GL20.GL_BLEND);		
@@ -92,8 +103,8 @@ public class LevelRenderer {
 		shapeRenderer.rect(1210, 10, 250, 140);
 		shapeRenderer.rect(1210, 160,250, 140);
 		shapeRenderer.rect(1210, 310,250, 300);
-		shapeRenderer.rect(1210, 620,250, AssetLoader.height-620);
-		shapeRenderer.rect(1470, 10, 440, AssetLoader.height-10);
+		shapeRenderer.rect(1210, 620,250, AssetLoader.height-630);
+		shapeRenderer.rect(1470, 10, 440, AssetLoader.height-20);
 		shapeRenderer.end();
 		
         for (int i=0;i<LevelScreen.buttonLevels.length;i++) {

@@ -25,12 +25,14 @@ import com.badlogic.gdx.utils.viewport.StretchViewport;
 public class AssetLoader {
 	public static Skin Skin_level;
 	public static TextureAtlas Atlas_level;
-	public static TextureAtlas Atlas_game;	
 	public static Texture Texture_fond;
 	public static Texture Texture_fond2;
 	public static Texture Texture_logo;
 	public static Sound intro;
 	public static int width;
+	public static Color[] Levelcolors;
+	public static Color[] Typecolors;
+	public static String[] Typenames;
 	public static int height;
 	public static float ratio;
 	public static boolean stretch=false;
@@ -73,7 +75,19 @@ public class AssetLoader {
 		addstyle(Atlas_level,"arrows");
 		addstyle(Atlas_level,"arrows2");
 		addstyle(Atlas_level,"exit2");
+		addstyle(Atlas_level,"cout");
+		addstyle(Atlas_level,"tech");
+		addstyle(Atlas_level,"cycle");
+		addstyle(Atlas_level,"temp");
+		addstyle(Atlas_level,"nrj");
+		addstyle(Atlas_level,"rayon");
 		Skin_level = new Skin(Gdx.files.internal("textures/level.json"),Atlas_level);
+		Levelcolors=new Color[5];
+		Levelcolors=new Color[]{AssetLoader.Skin_level.getColor("world1"),AssetLoader.Skin_level.getColor("world2"),AssetLoader.Skin_level.getColor("world3"),AssetLoader.Skin_level.getColor("world4"),AssetLoader.Skin_level.getColor("world5")};
+		Typecolors=new Color[13];
+		Typecolors=new Color[]{new Color(0,0,1f,1),new Color(0,0.6f,0,1),new Color(0.196f,0.803f,0.196f,1),new Color(0.5f,0.5f,0.5f,1),new Color(0.8f,0.8f,0.8f,1),new Color(0.6f,0,0,1),new Color(1f,0,0,1),new Color(0,0,0.6f,1),new Color(0,0,0.6f,1),new Color(0,0,0.6f,1),new Color(0,0,0.6f,1),new Color(0.294f,0.466f,0.615f,1),new Color(0.478f,0.192f,0.098f,1)};
+		Typenames=new String[13];
+		Typenames=new String[]{"E-","e-","Ph","e0","E0","e+","E+","K","L","M","N","n","p"};
 	}
 	
 	public static int setpref() {

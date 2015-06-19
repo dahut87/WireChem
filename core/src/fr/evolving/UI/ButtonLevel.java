@@ -19,7 +19,6 @@ public class ButtonLevel extends ImageTextButton {
 	public Level level;
 	public boolean Activated;
 	TextureRegion Finalled,Locked;
-	private Color[] Levelcolors={AssetLoader.Skin_level.getColor("world1"),AssetLoader.Skin_level.getColor("world2"),AssetLoader.Skin_level.getColor("world3"),AssetLoader.Skin_level.getColor("world4"),AssetLoader.Skin_level.getColor("world5")};
 	Label Thelabel;
 	
 	public ButtonLevel(Level level, boolean Activated) {
@@ -41,7 +40,7 @@ public class ButtonLevel extends ImageTextButton {
 	}
 	
 	public Color getLevelcolor() {
-		return Levelcolors[level.aWorld];
+		return AssetLoader.Levelcolors[level.aWorld];
 	}
 	
 	@Override

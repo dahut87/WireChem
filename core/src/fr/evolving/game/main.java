@@ -38,8 +38,8 @@ public class main extends Game {
 	}
 	
 	public void debug() {
-		AssetLoader.prefs.putInteger("ResolutionX", 1024);
-		AssetLoader.prefs.putInteger("ResolutionY", 768);
+		AssetLoader.prefs.putInteger("ResolutionX", 1280);
+		AssetLoader.prefs.putInteger("ResolutionY", 720);
 		AssetLoader.prefs.putBoolean("Fullscreen", false);
 		AssetLoader.prefs.putBoolean("VSync", false);
 		AssetLoader.prefs.putInteger("log", Gdx.app.LOG_DEBUG);	
