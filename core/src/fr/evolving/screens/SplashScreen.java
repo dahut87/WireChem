@@ -20,12 +20,15 @@ public class SplashScreen implements Screen {
 	private Stage stage;
 	private Image splashImage;
 	private float scale;
+	private SpriteBatch batcher;
 	
 	public SplashScreen(main game) {
-		this.game = game;
 		AssetLoader.load();
+		this.game = game;
+		batcher= new SpriteBatch();
 		stage = new Stage(AssetLoader.viewport);
 		splashImage = new Image(AssetLoader.Texture_logo);
+		AssetLoader.loadall();
 	}
 
 	@Override
@@ -35,14 +38,12 @@ public class SplashScreen implements Screen {
 		splashImage.setScale(scale);
 		splashImage.setPosition((AssetLoader.width / 2) - (scale * splashImage.getWidth() / 2), (AssetLoader.height / 2) - (scale * splashImage.getHeight() / 2));
 		stage.addActor(splashImage);
-        splashImage.addAction(Actions.sequence(Actions.alpha(0),Actions.fadeIn(0.5f),Actions.run(new Runnable() {
-        //splashImage.addAction(Actions.sequence(Actions.alpha(0),Actions.run(new Runnable() {
+        splashImage.addAction(Actions.sequence(Actions.alpha(0),Actions.fadeIn(5f),Actions.run(new Runnable() {
             @Override
             public void run() {
-                AssetLoader.loadall();
+                AssetLoader.finishall();
             }
         }),Actions.run(new Runnable() {
-        //splashImage.addAction(Actions.sequence(Actions.alpha(0),Actions.run(new Runnable() {
             @Override
             public void run() {
                 ((Game)Gdx.app.getApplicationListener()).setScreen(new LevelScreen());
@@ -56,6 +57,14 @@ public class SplashScreen implements Screen {
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		stage.act();
 	    stage.draw();
+	    if 	(AssetLoader.manager!=null) {
+		    batcher.begin();
+		    batcher.setProjectionMatrix(AssetLoader.Camera.combined);
+	    	AssetLoader.empty.draw(batcher, (AssetLoader.width / 2) - 400f, 150f, 800f, 50f);
+	    	AssetLoader.full.draw(batcher, (AssetLoader.width / 2) - 400f, 150f, AssetLoader.manager.getProgress()*800f, 50f);
+			AssetLoader.manager.update();
+	    	batcher.end();
+	    }
 	}
 
 	@Override

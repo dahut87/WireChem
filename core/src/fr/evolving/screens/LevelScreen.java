@@ -217,7 +217,7 @@ public class LevelScreen implements Screen {
         stage.addActor(Victory);
         Gdx.input.setInputProcessor(stage);
 		Gdx.app.debug("AssetLoader","Début dans la bande son \'intro\'");       
-		AssetLoader.intro.setLooping(0, true);
+		AssetLoader.intro.setLooping(true);
         AssetLoader.intro.play();
 	}
 
