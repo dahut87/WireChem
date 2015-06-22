@@ -38,7 +38,7 @@ public class SplashScreen implements Screen {
 		splashImage.setScale(scale);
 		splashImage.setPosition((AssetLoader.width / 2) - (scale * splashImage.getWidth() / 2), (AssetLoader.height / 2) - (scale * splashImage.getHeight() / 2));
 		stage.addActor(splashImage);
-        splashImage.addAction(Actions.sequence(Actions.alpha(0),Actions.fadeIn(5f),Actions.run(new Runnable() {
+        splashImage.addAction(Actions.sequence(Actions.alpha(0),Actions.fadeIn(3f),Actions.run(new Runnable() {
             @Override
             public void run() {
                 AssetLoader.finishall();

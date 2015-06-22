@@ -1,5 +1,6 @@
 package fr.evolving.screens;
 
+import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
@@ -44,6 +45,7 @@ public class LevelScreen implements Screen {
     private Stage stage;
     private Table table;
     private ImageButton Previous,Next,Exit;
+    public ImageButton logosmall;
     private ImageTextButton cout,tech,cycle,temp,rayon,nrj;
 	private TextButton buttonPlay,buttonExit;
 	private Level[] thelevels;
@@ -77,17 +79,29 @@ public class LevelScreen implements Screen {
 				buttonLevels[i++].addListener(new ClickListener(){
 		        @Override
 		        public void enter(InputEvent event, float x, float y, int pointer, Actor fromActor) {
-		        	ButtonLevel button = (ButtonLevel)event.getListenerActor();
-		        	Gdx.app.debug(getClass().getSimpleName(), "Enter button "+button.level.Name);
-		        	if (!button.isChecked())
-		        		 showlevel(button);
+		        	ButtonLevel abutton = (ButtonLevel)event.getListenerActor();
+		        	Gdx.app.debug(getClass().getSimpleName(), "Enter button "+abutton.level.Name);
+		        	if (!abutton.isChecked())
+		        		 showlevel(abutton);
 		        }
 		        public void exit(InputEvent event, float x, float y, int pointer, Actor fromActor) {
-		        	ButtonLevel button = (ButtonLevel)event.getListenerActor();
-		        	Gdx.app.debug(getClass().getSimpleName(), "Enter button "+button.level.Name);
-		        	if (!button.isChecked())
-		        		showlevel(button);
-		        	}
+		        	ButtonLevel abutton = (ButtonLevel)event.getListenerActor();
+		        	Gdx.app.debug(getClass().getSimpleName(), "Enter button "+abutton.level.Name);
+		        	if (!abutton.isChecked())
+		        		showlevel(abutton);
+				}
+				public void touchDragged(InputEvent event,float x,float y,int pointer) {
+					ButtonLevel abutton = (ButtonLevel)event.getListenerActor();
+					if (logosmall.isChecked()) {
+						abutton.setPosition(event.getStageX()-56, event.getStageY()-20);
+						}
+					}
+				public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
+					ButtonLevel abutton = (ButtonLevel)event.getListenerActor();
+					if (!logosmall.isChecked()) {
+						((Game)Gdx.app.getApplicationListener()).setScreen(new GameScreen(abutton.level));
+						}
+					}				
 				});
 			}
 	
@@ -121,6 +135,8 @@ public class LevelScreen implements Screen {
 		};
 		ScrollTimer.scheduleAtFixedRate(ScrollTask, 0, 30);
 		Gdx.app.debug(getClass().getSimpleName(),"Création des boutons.");
+		logosmall=new ImageButton(AssetLoader.Skin_level,"logosmall");	
+		logosmall.setPosition(20, AssetLoader.height-175+logosmall.getHeight()/2);
 		TextDescriptive = new TextArea("Descriptif", AssetLoader.Skin_level,"Descriptif");
 		TextDescriptive.setBounds(15, 15, 1185, 100);
 		buttonPlay = new TextButton("Connexions", AssetLoader.Skin_level,"Bouton");
@@ -215,6 +231,7 @@ public class LevelScreen implements Screen {
         stage.addActor(temp);
         stage.addActor(rayon);
         stage.addActor(Victory);
+        stage.addActor(logosmall);
         Gdx.input.setInputProcessor(stage);
 		Gdx.app.debug("AssetLoader","Début dans la bande son \'intro\'");       
 		AssetLoader.intro.setLooping(true);

@@ -30,7 +30,11 @@ public class Laser {
 		overlay=AssetLoader.Skin_level.getAtlas().findRegion("overlay");
 	}
 	
-	public void draw(Batch Laser,float x1,float y1,float x2,float y2,float maxwidth,float power,boolean active,Color colorsrc,Color colordst) {		
+	public void draw(Batch Laser,float xx1,float yy1,float xx2,float yy2,float maxwidth,float power,boolean active,Color colorsrc,Color colordst) {	
+		float x1=xx1+26;
+		float y1=yy1+20;
+		float x2=xx2+26;
+		float y2=yy2+20;
 		Vector2 vectorall = new Vector2(x2, y2).sub(new Vector2(x1, y1));
 		float length = vectorall.len();
 		Vector2 vectoradd = vectorall.scl(10/length);
@@ -45,11 +49,12 @@ public class Laser {
 		Laser.end();
 	}
 		
-	public void drawnotsoold(float x1,float y1,float x2,float y2,float maxwidth,float power,boolean active,Color colorsrc,Color colordst) {		
-		ShapeRenderer Laser=new ShapeRenderer();
-		//Laser.begin(ShapeType.Line);
+	public void drawnotsoold(ShapeRenderer Laser,float xx1,float yy1,float xx2,float yy2,float maxwidth,float power,boolean active,Color colorsrc,Color colordst) {	
+		float x1=xx1+58;
+		float y1=yy1+20;
+		float x2=xx2+58;
+		float y2=yy2+20;
 		Laser.begin(ShapeType.Filled);
-		//Gdx.gl.glEnable(GL20.GL_BLEND);
 		Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
 		if (active) {
 			Vector2 vectorall = new Vector2(x2, y2).sub(new Vector2(x1, y1));
@@ -77,14 +82,15 @@ public class Laser {
 			Laser.rectLine(x1, y1 , x2, y2, 2);
 		}
 		Laser.end();
-		Laser.dispose();
 		Gdx.gl.glDisable(GL20.GL_BLEND);
 	}
 	
 
-	public void drawold(float x1,float y1,float x2,float y2,float maxwidth,float power,boolean active,Color colorsrc,Color colordst) {
-		ShapeRenderer Laser=new ShapeRenderer();
-		//Laser.begin(ShapeType.Line);
+	public void drawold(ShapeRenderer Laser,float xx1,float yy1,float xx2,float yy2,float maxwidth,float power,boolean active,Color colorsrc,Color colordst) {
+		float x1=xx1+20;
+		float y1=yy1+20;
+		float x2=xx2+20;
+		float y2=yy2+20;
 		float adding=0;
 		Laser.begin(ShapeType.Point);
 		Vector2 vec2 = new Vector2(x2, y2).sub(new Vector2(x1, y1));
@@ -110,8 +116,6 @@ public class Laser {
 		     }
 		 }
 		 Laser.end();
-		 Laser.dispose();
-
 	}
 }
 	

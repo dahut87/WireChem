@@ -44,6 +44,16 @@ public class ButtonLevel extends ImageTextButton {
 	}
 	
 	@Override
+	public void setPosition(float x, float y) {
+		super.setPosition(x,y);
+		level.X=x;
+		level.Y=y;
+		Thelabel.setColor(level.X/1024f,level.X/1024f,level.X/1024f,1f);
+		Thelabel.setPosition(level.X+54, level.Y*AssetLoader.ratio+20, Align.bottom | Align.center);
+		this.setColor(1f, 0.47f+(float)level.X/1024f*0.529f,0.607f+(float)level.X/768f*0.392f, 1f);
+	}
+	
+	@Override
 	public void draw(Batch batch, float parentAlpha) {
 		super.draw(batch, parentAlpha);
 		if (level.Special) {

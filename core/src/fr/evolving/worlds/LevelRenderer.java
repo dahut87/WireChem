@@ -30,8 +30,7 @@ public class LevelRenderer {
 	int diry;
 	LevelScreen LevelScreen;
 	Laser Laser;
-	TextureRegion Texture_logobig;
-	TextureRegion Texture_logosmall;
+	public TextureRegion Texture_logobig;
 	BitmapFont font;
 	
 	public LevelRenderer(LevelScreen LevelScreen) {
@@ -84,8 +83,6 @@ public class LevelRenderer {
 		batcher2.setProjectionMatrix(AssetLoader.Camera.combined);
 		batcher2.setColor(Color.WHITE);
 		Texture_logobig=AssetLoader.Skin_level.getRegion("logo3");
-		Texture_logosmall=AssetLoader.Skin_level.getRegion("logo2");		
-		batcher2.draw(Texture_logosmall,20, AssetLoader.height-Texture_logobig.getRegionHeight()+Texture_logosmall.getRegionHeight()/2);
 		batcher2.draw(Texture_logobig,120, AssetLoader.height-Texture_logobig.getRegionHeight());
 		font.draw(batcher2, LevelScreen.selected.level.Name, 15, 145);
 			if (LevelScreen.selected!=null && LevelScreen.selected.level.Tech>0)
@@ -131,7 +128,10 @@ public class LevelRenderer {
 			        }
 			        if (found!=-1)
 			        {
-			        	Laser.draw(batcher,LevelScreen.buttonLevels[i].level.X+20,LevelScreen.buttonLevels[i].level.Y*AssetLoader.ratio+20,LevelScreen.buttonLevels[found].level.X+20,LevelScreen.buttonLevels[found].level.Y*AssetLoader.ratio+20,10,0.5f,LevelScreen.buttonLevels[found].Activated,LevelScreen.buttonLevels[i].getLevelcolor(),LevelScreen.buttonLevels[found].getLevelcolor());
+			        	if (!LevelScreen.logosmall.isChecked())
+			        		Laser.draw(batcher,LevelScreen.buttonLevels[i].level.X,LevelScreen.buttonLevels[i].level.Y*AssetLoader.ratio,LevelScreen.buttonLevels[found].level.X,LevelScreen.buttonLevels[found].level.Y*AssetLoader.ratio,10,0.5f,LevelScreen.buttonLevels[found].Activated,LevelScreen.buttonLevels[i].getLevelcolor(),LevelScreen.buttonLevels[found].getLevelcolor());
+			        	else
+		        			Laser.drawnotsoold(shapeRenderer,LevelScreen.buttonLevels[i].level.X,LevelScreen.buttonLevels[i].level.Y*AssetLoader.ratio,LevelScreen.buttonLevels[found].level.X,LevelScreen.buttonLevels[found].level.Y*AssetLoader.ratio,10,0.5f,LevelScreen.buttonLevels[found].Activated,LevelScreen.buttonLevels[i].getLevelcolor(),LevelScreen.buttonLevels[found].getLevelcolor());
 			        }
 			    }
 			}

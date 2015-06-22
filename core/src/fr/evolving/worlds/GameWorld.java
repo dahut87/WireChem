@@ -7,6 +7,7 @@ import com.badlogic.gdx.math.Rectangle;
 import fr.evolving.assets.SaveObject;
 import fr.evolving.assets.AssetLoader;
 import fr.evolving.automata.Grid;
+import fr.evolving.automata.Level;
 
 public class GameWorld {
 	private float runTime = 0;
@@ -20,17 +21,17 @@ public class GameWorld {
 		MENU, READY, RUNNING, GAMEOVER, OPTION
 	}
 
-	public GameWorld(int midPointY) {
+	public GameWorld(Level level) {
 		Gdx.app.log("Creation du plateau de jeu","ok");
 		currentState = GameState.MENU;
 		myGrid= new Grid(20,20);
 		//MySaveObject= new SaveObject("com.mysql.jdbc.Driver","jdbc:mysql://dahut.fr:3306/popfr_games","popfr_games","ef^J,khGMIL~");
-		MySaveObject= new SaveObject("com.mysql.jdbc.Driver","jdbc:mysql://192.168.1.252:3306/games","games","WoawGames!!87");
-		try {
-			MySaveObject.saveObject(myGrid);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+		//MySaveObject= new SaveObject("com.mysql.jdbc.Driver","jdbc:mysql://192.168.1.252:3306/games","games","WoawGames!!87");
+		//try {
+		//	MySaveObject.saveObject(myGrid);
+		//} catch (Exception e) {
+		//	e.printStackTrace();
+		//}
 	}
 
 	public void update(float delta) {

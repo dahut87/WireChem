@@ -88,17 +88,8 @@ public class AssetLoader {
 		Gdx.app.debug("AssetLoader","Ajout des textures disabled,over et down");
 		Atlas_level = manager.get("textures/level.pack");
 		if (manager.isLoaded("textures/level.pack")) {
-		for(int i=0; i < 5; i++)
-			addstyle(Atlas_level,"leveler"+String.valueOf(i));
-		addstyle(Atlas_level,"arrows");
-		addstyle(Atlas_level,"arrows2");
-		addstyle(Atlas_level,"exit2");
-		addstyle(Atlas_level,"cout");
-		addstyle(Atlas_level,"tech");
-		addstyle(Atlas_level,"cycle");
-		addstyle(Atlas_level,"temp");
-		addstyle(Atlas_level,"nrj");
-		addstyle(Atlas_level,"rayon");    
+		for(String toload: new String[]{"leveler0","leveler1","leveler2","leveler3","leveler4","arrows","arrows2","exit2","cout","tech","cycle","temp","nrj","rayon","logo2"}) 
+			addstyle(Atlas_level,toload);
 		}
 		Gdx.app.debug("AssetLoader","Chargement des skins et attente fin chargement");
 	    manager.load("textures/level.json", Skin.class, new SkinLoader.SkinParameter("textures/level.pack"));
