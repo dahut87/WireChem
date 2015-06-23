@@ -40,7 +40,10 @@ public class GameRenderer {
 		shapeRenderer.begin(ShapeType.Filled);
 		shapeRenderer.setColor(0.2f, 0.2f, 0.2f, 0.5f);
 		shapeRenderer.rect(5, 5, AssetLoader.width-10, 74);
-		shapeRenderer.rect(5, AssetLoader.height-81, 550, 74);
+		shapeRenderer.rect(5, AssetLoader.height-81, 810, 74);
+		shapeRenderer.rect(825, AssetLoader.height-107, 500, 100);
+		shapeRenderer.rect(1335, AssetLoader.height-107, 200, 100);
+		shapeRenderer.circle(1850, AssetLoader.height, 300, 60);
 		shapeRenderer.end();
 		batcher.begin();
 		batcher.disableBlending();

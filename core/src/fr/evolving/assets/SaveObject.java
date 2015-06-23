@@ -534,7 +534,7 @@ public class SaveObject {
 	"Générer le premier atome complet : l'hydrogène avec un proton et un électron négatif sur la couche K.",
 	"Ne",
 	new int[]{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-	new int[]{0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 1},
+	new int[]{0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1},
 	1000f,
 	750f,
 	6,

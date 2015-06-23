@@ -117,8 +117,8 @@ public class LevelScreen implements Screen {
 		showlevel(buttonLevels[0]);
 	}
 
-	public LevelScreen() {
-		this.world=0;
+	public LevelScreen(int aworld) {
+		this.world=aworld;
 		Gdx.app.debug(getClass().getSimpleName(),"Création des elements primordiaux du screen (stage, renderer, table)");
 		stage = new Stage(AssetLoader.viewport);
 		table = new Table();
@@ -193,7 +193,7 @@ public class LevelScreen implements Screen {
 		Victory.setPosition(1216, 185);
 		Gdx.app.debug(getClass().getSimpleName(),"Création des boutons de niveau.");
 		thelevels= SaveObject.initObject();
-		loadWorld(0);
+		loadWorld(world);
 	}
 
 	@Override

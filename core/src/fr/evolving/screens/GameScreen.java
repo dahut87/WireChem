@@ -3,15 +3,21 @@ package fr.evolving.screens;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
+import com.badlogic.gdx.scenes.scene2d.ui.ImageTextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 
 import fr.evolving.worlds.GameRenderer;
 import fr.evolving.worlds.GameWorld;
 import fr.evolving.worlds.LevelRenderer;
+import fr.evolving.UI.ButtonLevel;
+import fr.evolving.UI.Objectives;
 import fr.evolving.assets.AssetLoader;
 import fr.evolving.automata.Level;
 import fr.evolving.inputs.InputHandler;
@@ -20,24 +26,24 @@ public class GameScreen implements Screen {
 	private Timer ScrollTimer;
 	private TimerTask ScrollTask;
     private Stage stage;
-    private Table table,table2;
+    private Table table;
 	private GameWorld world;
 	private GameRenderer Renderer;
 	private float runTime;
 	public Level level;
-	private ImageButton[] bottom;
-	private ImageButton[] topleft;
-	String[] bottom_tocreate={"run","stop","speed","separator","move","zoomp","zoomm","separator","raz","save","levels","tree","exits","separator","screen","sound","tuto","settings","separator","stat"};
-	String[] topleft_tocreate={"cycle","temp","nrj","rayon"};
+	private ImageButton[] Barre;
+	private ImageTextButton cycle,temp,nrj,rayon,cout,tech;
+	String[] tocreate={"run","stop","speed","separator","move","zoomp","zoomm","separator","raz","save","levels","tree","exits","separator","screen","sound","tuto","settings","separator","stat"};
+	private ButtonLevel buttonlevel;
+	private Objectives objectives;
 	
 	
 	// This is the constructor, not the class declaration
-	public GameScreen(Level level) {
+	public GameScreen(Level alevel) {
 		Gdx.app.debug(getClass().getSimpleName(),"Création des elements primordiaux du screen (stage, renderer, table, level, world)");
 		stage = new Stage(AssetLoader.viewport);
 		table = new Table();
-		table2 = new Table();
-		this.level=level;
+		this.level=alevel;
 		world = new GameWorld(level);
 		Renderer = new GameRenderer(this);
 		world.setRenderer(Renderer);
@@ -53,15 +59,41 @@ public class GameScreen implements Screen {
 		};
 		ScrollTimer.scheduleAtFixedRate(ScrollTask, 0, 30);
 		Gdx.app.debug(getClass().getSimpleName(),"Création de la barre de gestion du bas");	
-		bottom=new ImageButton[bottom_tocreate.length];
+		Barre=new ImageButton[tocreate.length];
 		int i=0;
-		for (String tocreateitem: bottom_tocreate) 
-			bottom[i++]= new ImageButton(AssetLoader.Skin_level,tocreateitem);
-		topleft=new ImageButton[topleft_tocreate.length];
-		i=0;
-		for (String tocreateitem: topleft_tocreate) 
-			topleft[i++]= new ImageButton(AssetLoader.Skin_level,tocreateitem);
-
+		for (String tocreateitem: tocreate) 
+			Barre[i++]= new ImageButton(AssetLoader.Skin_level,tocreateitem);
+		Barre[10].addListener(new ClickListener(){
+	        @Override
+	        public void clicked(InputEvent event, float x, float y) {
+	        	((Game)Gdx.app.getApplicationListener()).setScreen(new LevelScreen(level.aWorld));
+	        }
+	     });
+		Barre[12].addListener(new ClickListener(){
+	        @Override
+	        public void clicked(InputEvent event, float x, float y) {
+	    		Gdx.app.exit();
+	        }
+	     });		
+		Gdx.app.debug(getClass().getSimpleName(),"Création de la barre de gestion du haut");	
+		cycle=new ImageTextButton(String.valueOf(level.Cycle),AssetLoader.Skin_level,"cycle2");
+		cycle.setPosition(10,AssetLoader.height-74);
+		temp=new ImageTextButton(String.valueOf(level.Temp),AssetLoader.Skin_level,"temp2");
+		temp.setPosition(210,AssetLoader.height-74);
+		nrj=new ImageTextButton(String.valueOf(level.Nrj),AssetLoader.Skin_level,"nrj2");
+		nrj.setPosition(410,AssetLoader.height-74);
+		rayon=new ImageTextButton(String.valueOf(level.Rayon),AssetLoader.Skin_level,"rayon2");
+		rayon.setPosition(610,AssetLoader.height-74);
+		tech=new ImageTextButton(String.valueOf(level.Tech),AssetLoader.Skin_level,"tech2");
+		tech.setPosition(1345,AssetLoader.height-74);
+		cout=new ImageTextButton(String.valueOf(level.Cout),AssetLoader.Skin_level,"cout2");
+		cout.setPosition(1445,AssetLoader.height-74);
+		objectives=new Objectives();
+		objectives.setVictory(level.Victory);
+		objectives.setPosition(960,AssetLoader.height-85);
+		buttonlevel=new ButtonLevel(level,true);
+		buttonlevel.setScale(0.6f);
+		buttonlevel.setPosition(860,AssetLoader.height-88);
 	}
 
 	@Override
@@ -81,13 +113,17 @@ public class GameScreen implements Screen {
 	public void show() {
 		Gdx.app.log("*****","Affichage du niveau.");
 		table.bottom().left().padBottom(10f);
-		for (int i=0;i<bottom_tocreate.length;i++) 
-			table.add(bottom[i]).padLeft(10f);
+		for (int i=0;i<tocreate.length;i++) 
+			table.add(Barre[i]).padLeft(10f);
+		stage.addActor(objectives);
+		stage.addActor(buttonlevel);
+		stage.addActor(rayon);
+		stage.addActor(nrj);
+		stage.addActor(temp);
+		stage.addActor(cycle);
 		stage.addActor(table);
-		table2.top().left().padTop(10f);
-		for (int i=0;i<topleft_tocreate.length;i++) 
-			table2.add(topleft[i]).padLeft(10f);
-		stage.addActor(table2);
+		stage.addActor(tech);
+		stage.addActor(cout);
         Gdx.input.setInputProcessor(stage);
 	}
 
