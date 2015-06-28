@@ -22,9 +22,9 @@ public class GameWorld {
 	}
 
 	public GameWorld(Level level) {
-		Gdx.app.log("Creation du plateau de jeu","ok");
+		Gdx.app.log(this.getClass().getSimpleName(),"Initialisation du niveau...");
 		currentState = GameState.MENU;
-		myGrid= new Grid(20,20);
+		//myGrid= new Grid(20,20);
 		//MySaveObject= new SaveObject("com.mysql.jdbc.Driver","jdbc:mysql://dahut.fr:3306/popfr_games","popfr_games","ef^J,khGMIL~");
 		//MySaveObject= new SaveObject("com.mysql.jdbc.Driver","jdbc:mysql://192.168.1.252:3306/games","games","WoawGames!!87");
 		//try {

@@ -9,6 +9,7 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageTextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.utils.Align;
 
@@ -22,6 +23,7 @@ public class ButtonLevel extends ImageTextButton {
 	Label Thelabel;
 	float scale;
 	ImageTextButtonStyle style;
+	LabelStyle stylelabel;
 	
 	public ButtonLevel(Level level, boolean Activated) {
 		super(level.Name, AssetLoader.Skin_level, "world"+String.valueOf(level.aWorld));
@@ -47,7 +49,9 @@ public class ButtonLevel extends ImageTextButton {
 		this.scale=scale;
 		this.setBounds(level.X, level.Y*AssetLoader.ratio, 111*scale, 125*scale);
 		Thelabel.setPosition(level.X+54*scale, level.Y*AssetLoader.ratio+20*scale, Align.bottom | Align.center);
-		Thelabel.setFontScale(scale);
+		stylelabel=Thelabel.getStyle();
+		stylelabel.font.setScale(scale);
+		Thelabel.setStyle(stylelabel);
 		style= this.getStyle();
 		style.pressedOffsetX=style.pressedOffsetX*scale;
 		style.pressedOffsetY=style.pressedOffsetY*scale;

@@ -90,10 +90,9 @@ public class GameScreen implements Screen {
 		cout.setPosition(1445,AssetLoader.height-74);
 		objectives=new Objectives();
 		objectives.setVictory(level.Victory);
-		objectives.setPosition(960,AssetLoader.height-85);
+		objectives.setPosition(890,AssetLoader.height-95);
 		buttonlevel=new ButtonLevel(level,true);
-		buttonlevel.setScale(0.6f);
-		buttonlevel.setPosition(860,AssetLoader.height-88);
+		buttonlevel.setPosition(1760,AssetLoader.height-125);
 	}
 
 	@Override

@@ -47,7 +47,7 @@ public class LevelScreen implements Screen {
     private ImageButton Previous,Next,Exit;
     public ImageButton logosmall;
     private ImageTextButton cout,tech,cycle,temp,rayon,nrj;
-	private TextButton buttonPlay,buttonExit;
+	private TextButton buttonConnect,buttonPlay,buttonStat;
 	private Level[] thelevels;
 	private TextArea TextDescriptive;
 	public int world;
@@ -95,13 +95,7 @@ public class LevelScreen implements Screen {
 					if (logosmall.isChecked()) {
 						abutton.setPosition(event.getStageX()-56, event.getStageY()-20);
 						}
-					}
-				public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
-					ButtonLevel abutton = (ButtonLevel)event.getListenerActor();
-					if (!logosmall.isChecked()) {
-						((Game)Gdx.app.getApplicationListener()).setScreen(new GameScreen(abutton.level));
-						}
-					}				
+					}		
 				});
 			}
 	
@@ -139,10 +133,18 @@ public class LevelScreen implements Screen {
 		logosmall.setPosition(20, AssetLoader.height-175+logosmall.getHeight()/2);
 		TextDescriptive = new TextArea("Descriptif", AssetLoader.Skin_level,"Descriptif");
 		TextDescriptive.setBounds(15, 15, 1185, 100);
-		buttonPlay = new TextButton("Connexions", AssetLoader.Skin_level,"Bouton");
-		buttonPlay.setPosition(1500, AssetLoader.height-40);
-		buttonExit = new TextButton("Statistiques", AssetLoader.Skin_level,"Bouton");
-		buttonExit.setPosition(1720, AssetLoader.height-40);		
+		buttonConnect = new TextButton("Connexions", AssetLoader.Skin_level,"Bouton");
+		buttonConnect.setBounds(1480, AssetLoader.height-60, 190, 40);
+		buttonPlay = new TextButton("Jouer", AssetLoader.Skin_level,"Bouton");
+		buttonPlay.setBounds(1040, 20, 150, 40);
+		buttonPlay.addListener(new ClickListener(){
+	        @Override
+			public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
+					((Game)Gdx.app.getApplicationListener()).setScreen(new GameScreen(selected.level));
+				}				
+			});
+		buttonStat = new TextButton("Statistiques", AssetLoader.Skin_level,"Bouton");
+		buttonStat.setBounds(1710, AssetLoader.height-60, 190, 40);
 		Exit=new ImageButton(AssetLoader.Skin_level,"Exit");
 		Exit.setPosition(1110, AssetLoader.height-Exit.getHeight()-5);
 		Exit.addListener(new ClickListener(){
@@ -222,7 +224,8 @@ public class LevelScreen implements Screen {
         stage.addActor(Exit);
         stage.addActor(Next);
         stage.addActor(buttonPlay);
-        stage.addActor(buttonExit);
+        stage.addActor(buttonConnect);
+        stage.addActor(buttonStat);       
         stage.addActor(Previous);
         stage.addActor(cout);
         stage.addActor(tech);
