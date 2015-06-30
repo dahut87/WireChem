@@ -21,6 +21,9 @@ import com.badlogic.gdx.graphics.g2d.TextureAtlas.AtlasRegion;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.Texture.TextureWrap;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.badlogic.gdx.maps.tiled.TiledMap;
+import com.badlogic.gdx.maps.tiled.TiledMapTileSet;
+import com.badlogic.gdx.maps.tiled.tiles.StaticTiledMapTile;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.ScalingViewport;
@@ -48,6 +51,7 @@ public class AssetLoader {
 	public static NinePatch empty;
 	public static NinePatch full;
 	public static AssetManager manager;
+	public static TiledMapTileSet tileSet;
 	
 	public static void addstyle(TextureAtlas Atlas_level,String Name) {
 		AtlasRegion AnAtlasRegion = Atlas_level.findRegion(Name);
@@ -109,6 +113,16 @@ public class AssetLoader {
 		Typecolors=new Color[]{new Color(0,0,1f,1),new Color(0,0.6f,0,1),new Color(0.196f,0.803f,0.196f,1),new Color(0.5f,0.5f,0.5f,1),new Color(0.8f,0.8f,0.8f,1),new Color(0.6f,0,0,1),new Color(1f,0,0,1),new Color(0,0,0.6f,1),new Color(0,0,0.6f,1),new Color(0,0,0.6f,1),new Color(0,0,0.6f,1),new Color(0.294f,0.466f,0.615f,1),new Color(0.478f,0.192f,0.098f,1)};
 		Typenames=new String[13];
 		Typenames=new String[]{"E-","e-","Ph","e0","E0","e+","E+","K","L","M","N","n","p"};
+	    Gdx.app.debug("AssetLoader","Création des tiles...");		
+        tileSet = new TiledMapTileSet();
+        tileSet.setName("copper");
+        for (int i = 0; i < 70; i++) {   
+           TextureRegion tileText = Atlas_level.findRegion("sprite"+i);
+           if (tileText != null) {
+              tileSet.putTile(i, new StaticTiledMapTile(tileText));
+              Gdx.app.debug("AssetLoader","Tiles N°:"+String.valueOf(i));
+           }
+        }
 	}
 	
 	public static int setpref() {

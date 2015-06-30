@@ -5,7 +5,7 @@ import com.badlogic.gdx.Gdx;
 
 public class Grid implements Serializable{
 	public Cell[][] Cells;
-	private Integer sizeX,sizeY;
+	public Integer sizeX,sizeY;
 	
 	public Grid(Integer X,Integer Y) {
 		this.sizeX=X;

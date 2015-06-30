@@ -22,7 +22,7 @@ public class GameWorld {
 	}
 
 	public GameWorld(Level level) {
-		Gdx.app.log(this.getClass().getSimpleName(),"Initialisation du niveau...");
+		Gdx.app.debug(this.getClass().getSimpleName(),"Initialisation du niveau...");
 		currentState = GameState.MENU;
 		//myGrid= new Grid(20,20);
 		//MySaveObject= new SaveObject("com.mysql.jdbc.Driver","jdbc:mysql://dahut.fr:3306/popfr_games","popfr_games","ef^J,khGMIL~");
