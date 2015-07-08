@@ -13,6 +13,7 @@ import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer.Cell;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
+import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
@@ -88,13 +89,13 @@ public class GameScreen implements Screen {
 		Barre[6].addListener(new ClickListener(){
 	        @Override
 	        public void clicked(InputEvent event, float x, float y) {
-	        	map.setZoom(map.getZoom()*0.7f);
+	        	map.setZoom(1.1f);
 	        }
 	     });
 		Barre[5].addListener(new ClickListener(){
 	        @Override
 	        public void clicked(InputEvent event, float x, float y) {
-	        	map.setZoom(map.getZoom()*1.3f);
+	        	map.setZoom(0.9f);
 	        }
 	     });	
 		Gdx.app.debug(getClass().getSimpleName(),"Création de la barre de gestion du haut");	
@@ -115,8 +116,6 @@ public class GameScreen implements Screen {
 		objectives.setPosition(890,AssetLoader.height-95);
 		buttonlevel=new ButtonLevel(level,true);
 		buttonlevel.setPosition(1760,AssetLoader.height-125);
-		Gdx.app.debug(getClass().getSimpleName(),"Création d'une tilemap");
-		map=new TouchMaptiles(level,128,128);
 		Gdx.app.debug(getClass().getSimpleName(),"Ajout des barres");
 		Barrehaut=new Image(AssetLoader.Atlas_level.findRegion("barrehaut"));
 		Barrehaut.setBounds(0.0f, AssetLoader.height-200.0f,1920.0f,200.0f);
@@ -124,6 +123,32 @@ public class GameScreen implements Screen {
 		Barrebas=new Image(AssetLoader.Atlas_level.findRegion("barrebas"));
 		Barrebas.setBounds(0.0f, 0.0f,1920.0f,95.0f);
 		Barrebas.setColor(0.25f, 0.25f, 0.25f, 0.9f);
+		Gdx.app.debug(getClass().getSimpleName(),"Création d'une tilemap");
+		map=new TouchMaptiles(level,128,128);
+		map.setBounds(0, 0, AssetLoader.width, AssetLoader.height);
+		map.addListener(new ClickListener(){
+			@Override
+		    public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+
+		         //Vector3 temp_coord = new Vector3(x,y,0);
+		         //Vector3  coords = map.camera.unproject(temp_coord);
+		         //x =(int) coords.x;
+		         //y =(int) coords.y;
+				x=(int)((x/AssetLoader.width*map.camera.viewportWidth)+map.decx);
+				y=(int)((y/AssetLoader.height*map.camera.viewportHeight)+map.decy);
+		        if (level.Grid.GetXY(x,y)!=null)
+		        {
+		            System.out.println("Screen coordinates translated to world coordinates: "+ "X: " + x + " Y: " + y+" zoom:"+map.getZoom());
+		            if (level.Grid.GetCopper(x,y)==false)
+		            	level.Grid.GetXY(x,y).Copper=true;
+		            else
+		            	level.Grid.GetXY(x,y).Copper=false;
+		            level.Grid.tiling();
+		            map.redraw();
+		        }	
+		        return false;
+				}
+		   });	
 	}
 
 	@Override
