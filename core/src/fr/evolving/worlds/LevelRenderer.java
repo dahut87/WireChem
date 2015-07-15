@@ -45,7 +45,6 @@ public class LevelRenderer {
 		Laser=new Laser();
 		AssetLoader.viewport.apply();
 		font=AssetLoader.Skin_level.getFont("OpenDyslexicAlta-22");
-		font.setColor(AssetLoader.Levelcolors[LevelScreen.world]);
 	}
 	
 	public void evolve() {
@@ -70,7 +69,7 @@ public class LevelRenderer {
 	public void render(float delta, float runTime) {
 		Gdx.gl.glClearColor(0, 0, 0, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
-		
+		font.setColor(AssetLoader.Levelcolors[LevelScreen.world]);
 		batcher.begin();
 		batcher.setProjectionMatrix(AssetLoader.Camera.combined);
 		batcher.setColor(0.25f,0.25f,0.25f,1f);

@@ -21,10 +21,8 @@ public class GameRenderer {
 	private ShapeRenderer shapeRenderer;
 	private SpriteBatch batcher;
 	private GameScreen GameScreen;
-
-	public void evolve() {
-
-	}
+	private TextureRegion oneselection;
+	private float rotation;
 
 	public GameRenderer(GameScreen GameScreen) {
 		this.GameScreen=GameScreen;
@@ -32,13 +30,38 @@ public class GameRenderer {
 		batcher.setProjectionMatrix(AssetLoader.Camera.combined);
 		shapeRenderer = new ShapeRenderer();
 		shapeRenderer.setProjectionMatrix(AssetLoader.Camera.combined);
+		oneselection= AssetLoader.Atlas_level.findRegion("circle");
+		rotation=0f;
+	}
+	
+	public void evolve() {
+		rotation+=5;
 	}
 
-	public void render(float delta, float runTime) {
-		shapeRenderer.begin(ShapeType.Filled);
-		shapeRenderer.end();
-		batcher.begin();
-		batcher.end();
+	public void render(float delta, float runTime,int layer) {
+		if (layer==0) {
+			Gdx.gl.glClearColor(0, 0, 0, 1);
+			Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+		}
+		else if (layer==1) {
+			batcher.begin();
+			batcher.setColor(0.25f, 0.25f, 0.25f, 1f);
+			batcher.draw(AssetLoader.Atlas_level.findRegion("barrehaut"),0.0f,AssetLoader.height-198.0f,1920.0f,200.0f);
+			batcher.draw(AssetLoader.Atlas_level.findRegion("barrebas"),0.0f,0.0f,1920.0f,170.0f);
+			batcher.draw(AssetLoader.Atlas_level.findRegion("barrecentre"),1450f,AssetLoader.height-800.0f,620f,520.0f);
+			batcher.end();
+		}
+		else if (layer==2) {
+			shapeRenderer.begin(ShapeType.Filled);
+			shapeRenderer.end();
+			batcher.begin();
+			if (GameScreen.selected!=null) 
+			{
+				batcher.setColor(1f, 0f, 0f, 1f);
+				batcher.draw(oneselection, GameScreen.selected.getX(), GameScreen.selected.getY(), GameScreen.selected.getWidth()/2,GameScreen.selected.getHeight()/2,GameScreen.selected.getWidth(), GameScreen.selected.getHeight(),1f,1f,rotation);
+			}
+			batcher.end();
+		}
 	}
 
 }

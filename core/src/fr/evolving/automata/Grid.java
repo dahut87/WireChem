@@ -122,6 +122,25 @@ public class Grid implements Serializable{
 						if (value>0)
 							GetXY(x,y).Copper_calc=oldvalue+22+value;
 					}
+					int value=0;
+					if (oldvalue==34 && (GetCoppercalc(x-1,y)==31 || GetCoppercalc(x-1,y)==55  || GetCoppercalc(x-1,y)==58))
+						value=62;
+					if (oldvalue==34 && (GetCoppercalc(x+1,y)==31 || GetCoppercalc(x+1,y)==55  || GetCoppercalc(x+1,y)==58))
+						value=58;
+					if (oldvalue==31 && (GetCoppercalc(x-1,y)==34 || GetCoppercalc(x-1,y)==58  || GetCoppercalc(x-1,y)==62))
+						value=59;
+					if (oldvalue==31 && (GetCoppercalc(x+1,y)==34 || GetCoppercalc(x+1,y)==58  || GetCoppercalc(x+1,y)==62))
+						value=55;
+					if (oldvalue==33 && (GetCoppercalc(x,y-1)==27 || GetCoppercalc(x,y-1)==50  || GetCoppercalc(x,y-1)==51))
+						value=57;
+					if (oldvalue==33 && (GetCoppercalc(x,y+1)==27 || GetCoppercalc(x,y+1)==50  || GetCoppercalc(x,y+1)==51))
+						value=56;
+					if (oldvalue==27 && (GetCoppercalc(x,y-1)==33 || GetCoppercalc(x,y-1)==56  || GetCoppercalc(x,y-1)==57))
+						value=51;
+					if (oldvalue==27 && (GetCoppercalc(x,y+1)==33 || GetCoppercalc(x,y+1)==56  || GetCoppercalc(x,y+1)==57))
+						value=50;
+					if (value>0)
+						GetXY(x,y).Copper_calc=value;
 					
 			}
 		return;

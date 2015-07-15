@@ -15,7 +15,7 @@ public class main extends Game {
 		debug();
 		//test();
 		Gdx.app.debug(getClass().getSimpleName(), "Récupération de la résolution des préférences.");		
-		if (AssetLoader.prefs.contains("ResolutionX") && AssetLoader.prefs.contains("ResolutionX"))	{
+		if (AssetLoader.prefs.getInteger("ResolutionX")>0 && AssetLoader.prefs.getInteger("ResolutionY")>0)	{
 			try {
 				int ResolutionX=AssetLoader.prefs.getInteger("ResolutionX");
 				int ResolutionY=AssetLoader.prefs.getInteger("ResolutionY");

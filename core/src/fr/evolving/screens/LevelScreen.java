@@ -80,13 +80,13 @@ public class LevelScreen implements Screen {
 		        @Override
 		        public void enter(InputEvent event, float x, float y, int pointer, Actor fromActor) {
 		        	ButtonLevel abutton = (ButtonLevel)event.getListenerActor();
-		        	Gdx.app.debug(getClass().getSimpleName(), "Enter button "+abutton.level.Name);
+		        	Gdx.app.debug(event.getListenerActor().toString(), "Enter button ");
 		        	if (!abutton.isChecked())
 		        		 showlevel(abutton);
 		        }
 		        public void exit(InputEvent event, float x, float y, int pointer, Actor fromActor) {
 		        	ButtonLevel abutton = (ButtonLevel)event.getListenerActor();
-		        	Gdx.app.debug(getClass().getSimpleName(), "Enter button "+abutton.level.Name);
+		        	Gdx.app.debug(event.getListenerActor().toString(), "Enter button ");
 		        	if (!abutton.isChecked())
 		        		showlevel(abutton);
 				}
@@ -162,7 +162,7 @@ public class LevelScreen implements Screen {
 	        		world++;
 		        	loadWorld(world);
 	        	}
-	    		Gdx.app.debug(getClass().getSimpleName(),"World:"+String.valueOf(world)+" Maxworld:"+String.valueOf(getMaxWorld()));
+	    		Gdx.app.debug(event.getListenerActor().toString(),"World:"+String.valueOf(world)+" Maxworld:"+String.valueOf(getMaxWorld()));
 	        }
 	     });
 		Previous=new ImageButton(AssetLoader.Skin_level,"Previous");
@@ -174,7 +174,7 @@ public class LevelScreen implements Screen {
 	        		world--;
 		        	loadWorld(world);
 	        	}
-	    		Gdx.app.debug(getClass().getSimpleName(),"World:"+String.valueOf(world)+" Maxworld:"+String.valueOf(getMaxWorld()));
+	    		Gdx.app.debug(event.getListenerActor().toString(),"World:"+String.valueOf(world)+" Maxworld:"+String.valueOf(getMaxWorld()));
 	        }
 	     });
 		cout=new ImageTextButton("5",AssetLoader.Skin_level,"cout");
