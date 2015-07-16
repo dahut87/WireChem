@@ -35,7 +35,7 @@ public class Grid implements Serializable{
 				GetXY(x,y).Copper_calc=value;
 			}
 			else
-				GetXY(x,y).Copper_calc=60;
+				GetXY(x,y).Copper_calc=-1;
 			for (int x=0;x<this.sizeX;x++)
 			for (int y=0;y<this.sizeY;y++) 
 			{
@@ -63,7 +63,7 @@ public class Grid implements Serializable{
 				}
 				else
 				{
-					if (GetCoppercalc(x,y)!=60)
+					if (GetCoppercalc(x,y)!=-1)
 					{
 						int oldvalue=GetXY(x,y).Copper_calc;
 						if (GetCoppercalc(x-1,y-1)==15 || GetCoppercalc(x-1,y-1)==35)
@@ -160,6 +160,14 @@ public class Grid implements Serializable{
 			return false;
 		else	
 			return cell.Copper;
+	}
+	
+	public boolean GetFiber(float X,float Y) {
+		Cell cell=GetXY(X,Y);
+		if (cell==null)
+			return false;
+		else	
+			return cell.Fiber>0;
 	}
 	
 	public int GetCoppercalc(float X,float Y) {

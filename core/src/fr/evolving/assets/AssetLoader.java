@@ -119,7 +119,9 @@ public class AssetLoader {
         for (int i = 0; i < 70; i++) {   
            TextureRegion tileText = Atlas_level.findRegion("sprite"+i);
            if (tileText != null) {
-              tileSet.putTile(i, new StaticTiledMapTile(tileText));
+        	  StaticTiledMapTile atile= new StaticTiledMapTile(tileText);
+        	  atile.setId(i);
+              tileSet.putTile(i, atile);
               Gdx.app.debug("AssetLoader","Tiles N°:"+String.valueOf(i));
            }
         }

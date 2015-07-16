@@ -66,6 +66,7 @@ public class GameScreen implements Screen {
 	private Objectives objectives;
 	private TouchMaptiles map;
 	private Menu menu;
+	private Actor menuactor;
 	private float oldx,oldy;
 	private Label fpsLabel;
 
@@ -176,6 +177,7 @@ public class GameScreen implements Screen {
 		        @Override
 		        public void clicked(InputEvent event, float x, float y) {
 		        	selected=event.getListenerActor();
+					map.fillempty(53);
 		        	Gdx.app.debug(event.getListenerActor().toString(),"Barre:Selection dans la Barre bas");
 		        }
 		     });
@@ -184,7 +186,85 @@ public class GameScreen implements Screen {
 	        @Override
 	        public void clicked(InputEvent event, float x, float y) {
 	        	Gdx.app.debug(event.getListenerActor().toString(),"Affichage sousmenu");
-	        	((TiledMapTileLayer)menu.map.getLayers().get(0)).getCell(1,6).setTile(AssetLoader.tileSet.getTile(10));
+	        	checkMenu(0,true);
+	        	menu.clear();
+				map.fillempty(53);
+	        	selected=null;
+	        	menu.setMenu(0, 7, 10);
+	        	menu.setMenu(1, 7, 61);
+	        	menu.setMenu(2, 7, 53);
+	        	Barre2[0].setChecked(true);
+	        }
+	     });
+		Barre2[1].addListener(new ClickListener(){
+	        @Override
+	        public void clicked(InputEvent event, float x, float y) {
+	        	Gdx.app.debug(event.getListenerActor().toString(),"Affichage sousmenu");
+	        	checkMenu(1,true);
+	        	menu.clear();
+				map.fillempty(53);
+	        	selected=null;
+	        	menu.setMenu(0, 7, 10);
+	        }
+	     });
+		Barre2[2].addListener(new ClickListener(){
+	        @Override
+	        public void clicked(InputEvent event, float x, float y) {
+	        	Gdx.app.debug(event.getListenerActor().toString(),"Affichage sousmenu");
+	        	checkMenu(2,true);
+	        	menu.clear();
+				map.fillempty(53);
+	        	selected=null;
+	        }
+	     });
+		Barre2[3].addListener(new ClickListener(){
+	        @Override
+	        public void clicked(InputEvent event, float x, float y) {
+	        	Gdx.app.debug(event.getListenerActor().toString(),"Affichage sousmenu");
+	        	checkMenu(3,true);
+	        	menu.clear();
+				map.fillempty(53);
+	        	selected=null;
+	        }
+	     });
+		Barre2[4].addListener(new ClickListener(){
+	        @Override
+	        public void clicked(InputEvent event, float x, float y) {
+	        	Gdx.app.debug(event.getListenerActor().toString(),"Affichage sousmenu");
+	        	checkMenu(4,true);
+	        	menu.clear();
+				map.fillempty(53);
+	        	selected=null;
+	        }
+	     });
+		Barre2[5].addListener(new ClickListener(){
+	        @Override
+	        public void clicked(InputEvent event, float x, float y) {
+	        	Gdx.app.debug(event.getListenerActor().toString(),"Affichage sousmenu");
+	        	checkMenu(5,true);
+	        	menu.clear();
+				map.fillempty(53);
+	        	selected=null;
+	        }
+	     });
+		Barre2[6].addListener(new ClickListener(){
+	        @Override
+	        public void clicked(InputEvent event, float x, float y) {
+	        	Gdx.app.debug(event.getListenerActor().toString(),"Affichage sousmenu");
+	        	checkMenu(6,true);
+	        	menu.clear();
+				map.fillempty(53);
+	        	selected=null;
+	        }
+	     });
+		Barre2[7].addListener(new ClickListener(){
+	        @Override
+	        public void clicked(InputEvent event, float x, float y) {
+	        	Gdx.app.debug(event.getListenerActor().toString(),"Affichage sousmenu");
+	        	checkMenu(7,true);
+	        	menu.clear();
+				map.fillempty(53);
+	        	selected=null;
 	        }
 	     });
 		Gdx.app.debug(getClass().getSimpleName(),"Création de la barre de gestion du haut");	
@@ -227,7 +307,7 @@ public class GameScreen implements Screen {
 					map.setDec((AssetLoader.width/2-x)/2,(AssetLoader.height/2-y)/2);
 					return false;
 				}
-				else if (selected.getName()=="pen")
+				else if (selected.getName()=="copper")
 				{
 					Vector2 coords=map.screentoworld(x, y);
 					if (level.Grid.GetXY(coords.x,coords.y)!=null)
@@ -238,9 +318,33 @@ public class GameScreen implements Screen {
 						else
 							level.Grid.GetXY(coords.x,coords.y).Copper=false;
 						level.Grid.tiling();
-						map.redraw();
+						map.redraw(60);
 					}	
-					return false;
+				}
+				else if (selected.getName()=="fiber")
+				{
+					Vector2 coords=map.screentoworld(x, y);
+					if (level.Grid.GetXY(coords.x,coords.y)!=null)
+					{
+						Gdx.app.debug(event.getListenerActor().toString(),"Screen coordinates translated to world coordinates: "+ "X: " + coords.x + " Y: " + coords.y);
+						if (level.Grid.GetFiber(coords.x,coords.y)==false)
+							level.Grid.GetXY(coords.x,coords.y).Fiber=1;
+						else
+							level.Grid.GetXY(coords.x,coords.y).Fiber=0;
+						map.redraw(60);
+					}	
+				}
+				else if (selected.getName()=="blank")
+				{
+					Vector2 coords=map.screentoworld(x, y);
+					if (level.Grid.GetXY(coords.x,coords.y)!=null)
+					{
+						Gdx.app.debug(event.getListenerActor().toString(),"Screen coordinates translated to world coordinates: "+ "X: " + coords.x + " Y: " + coords.y);
+						level.Grid.GetXY(coords.x,coords.y).Fiber=0;
+						level.Grid.GetXY(coords.x,coords.y).Copper=false;
+						level.Grid.tiling();
+						map.redraw(60);
+					}	
 				}
 				return true;
 			 }
@@ -258,15 +362,63 @@ public class GameScreen implements Screen {
 					oldx=x;
 					oldy=y;
 					}
+				else if (selected.getName()=="copper")
+				{
+					Vector2 coords=map.screentoworld(x, y);
+					if (level.Grid.GetXY(coords.x,coords.y)!=null)
+					{
+						Gdx.app.debug(event.getListenerActor().toString(),"Screen coordinates translated to world coordinates: "+ "X: " + coords.x + " Y: " + coords.y);
+						level.Grid.GetXY(coords.x,coords.y).Copper=true;
+						level.Grid.tiling();
+						map.redraw(60);
+					}	
 				}
-		   });
+				else if (selected.getName()=="fiber")
+				{
+					Vector2 coords=map.screentoworld(x, y);
+					if (level.Grid.GetXY(coords.x,coords.y)!=null)
+					{
+						Gdx.app.debug(event.getListenerActor().toString(),"Screen coordinates translated to world coordinates: "+ "X: " + coords.x + " Y: " + coords.y);
+						level.Grid.GetXY(coords.x,coords.y).Fiber=1;
+						map.redraw(60);
+					}	
+				}
+				else if (selected.getName()=="blank")
+				{
+					Vector2 coords=map.screentoworld(x, y);
+					if (level.Grid.GetXY(coords.x,coords.y)!=null)
+					{
+						Gdx.app.debug(event.getListenerActor().toString(),"Screen coordinates translated to world coordinates: "+ "X: " + coords.x + " Y: " + coords.y);
+						level.Grid.GetXY(coords.x,coords.y).Fiber=0;
+						level.Grid.GetXY(coords.x,coords.y).Copper=false;
+						level.Grid.tiling();
+						map.redraw(60);
+					}	
+				}
+			}
+		});
 		menu=new Menu(4,8);
 		map.addListener(new ClickListener(){
 			@Override
 		    public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
 				Vector2 coords=menu.screentoworld(x,y);	
-				Gdx.app.debug(event.getListenerActor().toString(),"Coordonnées:"+x+"x"+y+" Coordonnées deprojettée:"+coords.x+"x"+coords.y);
-				
+				int tile=menu.getMenu((int)coords.x,(int)coords.y);
+				Gdx.app.debug(event.getListenerActor().toString(),"Coordonnées:"+x+"x"+y+" Coordonnées deprojettée:"+coords.x+"x"+coords.y+" tile:"+tile);
+				if (tile!=54 && tile!=0) {
+					if (menuactor==null)
+						menuactor=new Actor();
+					Vector2 coords2=menu.worldtoscreen((int)coords.x,(int)coords.y);
+					menuactor.setBounds(coords2.x, coords2.y, 60, 60);
+					selected=menuactor;
+				if (tile==10 || tile==61 || tile==53)
+					map.fillempty(60);
+				if (tile==10)
+					selected.setName("copper");
+				else if (tile==61)
+					selected.setName("fiber");
+				else if (tile==53)
+					selected.setName("blank");
+				}
 				return false;
 			}
 		 });
@@ -313,6 +465,13 @@ public class GameScreen implements Screen {
 	    processors.add(stage2);
 	    multiplexer.setProcessors(processors);
 		Gdx.input.setInputProcessor(multiplexer);
+	}
+	
+	public void checkMenu(int menu,boolean check)
+	{
+		for (int i=0;i<Barre2.length;i++) 
+			Barre2[i].setChecked(false);
+		Barre2[menu].setChecked(true);
 	}
 
 	@Override
