@@ -1,5 +1,6 @@
 package fr.evolving.screens;
 
+import java.util.Iterator;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -42,6 +43,8 @@ import fr.evolving.UI.Objectives;
 import fr.evolving.UI.TouchMaptiles;
 import fr.evolving.assets.AssetLoader;
 import fr.evolving.automata.Level;
+import fr.evolving.automata.Positiver_I;
+import fr.evolving.automata.Positiver_II;
 import fr.evolving.inputs.InputHandler;
 
 public class GameScreen implements Screen {
@@ -122,6 +125,46 @@ public class GameScreen implements Screen {
 	        public void clicked(InputEvent event, float x, float y) {
 	        	Gdx.app.debug(event.getListenerActor().toString(),"Barre:Niveaux");
 	        	((Game)Gdx.app.getApplicationListener()).setScreen(new LevelScreen(level.aWorld));
+	        }
+	     });
+		Barre[0].addListener(new ClickListener(){
+	        @Override
+	        public void clicked(InputEvent event, float x, float y) {
+	        	Gdx.app.debug(event.getListenerActor().toString(),"tests");
+	        	level.Grid.Cells[0][0].Transmuter=new Positiver_I(level);
+	        	level.Grid.Cells[0][1].Transmuter=new Positiver_II(level);
+	        	level.Grid.Cells[0][2].Transmuter=new Positiver_I(level);
+	        	Gdx.app.debug("0 upgrade",String.valueOf(level.Grid.Cells[0][0].Transmuter.getUpgradeCycle()));
+	        	Gdx.app.debug("0 activation",String.valueOf(level.Grid.Cells[0][0].Transmuter.getActivationLevel()));
+	        	Gdx.app.debug("2 activation",String.valueOf(level.Grid.Cells[0][2].Transmuter.getActivationLevel()));
+	        	level.Grid.Cells[0][0].Transmuter.Activate();
+	        	level.Grid.Cells[0][0].Transmuter.UpgradeCycle();
+	        	Gdx.app.debug("0 activation",String.valueOf(level.Grid.Cells[0][0].Transmuter.getActivationLevel()));
+	        	Gdx.app.debug("2 activation",String.valueOf(level.Grid.Cells[0][2].Transmuter.getActivationLevel()));
+	        	level.Grid.Cells[0][0].Transmuter.Activate();
+	        	Gdx.app.debug("0 activation",String.valueOf(level.Grid.Cells[0][0].Transmuter.getActivationLevel()));
+	        	Gdx.app.debug("2 upgrade",String.valueOf(level.Grid.Cells[0][2].Transmuter.getUpgradeCycle()));
+	        	Gdx.app.debug("0 upgrade",String.valueOf(level.Grid.Cells[0][0].Transmuter.getUpgradeCycle()));
+	        	level.Grid.Cells[0][0].Transmuter.UpgradeCycle();	
+	        	Gdx.app.debug("2 upgrade",String.valueOf(level.Grid.Cells[0][2].Transmuter.getUpgradeCycle()));
+	        	Gdx.app.debug("0 upgrade",String.valueOf(level.Grid.Cells[0][0].Transmuter.getUpgradeCycle()));
+	        	level.Grid.Cells[0][0].Transmuter.UpgradeCycle();	
+	        	Gdx.app.debug("2 upgrade",String.valueOf(level.Grid.Cells[0][2].Transmuter.getUpgradeCycle()));
+	        	Gdx.app.debug("0 upgrade",String.valueOf(level.Grid.Cells[0][0].Transmuter.getUpgradeCycle()));
+	        	level.Grid.Cells[0][0].Transmuter.UpgradeCycle();	
+	        	Gdx.app.debug("2 upgrade",String.valueOf(level.Grid.Cells[0][2].Transmuter.getUpgradeCycle()));
+	        	Gdx.app.debug("0 upgrade",String.valueOf(level.Grid.Cells[0][0].Transmuter.getUpgradeCycle()));
+	        	Gdx.app.debug("1 upgrade",String.valueOf(level.Grid.Cells[0][1].Transmuter.getUpgradeCycle()));	
+	        	Gdx.app.debug("0 nom",String.valueOf(level.Grid.Cells[0][0].Transmuter.getName()));
+	        	Gdx.app.debug("1 nom",String.valueOf(level.Grid.Cells[0][1].Transmuter.getName()));	
+	        	Gdx.app.debug("1 taille",String.valueOf(level.Grid.Cells[0][1].Transmuter.getTiles().size()));	
+	        	level.Grid.Cells[0][0].Transmuter.UpgradeTemp();
+	        	level.Grid.Cells[0][1].Transmuter.UpgradeTemp();
+	        	level.Grid.Cells[0][2].Transmuter.UpgradeTemp();
+	        	level.Grid.Cells[0][2].Transmuter.UpgradeNrj();	        	
+	        	Gdx.app.debug("0 informations",String.valueOf(level.Grid.Cells[0][0].Transmuter.getInformations()));	
+	        	Gdx.app.debug("1 informations",String.valueOf(level.Grid.Cells[0][1].Transmuter.getInformations()));	
+	        	Gdx.app.debug("2 informations",String.valueOf(level.Grid.Cells[0][2].Transmuter.getInformations()));	
 	        }
 	     });
 		if (Gdx.graphics.isFullscreen())
@@ -313,7 +356,7 @@ public class GameScreen implements Screen {
 					if (level.Grid.GetXY(coords.x,coords.y)!=null)
 					{
 						Gdx.app.debug(event.getListenerActor().toString(),"Screen coordinates translated to world coordinates: "+ "X: " + coords.x + " Y: " + coords.y);
-						if (level.Grid.GetCopper(coords.x,coords.y)==false)
+						if (level.Grid.getCopper(coords.x,coords.y)==false)
 							level.Grid.GetXY(coords.x,coords.y).Copper=true;
 						else
 							level.Grid.GetXY(coords.x,coords.y).Copper=false;
