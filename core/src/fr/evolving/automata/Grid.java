@@ -1,7 +1,13 @@
 package fr.evolving.automata;
 
 import java.io.Serializable;
+import java.util.HashMap;
+import java.util.Iterator;
+
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.math.Vector2;
+
+import fr.evolving.automata.Transmuter.CaseType;
 
 public class Grid implements Serializable{
 	public Cell[][] Cells;
@@ -18,7 +24,30 @@ public class Grid implements Serializable{
 		}
 	}
 	
-	public void tiling() {
+	public void tiling_transmuter() {
+		for (int x=0;x<this.sizeX;x++)
+		for (int y=0;y<this.sizeY;y++) {
+			Transmuter transmuter=getTransmuter(x,y);
+			if (transmuter!=null)
+			{
+				Iterator<Vector2> keySetIterator = transmuter.getTiles().keySet().iterator();
+				int MainTile=transmuter.getMainTile();
+				GetXY(x,y).Transmuter_calc=(1<<16)*transmuter.getRotation().ordinal()+MainTile++;
+				while(keySetIterator.hasNext()){
+					Vector2 key = keySetIterator.next();
+					GetXY(x+key.x,y+key.y).Transmuter_calc=(1<<16)*transmuter.getRotation().ordinal()+MainTile++;
+				}
+			}
+		}
+		for (int x=0;x<this.sizeX;x++)
+		for (int y=0;y<this.sizeY;y++)
+		{
+			if (GetXY(x, y).Transmuter_calc>0)
+				Gdx.app.debug("info",x+","+y+">"+GetXY(x, y).Transmuter_calc);
+		}
+		}
+	
+	public void tiling_copper() {
 			for (int x=0;x<this.sizeX;x++)
 			for (int y=0;y<this.sizeY;y++)
 			if (getCopper(x,y))
@@ -152,6 +181,30 @@ public class Grid implements Serializable{
 			return null;
 		else
 			return this.Cells[(int)X][(int)Y];
+	}
+	
+	public Transmuter getTransmuter(float X,float Y) {
+		Cell cell=GetXY(X,Y);
+		if (cell==null)
+			return null;
+		else	
+			return cell.Transmuter;
+	}
+	
+	public int getTransmutercalc(float X,float Y) {
+		Cell cell=GetXY(X,Y);
+		if (cell==null)
+			return 0;
+		else	
+			return cell.Transmuter_calc & 0xFFFF;
+	}
+	
+	public int getTransmuterrot(float X,float Y) {
+		Cell cell=GetXY(X,Y);
+		if (cell==null)
+			return 0;
+		else	
+			return cell.Transmuter_calc>>16;
 	}
 	
 	public boolean getCopper(float X,float Y) {

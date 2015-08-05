@@ -13,6 +13,7 @@ import com.badlogic.gdx.scenes.scene2d.Actor;
 
 import fr.evolving.assets.AssetLoader;
 import fr.evolving.automata.Level;
+import fr.evolving.automata.Transmuter;
 
 public class TouchMaptiles extends Actor{
 	
@@ -71,6 +72,12 @@ public void redraw(int tile) {
 				((TiledMapTileLayer)map.getLayers().get(0)).getCell((int)x, (int)y).setTile(AssetLoader.tileSet.getTile(61));
 			else
 				((TiledMapTileLayer)map.getLayers().get(0)).getCell((int)x, (int)y).setTile(AssetLoader.tileSet.getTile(tile));
+			if (level.Grid.getTransmutercalc(x, y)==0)
+				((TiledMapTileLayer)map.getLayers().get(2)).getCell((int)x, (int)y).setTile(null);
+			else {
+				((TiledMapTileLayer)map.getLayers().get(2)).getCell((int)x, (int)y).setTile(AssetLoader.tileSet.getTile(level.Grid.getTransmutercalc(x, y)));
+				((TiledMapTileLayer)map.getLayers().get(2)).getCell((int)x, (int)y).setRotation(level.Grid.getTransmuterrot(x, y));
+			}
 		}
 }
 

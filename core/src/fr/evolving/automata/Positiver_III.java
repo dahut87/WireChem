@@ -1,6 +1,7 @@
 package fr.evolving.automata;
 
 import java.util.HashMap;
+import java.util.Iterator;
 
 import com.badlogic.gdx.math.Vector2;
 
@@ -59,7 +60,7 @@ public class Positiver_III extends Transmuter {
 		this.TurnTemp=0f;
 		this.TurnRayon=0f;
 		this.TurnNrj=0f;
-		this.Id=1;
+		this.Id=2;
 		this.Activable=true;
 		this.ActivationLevel=0;
 		this.Tiles= new HashMap<Vector2,CaseType>();
@@ -136,8 +137,25 @@ public class Positiver_III extends Transmuter {
 		return thesize*100+((int)(deltaid/thesize))*thesize;
 	}
 	
+	public int[] getallTiles() {
+		int thesize=Tiles.size()+1;
+		int[] result;
+		result=new int[thesize];
+		for(int i=0;i<thesize;i++)
+			result[i]=thesize*100+this.Id*thesize+i;
+		return result;
+	}	
+	
 	public HashMap<Vector2,CaseType> getTiles() {
-		return this.Tiles;
+		HashMap<Vector2,CaseType> newTiles= new HashMap<Vector2,CaseType>();
+		Iterator<Vector2> keySetIterator = this.Tiles.keySet().iterator();
+		while(keySetIterator.hasNext()){
+    	  Vector2 key = keySetIterator.next();
+    	  double delta=key.len();
+    	  double alpha=key.angleRad()+this.getRotation().ordinal()*Math.PI/2;
+    	  newTiles.put(new Vector2((float)Math.round(delta*Math.cos(alpha)),(float)Math.round(delta*Math.sin(alpha))), this.Tiles.get(key));
+    	}
+    	return newTiles;
 	}
 	
 	public boolean isActivable() {

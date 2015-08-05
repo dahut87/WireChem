@@ -9,10 +9,13 @@ import com.badlogic.gdx.math.Vector2;
 public abstract class Transmuter {
 	public enum CaseType{Rien,Cuivre,Fibre,Tout,Nimporte};
 	public enum Class{Structure,Charge,Direction,Filtrage,Synthèse,Détection,Divers,Scénario};
+	public enum Angular{A00,A90,A180,A270};
 	protected Level level;
+	protected Angular Rotation;
 	
 	public Transmuter(Level level) {
 		this.level=level;
+		this.Rotation=Angular.A00;
 	}
 	
 	public String getName() {
@@ -168,17 +171,31 @@ public abstract class Transmuter {
 	public float getTurnNrj() {
 		return 0;
 	}
+	
+	public int[] getallTiles() {
+		return null;
+	}	
 
 	public String getInformations() {
-		Iterator<Vector2> keySetIterator = this.getTiles().keySet().iterator();
+		HashMap<Vector2,CaseType> tiles=this.getTiles();
+		Iterator<Vector2> keySetIterator = tiles.keySet().iterator();
 		String result;
-		result="**********************************\n"+"Name:"+this.getName()+"\nClass:"+this.getaClass()+" Id:"+this.getMainTile()+"\nPrice:"+this.getPrice()+" Tech:"+this.getTechnology()+"\nResearch:"+this.getResearch()+" Size:"+this.getSize()+"\nActivable:"+this.isActivable()+" Activation:"+this.getActivationLevel()+" Visible:"+this.isShowed()+"\nUpgradable:"+((this.isUpgradable())?this.getUpgrade().getName():this.isUpgradable())+" Unlockable:"+((this.isUnlockable())?this.getUnlock().getName():this.isUnlockable())+"\nUpgrade Cycle:"+this.getUpgradeCycle()+" upgrade:"+this.isUpgradableCycle()+"\nUpgrade Temperature:"+this.getUpgradeTemp()+" upgrade:"+this.isUpgradableTemp()+"\nUpgrade Nrj:"+this.getUpgradeNrj()+" upgrade:"+this.isUpgradableNrj()+"\nUpgrade Rayon:"+this.getUpgradeRayon()+" upgrade:"+this.isUpgradableRayon()+"\nTemperature /turn:"+this.getTurnTemp()+" Rayon /turn:"+this.getTurnRayon()+" Nrj /turn:"+this.getTurnNrj()+"\nTemperature /use:"+this.getUsedTemp()+" Rayon /use:"+this.getUsedRayon()+" Nrj /use:"+this.getUsedNrj()+"\n";
-    	while(keySetIterator.hasNext()){
+		result="**********************************\n"+"Name:"+this.getName()+"\nClass:"+this.getaClass()+" Id:"+this.getMainTile()+" Rotation:"+this.getRotation()+"\nPrice:"+this.getPrice()+" Tech:"+this.getTechnology()+"\nResearch:"+this.getResearch()+" Size:"+this.getSize()+"\nActivable:"+this.isActivable()+" Activation:"+this.getActivationLevel()+" Visible:"+this.isShowed()+"\nUpgradable:"+((this.isUpgradable())?this.getUpgrade().getName():this.isUpgradable())+" Unlockable:"+((this.isUnlockable())?this.getUnlock().getName():this.isUnlockable())+"\nUpgrade Cycle:"+this.getUpgradeCycle()+" upgrade:"+this.isUpgradableCycle()+"\nUpgrade Temperature:"+this.getUpgradeTemp()+" upgrade:"+this.isUpgradableTemp()+"\nUpgrade Nrj:"+this.getUpgradeNrj()+" upgrade:"+this.isUpgradableNrj()+"\nUpgrade Rayon:"+this.getUpgradeRayon()+" upgrade:"+this.isUpgradableRayon()+"\nTemperature /turn:"+this.getTurnTemp()+" Rayon /turn:"+this.getTurnRayon()+" Nrj /turn:"+this.getTurnNrj()+"\nTemperature /use:"+this.getUsedTemp()+" Rayon /use:"+this.getUsedRayon()+" Nrj /use:"+this.getUsedNrj()+"\n";
+		while(keySetIterator.hasNext()){
     	  Vector2 key = keySetIterator.next();
-    	  result+="coords:" + key + " type: " + this.getTiles().get(key);
+    	  result+="\ncoords:" + key.x+","+key.y + " type: " + tiles.get(key);
     	}
     	result+="\n**********************************";
 		return result;
 	
+	}
+	
+	
+	public Angular getRotation() {
+		return this.Rotation;
+	}
+	
+	public void setRotation(Angular rotation) {
+		this.Rotation=rotation;
 	}
 }

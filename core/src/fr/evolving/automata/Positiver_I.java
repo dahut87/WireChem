@@ -1,6 +1,7 @@
 package fr.evolving.automata;
 
 import java.util.HashMap;
+import java.util.Iterator;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Vector2;
@@ -34,6 +35,7 @@ public class Positiver_I extends Transmuter {
 	private static int Id;
 	private static boolean Activable;
 	private int ActivationLevel;
+	private int Rotation;
 	private static HashMap<Vector2,CaseType> Tiles;
 	
 	public Positiver_I(Level level) {
@@ -137,8 +139,25 @@ public class Positiver_I extends Transmuter {
 		return thesize*100+((int)(deltaid/thesize))*thesize;
 	}
 	
+	public int[] getallTiles() {
+		int thesize=Tiles.size()+1;
+		int[] result;
+		result=new int[thesize];
+		for(int i=0;i<thesize;i++)
+			result[i]=thesize*100+this.Id*thesize+i;
+		return result;
+	}	
+	
 	public HashMap<Vector2,CaseType> getTiles() {
-		return this.Tiles;
+		HashMap<Vector2,CaseType> newTiles= new HashMap<Vector2,CaseType>();
+		Iterator<Vector2> keySetIterator = this.Tiles.keySet().iterator();
+		while(keySetIterator.hasNext()){
+    	  Vector2 key = keySetIterator.next();
+    	  double delta=key.len();
+    	  double alpha=key.angleRad()+this.getRotation().ordinal()*Math.PI/2;
+    	  newTiles.put(new Vector2((float)Math.round(delta*Math.cos(alpha)),(float)Math.round(delta*Math.sin(alpha))), this.Tiles.get(key));
+    	}
+    	return newTiles;
 	}
 	
 	public boolean isActivable() {
@@ -254,4 +273,5 @@ public class Positiver_I extends Transmuter {
 	public Transmuter getUnlock() {
 		return this.Unlock;
 	}
+
 }

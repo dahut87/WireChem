@@ -29,6 +29,11 @@ import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.ScalingViewport;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 
+import fr.evolving.automata.Positiver_I;
+import fr.evolving.automata.Positiver_II;
+import fr.evolving.automata.Positiver_III;
+import fr.evolving.automata.Transmuter;
+
 public class AssetLoader {
 	public static Skin Skin_level;
 	public static TextureAtlas Atlas_level;
@@ -52,6 +57,7 @@ public class AssetLoader {
 	public static NinePatch full;
 	public static AssetManager manager;
 	public static TiledMapTileSet tileSet;
+	public static Transmuter[] allTransmuter;
 	
 	public static void addstyle(TextureAtlas Atlas_level,String Name) {
 		AtlasRegion AnAtlasRegion = Atlas_level.findRegion(Name);
@@ -124,6 +130,23 @@ public class AssetLoader {
               tileSet.putTile(i, atile);
               Gdx.app.debug("AssetLoader","Tiles N°:"+String.valueOf(i));
            }
+        }
+        allTransmuter=new Transmuter[3];
+        allTransmuter[0]=new Positiver_I(null);
+        allTransmuter[1]=new Positiver_II(null);
+        allTransmuter[2]=new Positiver_III(null);
+        for(int i=0;i<allTransmuter.length;i++) {
+        	int[] result;
+        	result=allTransmuter[i].getallTiles();
+        	for (int j=0;j<result.length;j++) {
+        		TextureRegion tileText = Atlas_level.findRegion("sprite"+result[j]);
+        		if (tileText != null) {
+        			StaticTiledMapTile atile= new StaticTiledMapTile(tileText);
+          	  		atile.setId(result[j]);
+          	  		tileSet.putTile(result[j], atile);
+          	  		Gdx.app.debug("AssetLoader","Tiles N°:"+String.valueOf(result[j]));
+        		}
+        	}
         }
 	}
 	

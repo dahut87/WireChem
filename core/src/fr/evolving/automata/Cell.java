@@ -8,15 +8,15 @@ public class Cell implements Serializable{
 	public boolean Copper;
 	public transient int Copper_calc;
 	public transient int Fiber_old;
-	public transient Sprite Sprite ;
 	public Transmuter Transmuter;
+	public transient int Transmuter_calc;
 	
 	public Cell() {
 		this.Fiber=0;
 		this.Copper=false;
 		this.Fiber_old=0;
-		this.Sprite=null;
 		this.Transmuter=null;
+		this.Transmuter_calc=0;
 	}
 	
 }
