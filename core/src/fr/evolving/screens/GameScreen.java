@@ -46,6 +46,7 @@ import fr.evolving.automata.Level;
 import fr.evolving.automata.Positiver_I;
 import fr.evolving.automata.Positiver_II;
 import fr.evolving.automata.Positiver_III;
+import fr.evolving.automata.Transmuter;
 import fr.evolving.automata.Transmuter.Angular;
 import fr.evolving.inputs.InputHandler;
 
@@ -67,6 +68,7 @@ public class GameScreen implements Screen {
 	String[] tocreate={"run","stop","speed","separator","move","zoomp","zoomm","separator","raz","save","levels","tree","exits","separator","screen","sound","tuto","settings","separator","stat"};
 	String[] tocreate2={"Structure","Charge","Direction","Selection","Création","Détection","Action","Scénario"};
 	public Actor selected;
+	public Transmuter selected_transmuter;
 	private ButtonLevel buttonlevel;
 	private Objectives objectives;
 	private TouchMaptiles map;
@@ -176,6 +178,7 @@ public class GameScreen implements Screen {
 	        	level.Grid.Cells[2][2].Transmuter.setRotation(Angular.A270);
 	        	level.Grid.Cells[7][2].Transmuter=new Positiver_III(level);
 	        	level.Grid.Cells[7][2].Transmuter.setRotation(Angular.A270);
+	        	Gdx.app.debug("7.2 A270 place main",String.valueOf(level.Grid.Cells[7][2].Transmuter.getPostitionMainTile(205)));
 	        	level.Grid.tiling_transmuter();
 	        	int[] result;
 	        	result=level.Grid.Cells[5][5].Transmuter.getallTiles();
@@ -184,6 +187,7 @@ public class GameScreen implements Screen {
 	        	result=level.Grid.Cells[8][8].Transmuter.getallTiles();
 	        	for (int i=0;i<result.length;i++)	        	
         			Gdx.app.debug("getalltiles 8,8",String.valueOf(result[i]));
+	        	Gdx.app.debug("istransmuter 203",AssetLoader.getTransmuter(201).getName());
 	        }
 	     });
 		if (Gdx.graphics.isFullscreen())
@@ -266,7 +270,12 @@ public class GameScreen implements Screen {
 	        	menu.clear();
 				map.fillempty(53);
 	        	selected=null;
-	        	menu.setMenu(0, 7, 10);
+	        	menu.setMenu(0, 7, 200);
+	        	menu.setMenu(1, 7, 201);
+	        	menu.setMenu(0, 6, 202);
+	        	menu.setMenu(1, 6, 203);
+	        	menu.setMenu(0, 5, 204);
+	        	menu.setMenu(1, 5, 205);
 	        }
 	     });
 		Barre2[2].addListener(new ClickListener(){
@@ -408,6 +417,17 @@ public class GameScreen implements Screen {
 						map.redraw(60);
 					}	
 				}
+				else if (selected.getName()=="transmuter")
+				{
+					Vector2 coords=map.screentoworld(x, y);
+					if (level.Grid.GetXY(coords.x,coords.y)!=null)
+					{
+						Gdx.app.debug(event.getListenerActor().toString(),"Screen coordinates translated to world coordinates: "+ "X: " + coords.x + " Y: " + coords.y);
+						level.Grid.GetXY(coords.x,coords.y).Transmuter=selected_transmuter;
+						level.Grid.tiling_transmuter();
+						map.redraw(60);
+					}	
+				}
 				return true;
 			 }
 		   });
@@ -466,9 +486,9 @@ public class GameScreen implements Screen {
 				Vector2 coords=menu.screentoworld(x,y);	
 				int tile=menu.getMenu((int)coords.x,(int)coords.y);
 				Gdx.app.debug(event.getListenerActor().toString(),"Coordonnées:"+x+"x"+y+" Coordonnées deprojettée:"+coords.x+"x"+coords.y+" tile:"+tile);
+				if (menuactor==null)
+					menuactor=new Actor();
 				if (tile!=54 && tile!=0) {
-					if (menuactor==null)
-						menuactor=new Actor();
 					Vector2 coords2=menu.worldtoscreen((int)coords.x,(int)coords.y);
 					menuactor.setBounds(coords2.x, coords2.y, 60, 60);
 					selected=menuactor;
@@ -480,6 +500,19 @@ public class GameScreen implements Screen {
 					selected.setName("fiber");
 				else if (tile==53)
 					selected.setName("blank");
+				else if (tile>99) {
+					Transmuter transmuter=AssetLoader.getTransmuter(tile);
+					if (transmuter!=null) {
+						Vector2 gotomain=transmuter.getPostitionMainTile(tile);
+						if (gotomain!=null) {
+							coords2=menu.worldtoscreen((int)(coords.x+gotomain.x),(int)(coords.y+gotomain.y));
+							menuactor.setPosition(coords2.x, coords2.y);
+							selected.setName("transmuter");
+							selected_transmuter=transmuter;
+							Gdx.app.debug(event.getListenerActor().toString(),"transmuter deplacement vers origine:"+String.valueOf(gotomain.x)+","+String.valueOf(gotomain.y)+" coords:"+coords2.x+"x"+coords2.y);
+						}
+					}
+				}
 				}
 				return false;
 			}

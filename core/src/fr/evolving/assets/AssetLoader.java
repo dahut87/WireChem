@@ -150,6 +150,14 @@ public class AssetLoader {
         }
 	}
 	
+	public static Transmuter getTransmuter(int Id) {
+		for(Transmuter transmuter:allTransmuter) {
+			if (transmuter.isTransmuter(Id))
+				return transmuter;
+		}
+		return null;
+	}
+	
 	public static int setpref() {
 		prefs = Gdx.app.getPreferences("WireWorld - Evolving Games");
 		if (prefs.contains("log"))

@@ -146,6 +146,26 @@ public class Positiver_III extends Transmuter {
 		return result;
 	}	
 	
+	public Vector2[] getallSize() {
+		HashMap<Vector2,CaseType> newTiles= new HashMap<Vector2,CaseType>();
+		Iterator<Vector2> keySetIterator = this.Tiles.keySet().iterator();
+		Vector2[] vector=new Vector2[2];
+		vector[0]=new Vector2();
+		vector[1]=new Vector2();
+		while(keySetIterator.hasNext()){
+    	  Vector2 key = keySetIterator.next();
+    	  double delta=key.len();
+    	  double alpha=key.angleRad()+this.getRotation().ordinal()*Math.PI/2;
+    	  float x=(float)Math.round(delta*Math.cos(alpha));
+    	  float y=(float)Math.round(delta*Math.sin(alpha));
+    	  vector[0].x=Math.min(vector[0].x, x);
+    	  vector[0].y=Math.min(vector[0].y, y);
+    	  vector[1].x=Math.max(vector[1].x, x);
+    	  vector[1].y=Math.max(vector[1].y, y); 
+    	}
+    	return vector;
+	}
+	
 	public HashMap<Vector2,CaseType> getTiles() {
 		HashMap<Vector2,CaseType> newTiles= new HashMap<Vector2,CaseType>();
 		Iterator<Vector2> keySetIterator = this.Tiles.keySet().iterator();

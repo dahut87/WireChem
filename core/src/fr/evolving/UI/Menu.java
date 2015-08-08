@@ -25,6 +25,7 @@ public class Menu extends Actor{
 	private float decy;	
 	private int size=32;
 	
+	
 public Menu(int tilesizex,int tilesizey) {
 	this.tilesizex=tilesizex;
 	this.tilesizey=tilesizey;	
