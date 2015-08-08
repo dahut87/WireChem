@@ -22,6 +22,10 @@ public abstract class Transmuter {
 		return "";
 	}
 	
+	public String getDesc() {
+		return "";
+	}
+	
 	public String getaClass() {
 		return "";
 	}

@@ -10,7 +10,7 @@ import fr.evolving.automata.Transmuter.CaseType;
 import fr.evolving.automata.Transmuter.Class;
 
 public class Positiver_I extends Transmuter {
-	private static String Name;
+	private static String Name,Desc;
 	private static Class theClass;
 	private static int Price;
 	private static int Technology;
@@ -40,7 +40,8 @@ public class Positiver_I extends Transmuter {
 	
 	public Positiver_I(Level level) {
 		super(level);
-		this.Name="Positiveur I";		
+		this.Name="Positiveur I";	
+		this.Desc="Positiveur de degré 1 avec...blabla avec...blabla avec avecave aveca vecavec avec avec avec avecavecavecavec avec avecavecavec avec avecavecavecavec avec";
 		this.theClass=Class.Charge;		
 		this.Price=50;
 		this.Technology=2;
@@ -71,6 +72,10 @@ public class Positiver_I extends Transmuter {
 	
 	public String getName() {
 		return this.Name;
+	}
+	
+	public String getDesc() {
+		return this.Desc;
 	}
 	
 	public String getaClass() {
