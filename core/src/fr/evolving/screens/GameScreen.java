@@ -245,6 +245,9 @@ public class GameScreen implements Screen {
 		        	selected=event.getListenerActor();
 					map.fillempty(53);
 		        	Gdx.app.debug(event.getListenerActor().toString(),"Barre:Selection dans la Barre bas");
+		        	if (this.getTapCount()>=2 && selected.getName()=="move") {
+		        		map.initzoom();
+		        	}
 		        }
 		     });
 		}
@@ -256,16 +259,16 @@ public class GameScreen implements Screen {
 	        	menu.clear();
 				map.fillempty(53);
 	        	selected=null;
-	        	menu.setMenu(0, 7, 71);
-	        	menu.setMenu(1, 7, 72);
-	        	menu.setMenu(2, 7, 73);
-	        	menu.setMenu(1, 5, 70);
-	        	menu.setMenu(0, 6, 74);
-	        	menu.setMenu(1, 6, 75);
-	        	menu.setMenu(2, 6, 76);
-	        	menu.setMenu(0, 5, 77);
-	        	menu.setMenu(2, 5, 78);
-	        	menu.setMenu(3, 3, 79);
+	        	menu.setMenuTile(0, 7, 71);
+	        	menu.setMenuTile(1, 7, 72);
+	        	menu.setMenuTile(2, 7, 73);
+	        	menu.setMenuTile(1, 5, 70);
+	        	menu.setMenuTile(0, 6, 74);
+	        	menu.setMenuTile(1, 6, 75);
+	        	menu.setMenuTile(2, 6, 76);
+	        	menu.setMenuTile(0, 5, 77);
+	        	menu.setMenuTile(2, 5, 78);
+	        	menu.setMenuTile(3, 3, 79);
 	        	Barre2[0].setChecked(true);
 	        }
 	     });
@@ -277,12 +280,9 @@ public class GameScreen implements Screen {
 	        	menu.clear();
 				map.fillempty(53);
 	        	selected=null;
-	        	menu.setMenu(0, 7, 200);
-	        	menu.setMenu(1, 7, 201);
-	        	menu.setMenu(0, 6, 202);
-	        	menu.setMenu(1, 6, 203);
-	        	menu.setMenu(0, 5, 204);
-	        	menu.setMenu(1, 5, 205);
+	        	menu.setMenuTransmuter(0,7,"Positiveur I",Angular.A00);
+	        	menu.setMenuTransmuter(0,6,"Positiveur II",Angular.A00);
+	        	menu.setMenuTransmuter(0,5,"Positiveur III",Angular.A00);
 	        }
 	     });
 		Barre2[2].addListener(new ClickListener(){
@@ -371,6 +371,8 @@ public class GameScreen implements Screen {
 		    public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
 				oldx=0;
 				oldy=0;
+				if (selected!=null)
+					Gdx.app.debug(event.getListenerActor().toString(),"Cliquage sur la map, mode:"+selected.getName());
 				if (selected==null)
 					;
 				else if (selected.getName()=="cleaner") 
@@ -384,6 +386,25 @@ public class GameScreen implements Screen {
 					level.Grid.tiling_copper();
 					level.Grid.tiling_transmuter();
 					map.redraw(60);
+					return false;
+				}
+				else if (selected.getName()=="infos") 
+				{
+					Vector2 coords=map.screentoworld(x, y);
+					if (level.Grid.GetXY(coords.x,coords.y)!=null)
+					{
+						if (level.Grid.GetXY(coords.x,coords.y).Copper)
+							Gdx.app.debug(getClass().getSimpleName(),"*** Présence de cuivre");
+						if (level.Grid.GetXY(coords.x,coords.y).Fiber>0)
+							Gdx.app.debug(getClass().getSimpleName(),"*** Présence de fibre");
+						if (level.Grid.GetXY(coords.x,coords.y).Transmuter_calc>0) {
+							Vector2 gotomain=AssetLoader.resolveTransmuterMain(level.Grid.GetXY(coords.x,coords.y).Transmuter_calc);
+							if (gotomain!=null) {
+								Gdx.app.debug(event.getListenerActor().toString(),"transmuter deplacement vers origine:"+String.valueOf(gotomain.x)+","+String.valueOf(gotomain.y)+" coords:"+(coords.x+gotomain.x)+"x"+(coords.y+gotomain.y));
+								Gdx.app.debug(event.getListenerActor().toString(),level.Grid.getTransmuter(coords.x+gotomain.x,coords.y+gotomain.y).getInformations());
+							}
+						}
+					}
 					return false;
 				}
 				else if (selected.getName()=="zoomp") 
@@ -454,6 +475,8 @@ public class GameScreen implements Screen {
 		map.addListener(new ClickListener(){
 			@Override
 		    public void touchDragged(InputEvent event, float x, float y, int pointer) {
+				if (selected!=null)
+					Gdx.app.debug(event.getListenerActor().toString(),"Drag sur la map, mode:"+selected.getName());
 				if (selected==null)
 					;
 				else if (selected.getName()=="move") {					
@@ -564,7 +587,7 @@ public class GameScreen implements Screen {
 			@Override
 		    public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
 				Vector2 coords=menu.screentoworld(x,y);	
-				int tile=menu.getMenu((int)coords.x,(int)coords.y);
+				int tile=menu.getMenuTile((int)coords.x,(int)coords.y);
 				Gdx.app.debug(event.getListenerActor().toString(),"Coordonnées:"+x+"x"+y+" Coordonnées deprojettée:"+coords.x+"x"+coords.y+" tile:"+tile);
 				if (menuactor==null)
 					menuactor=new Actor();

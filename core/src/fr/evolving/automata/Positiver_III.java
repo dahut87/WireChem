@@ -38,7 +38,7 @@ public class Positiver_III extends Transmuter {
 	
 	public Positiver_III(Level level) {
 		super(level);
-		this.Name="positiveur III";		
+		this.Name="Positiveur III";		
 		this.theClass=Class.Charge;		
 		this.Price=50;
 		this.Technology=2;

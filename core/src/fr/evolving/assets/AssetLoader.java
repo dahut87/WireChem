@@ -159,6 +159,14 @@ public class AssetLoader {
 		return null;
 	}
 	
+	public static Transmuter getTransmuter(String Name) {
+		for(Transmuter transmuter:allTransmuter) {
+			if (transmuter.isTransmuter(Name))
+				return transmuter;
+		}
+		return null;
+	}
+	
 	public static Vector2 resolveTransmuterMain(int Id) {
 		Transmuter transmuter=getTransmuter(Id);
 		if (transmuter!=null) 

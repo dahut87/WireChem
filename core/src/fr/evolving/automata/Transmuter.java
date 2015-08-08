@@ -65,6 +65,10 @@ public abstract class Transmuter {
 		return (FindMainTile(Id)==getMainTile());
 	}
 	
+	public boolean isTransmuter(String Name) {
+		return  Name.equals(this.getName());
+	}
+	
 	public Vector2 getPostitionMainTile(int Id) {
 		if (!isTransmuter(Id))
 			return null;
