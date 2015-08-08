@@ -26,6 +26,9 @@ public class Grid implements Serializable{
 	
 	public void tiling_transmuter() {
 		for (int x=0;x<this.sizeX;x++)
+		for (int y=0;y<this.sizeY;y++)
+			GetXY(x,y).Transmuter_calc=0;
+		for (int x=0;x<this.sizeX;x++)
 		for (int y=0;y<this.sizeY;y++) {
 			Transmuter transmuter=getTransmuter(x,y);
 			if (transmuter!=null)

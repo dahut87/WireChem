@@ -24,6 +24,7 @@ import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapTileSet;
 import com.badlogic.gdx.maps.tiled.tiles.StaticTiledMapTile;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.ScalingViewport;
@@ -122,7 +123,7 @@ public class AssetLoader {
 	    Gdx.app.debug("AssetLoader","Création des tiles...");		
         tileSet = new TiledMapTileSet();
         tileSet.setName("copper");
-        for (int i = 0; i < 70; i++) {   
+        for (int i = 0; i < 99; i++) {   
            TextureRegion tileText = Atlas_level.findRegion("sprite"+i);
            if (tileText != null) {
         	  StaticTiledMapTile atile= new StaticTiledMapTile(tileText);
@@ -156,6 +157,14 @@ public class AssetLoader {
 				return transmuter;
 		}
 		return null;
+	}
+	
+	public static Vector2 resolveTransmuterMain(int Id) {
+		Transmuter transmuter=getTransmuter(Id);
+		if (transmuter!=null) 
+			return transmuter.getPostitionMainTile(Id);
+		else
+			return null;
 	}
 	
 	public static int setpref() {

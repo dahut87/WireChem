@@ -65,8 +65,9 @@ public void clear()
 public void setMenu(int x,int y,int tile)
 {
 	Cell cell=((TiledMapTileLayer)map.getLayers().get(0)).getCell(x,y);
-	if (cell!=null)
+	if (cell!=null) {
 		cell.setTile(AssetLoader.tileSet.getTile(tile));
+	}
 }
 
 public int getMenu(int x,int y)

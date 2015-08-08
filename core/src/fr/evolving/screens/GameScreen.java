@@ -65,8 +65,7 @@ public class GameScreen implements Screen {
 	private ImageButton[] Barre;
 	private ImageTextButton cycle,temp,nrj,rayon,cout,tech;
 	private ImageTextButton[] Barre2;	
-	String[] tocreate={"run","stop","speed","separator","move","zoomp","zoomm","separator","raz","save","levels","tree","exits","separator","screen","sound","tuto","settings","separator","stat"};
-	String[] tocreate2={"Structure","Charge","Direction","Selection","Création","Détection","Action","Scénario"};
+	String[] tocreate={"run","stop","speed","separator","move","zoomp","zoomm","infos","separator","raz","save","levels","tree","exits","separator","screen","sound","tuto","settings","separator","stat"};
 	public Actor selected;
 	public Transmuter selected_transmuter;
 	private ButtonLevel buttonlevel;
@@ -114,17 +113,18 @@ public class GameScreen implements Screen {
 		Gdx.app.debug(getClass().getSimpleName(),"Création des barres");	
 		Barre=new ImageButton[tocreate.length];
 		int i=0;
+		Gdx.app.debug(getClass().getSimpleName(),"Barre bas:"+Barre.length+" elements");	
 		for (String tocreateitem: tocreate) {
 			Barre[i]= new ImageButton(AssetLoader.Skin_level,tocreateitem);
 			Barre[i++].setName(tocreateitem);
 		}
-		Barre2=new ImageTextButton[tocreate2.length];
-		i=0;
-		for (String tocreateitem: tocreate2) {
-			Barre2[i]= new ImageTextButton(tocreateitem,AssetLoader.Skin_level);
-			Barre2[i++].setName(tocreateitem);
+		Barre2=new ImageTextButton[Transmuter.Class.values().length];
+		Gdx.app.debug(getClass().getSimpleName(),"Menu:"+Barre2.length+" elements");	
+		for (i=0;i<Barre2.length;i++) {
+			Barre2[i]= new ImageTextButton(Transmuter.Class.values()[i].toString(),AssetLoader.Skin_level);
+			Barre2[i].setName(Transmuter.Class.values()[i].toString());
 		}
-		Barre[10].addListener(new ClickListener(){
+		Barre[11].addListener(new ClickListener(){
 	        @Override
 	        public void clicked(InputEvent event, float x, float y) {
 	        	Gdx.app.debug(event.getListenerActor().toString(),"Barre:Niveaux");
@@ -191,8 +191,8 @@ public class GameScreen implements Screen {
 	        }
 	     });
 		if (Gdx.graphics.isFullscreen())
-			Barre[14].getStyle().up =new TextureRegionDrawable(AssetLoader.Atlas_level.findRegion("windows"));
-		Barre[14].addListener(new ClickListener(){
+			Barre[15].getStyle().up =new TextureRegionDrawable(AssetLoader.Atlas_level.findRegion("windows"));
+		Barre[15].addListener(new ClickListener(){
 	        @Override
 	        public void clicked(InputEvent event, float x, float y) {
 	        	Gdx.app.debug(event.getListenerActor().toString(),"Barre:Ecran");
@@ -201,19 +201,19 @@ public class GameScreen implements Screen {
 	        	{
 	        		Gdx.app.debug(event.getListenerActor().toString(),"vers fenetre.");
 	        		Gdx.graphics.setDisplayMode(currentMode.width, currentMode.height, false);
-	        		Barre[14].getStyle().up =new TextureRegionDrawable(AssetLoader.Atlas_level.findRegion("screen"));
+	        		Barre[15].getStyle().up =new TextureRegionDrawable(AssetLoader.Atlas_level.findRegion("screen"));
 	        	}
 	        	else
 	        	{
 	        		Gdx.app.debug(event.getListenerActor().toString(),"vers plein ecran.");
 	        		Gdx.graphics.setDisplayMode(currentMode.width, currentMode.height, true);
-	        		Barre[14].getStyle().up =new TextureRegionDrawable(AssetLoader.Atlas_level.findRegion("windows"));
+	        		Barre[15].getStyle().up =new TextureRegionDrawable(AssetLoader.Atlas_level.findRegion("windows"));
 	        	}
 	        }
 	     });
 		if (AssetLoader.intro.getVolume()==0)
-			Barre[15].getStyle().up =new TextureRegionDrawable(AssetLoader.Atlas_level.findRegion("nosound"));
-		Barre[15].addListener(new ClickListener(){
+			Barre[16].getStyle().up =new TextureRegionDrawable(AssetLoader.Atlas_level.findRegion("nosound"));
+		Barre[16].addListener(new ClickListener(){
 	        @Override
 	        public void clicked(InputEvent event, float x, float y) {
 	        	Gdx.app.debug(event.getListenerActor().getName(),"Barre:Son");
@@ -221,24 +221,24 @@ public class GameScreen implements Screen {
 	        	{
 	        		Gdx.app.debug(event.getListenerActor().toString(),"arret son.");
 	        		AssetLoader.intro.setVolume(0f);
-	        		Barre[15].getStyle().up =new TextureRegionDrawable(AssetLoader.Atlas_level.findRegion("nosound"));
+	        		Barre[16].getStyle().up =new TextureRegionDrawable(AssetLoader.Atlas_level.findRegion("nosound"));
 	        	}
 	        	else
 	        	{
 	        		Gdx.app.debug(event.getListenerActor().toString(),"marche son.");
 	        		AssetLoader.intro.setVolume(1f);
-	        		Barre[15].getStyle().up =new TextureRegionDrawable(AssetLoader.Atlas_level.findRegion("sound"));
+	        		Barre[16].getStyle().up =new TextureRegionDrawable(AssetLoader.Atlas_level.findRegion("sound"));
 	        	}
 	        }
 	     });
-		Barre[12].addListener(new ClickListener(){
+		Barre[13].addListener(new ClickListener(){
 	        @Override
 	        public void clicked(InputEvent event, float x, float y) {
 	        	Gdx.app.debug(event.getListenerActor().toString(),"Barre:Quitter");
 	    		Gdx.app.exit();
 	        }
 	     });
-		for (i=4;i<7;i++) {
+		for (i=4;i<8;i++) {
 			Barre[i].addListener(new ClickListener(){
 		        @Override
 		        public void clicked(InputEvent event, float x, float y) {
@@ -256,9 +256,16 @@ public class GameScreen implements Screen {
 	        	menu.clear();
 				map.fillempty(53);
 	        	selected=null;
-	        	menu.setMenu(0, 7, 10);
-	        	menu.setMenu(1, 7, 61);
-	        	menu.setMenu(2, 7, 53);
+	        	menu.setMenu(0, 7, 71);
+	        	menu.setMenu(1, 7, 72);
+	        	menu.setMenu(2, 7, 73);
+	        	menu.setMenu(1, 5, 70);
+	        	menu.setMenu(0, 6, 74);
+	        	menu.setMenu(1, 6, 75);
+	        	menu.setMenu(2, 6, 76);
+	        	menu.setMenu(0, 5, 77);
+	        	menu.setMenu(2, 5, 78);
+	        	menu.setMenu(3, 3, 79);
 	        	Barre2[0].setChecked(true);
 	        }
 	     });
@@ -366,6 +373,19 @@ public class GameScreen implements Screen {
 				oldy=0;
 				if (selected==null)
 					;
+				else if (selected.getName()=="cleaner") 
+				{
+					for(x=0;x<level.Grid.sizeX;x++)
+						for(y=0;y<level.Grid.sizeY;y++) {
+							level.Grid.GetXY(x, y).Copper=false;
+							level.Grid.GetXY(x, y).Fiber=0;
+							level.Grid.GetXY(x, y).Transmuter=null;
+						}
+					level.Grid.tiling_copper();
+					level.Grid.tiling_transmuter();
+					map.redraw(60);
+					return false;
+				}
 				else if (selected.getName()=="zoomp") 
 				{
 					map.setZoom(0.9f);
@@ -378,7 +398,7 @@ public class GameScreen implements Screen {
 					map.setDec((AssetLoader.width/2-x)/2,(AssetLoader.height/2-y)/2);
 					return false;
 				}
-				else if (selected.getName()=="copper")
+				else if (selected.getName()=="copper-pen")
 				{
 					Vector2 coords=map.screentoworld(x, y);
 					if (level.Grid.GetXY(coords.x,coords.y)!=null)
@@ -392,7 +412,7 @@ public class GameScreen implements Screen {
 						map.redraw(60);
 					}	
 				}
-				else if (selected.getName()=="fiber")
+				else if (selected.getName()=="fiber-pen")
 				{
 					Vector2 coords=map.screentoworld(x, y);
 					if (level.Grid.GetXY(coords.x,coords.y)!=null)
@@ -444,7 +464,7 @@ public class GameScreen implements Screen {
 					oldx=x;
 					oldy=y;
 					}
-				else if (selected.getName()=="copper")
+				else if (selected.getName()=="copper-brush")
 				{
 					Vector2 coords=map.screentoworld(x, y);
 					if (level.Grid.GetXY(coords.x,coords.y)!=null)
@@ -455,7 +475,7 @@ public class GameScreen implements Screen {
 						map.redraw(60);
 					}	
 				}
-				else if (selected.getName()=="fiber")
+				else if (selected.getName()=="fiber-brush")
 				{
 					Vector2 coords=map.screentoworld(x, y);
 					if (level.Grid.GetXY(coords.x,coords.y)!=null)
@@ -464,6 +484,66 @@ public class GameScreen implements Screen {
 						level.Grid.GetXY(coords.x,coords.y).Fiber=1;
 						map.redraw(60);
 					}	
+				}
+				else if (selected.getName()=="copper-eraser")
+				{
+					Vector2 coords=map.screentoworld(x, y);
+					if (level.Grid.GetXY(coords.x,coords.y)!=null)
+					{
+						Gdx.app.debug(event.getListenerActor().toString(),"Screen coordinates translated to world coordinates: "+ "X: " + coords.x + " Y: " + coords.y);
+						level.Grid.GetXY(coords.x,coords.y).Copper=false;
+						level.Grid.tiling_copper();
+						map.redraw(60);
+					}	
+				}
+				else if (selected.getName()=="fiber-eraser")
+				{
+					Vector2 coords=map.screentoworld(x, y);
+					if (level.Grid.GetXY(coords.x,coords.y)!=null)
+					{
+						Gdx.app.debug(event.getListenerActor().toString(),"Screen coordinates translated to world coordinates: "+ "X: " + coords.x + " Y: " + coords.y);
+						level.Grid.GetXY(coords.x,coords.y).Fiber=0;
+						map.redraw(60);
+					}	
+				}
+				else if (selected.getName()=="transmuter-eraser")
+				{
+					Vector2 coords=map.screentoworld(x, y);
+					if (level.Grid.GetXY(coords.x,coords.y)!=null)
+					{
+						if (level.Grid.GetXY(coords.x,coords.y).Transmuter_calc!=0)
+						{
+							Gdx.app.debug(event.getListenerActor().toString(),"Screen coordinates translated to world coordinates: "+ "X: " + coords.x + " Y: " + coords.y);
+							Vector2 gotomain=AssetLoader.resolveTransmuterMain(level.Grid.GetXY(coords.x,coords.y).Transmuter_calc);
+							if (gotomain!=null) {
+								level.Grid.GetXY(coords.x+gotomain.x,coords.y+gotomain.y).Transmuter=null;
+								Gdx.app.debug(event.getListenerActor().toString(),"transmuter deplacement vers origine:"+String.valueOf(gotomain.x)+","+String.valueOf(gotomain.y)+" coords:"+(coords.x+gotomain.x)+"x"+(coords.y+gotomain.y));
+							}
+							level.Grid.tiling_transmuter();
+							map.redraw(53);
+						}
+					}
+				}
+				else if (selected.getName()=="all-eraser")
+				{
+					Vector2 coords=map.screentoworld(x, y);
+					if (level.Grid.GetXY(coords.x,coords.y)!=null)
+					{
+						if (level.Grid.GetXY(coords.x,coords.y).Transmuter_calc!=0)
+						{
+							Gdx.app.debug(event.getListenerActor().toString(),"Screen coordinates translated to world coordinates: "+ "X: " + coords.x + " Y: " + coords.y);
+							Vector2 gotomain=AssetLoader.resolveTransmuterMain(level.Grid.GetXY(coords.x,coords.y).Transmuter_calc);
+							if (gotomain!=null) {
+								level.Grid.GetXY(coords.x+gotomain.x,coords.y+gotomain.y).Transmuter=null;
+								Gdx.app.debug(event.getListenerActor().toString(),"transmuter deplacement vers origine:"+String.valueOf(gotomain.x)+","+String.valueOf(gotomain.y)+" coords:"+(coords.x+gotomain.x)+"x"+(coords.y+gotomain.y));
+							}
+							level.Grid.tiling_transmuter();
+						}
+						level.Grid.GetXY(coords.x,coords.y).Fiber=0;
+						level.Grid.GetXY(coords.x,coords.y).Copper=false;
+						level.Grid.tiling_copper();
+						map.redraw(60);
+					}
 				}
 				else if (selected.getName()=="blank")
 				{
@@ -492,13 +572,26 @@ public class GameScreen implements Screen {
 					Vector2 coords2=menu.worldtoscreen((int)coords.x,(int)coords.y);
 					menuactor.setBounds(coords2.x, coords2.y, 60, 60);
 					selected=menuactor;
-				if (tile==10 || tile==61 || tile==53)
 					map.fillempty(60);
-				if (tile==10)
-					selected.setName("copper");
-				else if (tile==61)
-					selected.setName("fiber");
-				else if (tile==53)
+				if (tile==71)
+					selected.setName("copper-pen");
+				if (tile==72)
+					selected.setName("copper-brush");
+				if (tile==73)
+					selected.setName("copper-eraser");
+				if (tile==74)
+					selected.setName("fiber-pen");
+				if (tile==75)
+					selected.setName("fiber-brush");
+				if (tile==76)
+					selected.setName("fiber-eraser");
+				if (tile==77)
+					selected.setName("transmuter-eraser");
+				if (tile==78)
+					selected.setName("all-eraser");
+				if (tile==79)
+					selected.setName("cleaner");
+				else if (tile==70)
 					selected.setName("blank");
 				else if (tile>99) {
 					Transmuter transmuter=AssetLoader.getTransmuter(tile);
@@ -539,9 +632,9 @@ public class GameScreen implements Screen {
 	@Override
 	public void show() {
 		Gdx.app.log("*****","Affichage du niveau.");
-		for (int i=0;i<tocreate2.length;i++) 
+		for (int i=0;i<Barre2.length;i++) 
 			table2.addActor(Barre2[i]);
-		for (int i=0;i<tocreate.length;i++) 
+		for (int i=0;i<Barre.length;i++) 
 			table.addActor(Barre[i]);
 		stage2.addActor(map);
 		stage.addActor(objectives);

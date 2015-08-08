@@ -132,8 +132,8 @@ public class Positiver_III extends Transmuter {
 	}
 	
 	public int FindMainTile(int Id) {
-		int thesize=Id/100;
-		int deltaid=Id-thesize*100;
+		int thesize=(Id & 0xFFFF)/100;
+		int deltaid=(Id & 0xFFFF)-thesize*100;
 		return thesize*100+((int)(deltaid/thesize))*thesize;
 	}
 	

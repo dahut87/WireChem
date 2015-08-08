@@ -71,14 +71,19 @@ public abstract class Transmuter {
 		HashMap<Vector2,CaseType> tiles=this.getTiles();
 		Iterator<Vector2> keySetIterator = tiles.keySet().iterator();
 		int Idrec=this.getMainTile();
-		if (Id==Idrec)
+		if ((Id & 0xFFFF)==Idrec)
 			return new Vector2();
+		Transmuter.Angular oldrotation=this.getRotation();
+		this.setRotation(Transmuter.Angular.values()[Id>>16]);
 		while(keySetIterator.hasNext()){
     	  Vector2 key = keySetIterator.next();
     	  Idrec++;
-    	  if (Id==Idrec)
-    		  return new Vector2().sub(key);
+    	  if ((Id & 0xFFFF)==Idrec) {
+    		this.setRotation(oldrotation);
+  		    return new Vector2().sub(key);
+    	  }
     	}
+		this.setRotation(oldrotation);
 		return null;
 	}
 	
@@ -221,7 +226,6 @@ public abstract class Transmuter {
 		return result;
 	
 	}
-	
 	
 	public Angular getRotation() {
 		return this.Rotation;
