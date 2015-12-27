@@ -1,5 +1,6 @@
 package fr.evolving.screens;
 
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -21,6 +22,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.HorizontalGroup;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
@@ -49,6 +51,7 @@ import fr.evolving.automata.Positiver_II;
 import fr.evolving.automata.Positiver_III;
 import fr.evolving.automata.Transmuter;
 import fr.evolving.automata.Transmuter.Angular;
+import fr.evolving.automata.Transmuter.CaseType;
 import fr.evolving.inputs.InputHandler;
 
 public class GameScreen implements Screen {
@@ -368,7 +371,36 @@ public class GameScreen implements Screen {
 		Gdx.app.debug(getClass().getSimpleName(),"Création d'une tilemap");
 		map=new TouchMaptiles(level,128,128);
 		map.setBounds(0, 0, AssetLoader.width, AssetLoader.height);
-		map.addListener(new ClickListener(){
+		map.addListener(new InputListener(){
+			@Override
+			public boolean mouseMoved(InputEvent event,float x,float y) {
+				if (selected==null)
+					;
+				else if (selected.getName()=="transmuter") 
+				{
+					Vector2 coords=map.screentoworld(x, y);
+					if (level.Grid.GetXY(coords.x,coords.y)!=null)
+					{
+						Gdx.app.debug(event.getListenerActor().toString(),"Screen coordinates translated to world coordinates: "+ "X: " + coords.x + " Y: " + coords.y);
+						map.tempclear();
+						HashMap<Vector2,CaseType> tiles=selected_transmuter.getTiles();
+						Iterator<Vector2> keySetIterator = selected_transmuter.getTiles().keySet().iterator();
+						int MainTile=selected_transmuter.getMainTile();
+						int color=64;
+						if (level.Grid.getCopper(coords.x,coords.y) && level.Grid.getTransmutercalc(coords.x,coords.y)==0)
+							color=63;
+						map.tempdraw(coords.x, coords.y, MainTile, selected_transmuter.getRotation().ordinal(),color);
+						while(keySetIterator.hasNext()){
+							Vector2 key = keySetIterator.next();
+							color=64;
+							if (((!level.Grid.GetFiber(coords.x+key.x, coords.y+key.y) &&  !level.Grid.getCopper(coords.x+key.x, coords.y+key.y) && tiles.get(key)==CaseType.Rien) || (level.Grid.GetFiber(coords.x+key.x, coords.y+key.y) &&  level.Grid.getCopper(coords.x+key.x, coords.y+key.y) && tiles.get(key)==CaseType.Tout) || (level.Grid.GetFiber(coords.x+key.x, coords.y+key.y) && !level.Grid.getCopper(coords.x+key.x, coords.y+key.y) && tiles.get(key)==CaseType.Fibre) || (level.Grid.getCopper(coords.x+key.x, coords.y+key.y) && !level.Grid.GetFiber(coords.x+key.x, coords.y+key.y) && tiles.get(key)==CaseType.Cuivre)) && (level.Grid.getTransmutercalc(coords.x+key.x, coords.y+key.y)==0))
+								color=63;
+							map.tempdraw(coords.x+key.x, coords.y+key.y, ++MainTile, selected_transmuter.getRotation().ordinal(),color);
+						}
+					}	
+				}
+				return true;
+			}
 			@Override
 		    public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
 				oldx=0;
@@ -466,12 +498,66 @@ public class GameScreen implements Screen {
 				}
 				else if (selected.getName()=="transmuter")
 				{
+					if (button==1)
+					{
+						Vector2 coords=map.screentoworld(x, y);
+						if (level.Grid.GetXY(coords.x,coords.y)!=null)
+						{
+							Gdx.app.debug(event.getListenerActor().toString(),"Screen coordinates translated to world coordinates: "+ "X: " + coords.x + " Y: " + coords.y);
+							Angular angle=selected_transmuter.getRotation();
+							if (angle==Angular.A00)
+								selected_transmuter.setRotation(Angular.A90);
+							else if (angle==Angular.A90)
+								selected_transmuter.setRotation(Angular.A180);
+							else if (angle==Angular.A180)
+								selected_transmuter.setRotation(Angular.A270);
+							else if (angle==Angular.A270)
+								selected_transmuter.setRotation(Angular.A00);
+							map.tempclear();
+							HashMap<Vector2,CaseType> tiles=selected_transmuter.getTiles();
+							Iterator<Vector2> keySetIterator = selected_transmuter.getTiles().keySet().iterator();
+							int MainTile=selected_transmuter.getMainTile();
+							int color=64;
+							if (level.Grid.getCopper(coords.x,coords.y) && level.Grid.getTransmutercalc(coords.x,coords.y)==0)
+								color=63;
+							map.tempdraw(coords.x, coords.y, MainTile, selected_transmuter.getRotation().ordinal(),color);
+							while(keySetIterator.hasNext()){
+								Vector2 key = keySetIterator.next();
+								color=64;
+								if (((!level.Grid.GetFiber(coords.x+key.x, coords.y+key.y) &&  !level.Grid.getCopper(coords.x+key.x, coords.y+key.y) && tiles.get(key)==CaseType.Rien) || (level.Grid.GetFiber(coords.x+key.x, coords.y+key.y) &&  level.Grid.getCopper(coords.x+key.x, coords.y+key.y) && tiles.get(key)==CaseType.Tout) || (level.Grid.GetFiber(coords.x+key.x, coords.y+key.y) && !level.Grid.getCopper(coords.x+key.x, coords.y+key.y) && tiles.get(key)==CaseType.Fibre) || (level.Grid.getCopper(coords.x+key.x, coords.y+key.y) && !level.Grid.GetFiber(coords.x+key.x, coords.y+key.y) && tiles.get(key)==CaseType.Cuivre)) && (level.Grid.getTransmutercalc(coords.x+key.x, coords.y+key.y)==0))
+									color=63;
+								map.tempdraw(coords.x+key.x, coords.y+key.y, ++MainTile, selected_transmuter.getRotation().ordinal(),color);
+							}
+						}
+						return true;
+					}
 					Vector2 coords=map.screentoworld(x, y);
 					if (level.Grid.GetXY(coords.x,coords.y)!=null)
 					{
 						Gdx.app.debug(event.getListenerActor().toString(),"Screen coordinates translated to world coordinates: "+ "X: " + coords.x + " Y: " + coords.y);
-						level.Grid.GetXY(coords.x,coords.y).Transmuter=selected_transmuter;
+						level.Grid.GetXY(coords.x,coords.y).Transmuter=(Transmuter) selected_transmuter.clone();
 						level.Grid.tiling_transmuter();
+						map.redraw(60);
+					}	
+				}
+				else if (selected.getName()=="copper-brush")
+				{
+					Vector2 coords=map.screentoworld(x, y);
+					if (level.Grid.GetXY(coords.x,coords.y)!=null)
+					{
+						Gdx.app.debug(event.getListenerActor().toString(),"Screen coordinates translated to world coordinates: "+ "X: " + coords.x + " Y: " + coords.y);
+						level.Grid.GetXY(coords.x,coords.y).Copper=true;
+						level.Grid.tiling_copper();
+						map.redraw(60);
+					}	
+				}
+				else if (selected.getName()=="fiber-brush")
+				{
+					Vector2 coords=map.screentoworld(x, y);
+					if (level.Grid.GetXY(coords.x,coords.y)!=null)
+					{
+						Gdx.app.debug(event.getListenerActor().toString(),"Screen coordinates translated to world coordinates: "+ "X: " + coords.x + " Y: " + coords.y);
+						level.Grid.GetXY(coords.x,coords.y).Fiber=1;
 						map.redraw(60);
 					}	
 				}
@@ -631,7 +717,7 @@ public class GameScreen implements Screen {
 							coords2=menu.worldtoscreen((int)(coords.x+gotomain.x),(int)(coords.y+gotomain.y));
 							menuactor.setPosition(coords2.x, coords2.y);
 							selected.setName("transmuter");
-							selected_transmuter=transmuter;
+							selected_transmuter=(Transmuter) transmuter.clone();
 							Gdx.app.debug(event.getListenerActor().toString(),"transmuter deplacement vers origine:"+String.valueOf(gotomain.x)+","+String.valueOf(gotomain.y)+" coords:"+coords2.x+"x"+coords2.y);
 						}
 					}

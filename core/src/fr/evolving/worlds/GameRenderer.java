@@ -47,8 +47,8 @@ public class GameRenderer {
 			batcher.begin();
 			batcher.setColor(0.25f, 0.25f, 0.25f, 1f);
 			batcher.draw(AssetLoader.Atlas_level.findRegion("barrehaut"),0.0f,AssetLoader.height-198.0f,1920.0f,200.0f);
-			batcher.draw(AssetLoader.Atlas_level.findRegion("barrebas"),0.0f,0.0f,1920.0f,170.0f);
 			batcher.draw(AssetLoader.Atlas_level.findRegion("barrecentre"),1480f,AssetLoader.height-785.0f,590f,530.0f);
+			batcher.draw(AssetLoader.Atlas_level.findRegion("barrebas"),0.0f,0.0f,1920.0f,170.0f);
 			if (GameScreen.unroll)
 				batcher.draw(AssetLoader.Atlas_level.findRegion("barrecentre2"),1180f,AssetLoader.height-1000.0f,880f,386.0f);
 			batcher.end();

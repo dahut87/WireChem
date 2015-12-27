@@ -1,6 +1,7 @@
 package fr.evolving.UI;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.maps.MapLayers;
@@ -14,6 +15,7 @@ import com.badlogic.gdx.scenes.scene2d.Actor;
 import fr.evolving.assets.AssetLoader;
 import fr.evolving.automata.Level;
 import fr.evolving.automata.Transmuter;
+import fr.evolving.automata.Transmuter.Angular;
 
 public class TouchMaptiles extends Actor{
 	
@@ -32,7 +34,7 @@ public TouchMaptiles(Level level,int sizex,int sizey) {
 	map=new TiledMap();
     map.getTileSets().addTileSet(AssetLoader.tileSet);
     MapLayers layers = map.getLayers();
-    for (int i = 0; i < 3; i++) {
+    for (int i = 0; i < 5; i++) {
     	TiledMapTileLayer layer = new TiledMapTileLayer(level.Grid.sizeX, level.Grid.sizeY, sizex, sizey);
     	for (int x = 0; x < layer.getWidth();x++) {
     		for (int y = 0; y < layer.getHeight(); y++) {
@@ -44,6 +46,7 @@ public TouchMaptiles(Level level,int sizex,int sizey) {
     	}
     	layers.add(layer);
     }
+    layers.get(3).setOpacity(0.9f);
     MapRenderer = new OrthogonalTiledMapRenderer(map,1/128.0f);
     camera = new OrthographicCamera();
     initzoom();
@@ -59,6 +62,26 @@ public Vector2 screentoworldsize(float x, float y) {
 	x=((x/AssetLoader.width*camera.viewportWidth));
 	y=((y/AssetLoader.height*camera.viewportHeight));
 	return new Vector2(x,y);
+}
+
+public void tempdraw(float x,float y, int tile, int rotation, int surtile)
+{
+	Cell cell=((TiledMapTileLayer)map.getLayers().get(3)).getCell((int)x, (int)y);
+	if (cell!=null)
+	{
+		((TiledMapTileLayer)map.getLayers().get(4)).getCell((int)x, (int)y).setTile(AssetLoader.tileSet.getTile(tile));
+		((TiledMapTileLayer)map.getLayers().get(4)).getCell((int)x, (int)y).setRotation(rotation);
+		((TiledMapTileLayer)map.getLayers().get(3)).getCell((int)x, (int)y).setTile(AssetLoader.tileSet.getTile(surtile));
+	}
+}
+
+public void tempclear()
+{
+	for (int x=0;x<level.Grid.sizeX;x++)
+		for (int y=0;y<level.Grid.sizeY;y++) {
+			((TiledMapTileLayer)map.getLayers().get(3)).getCell((int)x, (int)y).setTile(null);
+			((TiledMapTileLayer)map.getLayers().get(4)).getCell((int)x, (int)y).setTile(null);
+		}
 }
 
 public void redraw(int tile) {
@@ -80,6 +103,9 @@ public void redraw(int tile) {
 				((TiledMapTileLayer)map.getLayers().get(2)).getCell((int)x, (int)y).setRotation(level.Grid.getTransmuterrot(x, y));
 			}
 		}
+	((TiledMapTileLayer)map.getLayers().get(0)).getCell((int)0, (int)0).setTile(AssetLoader.tileSet.getTile(1010));
+	((TiledMapTileLayer)map.getLayers().get(0)).getCell((int)1, (int)0).setTile(AssetLoader.tileSet.getTile(1010));
+	((TiledMapTileLayer)map.getLayers().get(0)).getCell((int)2, (int)0).setTile(AssetLoader.tileSet.getTile(1010));
 }
 
 public void initzoom() {

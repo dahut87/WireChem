@@ -23,9 +23,11 @@ import com.badlogic.gdx.graphics.Texture.TextureWrap;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapTileSet;
+import com.badlogic.gdx.maps.tiled.tiles.AnimatedTiledMapTile;
 import com.badlogic.gdx.maps.tiled.tiles.StaticTiledMapTile;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.ScalingViewport;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
@@ -122,33 +124,43 @@ public class AssetLoader {
 		Typenames=new String[]{"E-","e-","Ph","e0","E0","e+","E+","K","L","M","N","n","p"};
 	    Gdx.app.debug("AssetLoader","Création des tiles...");		
         tileSet = new TiledMapTileSet();
-        tileSet.setName("copper");
-        for (int i = 0; i < 99; i++) {   
-           TextureRegion tileText = Atlas_level.findRegion("sprite"+i);
-           if (tileText != null) {
-        	  StaticTiledMapTile atile= new StaticTiledMapTile(tileText);
-        	  atile.setId(i);
-              tileSet.putTile(i, atile);
-              Gdx.app.debug("AssetLoader","Tiles N°:"+String.valueOf(i));
-           }
+        Array<TextureAtlas.AtlasRegion> allregions=Atlas_level.getRegions();
+        for (int i=0;i<allregions.size;i++) {
+        	if (allregions.get(i).name.startsWith("sprite")) {
+        		if (allregions.get(i).name.contains("#"))
+        		{
+        			String[] name=allregions.get(i).name.split("_");
+        			if (name[0].contains("sprite"))
+        			{
+        				int id=Integer.parseInt(name[1].split("#")[0]);
+        				if (tileSet.getTile(1000+id)==null) {
+            				Gdx.app.debug("AssetLoader","Animated Tiles N°:"+String.valueOf(id+1000));
+        					int maxid=0;
+        					for(int j=1;Atlas_level.findRegion("sprite_"+id+"#"+j)!=null;j++)
+        						maxid=j;
+        					Array<StaticTiledMapTile> frameTiles=new Array<StaticTiledMapTile>(maxid);
+        					for(int j=1;j<=maxid;j++)
+        						frameTiles.add(new StaticTiledMapTile((Atlas_level.findRegion("sprite_"+id+"#"+j))));
+        					AnimatedTiledMapTile atile=new AnimatedTiledMapTile(0.15f,frameTiles);
+        					Gdx.app.debug("AssetLoader","Taille:"+String.valueOf(frameTiles.size));
+        					atile.setId(1000+id);
+        	           	  	tileSet.putTile(1000+id, atile);
+        				}      				
+        			}
+        		}
+        		else
+        		{
+        		StaticTiledMapTile atile= new StaticTiledMapTile(allregions.get(i));
+           	  	atile.setId(allregions.get(i).index);
+           	  	tileSet.putTile(allregions.get(i).index, atile);
+                Gdx.app.debug("AssetLoader","Tiles N°:"+String.valueOf(allregions.get(i).index));
+        		}
+        	}
         }
         allTransmuter=new Transmuter[3];
         allTransmuter[0]=new Positiver_I(null);
         allTransmuter[1]=new Positiver_II(null);
         allTransmuter[2]=new Positiver_III(null);
-        for(int i=0;i<allTransmuter.length;i++) {
-        	int[] result;
-        	result=allTransmuter[i].getallTiles();
-        	for (int j=0;j<result.length;j++) {
-        		TextureRegion tileText = Atlas_level.findRegion("sprite"+result[j]);
-        		if (tileText != null) {
-        			StaticTiledMapTile atile= new StaticTiledMapTile(tileText);
-          	  		atile.setId(result[j]);
-          	  		tileSet.putTile(result[j], atile);
-          	  		Gdx.app.debug("AssetLoader","Tiles N°:"+String.valueOf(result[j]));
-        		}
-        	}
-        }
 	}
 	
 	public static Transmuter getTransmuter(int Id) {
