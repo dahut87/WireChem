@@ -71,7 +71,7 @@ public void tempdraw(float x,float y, int tile, int rotation, int surtile)
 	{
 		((TiledMapTileLayer)map.getLayers().get(4)).getCell((int)x, (int)y).setTile(AssetLoader.tileSet.getTile(tile));
 		((TiledMapTileLayer)map.getLayers().get(4)).getCell((int)x, (int)y).setRotation(rotation);
-		((TiledMapTileLayer)map.getLayers().get(3)).getCell((int)x, (int)y).setTile(AssetLoader.tileSet.getTile(surtile));
+		if (surtile!=0) ((TiledMapTileLayer)map.getLayers().get(3)).getCell((int)x, (int)y).setTile(AssetLoader.tileSet.getTile(surtile));
 	}
 }
 

@@ -1,5 +1,7 @@
 package fr.evolving.screens;
 
+import java.lang.reflect.Method;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Timer;
@@ -80,8 +82,8 @@ public class GameScreen implements Screen {
 	private float oldx,oldy;
 	private Label fpsLabel,info_nom;
 	private TextArea info_desc,info_up_nrj_val,info_up_temp_val,info_up_rayon_val,info_up_cycle_val;
-	public boolean unroll;
-
+	public boolean unroll,mapexit;
+	public enum calling{mouseover,mouseclick,mousedrag,mousex2click,mousescroll};
 	
 	// This is the constructor, not the class declaration
 	public GameScreen(Level alevel) {
@@ -371,313 +373,39 @@ public class GameScreen implements Screen {
 		Gdx.app.debug(getClass().getSimpleName(),"Création d'une tilemap");
 		map=new TouchMaptiles(level,128,128);
 		map.setBounds(0, 0, AssetLoader.width, AssetLoader.height);
-		map.addListener(new InputListener(){
-			@Override
-			public boolean mouseMoved(InputEvent event,float x,float y) {
-				if (selected==null)
-					;
-				else if (selected.getName()=="transmuter") 
-				{
-					Vector2 coords=map.screentoworld(x, y);
-					if (level.Grid.GetXY(coords.x,coords.y)!=null)
-					{
-						Gdx.app.debug(event.getListenerActor().toString(),"Screen coordinates translated to world coordinates: "+ "X: " + coords.x + " Y: " + coords.y);
-						map.tempclear();
-						HashMap<Vector2,CaseType> tiles=selected_transmuter.getTiles();
-						Iterator<Vector2> keySetIterator = selected_transmuter.getTiles().keySet().iterator();
-						int MainTile=selected_transmuter.getMainTile();
-						int color=64;
-						if (level.Grid.getCopper(coords.x,coords.y) && level.Grid.getTransmutercalc(coords.x,coords.y)==0)
-							color=63;
-						map.tempdraw(coords.x, coords.y, MainTile, selected_transmuter.getRotation().ordinal(),color);
-						while(keySetIterator.hasNext()){
-							Vector2 key = keySetIterator.next();
-							color=64;
-							if (((!level.Grid.GetFiber(coords.x+key.x, coords.y+key.y) &&  !level.Grid.getCopper(coords.x+key.x, coords.y+key.y) && tiles.get(key)==CaseType.Rien) || (level.Grid.GetFiber(coords.x+key.x, coords.y+key.y) &&  level.Grid.getCopper(coords.x+key.x, coords.y+key.y) && tiles.get(key)==CaseType.Tout) || (level.Grid.GetFiber(coords.x+key.x, coords.y+key.y) && !level.Grid.getCopper(coords.x+key.x, coords.y+key.y) && tiles.get(key)==CaseType.Fibre) || (level.Grid.getCopper(coords.x+key.x, coords.y+key.y) && !level.Grid.GetFiber(coords.x+key.x, coords.y+key.y) && tiles.get(key)==CaseType.Cuivre)) && (level.Grid.getTransmutercalc(coords.x+key.x, coords.y+key.y)==0))
-								color=63;
-							map.tempdraw(coords.x+key.x, coords.y+key.y, ++MainTile, selected_transmuter.getRotation().ordinal(),color);
-						}
-					}	
-				}
-				return true;
-			}
-			@Override
-		    public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-				oldx=0;
-				oldy=0;
-				if (selected!=null)
-					Gdx.app.debug(event.getListenerActor().toString(),"Cliquage sur la map, mode:"+selected.getName());
-				if (selected==null)
-					;
-				else if (selected.getName()=="cleaner") 
-				{
-					for(x=0;x<level.Grid.sizeX;x++)
-						for(y=0;y<level.Grid.sizeY;y++) {
-							level.Grid.GetXY(x, y).Copper=false;
-							level.Grid.GetXY(x, y).Fiber=0;
-							level.Grid.GetXY(x, y).Transmuter=null;
-						}
-					level.Grid.tiling_copper();
-					level.Grid.tiling_transmuter();
-					map.redraw(60);
-					return false;
-				}
-				else if (selected.getName()=="infos") 
-				{
-					Vector2 coords=map.screentoworld(x, y);
-					if (level.Grid.GetXY(coords.x,coords.y)!=null)
-					{
-			        	Gdx.app.debug(event.getListenerActor().toString(),"Etat extension:"+unroll);
-						if (level.Grid.GetXY(coords.x,coords.y).Copper)
-							Gdx.app.debug(getClass().getSimpleName(),"*** Présence de cuivre");
-						if (level.Grid.GetXY(coords.x,coords.y).Fiber>0)
-							Gdx.app.debug(getClass().getSimpleName(),"*** Présence de fibre");
-						if (level.Grid.GetXY(coords.x,coords.y).Transmuter_calc>0) {
-							Vector2 gotomain=AssetLoader.resolveTransmuterMain(level.Grid.GetXY(coords.x,coords.y).Transmuter_calc);
-							if (gotomain!=null) {
-								Gdx.app.debug(event.getListenerActor().toString(),"transmuter deplacement vers origine:"+String.valueOf(gotomain.x)+","+String.valueOf(gotomain.y)+" coords:"+(coords.x+gotomain.x)+"x"+(coords.y+gotomain.y));
-								Gdx.app.debug(event.getListenerActor().toString(),level.Grid.getTransmuter(coords.x+gotomain.x,coords.y+gotomain.y).getInformations());
-								showInfo(level.Grid.getTransmuter(coords.x+gotomain.x,coords.y+gotomain.y));
-							}
-						}
-					}
-					else
-			        	hideInfo();
-					return false;
-				}
-				else if (selected.getName()=="zoomp") 
-				{
-					map.setZoom(0.9f);
-					map.setDec((AssetLoader.width/2-x)/2,(AssetLoader.height/2-y)/2);
-					return false;
-				}
-				else if (selected.getName()=="zoomm") 
-				{
-					map.setZoom(1.1f);
-					map.setDec((AssetLoader.width/2-x)/2,(AssetLoader.height/2-y)/2);
-					return false;
-				}
-				else if (selected.getName()=="copper-pen")
-				{
-					Vector2 coords=map.screentoworld(x, y);
-					if (level.Grid.GetXY(coords.x,coords.y)!=null)
-					{
-						Gdx.app.debug(event.getListenerActor().toString(),"Screen coordinates translated to world coordinates: "+ "X: " + coords.x + " Y: " + coords.y);
-						if (level.Grid.getCopper(coords.x,coords.y)==false)
-							level.Grid.GetXY(coords.x,coords.y).Copper=true;
-						else
-							level.Grid.GetXY(coords.x,coords.y).Copper=false;
-						level.Grid.tiling_copper();
-						map.redraw(60);
-					}	
-				}
-				else if (selected.getName()=="fiber-pen")
-				{
-					Vector2 coords=map.screentoworld(x, y);
-					if (level.Grid.GetXY(coords.x,coords.y)!=null)
-					{
-						Gdx.app.debug(event.getListenerActor().toString(),"Screen coordinates translated to world coordinates: "+ "X: " + coords.x + " Y: " + coords.y);
-						if (level.Grid.GetFiber(coords.x,coords.y)==false)
-							level.Grid.GetXY(coords.x,coords.y).Fiber=1;
-						else
-							level.Grid.GetXY(coords.x,coords.y).Fiber=0;
-						map.redraw(60);
-					}	
-				}
-				else if (selected.getName()=="blank")
-				{
-					Vector2 coords=map.screentoworld(x, y);
-					if (level.Grid.GetXY(coords.x,coords.y)!=null)
-					{
-						Gdx.app.debug(event.getListenerActor().toString(),"Screen coordinates translated to world coordinates: "+ "X: " + coords.x + " Y: " + coords.y);
-						level.Grid.GetXY(coords.x,coords.y).Fiber=0;
-						level.Grid.GetXY(coords.x,coords.y).Copper=false;
-						level.Grid.tiling_copper();
-						map.redraw(60);
-					}	
-				}
-				else if (selected.getName()=="transmuter")
-				{
-					if (button==1)
-					{
-						Vector2 coords=map.screentoworld(x, y);
-						if (level.Grid.GetXY(coords.x,coords.y)!=null)
-						{
-							Gdx.app.debug(event.getListenerActor().toString(),"Screen coordinates translated to world coordinates: "+ "X: " + coords.x + " Y: " + coords.y);
-							Angular angle=selected_transmuter.getRotation();
-							if (angle==Angular.A00)
-								selected_transmuter.setRotation(Angular.A90);
-							else if (angle==Angular.A90)
-								selected_transmuter.setRotation(Angular.A180);
-							else if (angle==Angular.A180)
-								selected_transmuter.setRotation(Angular.A270);
-							else if (angle==Angular.A270)
-								selected_transmuter.setRotation(Angular.A00);
-							map.tempclear();
-							HashMap<Vector2,CaseType> tiles=selected_transmuter.getTiles();
-							Iterator<Vector2> keySetIterator = selected_transmuter.getTiles().keySet().iterator();
-							int MainTile=selected_transmuter.getMainTile();
-							int color=64;
-							if (level.Grid.getCopper(coords.x,coords.y) && level.Grid.getTransmutercalc(coords.x,coords.y)==0)
-								color=63;
-							map.tempdraw(coords.x, coords.y, MainTile, selected_transmuter.getRotation().ordinal(),color);
-							while(keySetIterator.hasNext()){
-								Vector2 key = keySetIterator.next();
-								color=64;
-								if (((!level.Grid.GetFiber(coords.x+key.x, coords.y+key.y) &&  !level.Grid.getCopper(coords.x+key.x, coords.y+key.y) && tiles.get(key)==CaseType.Rien) || (level.Grid.GetFiber(coords.x+key.x, coords.y+key.y) &&  level.Grid.getCopper(coords.x+key.x, coords.y+key.y) && tiles.get(key)==CaseType.Tout) || (level.Grid.GetFiber(coords.x+key.x, coords.y+key.y) && !level.Grid.getCopper(coords.x+key.x, coords.y+key.y) && tiles.get(key)==CaseType.Fibre) || (level.Grid.getCopper(coords.x+key.x, coords.y+key.y) && !level.Grid.GetFiber(coords.x+key.x, coords.y+key.y) && tiles.get(key)==CaseType.Cuivre)) && (level.Grid.getTransmutercalc(coords.x+key.x, coords.y+key.y)==0))
-									color=63;
-								map.tempdraw(coords.x+key.x, coords.y+key.y, ++MainTile, selected_transmuter.getRotation().ordinal(),color);
-							}
-						}
-						return true;
-					}
-					Vector2 coords=map.screentoworld(x, y);
-					if (level.Grid.GetXY(coords.x,coords.y)!=null)
-					{
-						Gdx.app.debug(event.getListenerActor().toString(),"Screen coordinates translated to world coordinates: "+ "X: " + coords.x + " Y: " + coords.y);
-						level.Grid.GetXY(coords.x,coords.y).Transmuter=(Transmuter) selected_transmuter.clone();
-						level.Grid.tiling_transmuter();
-						map.redraw(60);
-					}	
-				}
-				else if (selected.getName()=="copper-brush")
-				{
-					Vector2 coords=map.screentoworld(x, y);
-					if (level.Grid.GetXY(coords.x,coords.y)!=null)
-					{
-						Gdx.app.debug(event.getListenerActor().toString(),"Screen coordinates translated to world coordinates: "+ "X: " + coords.x + " Y: " + coords.y);
-						level.Grid.GetXY(coords.x,coords.y).Copper=true;
-						level.Grid.tiling_copper();
-						map.redraw(60);
-					}	
-				}
-				else if (selected.getName()=="fiber-brush")
-				{
-					Vector2 coords=map.screentoworld(x, y);
-					if (level.Grid.GetXY(coords.x,coords.y)!=null)
-					{
-						Gdx.app.debug(event.getListenerActor().toString(),"Screen coordinates translated to world coordinates: "+ "X: " + coords.x + " Y: " + coords.y);
-						level.Grid.GetXY(coords.x,coords.y).Fiber=1;
-						map.redraw(60);
-					}	
-				}
-				return true;
-			 }
-		   });
 		map.addListener(new ClickListener(){
 			@Override
-		    public void touchDragged(InputEvent event, float x, float y, int pointer) {
-				if (selected!=null)
-					Gdx.app.debug(event.getListenerActor().toString(),"Drag sur la map, mode:"+selected.getName());
-				if (selected==null)
-					;
-				else if (selected.getName()=="move") {					
-					if (oldx!=0 && oldy!=0) {
-						map.setDec(x-oldx,y-oldy);
-						Gdx.app.debug(event.getListenerActor().toString(),"Decalage absolue en pixel:"+(x-oldx)+"x"+(y-oldy));
-					}
-					oldx=x;
-					oldy=y;
-					}
-				else if (selected.getName()=="copper-brush")
-				{
-					Vector2 coords=map.screentoworld(x, y);
-					if (level.Grid.GetXY(coords.x,coords.y)!=null)
-					{
-						Gdx.app.debug(event.getListenerActor().toString(),"Screen coordinates translated to world coordinates: "+ "X: " + coords.x + " Y: " + coords.y);
-						level.Grid.GetXY(coords.x,coords.y).Copper=true;
-						level.Grid.tiling_copper();
-						map.redraw(60);
-					}	
-				}
-				else if (selected.getName()=="fiber-brush")
-				{
-					Vector2 coords=map.screentoworld(x, y);
-					if (level.Grid.GetXY(coords.x,coords.y)!=null)
-					{
-						Gdx.app.debug(event.getListenerActor().toString(),"Screen coordinates translated to world coordinates: "+ "X: " + coords.x + " Y: " + coords.y);
-						level.Grid.GetXY(coords.x,coords.y).Fiber=1;
-						map.redraw(60);
-					}	
-				}
-				else if (selected.getName()=="copper-eraser")
-				{
-					Vector2 coords=map.screentoworld(x, y);
-					if (level.Grid.GetXY(coords.x,coords.y)!=null)
-					{
-						Gdx.app.debug(event.getListenerActor().toString(),"Screen coordinates translated to world coordinates: "+ "X: " + coords.x + " Y: " + coords.y);
-						level.Grid.GetXY(coords.x,coords.y).Copper=false;
-						level.Grid.tiling_copper();
-						map.redraw(60);
-					}	
-				}
-				else if (selected.getName()=="fiber-eraser")
-				{
-					Vector2 coords=map.screentoworld(x, y);
-					if (level.Grid.GetXY(coords.x,coords.y)!=null)
-					{
-						Gdx.app.debug(event.getListenerActor().toString(),"Screen coordinates translated to world coordinates: "+ "X: " + coords.x + " Y: " + coords.y);
-						level.Grid.GetXY(coords.x,coords.y).Fiber=0;
-						map.redraw(60);
-					}	
-				}
-				else if (selected.getName()=="transmuter-eraser")
-				{
-					Vector2 coords=map.screentoworld(x, y);
-					if (level.Grid.GetXY(coords.x,coords.y)!=null)
-					{
-						if (level.Grid.GetXY(coords.x,coords.y).Transmuter_calc!=0)
-						{
-							Gdx.app.debug(event.getListenerActor().toString(),"Screen coordinates translated to world coordinates: "+ "X: " + coords.x + " Y: " + coords.y);
-							Vector2 gotomain=AssetLoader.resolveTransmuterMain(level.Grid.GetXY(coords.x,coords.y).Transmuter_calc);
-							if (gotomain!=null) {
-								level.Grid.GetXY(coords.x+gotomain.x,coords.y+gotomain.y).Transmuter=null;
-								Gdx.app.debug(event.getListenerActor().toString(),"transmuter deplacement vers origine:"+String.valueOf(gotomain.x)+","+String.valueOf(gotomain.y)+" coords:"+(coords.x+gotomain.x)+"x"+(coords.y+gotomain.y));
-							}
-							level.Grid.tiling_transmuter();
-							map.redraw(53);
-						}
-					}
-				}
-				else if (selected.getName()=="all-eraser")
-				{
-					Vector2 coords=map.screentoworld(x, y);
-					if (level.Grid.GetXY(coords.x,coords.y)!=null)
-					{
-						if (level.Grid.GetXY(coords.x,coords.y).Transmuter_calc!=0)
-						{
-							Gdx.app.debug(event.getListenerActor().toString(),"Screen coordinates translated to world coordinates: "+ "X: " + coords.x + " Y: " + coords.y);
-							Vector2 gotomain=AssetLoader.resolveTransmuterMain(level.Grid.GetXY(coords.x,coords.y).Transmuter_calc);
-							if (gotomain!=null) {
-								level.Grid.GetXY(coords.x+gotomain.x,coords.y+gotomain.y).Transmuter=null;
-								Gdx.app.debug(event.getListenerActor().toString(),"transmuter deplacement vers origine:"+String.valueOf(gotomain.x)+","+String.valueOf(gotomain.y)+" coords:"+(coords.x+gotomain.x)+"x"+(coords.y+gotomain.y));
-							}
-							level.Grid.tiling_transmuter();
-						}
-						level.Grid.GetXY(coords.x,coords.y).Fiber=0;
-						level.Grid.GetXY(coords.x,coords.y).Copper=false;
-						level.Grid.tiling_copper();
-						map.redraw(60);
-					}
-				}
-				else if (selected.getName()=="blank")
-				{
-					Vector2 coords=map.screentoworld(x, y);
-					if (level.Grid.GetXY(coords.x,coords.y)!=null)
-					{
-						Gdx.app.debug(event.getListenerActor().toString(),"Screen coordinates translated to world coordinates: "+ "X: " + coords.x + " Y: " + coords.y);
-						level.Grid.GetXY(coords.x,coords.y).Fiber=0;
-						level.Grid.GetXY(coords.x,coords.y).Copper=false;
-						level.Grid.tiling_copper();
-						map.redraw(60);
-					}	
-				}
+			public boolean mouseMoved(InputEvent event,float x,float y) {
+				String[] exec={"transmuter"};
+				return event_coordination(x,y,0,calling.mouseover,exec);
 			}
-		});
+			@Override
+		    public boolean scrolled(InputEvent event,float x,float y,int amount) {
+				String[] exec={"transmuter"};
+				Gdx.app.debug(event.getListenerActor().toString(),"Coordonnées:");
+				return event_coordination(x,y,amount,calling.mousescroll,exec);
+			}
+			@Override	
+			 public void clicked(InputEvent event, float x, float y) {
+				oldx=0;
+				oldy=0;
+				String[] exec={"cleaner","infos","zoomp","zoomm","copper_pen","fiber_pen","copper_eraser","fiber_eraser","transmuter_eraser","all_eraser","blank","transmuter","copper_brush","fiber_brush"};
+				if (this.getTapCount()>=2)
+					event_coordination(x,y,0,calling.mousex2click,exec);
+				else
+					event_coordination(x,y,0,calling.mouseclick,exec);
+				}
+			@Override
+			public void touchDragged(InputEvent event, float x, float y, int pointer) {
+				String[] exec={"transmuter","move","copper_brush","fiber_brush","copper_eraser","fiber_eraser","transmuter_eraser","all_eraser","blank"};
+				event_coordination(x,y,0,calling.mousedrag,exec);
+			}
+		   });
 		menu=new Menu(4,8);
 		map.addListener(new ClickListener(){
 			@Override
 		    public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+				mapexit=true;
 				Vector2 coords=menu.screentoworld(x,y);	
 				int tile=menu.getMenuTile((int)coords.x,(int)coords.y);
 				Gdx.app.debug(event.getListenerActor().toString(),"Coordonnées:"+x+"x"+y+" Coordonnées deprojettée:"+coords.x+"x"+coords.y+" tile:"+tile);
@@ -689,21 +417,21 @@ public class GameScreen implements Screen {
 					selected=menuactor;
 					map.fillempty(60);
 				if (tile==71)
-					selected.setName("copper-pen");
+					selected.setName("copper_pen");
 				if (tile==72)
-					selected.setName("copper-brush");
+					selected.setName("copper_brush");
 				if (tile==73)
-					selected.setName("copper-eraser");
+					selected.setName("copper_eraser");
 				if (tile==74)
-					selected.setName("fiber-pen");
+					selected.setName("fiber_pen");
 				if (tile==75)
-					selected.setName("fiber-brush");
+					selected.setName("fiber_brush");
 				if (tile==76)
-					selected.setName("fiber-eraser");
+					selected.setName("fiber_eraser");
 				if (tile==77)
-					selected.setName("transmuter-eraser");
+					selected.setName("transmuter_eraser");
 				if (tile==78)
-					selected.setName("all-eraser");
+					selected.setName("all_eraser");
 				if (tile==79)
 					selected.setName("cleaner");
 				else if (tile==70)
@@ -728,7 +456,206 @@ public class GameScreen implements Screen {
 		 });
 	}
 	
+	boolean event_coordination(float x,float y,int button, calling call, String[] exec) {
+		if (selected!=null) {
+			if (Arrays.asList(exec).contains(selected.getName())) {
+				Vector2 coords=map.screentoworld(x, y);
+				if (level.Grid.GetXY(coords.x,coords.y)!=null)
+				{
+					mapexit=false;
+					Gdx.app.debug("evenement","mode:"+call+" outil:"+selected.getName()+ " X: " + coords.x + " Y: " + coords.y);
+					Method method;
+					try {
+						Class<?> base = Class.forName("fr.evolving.screens.GameScreen");
+						Class<?>[] params={float.class, float.class,int.class, int.class, boolean.class, int.class, calling.class};
+						method = base.getDeclaredMethod("map_"+selected.getName(), params);
+						method.invoke(this,(float)x,(float)y,(int)coords.x,(int)coords.y,true,(int)button,(calling)call);
+					} catch (Exception e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+				}
+				else
+				{
+					if (mapexit==false) {
+						mapexit=true;
+						map.tempclear();
+					}
+				}
+			}
+		
+		}
+		return true;
+	}
+
+	void map_transmuter(float realx, float realy,int x, int y,boolean alone,int button,calling call) {
+		if (call==calling.mousescroll || call==calling.mousex2click)
+		{
+			Angular angle=selected_transmuter.getRotation();
+			if (angle==Angular.A00)
+				selected_transmuter.setRotation(Angular.A90);
+			else if (angle==Angular.A90)
+				selected_transmuter.setRotation(Angular.A180);
+			else if (angle==Angular.A180)
+				selected_transmuter.setRotation(Angular.A270);
+			else if (angle==Angular.A270)
+				selected_transmuter.setRotation(Angular.A00);
+		}
+		map.tempclear();
+		boolean positionisgood=true;
+		HashMap<Vector2,CaseType> tiles=selected_transmuter.getTiles();
+		Iterator<Vector2> keySetIterator = selected_transmuter.getTiles().keySet().iterator();
+		int MainTile=selected_transmuter.getMainTile();
+		int color=63;
+		if (level.Grid.getCopper(x,y) && level.Grid.getTransmutercalc(x,y)==0)
+			color=0;
+		else
+			positionisgood=false;
+		map.tempdraw(x, y, MainTile, selected_transmuter.getRotation().ordinal(),color);
+		while(keySetIterator.hasNext()){
+			Vector2 key = keySetIterator.next();
+			color=63;
+			if (((!level.Grid.GetFiber(x+key.x, y+key.y) &&  !level.Grid.getCopper(x+key.x, y+key.y) && tiles.get(key)==CaseType.Rien) || (level.Grid.GetFiber(x+key.x, y+key.y) &&  level.Grid.getCopper(x+key.x, y+key.y) && tiles.get(key)==CaseType.Tout) || (level.Grid.GetFiber(x+key.x, y+key.y) && !level.Grid.getCopper(x+key.x, y+key.y) && tiles.get(key)==CaseType.Fibre) || (level.Grid.getCopper(x+key.x, y+key.y) && !level.Grid.GetFiber(x+key.x, y+key.y) && tiles.get(key)==CaseType.Cuivre)) && (level.Grid.getTransmutercalc(x+key.x, y+key.y)==0))
+				color=0;
+			else
+				positionisgood=false;
+			map.tempdraw(x+key.x, y+key.y, ++MainTile, selected_transmuter.getRotation().ordinal(),color);
+		if (call==calling.mouseclick && positionisgood && button!=1)
+		{
+			level.Grid.GetXY(x,y).Transmuter=(Transmuter) selected_transmuter.clone();
+			if (alone) level.Grid.tiling_transmuter();
+			map.redraw(53);
+		}
+		}
+	}
 	
+	
+	void map_infos(float realx, float realy,int x, int y,boolean alone,int button,calling call) {
+		if (level.Grid.GetXY(x,y)!=null)
+		{
+        	Gdx.app.debug("map","Etat extension:"+unroll);
+			if (level.Grid.GetXY(x,y).Copper)
+				Gdx.app.debug("map","*** Présence de cuivre");
+			if (level.Grid.GetXY(x,y).Fiber>0)
+				Gdx.app.debug("map","*** Présence de fibre");
+			if (level.Grid.GetXY(x,y).Transmuter_calc>0) {
+				Vector2 gotomain=AssetLoader.resolveTransmuterMain(level.Grid.GetXY(x,y).Transmuter_calc);
+				if (gotomain!=null) {
+					Gdx.app.debug("map","transmuter deplacement vers origine:"+String.valueOf(gotomain.x)+","+String.valueOf(gotomain.y)+" coords:"+(x+gotomain.x)+"x"+(y+gotomain.y));
+					//Gdx.app.debug("map",level.Grid.getTransmuter(x+gotomain.x,y+gotomain.y).getInformations());
+					showInfo(level.Grid.getTransmuter(x+gotomain.x,y+gotomain.y));
+				}
+			}
+		}
+		else
+        	hideInfo();
+	}
+	
+	void map_zoomp(float realx, float realy,int x, int y,boolean alone,int button,calling call) {
+		map.setZoom(0.9f);
+		map.setDec((AssetLoader.width/2-realx)/2,(AssetLoader.height/2-realy)/2);
+	}
+	
+	void map_zoomm(float realx, float realy,int x, int y,boolean alone,int button,calling call) {
+		map.setZoom(1.1f);
+		map.setDec((AssetLoader.width/2-realx)/2,(AssetLoader.height/2-realy)/2);
+	}
+
+	
+	void map_move(float realx, float realy,int x, int y,boolean alone,int button,calling call) {
+		if (oldx!=0 && oldy!=0) {
+			map.setDec(realx-oldx,realy-oldy);
+			Gdx.app.debug("map","Decalage absolue en pixel:"+(realx-oldx)+"x"+(realy-oldy));
+		}
+		oldx=realx;
+		oldy=realy;
+	}
+	
+	void map_blank(float realx, float realy,int x, int y,boolean alone,int button,calling call) {
+		map_fiber_eraser(0,0,x,y,false,button,call);
+		map_copper_eraser(0,0,x,y,alone,button,call);
+	}
+	
+	void map_cleaner(float realx, float realy,int x, int y,boolean alone,int button,calling call) {
+		for(x=0;x<level.Grid.sizeX;x++)
+			for(y=0;y<level.Grid.sizeY;y++) {
+				level.Grid.GetXY(x, y).Copper=false;
+				level.Grid.GetXY(x, y).Fiber=0;
+				level.Grid.GetXY(x, y).Transmuter=null;
+			}
+		level.Grid.tiling_copper();
+		level.Grid.tiling_transmuter();
+		map.redraw(60);
+	}
+	
+	void map_all_eraser(float realx, float realy,int x, int y,boolean alone,int button,calling call) {
+		map_fiber_eraser(0,0,x,y,false,button,call);
+		map_transmuter_eraser(0,0,x,y,alone,button,call);
+		map_copper_eraser(0,0,x,y,alone,button,call);
+	}
+	
+	void map_transmuter_eraser(float realx, float realy,int x, int y,boolean alone,int button,calling call) {
+		if (level.Grid.GetXY(x,y).Transmuter_calc!=0)
+		{
+			Vector2 gotomain=AssetLoader.resolveTransmuterMain(level.Grid.GetXY(x,y).Transmuter_calc);
+			if (gotomain!=null) {
+				level.Grid.GetXY(x+gotomain.x,y+gotomain.y).Transmuter=null;
+				Gdx.app.debug("map","transmuter deplacement vers origine:"+String.valueOf(gotomain.x)+","+String.valueOf(gotomain.y)+" coords:"+(x+gotomain.x)+"x"+(y+gotomain.y));
+			}
+			if (alone) {
+				level.Grid.tiling_transmuter();
+				map.redraw(53);
+			}
+		}
+	}
+	
+	void map_fiber_eraser(float realx, float realy,int x, int y,boolean alone,int button,calling call) {
+		level.Grid.GetXY(x,y).Fiber=0;
+		if (alone) {
+			level.Grid.tiling_copper();
+			map.redraw(60);
+		}
+	}
+	
+	void map_fiber_pen(float realx, float realy,int x, int y,boolean alone,int button,calling call) {
+		level.Grid.GetXY(x,y).Fiber=-1*level.Grid.GetXY(x,y).Fiber+1;
+		if (alone) {
+			level.Grid.tiling_copper();
+			map.redraw(60);
+		}
+	}
+	
+	void map_fiber_brush(float realx, float realy,int x, int y,boolean alone,int button,calling call) {
+		level.Grid.GetXY(x,y).Fiber=1;
+		if (alone) {
+			level.Grid.tiling_copper();
+			map.redraw(60);
+		}	
+	}
+	
+	void map_copper_eraser(float realx, float realy,int x, int y,boolean alone,int button,calling call) {
+		level.Grid.GetXY(x,y).Copper=false;
+		if (alone) {
+			level.Grid.tiling_copper();
+			map.redraw(60);
+		}
+	}
+	
+	void map_copper_pen(float realx, float realy,int x, int y,boolean alone,int button,calling call) {
+		level.Grid.GetXY(x,y).Copper=!level.Grid.GetXY(x,y).Copper;
+		if (alone) {
+			level.Grid.tiling_copper();
+			map.redraw(60);
+		}		
+	}
+	
+	void map_copper_brush(float realx, float realy,int x, int y,boolean alone,int button,calling call) {
+		level.Grid.GetXY(x,y).Copper=true;
+		if (alone) {
+			level.Grid.tiling_copper();
+			map.redraw(60);
+		}
+	}	
 
 	@Override
 	public void render(float delta) {
