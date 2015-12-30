@@ -130,30 +130,35 @@ public class AssetLoader {
         		if (allregions.get(i).name.contains("#"))
         		{
         			String[] name=allregions.get(i).name.split("_");
+            		String[] type=name[0].split("-");
         			if (name[0].contains("sprite"))
         			{
         				int id=Integer.parseInt(name[1].split("#")[0]);
         				if (tileSet.getTile(1000+id)==null) {
             				Gdx.app.debug("AssetLoader","Animated Tiles N°:"+String.valueOf(id+1000));
         					int maxid=0;
-        					for(int j=1;Atlas_level.findRegion("sprite_"+id+"#"+j)!=null;j++)
+        					for(int j=1;Atlas_level.findRegion("sprite-"+type[1]+"_"+id+"#"+j)!=null;j++)
         						maxid=j;
         					Array<StaticTiledMapTile> frameTiles=new Array<StaticTiledMapTile>(maxid);
         					for(int j=1;j<=maxid;j++)
-        						frameTiles.add(new StaticTiledMapTile((Atlas_level.findRegion("sprite_"+id+"#"+j))));
+        						frameTiles.add(new StaticTiledMapTile((Atlas_level.findRegion("sprite-"+type[1]+"_"+id+"#"+j))));
         					AnimatedTiledMapTile atile=new AnimatedTiledMapTile(0.15f,frameTiles);
         					Gdx.app.debug("AssetLoader","Taille:"+String.valueOf(frameTiles.size));
         					atile.setId(1000+id);
+        	          	  	atile.getProperties().put("type", type[1]);
         	           	  	tileSet.putTile(1000+id, atile);
+        	           	  	
         				}      				
         			}
         		}
         		else
         		{
+            	String[] type=allregions.get(i).name.split("-");
         		StaticTiledMapTile atile= new StaticTiledMapTile(allregions.get(i));
            	  	atile.setId(allregions.get(i).index);
+           	  	atile.getProperties().put("type", type[1]);
            	  	tileSet.putTile(allregions.get(i).index, atile);
-                Gdx.app.debug("AssetLoader","Tiles N°:"+String.valueOf(allregions.get(i).index));
+                Gdx.app.debug("AssetLoader","Type:"+type[1]+" Tiles N°:"+String.valueOf(allregions.get(i).index));
         		}
         	}
         }
@@ -161,7 +166,16 @@ public class AssetLoader {
         allTransmuter[0]=new Positiver_I(null);
         allTransmuter[1]=new Positiver_II(null);
         allTransmuter[2]=new Positiver_III(null);
-	}
+        for(int i=0;i<allTransmuter.length;i++) {
+        	int[] result;
+        	result=allTransmuter[i].getallTiles();
+        	for (int j=0;j<result.length;j++) {
+        			AssetLoader.tileSet.getTile(result[j]).getProperties().put("transmuter", allTransmuter[i]);
+        			AssetLoader.tileSet.getTile(result[j]).getProperties().put("name", allTransmuter[i].getName());        			
+          	  		Gdx.app.debug("AssetLoader","Ajustement données Tiles N°:"+String.valueOf(result[j])+" Nom:"+allTransmuter[i].getName());
+        		}
+        	}
+        }
 	
 	public static Transmuter getTransmuter(int Id) {
 		for(Transmuter transmuter:allTransmuter) {

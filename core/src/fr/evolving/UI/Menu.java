@@ -6,6 +6,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.maps.MapLayers;
+import com.badlogic.gdx.maps.MapProperties;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer.Cell;
@@ -66,13 +67,22 @@ public void clear()
 			layer.getCell(x, y).setTile(AssetLoader.tileSet.getTile(54));
 }
 
-public void setMenuTile(int x,int y,int tile)
+public void setMenuTile(int x,int y,int tile,String title)
 {
 	Cell cell=((TiledMapTileLayer)map.getLayers().get(0)).getCell(x,y);
 	if (cell!=null) {
 		cell.setTile(AssetLoader.tileSet.getTile(tile));
+		cell.getTile().getProperties().put("name", title);
 		Gdx.app.debug(getClass().getSimpleName(),"Tile find:"+tile+" coords"+x+","+y);
 	}
+}
+
+public int getSizeX() {
+	return tilesizex;
+}
+
+public int getSizeY() {
+	return tilesizey;
 }
 
 public void setMenuTransmuter(int x,int y,String Name,Transmuter.Angular Angle)
@@ -89,22 +99,27 @@ public void setMenuTransmuter(int x,int y,String Name,Transmuter.Angular Angle)
 			cell.setRotation(Angle.ordinal());
 			while(keySetIterator.hasNext()){
 				Vector2 key = keySetIterator.next();
-				((TiledMapTileLayer)map.getLayers().get(0)).getCell((int)(x+key.x),(int)(y+key.y)).setTile(AssetLoader.tileSet.getTile(MainTile++));
-				((TiledMapTileLayer)map.getLayers().get(0)).getCell((int)(x+key.x),(int)(y+key.y)).setRotation(Angle.ordinal());
+				Cell subcell=((TiledMapTileLayer)map.getLayers().get(0)).getCell((int)(x+key.x),(int)(y+key.y));
+				subcell.setTile(AssetLoader.tileSet.getTile(MainTile++));
+				subcell.setRotation(Angle.ordinal());
+				subcell.getTile().getProperties().put("movetox",(int) -key.x);
+				subcell.getTile().getProperties().put("movetoy",(int) -key.y);
 			}
 			
 		}
 	}
 }
 
-public int getMenuTile(int x,int y)
+public MapProperties getMenubyTile(int x,int y)
 {
 	Cell cell=((TiledMapTileLayer)map.getLayers().get(0)).getCell(x,y);
 	if (cell!=null)
-		return cell.getTile().getId();
+		return cell.getTile().getProperties();
 	else
-		return 0;
+		return null;
 }
+
+
 
 public Vector2 screentoworld(float x, float y) {
 	int xx=(int) ((x-1531f)/60f);

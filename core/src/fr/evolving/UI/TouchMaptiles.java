@@ -95,13 +95,15 @@ public void redraw(int tile) {
 		for (int y=0;y<level.Grid.sizeY;y++) {
 			if (level.Grid.getCopper(x,y))
 				((TiledMapTileLayer)map.getLayers().get(1)).getCell((int)x, (int)y).setTile(AssetLoader.tileSet.getTile(level.Grid.getCoppercalc(x,y)));
-			if (level.Grid.GetFiber(x,y))
+			if (level.Grid.getFiber(x,y))
 				((TiledMapTileLayer)map.getLayers().get(0)).getCell((int)x, (int)y).setTile(AssetLoader.tileSet.getTile(61));
 			if (level.Grid.getTransmutercalc(x, y)!=0)
 			{
 				((TiledMapTileLayer)map.getLayers().get(2)).getCell((int)x, (int)y).setTile(AssetLoader.tileSet.getTile(level.Grid.getTransmutercalc(x, y)));
 				((TiledMapTileLayer)map.getLayers().get(2)).getCell((int)x, (int)y).setRotation(level.Grid.getTransmuterrot(x, y));
-			}
+				((TiledMapTileLayer)map.getLayers().get(2)).getCell((int)x, (int)y).getTile().getProperties().put("movex",level.Grid.GetXY(x, y).Transmuter_movex);
+				((TiledMapTileLayer)map.getLayers().get(2)).getCell((int)x, (int)y).getTile().getProperties().put("movey",level.Grid.GetXY(x, y).Transmuter_movex);
+			};
 		}
 	((TiledMapTileLayer)map.getLayers().get(0)).getCell((int)0, (int)0).setTile(AssetLoader.tileSet.getTile(1010));
 	((TiledMapTileLayer)map.getLayers().get(0)).getCell((int)1, (int)0).setTile(AssetLoader.tileSet.getTile(1010));

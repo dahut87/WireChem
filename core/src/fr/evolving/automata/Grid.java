@@ -39,6 +39,8 @@ public class Grid implements Serializable{
 				while(keySetIterator.hasNext()){
 					Vector2 key = keySetIterator.next();
 					GetXY(x+key.x,y+key.y).Transmuter_calc=(1<<16)*transmuter.getRotation().ordinal()+MainTile++;
+					GetXY(x+key.x,y+key.y).Transmuter_movex=(int)-key.x;
+					GetXY(x+key.x,y+key.y).Transmuter_movey=(int)-key.y;
 				}
 			}
 		}
@@ -218,7 +220,7 @@ public class Grid implements Serializable{
 			return cell.Copper;
 	}
 	
-	public boolean GetFiber(float X,float Y) {
+	public boolean getFiber(float X,float Y) {
 		Cell cell=GetXY(X,Y);
 		if (cell==null)
 			return false;

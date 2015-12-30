@@ -15,11 +15,14 @@ import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.input.GestureDetector;
 import com.badlogic.gdx.maps.MapLayers;
+import com.badlogic.gdx.maps.MapProperties;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer.Cell;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.Actor;
@@ -34,6 +37,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextArea;
 import com.badlogic.gdx.scenes.scene2d.ui.VerticalGroup;
+import com.badlogic.gdx.scenes.scene2d.utils.ActorGestureListener;
 import com.badlogic.gdx.scenes.scene2d.utils.Align;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
@@ -83,7 +87,8 @@ public class GameScreen implements Screen {
 	private Label fpsLabel,info_nom;
 	private TextArea info_desc,info_up_nrj_val,info_up_temp_val,info_up_rayon_val,info_up_cycle_val;
 	public boolean unroll,mapexit;
-	public enum calling{mouseover,mouseclick,mousedrag,mousex2click,mousescroll};
+	public enum calling{mouseover,mouseclick,mousedrag,longpress,tap,taptap,zoom,fling,pan,pinch};
+	GestureDetector gesturedetector;
 	
 	// This is the constructor, not the class declaration
 	public GameScreen(Level alevel) {
@@ -212,103 +217,63 @@ public class GameScreen implements Screen {
 		Barre2[0].addListener(new ClickListener(){
 	        @Override
 	        public void clicked(InputEvent event, float x, float y) {
-	        	Gdx.app.debug(event.getListenerActor().toString(),"Affichage sousmenu");
-	        	checkMenu(0,true);
-	        	menu.clear();
-				map.fillempty(53);
-	        	selected=null;
-	        	menu.setMenuTile(0, 7, 71);
-	        	menu.setMenuTile(1, 7, 72);
-	        	menu.setMenuTile(2, 7, 73);
-	        	menu.setMenuTile(1, 5, 70);
-	        	menu.setMenuTile(0, 6, 74);
-	        	menu.setMenuTile(1, 6, 75);
-	        	menu.setMenuTile(2, 6, 76);
-	        	menu.setMenuTile(0, 5, 77);
-	        	menu.setMenuTile(2, 5, 78);
-	        	menu.setMenuTile(3, 3, 79);
+	        	preparemenu(0);
+	        	menu.setMenuTile(0, 7, 71, "copper_pen");
+	        	menu.setMenuTile(1, 7, 72, "copper_brush");
+	        	menu.setMenuTile(2, 7, 73, "copper_eraser");
+	        	menu.setMenuTile(1, 5, 70, "blank");
+	        	menu.setMenuTile(0, 6, 74, "fiber_pen");
+	        	menu.setMenuTile(1, 6, 75, "fiber_brush");
+	        	menu.setMenuTile(2, 6, 76, "fiber_eraser");
+	        	menu.setMenuTile(0, 5, 77, "transmuter_eraser");
+	        	menu.setMenuTile(2, 5, 78, "all_eraser");
+	        	menu.setMenuTile(3, 3, 79, "cleaner");
 	        	Barre2[0].setChecked(true);
-	        	hideInfo();
 	        }
 	     });
 		Barre2[1].addListener(new ClickListener(){
 	        @Override
 	        public void clicked(InputEvent event, float x, float y) {
-	        	Gdx.app.debug(event.getListenerActor().toString(),"Affichage sousmenu");
-	        	checkMenu(1,true);
-	        	menu.clear();
-				map.fillempty(53);
-	        	selected=null;
+	        	preparemenu(1);
 	        	menu.setMenuTransmuter(0,7,"Positiveur I",Angular.A00);
 	        	menu.setMenuTransmuter(0,6,"Positiveur II",Angular.A00);
 	        	menu.setMenuTransmuter(0,5,"Positiveur III",Angular.A00);
-	        	hideInfo();
 	        }
 	     });
 		Barre2[2].addListener(new ClickListener(){
 	        @Override
 	        public void clicked(InputEvent event, float x, float y) {
-	        	Gdx.app.debug(event.getListenerActor().toString(),"Affichage sousmenu");
-	        	checkMenu(2,true);
-	        	menu.clear();
-				map.fillempty(53);
-	        	selected=null;
-	        	hideInfo();
+	        	preparemenu(2);
 	        }
 	     });
 		Barre2[3].addListener(new ClickListener(){
 	        @Override
 	        public void clicked(InputEvent event, float x, float y) {
-	        	Gdx.app.debug(event.getListenerActor().toString(),"Affichage sousmenu");
-	        	checkMenu(3,true);
-	        	menu.clear();
-				map.fillempty(53);
-	        	selected=null;
-	        	hideInfo();
+	        	preparemenu(3);
 	        }
 	     });
 		Barre2[4].addListener(new ClickListener(){
 	        @Override
 	        public void clicked(InputEvent event, float x, float y) {
-	        	Gdx.app.debug(event.getListenerActor().toString(),"Affichage sousmenu");
-	        	checkMenu(4,true);
-	        	menu.clear();
-				map.fillempty(53);
-	        	selected=null;
-	        	hideInfo();
+	        	preparemenu(4);
 	        }
 	     });
 		Barre2[5].addListener(new ClickListener(){
 	        @Override
 	        public void clicked(InputEvent event, float x, float y) {
-	        	Gdx.app.debug(event.getListenerActor().toString(),"Affichage sousmenu");
-	        	checkMenu(5,true);
-	        	menu.clear();
-				map.fillempty(53);
-	        	selected=null;
-	        	hideInfo();
+	        	preparemenu(5);
 	        }
 	     });
 		Barre2[6].addListener(new ClickListener(){
 	        @Override
 	        public void clicked(InputEvent event, float x, float y) {
-	        	Gdx.app.debug(event.getListenerActor().toString(),"Affichage sousmenu");
-	        	checkMenu(6,true);
-	        	menu.clear();
-				map.fillempty(53);
-	        	selected=null;
-	        	hideInfo();
+	        	preparemenu(6);
 	        }
 	     });
 		Barre2[7].addListener(new ClickListener(){
 	        @Override
 	        public void clicked(InputEvent event, float x, float y) {
-	        	Gdx.app.debug(event.getListenerActor().toString(),"Affichage sousmenu");
-	        	checkMenu(7,true);
-	        	menu.clear();
-				map.fillempty(53);
-	        	selected=null;
-	        	hideInfo();
+	        	preparemenu(7);
 	        }
 	     });
 		Gdx.app.debug(getClass().getSimpleName(),"Création de la barre de gestion du haut");	
@@ -373,27 +338,52 @@ public class GameScreen implements Screen {
 		Gdx.app.debug(getClass().getSimpleName(),"Création d'une tilemap");
 		map=new TouchMaptiles(level,128,128);
 		map.setBounds(0, 0, AssetLoader.width, AssetLoader.height);
-		map.addListener(new ClickListener(){
+		map.addListener(new ActorGestureListener(){
+			   @Override
+			   public void zoom(InputEvent event, float initialDistance, float distance) {
+					String[] exec={"zoomp","zoomm"};
+					int zooming=(int)(distance/initialDistance*1000f);
+					event_coordination(0,0,zooming,calling.zoom,exec);
+			   }
+			@Override
+			 public void pinch(InputEvent event, Vector2 initialPointer1, Vector2 initialPointer2, Vector2 pointer1, Vector2 pointer2)
+			 {
+			      float deltaX = pointer2.x - pointer1.x;
+			      float deltaY = pointer2.y - pointer1.y;
+			      int angle = (int)((float)Math.atan2((double)deltaY,(double)deltaX) * MathUtils.radiansToDegrees);
+			      angle += 90;
+			      if(angle < 0)
+			         angle = 360 - (-angle);
+				String[] exec={"transmuter"};
+				event_coordination(initialPointer1.x,initialPointer1.y,angle,calling.pinch,exec);
+			   }
+			@Override
+			public boolean longPress(Actor actor, float x, float y) {
+				String[] exec={"transmuter"};
+				return event_coordination(x,y,0,calling.longpress,exec);
+		}
+			@Override
+			public void tap(InputEvent event, float x, float y, int count, int button)  {
+				String[] exec={"transmuter"};
+				if (count==1)
+					event_coordination(x,y,button,calling.tap,exec);
+				else if (count>=2)
+					event_coordination(x,y,button,calling.taptap,exec);
+		}
+	   });
+		map.addListener(new InputListener(){
 			@Override
 			public boolean mouseMoved(InputEvent event,float x,float y) {
 				String[] exec={"transmuter"};
 				return event_coordination(x,y,0,calling.mouseover,exec);
 			}
-			@Override
-		    public boolean scrolled(InputEvent event,float x,float y,int amount) {
-				String[] exec={"transmuter"};
-				Gdx.app.debug(event.getListenerActor().toString(),"Coordonnées:");
-				return event_coordination(x,y,amount,calling.mousescroll,exec);
-			}
+			
 			@Override	
-			 public void clicked(InputEvent event, float x, float y) {
+			 public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
 				oldx=0;
 				oldy=0;
 				String[] exec={"cleaner","infos","zoomp","zoomm","copper_pen","fiber_pen","copper_eraser","fiber_eraser","transmuter_eraser","all_eraser","blank","transmuter","copper_brush","fiber_brush"};
-				if (this.getTapCount()>=2)
-					event_coordination(x,y,0,calling.mousex2click,exec);
-				else
-					event_coordination(x,y,0,calling.mouseclick,exec);
+				return event_coordination(x,y,button,calling.mouseclick,exec);
 				}
 			@Override
 			public void touchDragged(InputEvent event, float x, float y, int pointer) {
@@ -404,58 +394,39 @@ public class GameScreen implements Screen {
 		menu=new Menu(4,8);
 		map.addListener(new ClickListener(){
 			@Override
-		    public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+			public void clicked(InputEvent event, float x, float y)  {
 				mapexit=true;
 				Vector2 coords=menu.screentoworld(x,y);	
-				int tile=menu.getMenuTile((int)coords.x,(int)coords.y);
-				Gdx.app.debug(event.getListenerActor().toString(),"Coordonnées:"+x+"x"+y+" Coordonnées deprojettée:"+coords.x+"x"+coords.y+" tile:"+tile);
-				if (menuactor==null)
-					menuactor=new Actor();
-				if (tile!=54 && tile!=0) {
+				MapProperties tile=menu.getMenubyTile((int)coords.x,(int)coords.y);
+				if (tile!=null && tile.containsKey("name"))
+				{
+					Gdx.app.debug("menu","Coordonnées:"+x+"x"+y+" Coordonnées deprojettée:"+coords.x+"x"+coords.y+" type:"+tile.get("type")+" name:"+tile.get("name").toString());
+					if (menuactor==null)
+						menuactor=new Actor();
 					Vector2 coords2=menu.worldtoscreen((int)coords.x,(int)coords.y);
 					menuactor.setBounds(coords2.x, coords2.y, 60, 60);
 					selected=menuactor;
 					map.fillempty(60);
-				if (tile==71)
-					selected.setName("copper_pen");
-				if (tile==72)
-					selected.setName("copper_brush");
-				if (tile==73)
-					selected.setName("copper_eraser");
-				if (tile==74)
-					selected.setName("fiber_pen");
-				if (tile==75)
-					selected.setName("fiber_brush");
-				if (tile==76)
-					selected.setName("fiber_eraser");
-				if (tile==77)
-					selected.setName("transmuter_eraser");
-				if (tile==78)
-					selected.setName("all_eraser");
-				if (tile==79)
-					selected.setName("cleaner");
-				else if (tile==70)
-					selected.setName("blank");
-				else if (tile>99) {
-					Transmuter transmuter=AssetLoader.getTransmuter(tile);
-					if (transmuter!=null) {
-						showInfo(transmuter);
-						Vector2 gotomain=transmuter.getPostitionMainTile(tile);
-						if (gotomain!=null) {
-							coords2=menu.worldtoscreen((int)(coords.x+gotomain.x),(int)(coords.y+gotomain.y));
-							menuactor.setPosition(coords2.x, coords2.y);
-							selected.setName("transmuter");
-							selected_transmuter=(Transmuter) transmuter.clone();
-							Gdx.app.debug(event.getListenerActor().toString(),"transmuter deplacement vers origine:"+String.valueOf(gotomain.x)+","+String.valueOf(gotomain.y)+" coords:"+coords2.x+"x"+coords2.y);
+					if (tile.get("type").toString().startsWith("transmuter"))
+					{
+						selected.setName("transmuter");
+						selected_transmuter=(Transmuter) ((Transmuter) tile.get("transmuter")).clone();
+						if (selected_transmuter!=null) {
+							showInfo(selected_transmuter);
+							if (tile.containsKey("movetox")) {
+								coords2=menu.worldtoscreen((int)coords.x+(Integer) tile.get("movetox"),(int)(coords.y+(Integer) tile.get("movetoy")));
+								menuactor.setPosition(coords2.x, coords2.y);
+								Gdx.app.debug("menu","transmuter deplacement vers origine:"+tile.get("movetox").toString()+","+tile.get("movetoy").toString()+" coords:"+coords2.x+"x"+coords2.y);
+							}
 						}
 					}
+					else
+						selected.setName(tile.get("name").toString());
 				}
-				}
-				return false;
 			}
-		 });
+		});
 	}
-	
+
 	boolean event_coordination(float x,float y,int button, calling call, String[] exec) {
 		if (selected!=null) {
 			if (Arrays.asList(exec).contains(selected.getName())) {
@@ -463,7 +434,8 @@ public class GameScreen implements Screen {
 				if (level.Grid.GetXY(coords.x,coords.y)!=null)
 				{
 					mapexit=false;
-					Gdx.app.debug("evenement","mode:"+call+" outil:"+selected.getName()+ " X: " + coords.x + " Y: " + coords.y);
+					if (call!=calling.mouseover)
+						Gdx.app.debug("evenement","mode:"+call+" outil:"+selected.getName()+ " X: " + coords.x + " Y: " + coords.y+" button:"+button);
 					Method method;
 					try {
 						Class<?> base = Class.forName("fr.evolving.screens.GameScreen");
@@ -489,7 +461,7 @@ public class GameScreen implements Screen {
 	}
 
 	void map_transmuter(float realx, float realy,int x, int y,boolean alone,int button,calling call) {
-		if (call==calling.mousescroll || call==calling.mousex2click)
+		if (call==calling.taptap && button==0 || (call==calling.mouseclick && button==1))
 		{
 			Angular angle=selected_transmuter.getRotation();
 			if (angle==Angular.A00)
@@ -515,16 +487,17 @@ public class GameScreen implements Screen {
 		while(keySetIterator.hasNext()){
 			Vector2 key = keySetIterator.next();
 			color=63;
-			if (((!level.Grid.GetFiber(x+key.x, y+key.y) &&  !level.Grid.getCopper(x+key.x, y+key.y) && tiles.get(key)==CaseType.Rien) || (level.Grid.GetFiber(x+key.x, y+key.y) &&  level.Grid.getCopper(x+key.x, y+key.y) && tiles.get(key)==CaseType.Tout) || (level.Grid.GetFiber(x+key.x, y+key.y) && !level.Grid.getCopper(x+key.x, y+key.y) && tiles.get(key)==CaseType.Fibre) || (level.Grid.getCopper(x+key.x, y+key.y) && !level.Grid.GetFiber(x+key.x, y+key.y) && tiles.get(key)==CaseType.Cuivre)) && (level.Grid.getTransmutercalc(x+key.x, y+key.y)==0))
+			if (((!level.Grid.getFiber(x+key.x, y+key.y) &&  !level.Grid.getCopper(x+key.x, y+key.y) && tiles.get(key)==CaseType.Rien) || (level.Grid.getFiber(x+key.x, y+key.y) &&  level.Grid.getCopper(x+key.x, y+key.y) && tiles.get(key)==CaseType.Tout) || (level.Grid.getFiber(x+key.x, y+key.y) && !level.Grid.getCopper(x+key.x, y+key.y) && tiles.get(key)==CaseType.Fibre) || (level.Grid.getCopper(x+key.x, y+key.y) && !level.Grid.getFiber(x+key.x, y+key.y) && tiles.get(key)==CaseType.Cuivre)) && (level.Grid.getTransmutercalc(x+key.x, y+key.y)==0))
 				color=0;
 			else
 				positionisgood=false;
 			map.tempdraw(x+key.x, y+key.y, ++MainTile, selected_transmuter.getRotation().ordinal(),color);
-		if (call==calling.mouseclick && positionisgood && button!=1)
+		if ((call==calling.longpress && button==0) && positionisgood)
 		{
 			level.Grid.GetXY(x,y).Transmuter=(Transmuter) selected_transmuter.clone();
 			if (alone) level.Grid.tiling_transmuter();
-			map.redraw(53);
+			map.redraw(60);
+			Gdx.input.vibrate(new long[] { 0, 400, 500, 400}, -1);
 		}
 		}
 	}
@@ -539,13 +512,10 @@ public class GameScreen implements Screen {
 			if (level.Grid.GetXY(x,y).Fiber>0)
 				Gdx.app.debug("map","*** Présence de fibre");
 			if (level.Grid.GetXY(x,y).Transmuter_calc>0) {
-				Vector2 gotomain=AssetLoader.resolveTransmuterMain(level.Grid.GetXY(x,y).Transmuter_calc);
-				if (gotomain!=null) {
-					Gdx.app.debug("map","transmuter deplacement vers origine:"+String.valueOf(gotomain.x)+","+String.valueOf(gotomain.y)+" coords:"+(x+gotomain.x)+"x"+(y+gotomain.y));
-					//Gdx.app.debug("map",level.Grid.getTransmuter(x+gotomain.x,y+gotomain.y).getInformations());
-					showInfo(level.Grid.getTransmuter(x+gotomain.x,y+gotomain.y));
+				Gdx.app.debug("map","transmuter deplacement vers origine:"+level.Grid.GetXY(x,y).Transmuter_movex+","+level.Grid.GetXY(x,y).Transmuter_movey+" coords:"+(x+level.Grid.GetXY(x,y).Transmuter_movex)+"x"+(y+level.Grid.GetXY(x,y).Transmuter_movey));
+				Gdx.app.debug("map",level.Grid.getTransmuter(x+level.Grid.GetXY(x,y).Transmuter_movex,y+level.Grid.GetXY(x,y).Transmuter_movey).getInformations());
+					showInfo(level.Grid.getTransmuter(x+level.Grid.GetXY(x,y).Transmuter_movex,y+level.Grid.GetXY(x,y).Transmuter_movey));
 				}
-			}
 		}
 		else
         	hideInfo();
@@ -597,17 +567,14 @@ public class GameScreen implements Screen {
 	void map_transmuter_eraser(float realx, float realy,int x, int y,boolean alone,int button,calling call) {
 		if (level.Grid.GetXY(x,y).Transmuter_calc!=0)
 		{
-			Vector2 gotomain=AssetLoader.resolveTransmuterMain(level.Grid.GetXY(x,y).Transmuter_calc);
-			if (gotomain!=null) {
-				level.Grid.GetXY(x+gotomain.x,y+gotomain.y).Transmuter=null;
-				Gdx.app.debug("map","transmuter deplacement vers origine:"+String.valueOf(gotomain.x)+","+String.valueOf(gotomain.y)+" coords:"+(x+gotomain.x)+"x"+(y+gotomain.y));
+				level.Grid.GetXY(x+level.Grid.GetXY(x,y).Transmuter_movex,y+level.Grid.GetXY(x,y).Transmuter_movey).Transmuter=null;
+				Gdx.app.debug("map","transmuter deplacement vers origine:"+level.Grid.GetXY(x,y).Transmuter_movex+","+level.Grid.GetXY(x,y).Transmuter_movey+" coords:"+(x+level.Grid.GetXY(x,y).Transmuter_movex)+"x"+(y+level.Grid.GetXY(x,y).Transmuter_movey));
 			}
 			if (alone) {
 				level.Grid.tiling_transmuter();
-				map.redraw(53);
+				map.redraw(60);
 			}
 		}
-	}
 	
 	void map_fiber_eraser(float realx, float realy,int x, int y,boolean alone,int button,calling call) {
 		level.Grid.GetXY(x,y).Fiber=0;
@@ -713,8 +680,21 @@ public class GameScreen implements Screen {
 		stage.addActor(menu);
 	    processors.add(stage);
 	    processors.add(stage_menu);
+		gesturedetector=new GestureDetector(null);
+	    processors.add(gesturedetector);  
 	    multiplexer.setProcessors(processors);
-		Gdx.input.setInputProcessor(multiplexer);
+		Gdx.input.setInputProcessor(multiplexer);	    
+		//Gdx.input.setInputProcessor(multiplexer);
+	}
+	
+	public void preparemenu(int menuitem) {
+		Gdx.app.debug("menu","Affichage sousmenu "+menuitem);
+		checkMenu(menuitem,true);
+		menu.clear();
+		map.tempclear();
+		map.fillempty(53);
+		selected=null;
+		hideInfo();
 	}
 	
 	public void showInfo(Transmuter transmuter) {
@@ -751,7 +731,6 @@ public class GameScreen implements Screen {
 	
 	public void hideInfo() {
 		unroll=false;
-		
 	}	
 	
 	public void checkMenu(int menu,boolean check)
