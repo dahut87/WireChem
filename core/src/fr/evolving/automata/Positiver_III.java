@@ -109,7 +109,7 @@ public class Positiver_III extends Transmuter {
 	
 	public void Activate() {
 		if (this.Activable)
-			ActivationLevel=(int)(10*this.UpgradedCycle);
+			ActivationLevel=this.getMaxActivationLevel();
 	}
 	
 	public void UpgradeTemp() {
@@ -185,6 +185,10 @@ public class Positiver_III extends Transmuter {
 	
 	public boolean isActivable() {
 		return this.Activable;
+	}
+	
+	public int getMaxActivationLevel() {
+		return ActivationLevel=(int)(10*this.UpgradedCycle);
 	}
 	
 	public int getActivationLevel() {

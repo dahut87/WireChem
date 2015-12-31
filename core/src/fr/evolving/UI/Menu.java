@@ -1,5 +1,6 @@
 package fr.evolving.UI;
 
+import java.util.HashMap;
 import java.util.Iterator;
 
 import com.badlogic.gdx.Gdx;
@@ -18,6 +19,7 @@ import fr.evolving.assets.AssetLoader;
 import fr.evolving.automata.Level;
 import fr.evolving.automata.Transmuter;
 import fr.evolving.automata.Transmuter.Angular;
+import fr.evolving.automata.Transmuter.CaseType;
 
 public class Menu extends Actor{
 	
@@ -49,6 +51,7 @@ public Menu(int tilesizex,int tilesizey) {
     	}
     	layers.add(layer);
     }
+	map.getLayers().get(1).setOpacity(0.5f);
     MapRenderer = new OrthogonalTiledMapRenderer(map,1/(float)size);
     camera = new OrthographicCamera();
 	camera.setToOrtho(false, tilesizex*32,tilesizex*32*AssetLoader.height/AssetLoader.width);
@@ -73,8 +76,33 @@ public void setMenuTile(int x,int y,int tile,String title)
 	if (cell!=null) {
 		cell.setTile(AssetLoader.tileSet.getTile(tile));
 		cell.getTile().getProperties().put("name", title);
+		cell.setRotation(0);
 		Gdx.app.debug(getClass().getSimpleName(),"Tile find:"+tile+" coords"+x+","+y);
 	}
+}
+
+public void setMenuTransmuterSurtile(int x,int y,Transmuter transmuter)
+{
+		if (transmuter!=null) {
+			Cell cell=((TiledMapTileLayer)map.getLayers().get(1)).getCell(x,y);
+			HashMap<Vector2,CaseType> tiles=transmuter.getTiles();
+			Iterator<Vector2> keySetIterator = transmuter.getTiles().keySet().iterator();
+			cell.setTile(AssetLoader.tileSet.getTile(83));
+			while(keySetIterator.hasNext()){
+				Vector2 key = keySetIterator.next();
+				Cell subcell=((TiledMapTileLayer)map.getLayers().get(1)).getCell((int)(x+key.x),(int)(y+key.y));
+				subcell.setTile(AssetLoader.tileSet.getTile(tiles.get(key).ordinal()+80));
+			}
+			
+		}
+}
+
+public void EraseMenuTransmuterSurtile()
+{
+	TiledMapTileLayer layer = (TiledMapTileLayer) map.getLayers().get(1);
+	for (int x = 0; x < layer.getWidth(); x++)
+		for (int y = 0; y < layer.getHeight(); y++)
+			layer.getCell(x, y).setTile(null);	
 }
 
 public int getSizeX() {

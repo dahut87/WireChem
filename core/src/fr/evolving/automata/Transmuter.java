@@ -7,7 +7,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Vector2;
 
 public abstract class Transmuter implements Cloneable {
-	public enum CaseType{Rien,Cuivre,Fibre,Tout,Nimporte};
+	public enum CaseType{Rien,Cuivre_seul,Fibre_seul,Cuivre,Fibre,Tout,Nimporte};
 	public enum Class{Structure,Charge,Direction,Filtrage,Synthèse,Détection,Divers,Scénario};
 	public enum Angular{A00,A90,A180,A270};
 	protected Level level;
@@ -97,6 +97,10 @@ public abstract class Transmuter implements Cloneable {
 	
 	public HashMap<Vector2,CaseType> getTiles() {
 		return null;
+	}
+	
+	public int getMaxActivationLevel() {
+		return 0;
 	}
 	
 	public int getActivationLevel() {
