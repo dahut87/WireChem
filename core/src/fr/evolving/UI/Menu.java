@@ -14,6 +14,9 @@ import com.badlogic.gdx.maps.tiled.TiledMapTileLayer.Cell;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.utils.ObjectMap.Entries;
+import com.badlogic.gdx.utils.ObjectMap.Entry;
+import com.badlogic.gdx.utils.OrderedMap;
 
 import fr.evolving.assets.AssetLoader;
 import fr.evolving.automata.Level;
@@ -85,13 +88,12 @@ public void setMenuTransmuterSurtile(int x,int y,Transmuter transmuter)
 {
 		if (transmuter!=null) {
 			Cell cell=((TiledMapTileLayer)map.getLayers().get(1)).getCell(x,y);
-			HashMap<Vector2,CaseType> tiles=transmuter.getTiles();
-			Iterator<Vector2> keySetIterator = transmuter.getTiles().keySet().iterator();
-			cell.setTile(AssetLoader.tileSet.getTile(83));
-			while(keySetIterator.hasNext()){
-				Vector2 key = keySetIterator.next();
-				Cell subcell=((TiledMapTileLayer)map.getLayers().get(1)).getCell((int)(x+key.x),(int)(y+key.y));
-				subcell.setTile(AssetLoader.tileSet.getTile(tiles.get(key).ordinal()+80));
+			OrderedMap<Vector2, Integer> tiles=transmuter.getTilesidrotated();
+			Entries<Vector2, Integer> iterator=tiles.iterator();
+			while(iterator.hasNext()){
+				Entry<Vector2, Integer> all = iterator.next();
+				Cell subcell=((TiledMapTileLayer)map.getLayers().get(1)).getCell((int)(x+all.key.x),(int)(y+all.key.y));
+				subcell.setTile(AssetLoader.tileSet.getTile(transmuter.getTilestype(tiles.keys().toArray().indexOf(all.key, false)).ordinal()+80));
 			}
 			
 		}
@@ -121,17 +123,14 @@ public void setMenuTransmuter(int x,int y,String Name,Transmuter.Angular Angle)
 		if (transmuter!=null) {
 			Gdx.app.debug(getClass().getSimpleName(),"Transmuter find:"+transmuter.getName()+" Angle:"+Angle+" coords"+x+","+y);
 			transmuter.setRotation(Angle);
-			Iterator<Vector2> keySetIterator = transmuter.getTiles().keySet().iterator();
-			int MainTile=transmuter.getMainTile();
-			cell.setTile(AssetLoader.tileSet.getTile(MainTile++));
-			cell.setRotation(Angle.ordinal());
+			Iterator<Entry<Vector2, Integer>> keySetIterator = transmuter.getTilesidrotated().iterator();
 			while(keySetIterator.hasNext()){
-				Vector2 key = keySetIterator.next();
-				Cell subcell=((TiledMapTileLayer)map.getLayers().get(0)).getCell((int)(x+key.x),(int)(y+key.y));
-				subcell.setTile(AssetLoader.tileSet.getTile(MainTile++));
+				Entry<Vector2, Integer> all = keySetIterator.next();
+				Cell subcell=((TiledMapTileLayer)map.getLayers().get(0)).getCell((int)(x+all.key.x),(int)(y+all.key.y));
+				subcell.setTile(AssetLoader.tileSet.getTile(all.value));
 				subcell.setRotation(Angle.ordinal());
-				subcell.getTile().getProperties().put("movetox",(int) -key.x);
-				subcell.getTile().getProperties().put("movetoy",(int) -key.y);
+				subcell.getTile().getProperties().put("movetox",(int) -all.key.x);
+				subcell.getTile().getProperties().put("movetoy",(int) -all.key.y);
 			}
 			
 		}

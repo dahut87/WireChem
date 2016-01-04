@@ -1,11 +1,15 @@
 package fr.evolving.assets;
 
+import java.util.Iterator;
+import java.util.Locale;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Preferences;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.assets.loaders.SkinLoader;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
+import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -27,11 +31,23 @@ import com.badlogic.gdx.maps.tiled.tiles.AnimatedTiledMapTile;
 import com.badlogic.gdx.maps.tiled.tiles.StaticTiledMapTile;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.scenes.scene2d.ui.TooltipManager;
 import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.I18NBundle;
+import com.badlogic.gdx.utils.ObjectMap.Values;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.ScalingViewport;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 
+import fr.evolving.automata.Inverter_I;
+import fr.evolving.automata.Inverter_II;
+import fr.evolving.automata.Negativer;
+import fr.evolving.automata.Negativer_I;
+import fr.evolving.automata.Negativer_II;
+import fr.evolving.automata.Negativer_III;
+import fr.evolving.automata.Neutraliser_I;
+import fr.evolving.automata.Neutraliser_II;
+import fr.evolving.automata.Positiver;
 import fr.evolving.automata.Positiver_I;
 import fr.evolving.automata.Positiver_II;
 import fr.evolving.automata.Positiver_III;
@@ -60,7 +76,9 @@ public class AssetLoader {
 	public static NinePatch full;
 	public static AssetManager manager;
 	public static TiledMapTileSet tileSet;
-	public static Transmuter[] allTransmuter;
+	public static Array<Transmuter> allTransmuter;
+    public static TooltipManager Tooltipmanager;
+    public static I18NBundle french,usa,language;
 	
 	public static void addstyle(TextureAtlas Atlas_level,String Name) {
 		AtlasRegion AnAtlasRegion = Atlas_level.findRegion(Name);
@@ -97,7 +115,7 @@ public class AssetLoader {
 		manager.load("musics/intro.mp3", Music.class);
 	}
 	
-	public static void finishall() {	
+	public static void finishall() {
 		Gdx.app.debug("AssetLoader","Ajout des textures disabled,over et down");
 		Atlas_level = manager.get("textures/level.pack");
 		if (manager.isLoaded("textures/level.pack")) {
@@ -162,28 +180,37 @@ public class AssetLoader {
         		}
         	}
         }
-        allTransmuter=new Transmuter[3];
-        allTransmuter[0]=new Positiver_I(null);
-        allTransmuter[1]=new Positiver_II(null);
-        allTransmuter[2]=new Positiver_III(null);
-        for(int i=0;i<allTransmuter.length;i++) {
-        	int[] result;
-        	result=allTransmuter[i].getallTiles();
-        	for (int j=0;j<result.length;j++) {
-        			AssetLoader.tileSet.getTile(result[j]).getProperties().put("transmuter", allTransmuter[i]);
-        			AssetLoader.tileSet.getTile(result[j]).getProperties().put("name", allTransmuter[i].getName());        			
-          	  		Gdx.app.debug("AssetLoader","Ajustement données Tiles N°:"+String.valueOf(result[j])+" Nom:"+allTransmuter[i].getName());
+        allTransmuter=new Array<Transmuter>();
+        allTransmuter.add(new Positiver(null));
+        allTransmuter.add(new Positiver_I(null));
+        allTransmuter.add(new Positiver_II(null));
+        allTransmuter.add(new Positiver_III(null));
+        allTransmuter.add(new Negativer(null));
+        allTransmuter.add(new Negativer_I(null));
+        allTransmuter.add(new Negativer_II(null));
+        allTransmuter.add(new Negativer_III(null));
+        allTransmuter.add(new Inverter_I(null));
+        allTransmuter.add(new Inverter_II(null));
+        allTransmuter.add(new Neutraliser_I(null));
+        allTransmuter.add(new Neutraliser_II(null));
+        for(Transmuter transmuter:allTransmuter) {
+        	Values<Integer> allTiles=transmuter.getTilesid().iterator();
+    		while(allTiles.hasNext()) {
+    			Integer atile=allTiles.next();
+      	  		Gdx.app.debug("AssetLoader","Ajustement données Tiles N°:"+String.valueOf(atile)+" Nom:"+transmuter.getName());
+        			AssetLoader.tileSet.getTile(atile).getProperties().put("transmuter", transmuter);
+        			AssetLoader.tileSet.getTile(atile).getProperties().put("name", transmuter.getName());        			
         		}
         	}
+        Gdx.app.debug("AssetLoader","Ajout de la gestion des tooltips");
+        Tooltipmanager= new TooltipManager();
+        Gdx.app.debug("AssetLoader","Ajout de la gestion des locales");        
+        FileHandle baseFileHandle = Gdx.files.internal("i18n/messages/messages");
+        usa = I18NBundle.createBundle(baseFileHandle, new Locale("en"));   
+        french = I18NBundle.createBundle(baseFileHandle, new Locale("fr"));
+        language=usa;
+        I18NBundle.setExceptionOnMissingKey(true);
         }
-	
-	public static Transmuter getTransmuter(int Id) {
-		for(Transmuter transmuter:allTransmuter) {
-			if (transmuter.isTransmuter(Id))
-				return transmuter;
-		}
-		return null;
-	}
 	
 	public static Transmuter getTransmuter(String Name) {
 		for(Transmuter transmuter:allTransmuter) {
@@ -191,14 +218,6 @@ public class AssetLoader {
 				return transmuter;
 		}
 		return null;
-	}
-	
-	public static Vector2 resolveTransmuterMain(int Id) {
-		Transmuter transmuter=getTransmuter(Id);
-		if (transmuter!=null) 
-			return transmuter.getPostitionMainTile(Id);
-		else
-			return null;
 	}
 	
 	public static int setpref() {

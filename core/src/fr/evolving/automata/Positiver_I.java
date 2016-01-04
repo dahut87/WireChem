@@ -5,6 +5,8 @@ import java.util.Iterator;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.utils.ObjectMap.Values;
+import com.badlogic.gdx.utils.OrderedMap;
 
 import fr.evolving.automata.Transmuter.CaseType;
 import fr.evolving.automata.Transmuter.Class;
@@ -32,11 +34,11 @@ public class Positiver_I extends Transmuter {
 	private static float TurnTemp;
 	private static float TurnRayon;
 	private static float TurnNrj;
-	private static int Id;
 	private static boolean Activable;
 	private int ActivationLevel;
 	private int Rotation;
-	private static HashMap<Vector2,CaseType> Tiles;
+	private static OrderedMap<Vector2, CaseType> Tilestype;
+	private static OrderedMap<Vector2, Integer> Tilesid;
 	
 	public Positiver_I(Level level) {
 		super(level);
@@ -63,11 +65,14 @@ public class Positiver_I extends Transmuter {
 		this.TurnTemp=0f;
 		this.TurnRayon=0f;
 		this.TurnNrj=0f;
-		this.Id=0;
 		this.Activable=true;
 		this.ActivationLevel=0;
-		this.Tiles= new HashMap<Vector2,CaseType>();
-		this.Tiles.put(new Vector2(1,0), CaseType.Fibre);
+		this.Tilestype= new OrderedMap<Vector2, CaseType>();
+		this.Tilestype.put(new Vector2(0,0), CaseType.Cuivre_seul);
+		this.Tilestype.put(new Vector2(1,0), CaseType.Fibre_seul);
+		this.Tilesid= new OrderedMap<Vector2, Integer>();
+		this.Tilesid.put(new Vector2(0,0), 104);
+		this.Tilesid.put(new Vector2(1,0), 105);		
 	}
 	
 	public String getName() {
@@ -134,53 +139,22 @@ public class Positiver_I extends Transmuter {
 			UpgradedCycle+=0.2f;
 	}
 	
-	public int getMainTile() {
-		return this.getSize()*100+Id*this.getSize();
-	}
-	
-	public int FindMainTile(int Id) {
-		int thesize=(Id & 0xFFFF)/100;
-		int deltaid=(Id & 0xFFFF)-thesize*100;
-		return thesize*100+((int)(deltaid/thesize))*thesize;
-	}
-	
-	public int[] getallTiles() {
-		int thesize=Tiles.size()+1;
-		int[] result;
-		result=new int[thesize];
-		for(int i=0;i<thesize;i++)
-			result[i]=thesize*100+this.Id*thesize+i;
-		return result;
+	public  Values<Integer> getTilesid() {
+		return Tilesid.values();
 	}	
 	
-	public Vector2[] getallSize() {
-		HashMap<Vector2,CaseType> newTiles= new HashMap<Vector2,CaseType>();
-		Iterator<Vector2> keySetIterator = this.Tiles.keySet().iterator();
-		Vector2[] vector=new Vector2[2];
-		vector[0]=new Vector2();
-		vector[1]=new Vector2();
-		while(keySetIterator.hasNext()){
-    	  Vector2 key = keySetIterator.next();
-    	  double delta=key.len();
-    	  double alpha=key.angleRad()+this.getRotation().ordinal()*Math.PI/2;
-    	  float x=(float)Math.round(delta*Math.cos(alpha));
-    	  float y=(float)Math.round(delta*Math.sin(alpha));
-    	  vector[0].x=Math.min(vector[0].x, x);
-    	  vector[0].y=Math.min(vector[0].y, y);
-    	  vector[1].x=Math.max(vector[1].x, x);
-    	  vector[1].y=Math.max(vector[1].y, y); 
-    	}
-    	return vector;
-	}
+	public CaseType getTilestype(int order) {
+		return Tilestype.values().toArray().get(order);
+	}	
 	
-	public HashMap<Vector2,CaseType> getTiles() {
-		HashMap<Vector2,CaseType> newTiles= new HashMap<Vector2,CaseType>();
-		Iterator<Vector2> keySetIterator = this.Tiles.keySet().iterator();
-		while(keySetIterator.hasNext()){
-    	  Vector2 key = keySetIterator.next();
+	public OrderedMap<Vector2, Integer> getTilesidrotated() {
+		OrderedMap<Vector2,Integer> newTiles= new OrderedMap<Vector2,Integer>();
+		Iterator<Vector2> tiles = this.Tilesid.keys();
+		while(tiles.hasNext()){
+    	  Vector2 key = tiles.next();
     	  double delta=key.len();
     	  double alpha=key.angleRad()+this.getRotation().ordinal()*Math.PI/2;
-    	  newTiles.put(new Vector2((float)Math.round(delta*Math.cos(alpha)),(float)Math.round(delta*Math.sin(alpha))), this.Tiles.get(key));
+    	  newTiles.put(new Vector2((float)Math.round(delta*Math.cos(alpha)),(float)Math.round(delta*Math.sin(alpha))), this.Tilesid.get(key));
     	}
     	return newTiles;
 	}
@@ -212,7 +186,7 @@ public class Positiver_I extends Transmuter {
 	}
 	
 	public int getSize() {
-		return (Tiles.size()+1);
+		return (Tilesid.size);
 	}
 
 	public int getTechnology() {

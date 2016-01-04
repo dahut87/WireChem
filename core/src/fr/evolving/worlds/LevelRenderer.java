@@ -85,7 +85,7 @@ public class LevelRenderer {
 		batcher2.draw(Texture_logobig,120, AssetLoader.height-Texture_logobig.getRegionHeight());
 		font.draw(batcher2, LevelScreen.selected.level.Name, 15, 145);
 			if (LevelScreen.selected!=null && LevelScreen.selected.level.Tech>0)
-		font.draw(batcher2, "Récompenses", 1215, AssetLoader.height-15);
+		font.draw(batcher2, "Recompenses", 1215, AssetLoader.height-15);
 		if (LevelScreen.selected!=null && LevelScreen.selected.level.Cout>0) {
 			font.draw(batcher2, "Ressources", 1215, 145);
 			font.draw(batcher2, "Objectifs", 1215, 295);

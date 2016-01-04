@@ -11,7 +11,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.ImageTextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
-import com.badlogic.gdx.scenes.scene2d.utils.Align;
+import com.badlogic.gdx.utils.Align;
 
 import fr.evolving.assets.AssetLoader;
 import fr.evolving.automata.Level;
@@ -50,14 +50,14 @@ public class ButtonLevel extends ImageTextButton {
 		this.setBounds(level.X, level.Y*AssetLoader.ratio, 111*scale, 125*scale);
 		Thelabel.setPosition(level.X+54*scale, level.Y*AssetLoader.ratio+20*scale, Align.bottom | Align.center);
 		stylelabel=Thelabel.getStyle();
-		stylelabel.font.setScale(scale);
+		//stylelabel.font.setScale(scale);
 		Thelabel.setStyle(stylelabel);
 		style= this.getStyle();
 		style.pressedOffsetX=style.pressedOffsetX*scale;
 		style.pressedOffsetY=style.pressedOffsetY*scale;
 		style.unpressedOffsetX=style.unpressedOffsetX*scale;
 		style.unpressedOffsetY=style.unpressedOffsetY*scale;
-		style.font.setScale(scale);
+		//style.font.setScale(scale);
 		this.setStyle(this.style);
 	}
 	

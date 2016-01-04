@@ -11,7 +11,7 @@ import com.badlogic.gdx.utils.ObjectMap.Values;
 import fr.evolving.automata.Transmuter.CaseType;
 import fr.evolving.automata.Transmuter.Class;
 
-public class Positiver_III extends Transmuter {
+public class Negativer_I extends Transmuter {
 	private static String Name,Desc;
 	private static Class theClass;
 	private static int Price;
@@ -40,15 +40,15 @@ public class Positiver_III extends Transmuter {
 	private static OrderedMap<Vector2, CaseType> Tilestype;
 	private static OrderedMap<Vector2, Integer> Tilesid;
 	
-	public Positiver_III(Level level) {
+	public Negativer_I(Level level) {
 		super(level);
-		this.Name="Positiveur III";	
-		this.Desc="Positiveur de degré 3 avec...blabla avec...blabla avec avecave aveca vecavec avec avec avec avecavecavecavec avec avecavecavec avec avecavecavecavec avec";
+		this.Name="Negativeur I";	
+		this.Desc="Negativeur de degré 1 avec...blabla avec...blabla avec avecave aveca vecavec avec avec avec avecavecavecavec avec avecavecavec avec avecavecavecavec avec";
 		this.theClass=Class.Charge;		
 		this.Price=50;
 		this.Technology=2;
 		this.Research=0;		
-		this.Upgrade=null;
+		this.Upgrade=new Negativer_II(level);
 		this.Unlock=null;
 		this.showed=true;
 		this.CanUpgradeTemp=true;
@@ -68,9 +68,11 @@ public class Positiver_III extends Transmuter {
 		this.Activable=true;
 		this.ActivationLevel=0;
 		this.Tilestype= new OrderedMap<Vector2, CaseType>();
-		this.Tilestype.put(new Vector2(0,0), CaseType.Tout);
+		this.Tilestype.put(new Vector2(0,0), CaseType.Cuivre_seul);
+		this.Tilestype.put(new Vector2(1,0), CaseType.Fibre_seul);
 		this.Tilesid= new OrderedMap<Vector2, Integer>();
-		this.Tilesid.put(new Vector2(0,0), 102);	
+		this.Tilesid.put(new Vector2(0,0), 108);
+		this.Tilesid.put(new Vector2(1,0), 105);	
 	}
 	
 	public String getName() {

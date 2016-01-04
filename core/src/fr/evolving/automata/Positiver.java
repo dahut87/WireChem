@@ -11,7 +11,7 @@ import com.badlogic.gdx.utils.ObjectMap.Values;
 import fr.evolving.automata.Transmuter.CaseType;
 import fr.evolving.automata.Transmuter.Class;
 
-public class Positiver_III extends Transmuter {
+public class Positiver extends Transmuter {
 	private static String Name,Desc;
 	private static Class theClass;
 	private static int Price;
@@ -40,10 +40,10 @@ public class Positiver_III extends Transmuter {
 	private static OrderedMap<Vector2, CaseType> Tilestype;
 	private static OrderedMap<Vector2, Integer> Tilesid;
 	
-	public Positiver_III(Level level) {
+	public Positiver(Level level) {
 		super(level);
-		this.Name="Positiveur III";	
-		this.Desc="Positiveur de degré 3 avec...blabla avec...blabla avec avecave aveca vecavec avec avec avec avecavecavecavec avec avecavecavec avec avecavecavecavec avec";
+		this.Name="Positiveur non activable";	
+		this.Desc="Positiveur ...blabla avec...blabla avec avecave aveca vecavec avec avec avec avecavecavecavec avec avecavecavec avec avecavecavecavec avec";
 		this.theClass=Class.Charge;		
 		this.Price=50;
 		this.Technology=2;
@@ -68,9 +68,9 @@ public class Positiver_III extends Transmuter {
 		this.Activable=true;
 		this.ActivationLevel=0;
 		this.Tilestype= new OrderedMap<Vector2, CaseType>();
-		this.Tilestype.put(new Vector2(0,0), CaseType.Tout);
+		this.Tilestype.put(new Vector2(0,0), CaseType.Nimporte);
 		this.Tilesid= new OrderedMap<Vector2, Integer>();
-		this.Tilesid.put(new Vector2(0,0), 102);	
+		this.Tilesid.put(new Vector2(0,0), 100);	
 	}
 	
 	public String getName() {

@@ -6,6 +6,7 @@ import java.util.Iterator;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.utils.ObjectMap.Entry;
 
 import fr.evolving.automata.Transmuter.CaseType;
 
@@ -33,14 +34,12 @@ public class Grid implements Serializable{
 			Transmuter transmuter=getTransmuter(x,y);
 			if (transmuter!=null)
 			{
-				Iterator<Vector2> keySetIterator = transmuter.getTiles().keySet().iterator();
-				int MainTile=transmuter.getMainTile();
-				GetXY(x,y).Transmuter_calc=(1<<16)*transmuter.getRotation().ordinal()+MainTile++;
-				while(keySetIterator.hasNext()){
-					Vector2 key = keySetIterator.next();
-					GetXY(x+key.x,y+key.y).Transmuter_calc=(1<<16)*transmuter.getRotation().ordinal()+MainTile++;
-					GetXY(x+key.x,y+key.y).Transmuter_movex=(int)-key.x;
-					GetXY(x+key.x,y+key.y).Transmuter_movey=(int)-key.y;
+				Iterator<Entry<Vector2, Integer>> tiles = transmuter.getTilesidrotated().iterator();
+				while(tiles.hasNext()){
+					Entry<Vector2, Integer> all=tiles.next();
+					GetXY(x+all.key.x,y+all.key.y).Transmuter_calc=(1<<16)*transmuter.getRotation().ordinal()+all.value;
+					GetXY(x+all.key.x,y+all.key.y).Transmuter_movex=(int)-all.key.x;
+					GetXY(x+all.key.x,y+all.key.y).Transmuter_movey=(int)-all.key.y;
 				}
 			}
 		}

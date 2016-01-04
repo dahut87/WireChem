@@ -5,10 +5,14 @@ import java.util.Iterator;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.utils.ObjectMap.Entries;
+import com.badlogic.gdx.utils.ObjectMap.Entry;
+import com.badlogic.gdx.utils.ObjectMap.Values;
+import com.badlogic.gdx.utils.OrderedMap;
 
 public abstract class Transmuter implements Cloneable {
 	public enum CaseType{Rien,Cuivre_seul,Fibre_seul,Cuivre,Fibre,Tout,Nimporte};
-	public enum Class{Structure,Charge,Direction,Filtrage,Synthèse,Détection,Divers,Scénario};
+	public enum Class{Structure,Charge,Direction,Filtrage,Synthese,Detection,Divers,Scenario};
 	public enum Angular{A00,A90,A180,A270};
 	protected Level level;
 	protected Angular Rotation;
@@ -57,45 +61,19 @@ public abstract class Transmuter implements Cloneable {
 	public void UpgradeCycle() {
 	}
 	
-	public int getMainTile() {
-		return 0;
-	}
-	
-	public int FindMainTile(int Id) {
-		return 0;
-	}
-	
-	public boolean isTransmuter(int Id) {
-		return (FindMainTile(Id)==getMainTile());
-	}
-	
 	public boolean isTransmuter(String Name) {
 		return  Name.equals(this.getName());
 	}
 	
-	public Vector2 getPostitionMainTile(int Id) {
-		if (!isTransmuter(Id))
-			return null;
-		HashMap<Vector2,CaseType> tiles=this.getTiles();
-		Iterator<Vector2> keySetIterator = tiles.keySet().iterator();
-		int Idrec=this.getMainTile();
-		if ((Id & 0xFFFF)==Idrec)
-			return new Vector2();
-		Transmuter.Angular oldrotation=this.getRotation();
-		this.setRotation(Transmuter.Angular.values()[Id>>16]);
-		while(keySetIterator.hasNext()){
-    	  Vector2 key = keySetIterator.next();
-    	  Idrec++;
-    	  if ((Id & 0xFFFF)==Idrec) {
-    		this.setRotation(oldrotation);
-  		    return new Vector2().sub(key);
-    	  }
-    	}
-		this.setRotation(oldrotation);
+	public CaseType getTilestype(int order) {
 		return null;
 	}
 	
-	public HashMap<Vector2,CaseType> getTiles() {
+	public OrderedMap<Vector2, Integer> getTilesidrotated() {
+		return null;
+	}
+	
+	public  Values<Integer> getTilesid() {
 		return null;
 	}
 	
@@ -209,30 +187,18 @@ public abstract class Transmuter implements Cloneable {
 	public float getTurnNrj() {
 		return 0;
 	}
-	
-	public int[] getallTiles() {
-		return null;
-	}
-	
-	public Vector2[] getallSize() {
-		return null;
-	}
 
 	public String getInformations() {
-		HashMap<Vector2,CaseType> tiles=this.getTiles();
-		Iterator<Vector2> keySetIterator = tiles.keySet().iterator();
+		OrderedMap<Vector2, Integer> tiles=this.getTilesidrotated();
+		Entries<Vector2, Integer> iterator=tiles.iterator();
 		String result;
-		result="**********************************\n"+"Name:"+this.getName()+"\nClass:"+this.getaClass()+" Id:"+this.getMainTile()+" Rotation:"+this.getRotation()+"\nPrice:"+this.getPrice()+" Tech:"+this.getTechnology()+"\nResearch:"+this.getResearch()+" Size:"+this.getSize()+"\nActivable:"+this.isActivable()+" Activation:"+this.getActivationLevel()+" Visible:"+this.isShowed()+"\nUpgradable:"+((this.isUpgradable())?this.getUpgrade().getName():this.isUpgradable())+" Unlockable:"+((this.isUnlockable())?this.getUnlock().getName():this.isUnlockable())+"\nUpgrade Cycle:"+this.getUpgradeCycle()+" upgrade:"+this.isUpgradableCycle()+"\nUpgrade Temperature:"+this.getUpgradeTemp()+" upgrade:"+this.isUpgradableTemp()+"\nUpgrade Nrj:"+this.getUpgradeNrj()+" upgrade:"+this.isUpgradableNrj()+"\nUpgrade Rayon:"+this.getUpgradeRayon()+" upgrade:"+this.isUpgradableRayon()+"\nTemperature /turn:"+this.getTurnTemp()+" Rayon /turn:"+this.getTurnRayon()+" Nrj /turn:"+this.getTurnNrj()+"\nTemperature /use:"+this.getUsedTemp()+" Rayon /use:"+this.getUsedRayon()+" Nrj /use:"+this.getUsedNrj()+"\nTiles:";
-		int[] allTiles;
-		Vector2[] allSize;
-		allTiles=this.getallTiles();
-		for(int i=0;i<allTiles.length;i++)
-			result+=allTiles[i]+" ";
-		allSize=this.getallSize();
-		result+="Size x&y:"+allSize[0].x+","+allSize[0].y+" to "+ allSize[1].x+","+allSize[1].y+"\n *Placement*\n";
-		while(keySetIterator.hasNext()){
-    	  Vector2 key = keySetIterator.next();
-    	  result+="\ncoords:" + key.x+","+key.y + " type: " + tiles.get(key);
+		result="**********************************\n"+"Name:"+this.getName()+"\nClass:"+this.getaClass()+" Rotation:"+this.getRotation()+"\nPrice:"+this.getPrice()+" Tech:"+this.getTechnology()+"\nResearch:"+this.getResearch()+" Size:"+this.getSize()+"\nActivable:"+this.isActivable()+" Activation:"+this.getActivationLevel()+" Visible:"+this.isShowed()+"\nUpgradable:"+((this.isUpgradable())?this.getUpgrade().getName():this.isUpgradable())+" Unlockable:"+((this.isUnlockable())?this.getUnlock().getName():this.isUnlockable())+"\nUpgrade Cycle:"+this.getUpgradeCycle()+" upgrade:"+this.isUpgradableCycle()+"\nUpgrade Temperature:"+this.getUpgradeTemp()+" upgrade:"+this.isUpgradableTemp()+"\nUpgrade Nrj:"+this.getUpgradeNrj()+" upgrade:"+this.isUpgradableNrj()+"\nUpgrade Rayon:"+this.getUpgradeRayon()+" upgrade:"+this.isUpgradableRayon()+"\nTemperature /turn:"+this.getTurnTemp()+" Rayon /turn:"+this.getTurnRayon()+" Nrj /turn:"+this.getTurnNrj()+"\nTemperature /use:"+this.getUsedTemp()+" Rayon /use:"+this.getUsedRayon()+" Nrj /use:"+this.getUsedNrj()+"\nTiles:";
+		Values<Integer> allTiles=this.getTilesid().iterator();
+		while(allTiles.hasNext())
+			result+=String.valueOf(allTiles.next())+" ";
+		while(iterator.hasNext()){
+    	  Entry<Vector2, Integer> all = iterator.next();
+    	  result+="\ncoords:" + all.key.x+","+all.key.y + " type: " + this.getTilestype(tiles.keys().toArray().indexOf(all.key, false)) +" id:"+all.value;
     	}
     	result+="\n**********************************";
 		return result;
