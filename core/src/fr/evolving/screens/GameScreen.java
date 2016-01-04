@@ -475,7 +475,8 @@ public class GameScreen implements Screen {
 	}
 
 	void map_fiber_pen(float realx, float realy,int x, int y,boolean alone,int button,calling call) {
-		level.Grid.GetXY(x,y).Fiber=-1*level.Grid.GetXY(x,y).Fiber+1;
+		if (level.Grid.GetXY(x,y).Transmuter_calc==0)
+			level.Grid.GetXY(x,y).Fiber=-1*level.Grid.GetXY(x,y).Fiber+1;
 		if (alone) {
 			level.Grid.tiling_copper();
 			map.redraw(60);
@@ -483,7 +484,8 @@ public class GameScreen implements Screen {
 	}
 
 	void map_fiber_brush(float realx, float realy,int x, int y,boolean alone,int button,calling call) {
-		level.Grid.GetXY(x,y).Fiber=1;
+		if (level.Grid.GetXY(x,y).Transmuter_calc==0)
+			level.Grid.GetXY(x,y).Fiber=1;
 		if (alone) {
 			level.Grid.tiling_copper();
 			map.redraw(60);
@@ -501,7 +503,8 @@ public class GameScreen implements Screen {
 	}
 
 	void map_copper_pen(float realx, float realy,int x, int y,boolean alone,int button,calling call) {
-		level.Grid.GetXY(x,y).Copper=!level.Grid.GetXY(x,y).Copper;
+		if (level.Grid.GetXY(x,y).Transmuter_calc==0)
+			level.Grid.GetXY(x,y).Copper=!level.Grid.GetXY(x,y).Copper;
 		if (alone) {
 			level.Grid.tiling_copper();
 			map.redraw(60);
@@ -509,7 +512,8 @@ public class GameScreen implements Screen {
 	}
 
 	void map_copper_brush(float realx, float realy,int x, int y,boolean alone,int button,calling call) {
-		level.Grid.GetXY(x,y).Copper=true;
+		if (level.Grid.GetXY(x,y).Transmuter_calc==0)
+			level.Grid.GetXY(x,y).Copper=true;
 		if (alone) {
 			level.Grid.tiling_copper();
 			map.redraw(60);

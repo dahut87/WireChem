@@ -69,7 +69,7 @@ public class Negativer_II extends Transmuter {
 		this.ActivationLevel=0;
 		this.Tilestype= new OrderedMap<Vector2, CaseType>();
 		this.Tilestype.put(new Vector2(0,0), CaseType.Cuivre);
-		this.Tilestype.put(new Vector2(1,0), CaseType.Fibre);
+		this.Tilestype.put(new Vector2(1,0), CaseType.Fibre_seul);
 		this.Tilesid= new OrderedMap<Vector2, Integer>();
 		this.Tilesid.put(new Vector2(0,0), 109);
 		this.Tilesid.put(new Vector2(1,0), 107);	
