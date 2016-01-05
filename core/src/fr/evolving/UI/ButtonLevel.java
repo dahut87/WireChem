@@ -22,12 +22,14 @@ public class ButtonLevel extends ImageTextButton {
 	TextureRegion Finalled,Locked;
 	Label Thelabel;
 	float scale;
+	float ratio;
 	ImageTextButtonStyle style;
 	LabelStyle stylelabel;
 	
-	public ButtonLevel(Level level, boolean Activated) {
+	public ButtonLevel(Level level, boolean Activated,float ratio) {
 		super(level.Name, AssetLoader.Skin_level, "world"+String.valueOf(level.aWorld));
 		this.level=level;
+		this.ratio=ratio;
 		this.Activated=Activated;
 		if (level.Special==true) {
 			Finalled=AssetLoader.Skin_level.getAtlas().findRegion("boss");
@@ -38,17 +40,17 @@ public class ButtonLevel extends ImageTextButton {
 		}
 		this.setColor(1f, 0.47f+(float)level.X/1024f*0.529f,0.607f+(float)level.X/768f*0.392f, 1f);
 		this.scale=1f;
-		this.setBounds(level.X, level.Y*AssetLoader.ratio, 111*scale, 125*scale);
+		this.setBounds(level.X, level.Y*ratio, 111*scale, 125*scale);
 		Thelabel=new Label(level.Element, AssetLoader.Skin_level,"Levelshort");
 		Thelabel.setColor(level.X/1024f,level.X/1024f,level.X/1024f,1f);
-		Thelabel.setPosition(level.X+54*scale, level.Y*AssetLoader.ratio+20*scale, Align.bottom | Align.center);
+		Thelabel.setPosition(level.X+54*scale, level.Y*ratio+20*scale, Align.bottom | Align.center);
 	}
 	
 	@Override	
 	public void setScale(float scale) {
 		this.scale=scale;
-		this.setBounds(level.X, level.Y*AssetLoader.ratio, 111*scale, 125*scale);
-		Thelabel.setPosition(level.X+54*scale, level.Y*AssetLoader.ratio+20*scale, Align.bottom | Align.center);
+		this.setBounds(level.X, level.Y*ratio, 111*scale, 125*scale);
+		Thelabel.setPosition(level.X+54*scale, level.Y*ratio+20*scale, Align.bottom | Align.center);
 		stylelabel=Thelabel.getStyle();
 		//stylelabel.font.setScale(scale);
 		Thelabel.setStyle(stylelabel);
@@ -71,7 +73,7 @@ public class ButtonLevel extends ImageTextButton {
 		level.X=x;
 		level.Y=y;
 		Thelabel.setColor(level.X/1024f,level.X/1024f,level.X/1024f,1f);
-		Thelabel.setPosition(level.X+54*scale, level.Y*AssetLoader.ratio+20*scale, Align.bottom | Align.center);
+		Thelabel.setPosition(level.X+54*scale, level.Y*ratio+20*scale, Align.bottom | Align.center);
 		this.setColor(1f, 0.47f+(float)level.X/1024f*0.529f,0.607f+(float)level.X/768f*0.392f, 1f);
 	}
 	
@@ -79,10 +81,10 @@ public class ButtonLevel extends ImageTextButton {
 	public void draw(Batch batch, float parentAlpha) {
 		super.draw(batch, parentAlpha);
 		if (level.Special) {
-			batch.draw(Finalled,level.X,level.Y*AssetLoader.ratio,Finalled.getRegionWidth()*scale,Finalled.getRegionHeight()*scale);
+			batch.draw(Finalled,level.X,level.Y*ratio,Finalled.getRegionWidth()*scale,Finalled.getRegionHeight()*scale);
 		}
 		if (!Activated) {
-			batch.draw(Locked,level.X+this.getWidth()-Locked.getRegionWidth(),level.Y*AssetLoader.ratio+this.getHeight()-Locked.getRegionHeight(),Locked.getRegionWidth()*scale,Locked.getRegionHeight()*scale);
+			batch.draw(Locked,level.X+this.getWidth()-Locked.getRegionWidth(),level.Y*ratio+this.getHeight()-Locked.getRegionHeight(),Locked.getRegionWidth()*scale,Locked.getRegionHeight()*scale);
 		}
 		Thelabel.draw(batch, 1f);
 	}

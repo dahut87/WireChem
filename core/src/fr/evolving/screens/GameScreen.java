@@ -7,9 +7,11 @@ import java.util.Iterator;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import com.badlogic.gdx.Application.ApplicationType;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Graphics.DisplayMode;
+import com.badlogic.gdx.Graphics;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.Screen;
@@ -153,21 +155,35 @@ public class GameScreen implements Screen {
 			rmax("resolution Native",0,0)
 			;
 		    private final String text;
-		    private final int resx,resy;
+		    private int resx,resy;
+		    boolean full;
 		    private resolutions(final String text,int resx,int resy) {
 		        this.text = text;
 		        this.resx=resx;
 		        this.resy=resy;
 		    }
 		    @Override
-		    public String toString() {
-		        return text;
+		    public String toString()
+		    {
+		    	if (full)
+		    		return text+" Fullscreen";
+		    	else
+		    		return text;
+		    }
+		    public void SetFull(boolean fullscreen) {
+		    	full=fullscreen;
 		    }
 		    public int getResolutionX() {
 		        return resx;
 		    }
 		    public int getResolutionY() {
 		        return resy;
+		    }
+		    public void setResolutionX(int x) {
+		        resx=x;
+		    }
+		    public void setResolutionY(int y) {
+		    	resy=y;
 		    }
 		}
 	GestureDetector gesturedetector;
@@ -262,7 +278,7 @@ public class GameScreen implements Screen {
 		objectives=new Objectives();
 		objectives.setVictory(level.Victory);
 		objectives.setPosition(890,AssetLoader.height-95);
-		buttonlevel=new ButtonLevel(level,true);
+		buttonlevel=new ButtonLevel(level,true,1.0f);
 		buttonlevel.setPosition(1760,AssetLoader.height-125);
 		Gdx.app.debug(getClass().getSimpleName(),"Création de la barre d'information");
 		info_tech=new ImageTextButton("0",AssetLoader.Skin_level,"info_tech");
@@ -645,7 +661,7 @@ public class GameScreen implements Screen {
 		stage_info.addActor(info_cout);
 		stage_info.addActor(info_desc);	
 		stage_menu.addActor(map);
-		stage_tooltip.addActor(tooltip);		
+		//stage_tooltip.addActor(tooltip);		
 		stage.addActor(objectives);
 		stage.addActor(buttonlevel);
 		stage.addActor(rayon);
@@ -886,7 +902,6 @@ public class GameScreen implements Screen {
 	}
 	 
 	public Table Createoption() {
-		Table layer = new Table();
 		winOptions = new Window("Options", AssetLoader.Skin_ui);
 		winOptions.add(SettingsVideo()).row();
 		winOptions.add(SettingsAudio()).row();
@@ -997,6 +1012,22 @@ public class GameScreen implements Screen {
 		tablev3.add(selTexturequal).left().row();
 		table.add(tablev3).left();
 		table.row();
+		if(Gdx.app.getType() == ApplicationType.Desktop) {
+			Graphics.DisplayMode[] modes=Gdx.graphics.getDisplayModes();
+			for(resolutions res:resolutions.values()) {
+				res.SetFull(false);
+				for(DisplayMode mode:modes) {
+					if (res.resx==mode.width && res.resy==mode.height)
+						res.SetFull(true);
+				}
+			}
+			Vector2 maxres=Preference.getmaxresolution();
+			resolutions.rmax.SetFull(true);
+			resolutions.rmax.setResolutionX((int)maxres.x);
+			resolutions.rmax.setResolutionY((int)maxres.y);
+		}
+		else
+			selResolution.setDisabled(true);
 		return table;
 	}
 	

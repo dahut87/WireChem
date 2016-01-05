@@ -74,7 +74,7 @@ public class LevelScreen implements Screen {
 		buttonLevels = new ButtonLevel[10];
 		for (Level level :thelevels) {
 			if (level!=null && level.aWorld==aworld) {
-				buttonLevels[i]=new ButtonLevel(level,true);
+				buttonLevels[i]=new ButtonLevel(level,true,AssetLoader.ratio);
 				Gdx.app.debug(getClass().getSimpleName(),"Ajout du niveau :"+level.Name+" N°"+String.valueOf(level.aLevel));
 				buttonLevels[i++].addListener(new ClickListener(){
 		        @Override
