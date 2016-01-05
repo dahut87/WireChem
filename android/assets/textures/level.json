@@ -1,0 +1,151 @@
+{
+    com.badlogic.gdx.graphics.g2d.BitmapFont: {
+	Fluoxetine-25: { file: fonts/Fluoxetine-25.fnt },
+	Vademecum-28: { file: fonts/Vademecum-28.fnt },
+	Vademecum-18: { file: fonts/Vademecum-18.fnt },
+	OpenDyslexicAlta-25: { file: fonts/OpenDyslexicAlta-25.fnt },
+	OpenDyslexicAlta-22: { file: fonts/OpenDyslexicAlta-22.fnt },
+	OpenDyslexicAlta-20: { file: fonts/OpenDyslexicAlta-20.fnt },
+	OpenDyslexicAlta-18: { file: fonts/OpenDyslexicAlta-18.fnt },
+	OpenDyslexicAlta-28: { file: fonts/OpenDyslexicAlta-28.fnt },
+    },
+    com.badlogic.gdx.scenes.scene2d.ui.TextButton$TextButtonStyle: { 
+        Bouton: { up: button_up , down: button_down, font: OpenDyslexicAlta-25, pressedOffsetY: -4 }
+    }
+    com.badlogic.gdx.graphics.Color: {
+      red: { a: 1, b: 0, g: 0, r: 1 },
+      veryred: { a: 1, b: 0, g:0, r: 0.7 },
+      green: { a: 1, b: 0, g: 1, r: 0 },
+      blue: { a: 1, b: 1, g: 0, r: 0 },
+      white: { a: 1, b: 1, g: 1, r: 1 },
+      black: { a: 1, b: 0, g: 0, r: 0 },
+      grey: { a: 1, b: 0, g: 0, r: 0 },
+      lowgrey: { a: 1, b: 0.352, g: 0.352, r: 0.352 },
+      world0: { r:0.843, g:0.129, b:1, a:1},
+      world1: { r:0, g:0.752, b:0.956, a:1},
+      world2: { r:0.921, g:0.462, b:0.462, a:1},
+      world3: { r:0.019, g:0.615, b:0.235, a:1},
+      world4: { r:0.788, g:0.819, b:0.384, a:1},
+   }
+   com.badlogic.gdx.scenes.scene2d.ui.Skin$TintedDrawable: {
+		leveler0_down: { name: leveler0, color: veryred },
+		leveler0_over: { name: leveler0, color: red },
+		leveler0_disabled: { name: leveler0, color: lowgrey },
+		leveler1_down: { name: leveler1, color: veryred },
+		leveler1_over: { name: leveler1, color: red },
+		leveler1_disabled: { name: leveler1, color: lowgrey },
+		leveler2_down: { name: leveler2, color: veryred },
+		leveler2_over: { name: leveler2, color: red },
+		leveler2_disabled: { name: leveler2, color: lowgrey },
+		leveler3_down: { name: leveler3, color: veryred },
+		leveler3_over: { name: leveler3, color: red },
+		leveler3_disabled: { name: leveler3, color: lowgrey },
+		leveler4_down: { name: leveler4, color: veryred },
+		leveler4_over: { name: leveler4, color: red },
+		leveler4_disabled: { name: leveler4, color: lowgrey },
+		
+		arrows_down: { name: arrows, color: veryred },
+		arrows_over: { name: arrows, color: red },
+		arrows_disabled: { name: arrows, color: lowgrey },
+		arrows2_down: { name: arrows2, color: veryred },
+		arrows2_over: { name: arrows2, color: red },
+		arrows2_disabled: { name: arrows2, color: lowgrey },
+		logo2_down: { name: logo2, color: veryred },
+		logo2_over: { name: logo2, color: red },
+		logo2_disabled: { name: logo2, color: lowgrey },
+		cout_down: { name: cout, color: veryred },
+		cout_over: { name: cout, color: red },
+		cout_disabled: { name: cout, color: lowgrey },
+		leveler4_down: { name: rayon, color: veryred },
+		leveler4_over: { name: rayon, color: red },
+		leveler4_disabled: { name: rayon, color: lowgrey },
+		rayon_down: { name: leveler4, color: veryred },
+		rayon_over: { name: leveler4, color: red },
+		rayon_disabled: { name: leveler4, color: lowgrey },
+		nrj_down: { name: nrj, color: veryred },
+		nrj_over: { name: nrj, color: red },
+		nrj_disabled: { name: nrj, color: lowgrey },
+		temp_down: { name: temp, color: veryred },
+		temp_over: { name: temp, color: red },
+		temp_disabled: { name: temp, color: lowgrey },
+		cycle_down: { name: cycle, color: veryred },
+		cycle_over: { name: cycle, color: red },
+		cycle_disabled: { name: cycle, color: lowgrey },
+		tech_down: { name: tech, color: veryred },
+		tech_over: { name: tech, color: red },
+		tech_disabled: { name: tech, color: lowgrey }
+		exit2_down: { name: exit2, color: veryred },
+		exit2_over: { name: exit2, color: red },
+		exit2_disabled: { name: exit2, color: lowgrey }
+	}
+    com.badlogic.gdx.scenes.scene2d.ui.ImageTextButton$ImageTextButtonStyle: { 
+        world0: { checkedFontColor:red, disabledFontColor:white, fontColor:white, overFontColor:red ,up: leveler0 , down: leveler0_down, over:leveler0_over, disabled:leveler0_disabled, checked:leveler0_over, font: Fluoxetine-25, pressedOffsetY: -70, unpressedOffsetY: -72, checkedOffsetY: -72 }
+        world1: { checkedFontColor:red, disabledFontColor:white, fontColor:white, overFontColor:red ,up: leveler1 , down: leveler1_down, over:leveler1_over, disabled:leveler1_disabled, checked:leveler1_over, font: Fluoxetine-25, pressedOffsetY: -70, unpressedOffsetY: -72, checkedOffsetY: -72 }
+        world2: { checkedFontColor:red, disabledFontColor:white, fontColor:white, overFontColor:red ,up: leveler2 , down: leveler2_down, over:leveler2_over, disabled:leveler2_disabled, checked:leveler2_over, font: Fluoxetine-25, pressedOffsetY: -70, unpressedOffsetY: -72, checkedOffsetY: -72 }
+        world3: { checkedFontColor:red, disabledFontColor:white, fontColor:white, overFontColor:red ,up: leveler3 , down: leveler3_down, over:leveler3_over, disabled:leveler3_disabled, checked:leveler3_over, font: Fluoxetine-25, pressedOffsetY: -70, unpressedOffsetY: -72, checkedOffsetY: -72 }
+        world4: { checkedFontColor:red, disabledFontColor:white, fontColor:white, overFontColor:red ,up: leveler4 , down: leveler4_down, over:leveler4_over, disabled:leveler4_disabled, checked:leveler4_over, font: Fluoxetine-25, pressedOffsetY: -70, unpressedOffsetY: -72, checkedOffsetY: -72 }
+        cout: { disabledFontColor:white, fontColor:white, overFontColor:red ,up: cout , down: cout_down, over:cout_over, disabled:cout_disabled, font: OpenDyslexicAlta-25, pressedOffsetY: -45, unpressedOffsetY: -47, checkedOffsetY: -47 }
+        tech: { disabledFontColor:white, fontColor:white, overFontColor:red ,up: tech , down: tech_down, over:tech_over, disabled:tech_disabled, font: OpenDyslexicAlta-25, pressedOffsetY: -45, unpressedOffsetY: -47, checkedOffsetY: -47 } 
+        cycle: { disabledFontColor:white, fontColor:white, overFontColor:red ,up: cycle , down: cycle_down, over:cycle_over, disabled:cycle_disabled, font: OpenDyslexicAlta-25, pressedOffsetY: -45, unpressedOffsetY: -47, checkedOffsetY: -47 }
+        temp: { disabledFontColor:white, fontColor:white, overFontColor:red ,up: temp , down: temp_down, over:temp_over, disabled:temp_disabled, font: OpenDyslexicAlta-25, pressedOffsetY: -45, unpressedOffsetY: -47, checkedOffsetY: -47 } 
+        rayon: { disabledFontColor:white, fontColor:white, overFontColor:red ,up: rayon , down: rayon_down, over:rayon_over, disabled:rayon_disabled, font: OpenDyslexicAlta-25, pressedOffsetY: -45, unpressedOffsetY: -47, checkedOffsetY: -47 }
+        nrj: { disabledFontColor:white, fontColor:white, overFontColor:red ,up: nrj , down: nrj_down, over:nrj_over, disabled:nrj_disabled, font: OpenDyslexicAlta-25, pressedOffsetY: -45, unpressedOffsetY: -47, checkedOffsetY: -47 } 
+        cycle2: { disabledFontColor:white, fontColor:white, overFontColor:red ,up: cycle , down: cycle, over:cycle, disabled:cycle, font: OpenDyslexicAlta-25, pressedOffsetX: 45, unpressedOffsetX: 47,  checkedOffsetX: 45 }
+        temp2: { disabledFontColor:white, fontColor:white, overFontColor:red ,up: temp , down: temp, over:temp, disabled:temp, font: OpenDyslexicAlta-25, pressedOffsetX: 45, unpressedOffsetX: 47, checkedOffsetX: 45 } 
+        rayon2: { disabledFontColor:white, fontColor:white, overFontColor:red ,up: rayon , down: rayon, over:rayon, disabled:rayon, font: OpenDyslexicAlta-25, pressedOffsetX: 45, unpressedOffsetX: 47, checkedOffsetX: 45 }
+        nrj2: { disabledFontColor:white, fontColor:white, overFontColor:red ,up: nrj , down: nrj, over:nrj, disabled:nrj, font: OpenDyslexicAlta-25, pressedOffsetX: 45, unpressedOffsetX: 47, checkedOffsetX: 45 } 
+        cout2: { disabledFontColor:white, fontColor:white, overFontColor:red ,up: cout , down: cout, over:cout, disabled:cout, font: OpenDyslexicAlta-25, pressedOffsetY: -45, unpressedOffsetY: -47, checkedOffsetY: -47 }
+        tech2: { disabledFontColor:white, fontColor:white, overFontColor:red ,up: tech , down: tech, over:tech, disabled:tech, font: OpenDyslexicAlta-25, pressedOffsetY: -45, unpressedOffsetY: -47, checkedOffsetY: -47 } 
+        research2: { disabledFontColor:white, fontColor:white, overFontColor:red ,up: points , down: points, over:points, disabled:points, font: OpenDyslexicAlta-25, pressedOffsetY: -45, unpressedOffsetY: -47, checkedOffsetY: -47 } 
+        info_research: { disabledFontColor:white, fontColor:white, overFontColor:red ,up: points , down: points, over:points, disabled:points, font: OpenDyslexicAlta-20, pressedOffsetY: -35, unpressedOffsetY: -37, checkedOffsetY: -37 }
+        info_activation: { disabledFontColor:white, fontColor:white, overFontColor:red ,up: activation , down: activation, over:activation, disabled:activation, font: OpenDyslexicAlta-20, pressedOffsetY: -35, unpressedOffsetY: -37, checkedOffsetY: -37 } 
+        info_cout: { disabledFontColor:white, fontColor:white, overFontColor:red ,up: cout , down: cout, over:cout, disabled:cout, font: OpenDyslexicAlta-20, pressedOffsetY: -35, unpressedOffsetY: -37, checkedOffsetY: -37 }
+        info_tech: { disabledFontColor:white, fontColor:white, overFontColor:red ,up: tech , down: tech, over:tech, disabled:tech, font: OpenDyslexicAlta-20, pressedOffsetY: -35, unpressedOffsetY: -37, checkedOffsetY: -37 } 
+        default: { checkedFontColor:red,disabledFontColor:white, fontColor:white, overFontColor:red , font: OpenDyslexicAlta-25, pressedOffsetY: 0, unpressedOffsetY: -2 } 
+    }
+  com.badlogic.gdx.scenes.scene2d.ui.ImageButton$ImageButtonStyle: { 
+        Exit: { up: exit2 , down: exit2_down, over:exit2_over}
+        Next: { up: arrows , down: arrows_down, over:arrows_over}
+        Previous: { up: arrows2 , down: arrows2_down, over:arrows2_over}
+        logosmall: { up: logo2 , down: logo2_down, over:logo2_over,checked:logo2_down}
+        run: { up: run }   
+        stop: { up: stop }   
+        speed: { up: speed }   
+        move: { up: move }   
+        zoomp: { up: zoomp }   
+        zoomm: { up: zoomm }   
+        raz: { up: raz }   
+        save: { up: save }   
+        levels: { up: levels }   
+        exits: { up: exits }   
+        screen: { checked: screen, up:windows   }  
+        sound: { checked:sound , up :nosound }
+ 		Setflag: { checked:french  , up: usa }
+        tuto: { checked:tuto , up:nothing }   
+        settings: { up: settings }   
+        stat: { up: stat }
+        separator: { up: separator }       
+        tree: { up: tree }    
+        infos: { up: infos }
+        info_nrj: { up: nrj }
+        info_cycle: { up: cycle } 
+        info_temp: { up: temp } 
+       	info_rayon: { up: rayon } 
+       	info_nrjval: { up: jauge3 }
+        info_cycleval: { up: jauge3 } 
+        info_tempval: { up: jauge3 } 
+       	info_rayonval: { up: jauge3 }        
+    } 
+    
+  com.badlogic.gdx.scenes.scene2d.ui.Label$LabelStyle: { 
+        Levelshort: { font : Vademecum-28 }
+        FPS: { font : OpenDyslexicAlta-18 }
+        info_nom: { font : Vademecum-18 }
+    }
+  com.badlogic.gdx.scenes.scene2d.ui.TextField$TextFieldStyle: { 
+        Descriptif: { font : OpenDyslexicAlta-20 , fontColor:white}
+        info_desc: { font : OpenDyslexicAlta-20 , fontColor:white}
+        info_tooltip: { font : OpenDyslexicAlta-18 , fontColor:white}
+    }
+    
+}
