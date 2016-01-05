@@ -6,21 +6,20 @@ import com.badlogic.gdx.Gdx;
 import fr.evolving.screens.GameScreen;
 import fr.evolving.screens.SplashScreen;
 import fr.evolving.assets.AssetLoader;
+import fr.evolving.assets.Preference;
 
 public class main extends Game {
 	
 	@Override
 	public void create() {
-		Gdx.app.setLogLevel(AssetLoader.setpref());		
-		debug();
-		//test();
+		Gdx.app.setLogLevel(Preference.init());		
 		Gdx.app.debug(getClass().getSimpleName(), "Récupération de la résolution des préférences.");		
-		if (AssetLoader.prefs.getInteger("ResolutionX")>0 && AssetLoader.prefs.getInteger("ResolutionY")>0)	{
+		if (Preference.prefs.getInteger("ResolutionX")>0 && Preference.prefs.getInteger("ResolutionY")>0)	{
 			try {
-				int ResolutionX=AssetLoader.prefs.getInteger("ResolutionX");
-				int ResolutionY=AssetLoader.prefs.getInteger("ResolutionY");
-				boolean Fullscreen=AssetLoader.prefs.getBoolean("Fullscreen");
-				boolean VSync=AssetLoader.prefs.getBoolean("VSync");
+				int ResolutionX=Preference.prefs.getInteger("ResolutionX");
+				int ResolutionY=Preference.prefs.getInteger("ResolutionY");
+				boolean Fullscreen=Preference.prefs.getBoolean("Fullscreen");
+				boolean VSync=Preference.prefs.getBoolean("VSync");
 				Gdx.graphics.setDisplayMode(ResolutionX, ResolutionY, Fullscreen);
 				Gdx.graphics.setVSync(VSync);
 			} catch (ClassCastException e) {
@@ -37,26 +36,6 @@ public class main extends Game {
 		setScreen(new SplashScreen(this));
 	}
 	
-	public void debug() {
-		AssetLoader.prefs.putInteger("ResolutionX", 1280);
-		AssetLoader.prefs.putInteger("ResolutionY", 720);
-		AssetLoader.prefs.putBoolean("Fullscreen", false);
-		AssetLoader.prefs.putBoolean("VSync", false);
-		AssetLoader.prefs.putInteger("log", Gdx.app.LOG_DEBUG);	
-		Gdx.app.setLogLevel(Gdx.app.LOG_DEBUG);
-		AssetLoader.prefs.flush();
-	}
-	
-	public void test() {
-		AssetLoader.prefs.putInteger("ResolutionX", 1920);
-		AssetLoader.prefs.putInteger("ResolutionY", 1080);
-		AssetLoader.prefs.putBoolean("Fullscreen", true);
-		AssetLoader.prefs.putBoolean("VSync", true);
-		AssetLoader.prefs.putInteger("log", Gdx.app.LOG_INFO);	
-		Gdx.app.setLogLevel(Gdx.app.LOG_INFO);
-		AssetLoader.prefs.flush();
-	}
-
 	@Override
 	public void dispose() {
 		super.dispose();

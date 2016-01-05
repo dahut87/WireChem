@@ -13,8 +13,10 @@ import com.badlogic.gdx.Graphics.DisplayMode;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.Texture.TextureFilter;
 import com.badlogic.gdx.input.GestureDetector;
 import com.badlogic.gdx.maps.MapLayers;
 import com.badlogic.gdx.maps.MapProperties;
@@ -29,16 +31,22 @@ import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.CheckBox;
 import com.badlogic.gdx.scenes.scene2d.ui.HorizontalGroup;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageTextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.scenes.scene2d.ui.SelectBox;
+import com.badlogic.gdx.scenes.scene2d.ui.Slider;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextArea;
+import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Tooltip;
 import com.badlogic.gdx.scenes.scene2d.ui.VerticalGroup;
+import com.badlogic.gdx.scenes.scene2d.ui.Window;
 import com.badlogic.gdx.scenes.scene2d.utils.ActorGestureListener;
+import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Array;
@@ -54,6 +62,7 @@ import fr.evolving.UI.ButtonLevel;
 import fr.evolving.UI.Objectives;
 import fr.evolving.UI.TouchMaptiles;
 import fr.evolving.assets.AssetLoader;
+import fr.evolving.assets.Preference;
 import fr.evolving.automata.Level;
 import fr.evolving.automata.Positiver_I;
 import fr.evolving.automata.Positiver_II;
@@ -75,8 +84,15 @@ public class GameScreen implements Screen {
 	private GameRenderer Renderer;
 	private float runTime;
 	public Level level;
+	private Window winOptions;
 	private ImageButton[] Barre;
-	private ImageButton info_up_nrj,info_up_temp,info_up_rayon,info_up_cycle,info_up_nrjval,info_up_tempval,info_up_rayonval,info_up_cycleval;
+	private CheckBox SetSound,SetVsynch,SetFullscreen,SetAnimation,Settuto,Setdebog,Setrefresh;
+	private Slider SetEffectvolume,SetMusicvolume;
+	private TextButton Setcancel,Setsave;
+	private SelectBox<resolutions> selResolution;
+	private SelectBox<quality> selTexturequal;
+	private SelectBox<adaptation> selAdaptscreen;
+	private ImageButton Setflag,info_up_nrj,info_up_temp,info_up_rayon,info_up_cycle,info_up_nrjval,info_up_tempval,info_up_rayonval,info_up_cycleval,SetFlag;
 	private ImageTextButton cycle,temp,nrj,rayon,cout,tech,research,info_cout,info_tech,info_research,info_activation;
 	private ImageTextButton[] Barre2;	
 	String[] tocreate={"run","stop","speed","separator","move","zoomp","zoomm","infos","separator","raz","save","levels","tree","exits","separator","screen","sound","tuto","settings","separator","stat"};
@@ -92,6 +108,68 @@ public class GameScreen implements Screen {
 	private TextArea info_desc,tooltip;
 	public boolean unroll,mapexit;
 	public enum calling{mouseover,mouseclick,mousedrag,longpress,tap,taptap,zoom,fling,pan,pinch};
+	public enum quality{
+		Bas("Bas", TextureFilter.Nearest ),
+		Moyen("Moyen", TextureFilter.MipMap),
+		Eleve("Eleve", TextureFilter.Linear)	
+		;
+	    private final String text;
+	    private final TextureFilter aquality;
+	    private quality(final String text, TextureFilter aquality) {
+	        this.text = text;
+	        this.aquality=aquality;
+	    }
+	    @Override
+	    public String toString() {
+	        return text;
+	    }
+	    public TextureFilter getQuality() {
+	        return this.aquality;
+	    }
+	};
+	public enum adaptation {
+		fit("Aspect conserve"),
+		fill("Remplissage")
+		;
+	    private final String text;
+	    private adaptation(final String text) {
+	        this.text = text;
+	    }
+	    @Override
+	    public String toString() {
+	        return text;
+	    }
+	}
+	public enum resolutions{
+			r1024_768("XGA (1024x768) 4:3",1024,768),
+			r1280_720("720p (1280x720) 16:9",1280,720),
+			r1280_768("WXGA (1280x768) 5:3",1280,768),
+			r1280_1024("SXGA (1280x1024) 5:4",1280,1024),
+			r1400_1050("SXGA+ (1400x1050) 4:3",1400,1050),				
+			r1680_1050("WSXGA (1680x1050) 16:10",1680,1050),
+			r1600_1200("UXGA (1600x1200) 4:3",1600,1200),
+			r1920_1080("1080p (1920x1080) 16:9",1920,1080),
+			r1920_1200("WUXGA (1920x1200) 16:10",1920,1200),	
+			rmax("resolution Native",0,0)
+			;
+		    private final String text;
+		    private final int resx,resy;
+		    private resolutions(final String text,int resx,int resy) {
+		        this.text = text;
+		        this.resx=resx;
+		        this.resy=resy;
+		    }
+		    @Override
+		    public String toString() {
+		        return text;
+		    }
+		    public int getResolutionX() {
+		        return resx;
+		    }
+		    public int getResolutionY() {
+		        return resy;
+		    }
+		}
 	GestureDetector gesturedetector;
 
 	// This is the constructor, not the class declaration
@@ -100,7 +178,7 @@ public class GameScreen implements Screen {
 		table = new HorizontalGroup();
 		table.bottom().padLeft(5f).padBottom(8f).space(10f);
 		table2 = new VerticalGroup();
-		table2.setPosition(AssetLoader.width, AssetLoader.height*2/3);
+		table2.setPosition(AssetLoader.width, AssetLoader.height-360);
 		table2.right();
 		table2.space(10f);
 		Gdx.app.debug(getClass().getSimpleName(),"Création des elements primordiaux du screen (stage, renderer, table, level, world)");
@@ -522,9 +600,11 @@ public class GameScreen implements Screen {
 
 	@Override
 	public void render(float delta) {
+		stage.act();
 		runTime += delta;
 		world.update(delta);
-		fpsLabel.setText(Gdx.graphics.getFramesPerSecond()+"FPS");
+		if (Preference.prefs.getBoolean("Refresh"))
+			fpsLabel.setText(Gdx.graphics.getFramesPerSecond()+"FPS");
 		Renderer.render(delta, runTime,0);
 		stage_menu.draw();
 		Renderer.render(delta, runTime,1);
@@ -542,6 +622,9 @@ public class GameScreen implements Screen {
 
 	@Override
 	public void show() {
+		Gdx.app.debug(getClass().getSimpleName(),"Création de la fenêtre d'option");
+		Table Optiontable=Createoption();
+		stage.addActor(winOptions);
 		Gdx.app.log("*****","Affichage du niveau.");
 		for (int i=0;i<Barre2.length;i++) 
 			table2.addActor(Barre2[i]);
@@ -562,12 +645,13 @@ public class GameScreen implements Screen {
 		stage_info.addActor(info_cout);
 		stage_info.addActor(info_desc);	
 		stage_menu.addActor(map);
-		//stage_tooltip.addActor(tooltip);		
+		stage_tooltip.addActor(tooltip);		
 		stage.addActor(objectives);
 		stage.addActor(buttonlevel);
 		stage.addActor(rayon);
 		stage.addActor(nrj);
-		stage.addActor(fpsLabel);
+		if (Preference.prefs.getBoolean("Refresh"))
+			stage.addActor(fpsLabel);
 		stage.addActor(temp);
 		stage.addActor(cycle);
 		stage.addActor(table2);
@@ -667,6 +751,9 @@ public class GameScreen implements Screen {
 			((ImageButton)caller).setChecked(AssetLoader.Tooltipmanager.enabled);
 		}
 		else if (caller.getName()=="settings") {
+			winOptions.setVisible(!winOptions.isVisible());
+			if (winOptions.isVisible())
+				readpref();
 		}
 		else if (caller.getName()=="flag") {
 			if  (AssetLoader.language.getLocale().getDisplayName().contains("français")) 
@@ -797,5 +884,172 @@ public class GameScreen implements Screen {
 	public void dispose() {
 		stage.dispose();
 	}
+	 
+	public Table Createoption() {
+		Table layer = new Table();
+		winOptions = new Window("Options", AssetLoader.Skin_ui);
+		winOptions.add(SettingsVideo()).row();
+		winOptions.add(SettingsAudio()).row();
+		winOptions.add(SettingsOther()).row();
+		winOptions.add(SettingsButtons()).pad(10, 0, 10, 0);
+		winOptions.setColor(1, 1, 1, 0.8f);
+		winOptions.setVisible(false);
+		winOptions.pack();
+		winOptions.setPosition(100, 250);
+		return winOptions;
+	}
+	
+	public void readpref() {
+		SetFullscreen.setChecked(Preference.prefs.getBoolean("Fullscreen"));
+		SetSound.setChecked(Preference.prefs.getBoolean("Sound"));
+		Settuto.setChecked(Preference.prefs.getBoolean("Tutorial"));
+		SetVsynch.setChecked(Preference.prefs.getBoolean("VSync"));
+		Setrefresh.setChecked(Preference.prefs.getBoolean("Refresh"));
+		SetAnimation.setChecked(Preference.prefs.getBoolean("Animation"));
+		Setflag.setChecked(Preference.prefs.getBoolean("Language"));
+		SetEffectvolume.setValue(Preference.prefs.getFloat("Effect"));
+		SetMusicvolume.setValue(Preference.prefs.getFloat("Music"));		
+		selResolution.setSelectedIndex(Preference.prefs.getInteger("Resolution"));
+		selAdaptscreen.setSelectedIndex(Preference.prefs.getInteger("Adaptation"));
+		selTexturequal.setSelectedIndex(Preference.prefs.getInteger("Quality"));
+		Setdebog.setChecked(Preference.prefs.getInteger("log")==Gdx.app.LOG_DEBUG);
+	}
+	
+	public void writepref() {
+		Preference.prefs.putInteger("ResolutionX", selResolution.getSelected().getResolutionX());
+		Preference.prefs.putInteger("ResolutionY", selResolution.getSelected().getResolutionY());
+		Preference.prefs.putInteger("Resolution", selResolution.getSelectedIndex());
+		Preference.prefs.putBoolean("Fullscreen", SetFullscreen.isChecked());
+		Preference.prefs.putBoolean("Sound", SetSound.isChecked());
+		Preference.prefs.putBoolean("Tutorial", Settuto.isChecked());
+		Preference.prefs.putBoolean("VSync", SetVsynch.isChecked());
+		Preference.prefs.putBoolean("Refresh", Setrefresh.isChecked());
+		Preference.prefs.putBoolean("Animation", SetAnimation.isChecked());
+		Preference.prefs.putBoolean("Language", Setflag.isChecked());	
+		Preference.prefs.putFloat("Effect", SetEffectvolume.getValue());
+		Preference.prefs.putFloat("Music", SetMusicvolume.getValue());
+		Preference.prefs.putInteger("Adaptation", selAdaptscreen.getSelectedIndex());
+		Preference.prefs.putInteger("Quality", selTexturequal.getSelectedIndex());	
+		if (Setdebog.isChecked())
+			Preference.prefs.putInteger("log", Gdx.app.LOG_DEBUG);
+		else
+			Preference.prefs.putInteger("log", Gdx.app.LOG_INFO);
+		Preference.prefs.flush();
+	}
+	
+	private Table SettingsOther() {
+		Table table = new Table();
+		table.pad(10, 10, 0, 10);
+		table.add(new Label("Divers", AssetLoader.Skin_level, "Fluoxetine-25", Color.ORANGE)).colspan(3);
+		table.row();
+		table.columnDefaults(0).padRight(10);
+		table.columnDefaults(1).padRight(10);
+		Settuto = new CheckBox("Activation du tutoriel", AssetLoader.Skin_ui);
+		table.add(Settuto).left();
+		table.row();	
+		Setdebog = new CheckBox("Mode debugage", AssetLoader.Skin_ui);
+		table.add(Setdebog).left();
+		table.row();
+		Setrefresh = new CheckBox("Afficher le rafraichissement", AssetLoader.Skin_ui);
+		table.add(Setrefresh).left();
+		table.row();	
+		table.add(new Label("Choix de la langue", AssetLoader.Skin_ui, "default-font", Color.WHITE)).left();
+		Setflag=new ImageButton(AssetLoader.Skin_level,"Setflag");
+		table.add(Setflag);
+		table.row();
+		return table;
+	}
+	
+	private Table SettingsVideo() {
+		Table table = new Table();
+		table.pad(10, 10, 0, 10);
+		table.add(new Label("Video", AssetLoader.Skin_level, "Fluoxetine-25", Color.ORANGE)).colspan(3);
+		table.row();
+		table.columnDefaults(0).padRight(10);
+		table.columnDefaults(1).padRight(10);
+		
+		SetVsynch = new CheckBox("Synchronisation verticale", AssetLoader.Skin_ui);
+		table.add(SetVsynch).left();
+		Table tablev1 = new Table();
+		tablev1.add(new Label("Resolution:", AssetLoader.Skin_ui, "default-font", Color.WHITE)).left().row();
+		selResolution = new SelectBox<resolutions>(AssetLoader.Skin_ui);
+		selResolution.setItems(resolutions.values());
+		tablev1.add(selResolution).left().row();
+		table.add(tablev1).left();
+		table.row();	
+		
+		SetFullscreen = new CheckBox("Plein ecran", AssetLoader.Skin_ui);
+		table.add(SetFullscreen).left();
+		Table tablev2 = new Table();
+		tablev2.add(new Label("Remplissage de l'ecran:", AssetLoader.Skin_ui, "default-font", Color.WHITE)).left().row();
+		selAdaptscreen = new SelectBox<adaptation>(AssetLoader.Skin_ui);
+		selAdaptscreen.setItems(adaptation.values());
+		tablev2.add(selAdaptscreen).left().row();
+		table.add(tablev2).left();
+		table.row();
+		
+		Table tablev3 = new Table();
+		tablev3.add(new Label("Qualite des textures:", AssetLoader.Skin_ui, "default-font", Color.WHITE)).left().row();
+		SetAnimation = new CheckBox("Activer les animations", AssetLoader.Skin_ui);
+		table.add(SetAnimation).left();
+		selTexturequal = new SelectBox<quality>(AssetLoader.Skin_ui);
+		selTexturequal.setItems(quality.values());
+		tablev3.add(selTexturequal).left().row();
+		table.add(tablev3).left();
+		table.row();
+		return table;
+	}
+	
+	
+	private Table SettingsAudio() {
+		Table table = new Table();
+		table.pad(10, 10, 0, 10);
+		table.add(new Label("Audio", AssetLoader.Skin_level, "Fluoxetine-25", Color.ORANGE)).colspan(3);
+		table.row();
+		table.columnDefaults(0).padRight(10);
+		table.columnDefaults(1).padRight(10);
+		SetSound = new CheckBox("Activation du son", AssetLoader.Skin_ui);
+		table.add(SetSound).left();
+		table.row();	
+		table.add(new Label("Volume des effets", AssetLoader.Skin_ui));
+		SetEffectvolume = new Slider(0.0f, 1.0f, 0.1f, false, AssetLoader.Skin_ui);
+		table.add(SetEffectvolume).left();
+		table.row();
+		table.add(new Label("Volume de la musiques", AssetLoader.Skin_ui));
+		SetMusicvolume = new Slider(0.0f, 1.0f, 0.1f, false, AssetLoader.Skin_ui);
+		table.add(SetMusicvolume).left();
+		table.row();		
+		return table;
+	}
+	
+	private void onSaveClicked() {
+		winOptions.setVisible(false);
+		writepref();
+	}
+	
+	private void onCancelClicked() {
+		winOptions.setVisible(false);
+	}
 
+	private Table SettingsButtons() {
+		Table table = new Table();
+		table.pad(10, 10, 0, 10);
+		Setsave = new TextButton("Save", AssetLoader.Skin_ui);
+		table.add(Setsave).padRight(30);
+		Setsave.addListener(new ChangeListener() {
+			@Override
+			public void changed(ChangeEvent event, Actor actor) {
+				onSaveClicked();
+			}
+		});
+		Setcancel = new TextButton("Cancel", AssetLoader.Skin_ui);
+		table.add(Setcancel);
+		Setcancel.addListener(new ChangeListener() {
+			@Override
+			public void changed(ChangeEvent event, Actor actor) {
+				onCancelClicked();
+			}
+		});
+		return table;
+	}
 }

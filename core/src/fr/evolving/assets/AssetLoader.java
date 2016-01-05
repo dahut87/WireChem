@@ -7,6 +7,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Preferences;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.assets.loaders.SkinLoader;
+import com.badlogic.gdx.assets.loaders.TextureLoader;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.files.FileHandle;
@@ -52,9 +53,10 @@ import fr.evolving.automata.Positiver_I;
 import fr.evolving.automata.Positiver_II;
 import fr.evolving.automata.Positiver_III;
 import fr.evolving.automata.Transmuter;
+import fr.evolving.screens.GameScreen;
 
 public class AssetLoader {
-	public static Skin Skin_level;
+	public static Skin Skin_level,Skin_ui;
 	public static TextureAtlas Atlas_level;
 	public static Texture Texture_fond;
 	public static Texture Texture_fond2;
@@ -66,8 +68,6 @@ public class AssetLoader {
 	public static String[] Typenames;
 	public static int height;
 	public static float ratio;
-	public static boolean stretch=false;
-	public static Preferences prefs;
 	public static ScalingViewport viewport;
 	public static OrthographicCamera Camera;
 	private static Texture emptyT;
@@ -79,71 +79,52 @@ public class AssetLoader {
 	public static Array<Transmuter> allTransmuter;
     public static TooltipManager Tooltipmanager;
     public static I18NBundle french,usa,language;
-	
-	public static void addstyle(TextureAtlas Atlas_level,String Name) {
-		AtlasRegion AnAtlasRegion = Atlas_level.findRegion(Name);
-		if (AnAtlasRegion==null) return;
-		TextureData ATextureData = AnAtlasRegion.getTexture().getTextureData();
-		ATextureData.prepare();
-		Pixmap Pixmap_Ori=ATextureData.consumePixmap();
-		Pixmap Pixmap_Over=new Pixmap(AnAtlasRegion.getRegionWidth(), AnAtlasRegion.getRegionHeight(), Pixmap.Format.RGBA8888);
-		Pixmap Pixmap_Disable=new Pixmap(AnAtlasRegion.getRegionWidth(), AnAtlasRegion.getRegionHeight(), Pixmap.Format.RGBA8888);
-		Pixmap Pixmap_Down=new Pixmap(AnAtlasRegion.getRegionWidth(), AnAtlasRegion.getRegionHeight(), Pixmap.Format.RGBA8888);
-		Color acolor;
-		for(int x=0; x < AnAtlasRegion.getRegionWidth(); x++)
-		{
-			for(int y =0; y < AnAtlasRegion.getRegionHeight(); y++)
-			{
-				acolor= new Color(Pixmap_Ori.getPixel(AnAtlasRegion.getRegionX()+x, AnAtlasRegion.getRegionY()+y));
-				Pixmap_Down.drawPixel(x, y,Color.rgba8888(acolor.a,0f,0f,acolor.a));
-				Pixmap_Disable.drawPixel(x, y, Color.rgba8888(acolor.r*0.352f,acolor.g*0.352f,acolor.b*0.352f,acolor.a));
-				Pixmap_Over.drawPixel(x, y, Color.rgba8888(acolor.r,acolor.g*0.2f,acolor.b*0.2f,acolor.a));
-			}
-		}
-		Atlas_level.addRegion(Name+"_disabled", new TextureRegion(new Texture(Pixmap_Disable)));
-		Atlas_level.addRegion(Name+"_over", new TextureRegion(new Texture(Pixmap_Over)));
-		Atlas_level.addRegion(Name+"_down", new TextureRegion(new Texture(Pixmap_Down)));
-	}
+    public static TextureFilter quality;
 	
 	public static void loadall() {
+		TextureLoader.TextureParameter params = new TextureLoader.TextureParameter();
+        params.minFilter = quality;
+        params.magFilter = quality;
+        params.genMipMaps=(quality==TextureFilter.MipMap);
 		Gdx.app.debug("AssetLoader","Initialisation du asset manager");
 		manager = new AssetManager();
 		Gdx.app.debug("AssetLoader","Initialisation du chargement des éléments multimédia");
 		manager.load("textures/level.pack", TextureAtlas.class);
-		manager.load("pictures/fond.png", Texture.class);
-		manager.load("pictures/fond2.png", Texture.class);
+		manager.load("textures/ui.pack", TextureAtlas.class);
+		manager.load("pictures/fond.png", Texture.class,params);
+		manager.load("pictures/fond2.png", Texture.class,params);
 		manager.load("musics/intro.mp3", Music.class);
+	    manager.load("textures/level.json", Skin.class, new SkinLoader.SkinParameter("textures/level.pack"));
+	    manager.load("textures/ui.json", Skin.class, new SkinLoader.SkinParameter("textures/ui.pack"));
 	}
 	
 	public static void finishall() {
-		Gdx.app.debug("AssetLoader","Ajout des textures disabled,over et down");
-		Atlas_level = manager.get("textures/level.pack");
-		if (manager.isLoaded("textures/level.pack")) {
-		for(String toload: new String[]{"leveler0","leveler1","leveler2","leveler3","leveler4","arrows","arrows2","exit2","cout","tech","cycle","temp","nrj","rayon","logo2"}) 
-			addstyle(Atlas_level,toload);
-		}
-		Gdx.app.debug("AssetLoader","Chargement des skins et attente fin chargement");
-	    manager.load("textures/level.json", Skin.class, new SkinLoader.SkinParameter("textures/level.pack"));
+		Gdx.app.debug("AssetLoader","Attente fin chargement...");
 	    manager.finishLoading();
 		Gdx.app.debug("AssetLoader","Affectation des éléments multimédia");
+		Atlas_level = manager.get("textures/level.pack");
 		intro = manager.get("musics/intro.mp3");
 		Texture_fond = manager.get("pictures/fond.png");
 		Texture_fond.setWrap(TextureWrap.Repeat, TextureWrap.Repeat);
+		Texture_fond.setFilter(quality, quality);
 		Texture_fond2 = manager.get("pictures/fond2.png");
 		Texture_fond2.setWrap(TextureWrap.Repeat, TextureWrap.Repeat);
+		Texture_fond2.setFilter(quality, quality);
 	    Skin_level = manager.get("textures/level.json");
-	    Skin_level.addRegions(Atlas_level);
+	    Skin_ui = manager.get("textures/ui.json");	    
 	    Gdx.app.debug("AssetLoader","Definition des constantes");
 		Levelcolors=new Color[5];
-		Levelcolors=new Color[]{AssetLoader.Skin_level.getColor("world1"),AssetLoader.Skin_level.getColor("world2"),AssetLoader.Skin_level.getColor("world3"),AssetLoader.Skin_level.getColor("world4"),AssetLoader.Skin_level.getColor("world5")};
+		Levelcolors=new Color[]{AssetLoader.Skin_level.getColor("world0"),AssetLoader.Skin_level.getColor("world1"),AssetLoader.Skin_level.getColor("world2"),AssetLoader.Skin_level.getColor("world3"),AssetLoader.Skin_level.getColor("world4")};
 		Typecolors=new Color[13];
 		Typecolors=new Color[]{new Color(0,0,1f,1),new Color(0,0.6f,0,1),new Color(0.196f,0.803f,0.196f,1),new Color(0.5f,0.5f,0.5f,1),new Color(0.8f,0.8f,0.8f,1),new Color(0.6f,0,0,1),new Color(1f,0,0,1),new Color(0,0,0.6f,1),new Color(0,0,0.6f,1),new Color(0,0,0.6f,1),new Color(0,0,0.6f,1),new Color(0.294f,0.466f,0.615f,1),new Color(0.478f,0.192f,0.098f,1)};
 		Typenames=new String[13];
 		Typenames=new String[]{"E-","e-","Ph","e0","E0","e+","E+","K","L","M","N","n","p"};
-	    Gdx.app.debug("AssetLoader","Création des tiles...");		
+		Gdx.app.debug("AssetLoader","Création des tiles...");		
         tileSet = new TiledMapTileSet();
         Array<TextureAtlas.AtlasRegion> allregions=Atlas_level.getRegions();
+        Gdx.app.debug("AssetLoader",allregions.size+" régions disponibles");
         for (int i=0;i<allregions.size;i++) {
+        	allregions.get(i).getTexture().setFilter(quality, quality);
         	if (allregions.get(i).name.startsWith("sprite")) {
         		if (allregions.get(i).name.contains("#"))
         		{
@@ -208,7 +189,10 @@ public class AssetLoader {
         FileHandle baseFileHandle = Gdx.files.internal("i18n/messages/messages");
         usa = I18NBundle.createBundle(baseFileHandle, new Locale("en"));   
         french = I18NBundle.createBundle(baseFileHandle, new Locale("fr"));
-        language=usa;
+        if (Preference.prefs.getBoolean("Language"))
+        	language=french;
+        else
+        	language=usa;
         I18NBundle.setExceptionOnMissingKey(true);
         }
 	
@@ -218,14 +202,6 @@ public class AssetLoader {
 				return transmuter;
 		}
 		return null;
-	}
-	
-	public static int setpref() {
-		prefs = Gdx.app.getPreferences("WireWorld - Evolving Games");
-		if (prefs.contains("log"))
-			return prefs.getInteger("log");
-		else
-			return Gdx.app.LOG_INFO;
 	}
 	
 	public static void init() {
@@ -247,7 +223,7 @@ public class AssetLoader {
 		Camera = new OrthographicCamera(width,height);
 		Camera.position.set(width/2, height/2, 0);
 		Camera.update();
-		if (stretch) {
+		if (Preference.prefs.getInteger("Adaptation")==1) {
 			viewport = new StretchViewport(width,height);
 			Gdx.app.debug("AssetLoader","Adaptation d'écran maximale, 'Aspect-Ratio' non conservé.");				
 		}
@@ -259,12 +235,16 @@ public class AssetLoader {
 	}
 
 	public static void load() {
+		Gdx.app.debug("AssetLoader","Réglage de la qualité des textures");		
+		quality=GameScreen.quality.values()[Preference.prefs.getInteger("Quality")].getQuality();
 		Gdx.app.debug("AssetLoader","Chargements des éléments minimalistes");
-		Texture_logo = new Texture(Gdx.files.internal("pictures/logo.png"));
-		Texture_logo.setFilter(TextureFilter.Linear,TextureFilter.Linear);
-		emptyT=new Texture(Gdx.files.internal("pictures/empty.png"));
-		fullT=new Texture(Gdx.files.internal("pictures/full.png"));
-		empty=new NinePatch(new TextureRegion(emptyT,24,24),8,8,8,8);
+		Texture_logo = new Texture(Gdx.files.internal("pictures/logo.png"),quality==TextureFilter.MipMap);
+		Texture_logo.setFilter(quality,quality);
+		emptyT=new Texture(Gdx.files.internal("pictures/empty.png"),quality==TextureFilter.MipMap);
+		emptyT.setFilter(quality,quality);
+		fullT=new Texture(Gdx.files.internal("pictures/full.png"),quality==TextureFilter.MipMap);
+		fullT.setFilter(quality,quality);
+		empty=new NinePatch(new TextureRegion(emptyT,24,24),8,8,8,8);	
 		full=new NinePatch(new TextureRegion(fullT,24,24),8,8,8,8);
 	}
 

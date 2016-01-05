@@ -61,6 +61,8 @@ public Menu(int tilesizex,int tilesizey) {
 	Gdx.app.debug(getClass().getSimpleName(),"Caméra pour tilemap:"+(tilesizex*size)+"x"+(tilesizey*size));
 	decx=-102f;
 	decy=-20f;
+	if (AssetLoader.ratio==1.44f)
+		decy-=24;
 	camera.translate(decx,decy);
 	Gdx.app.debug(getClass().getSimpleName(),"Décalage:"+decx+"x"+decy);	
 }
