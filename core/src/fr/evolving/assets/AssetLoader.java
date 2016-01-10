@@ -53,6 +53,7 @@ import fr.evolving.automata.Positiver_I;
 import fr.evolving.automata.Positiver_II;
 import fr.evolving.automata.Positiver_III;
 import fr.evolving.automata.Transmuter;
+import fr.evolving.database.LocalBase;
 import fr.evolving.screens.GameScreen;
 
 public class AssetLoader {

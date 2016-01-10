@@ -72,6 +72,8 @@ import fr.evolving.automata.Positiver_III;
 import fr.evolving.automata.Transmuter;
 import fr.evolving.automata.Transmuter.Angular;
 import fr.evolving.automata.Transmuter.CaseType;
+import fr.evolving.database.LocalBase;
+import fr.evolving.database.Base.datatype;
 import fr.evolving.inputs.InputHandler;
 
 public class GameScreen implements Screen {
@@ -530,13 +532,15 @@ public class GameScreen implements Screen {
 
 	void map_cleaner(float realx, float realy,int x, int y,boolean alone,int button,calling call) {
 		for(x=0;x<level.Grid.sizeX;x++)
-			for(y=0;y<level.Grid.sizeY;y++) {
+			for(y=0;y<level.Grid.sizeY;y++)
 				map_transmuter_eraser(0,0,x,y,false,button,call);
+		level.Grid.tiling_transmuter();
+		for(x=0;x<level.Grid.sizeX;x++)
+			for(y=0;y<level.Grid.sizeY;y++) {
 				map_fiber_eraser(0,0,x,y,false,button,call);
 				map_copper_eraser(0,0,x,y,false,button,call);
 			}
 		level.Grid.tiling_copper();
-		level.Grid.tiling_transmuter();
 		map.redraw(60);
 	}
 
@@ -691,11 +695,19 @@ public class GameScreen implements Screen {
 		menu.EraseMenuTransmuterSurtile();
 		hideInfo();
 		if (caller.getName()=="run") {
-
+			LocalBase test2=new LocalBase(datatype.userdata,"local:test.db");
+			test2.setGrid(0,0, level.Grid);
 		}
 		else if (caller.getName()=="stop") {
+			LocalBase test2=new LocalBase(datatype.userdata,"local:test.db");
+			level.Grid=test2.getGrid(0,0,0);
+			level.Grid.tiling_transmuter();
+			level.Grid.tiling_copper();
+			map.redraw(53);
 		}
 		else if (caller.getName()=="speed") {
+			LocalBase test2=new LocalBase(datatype.userdata,"local:test.db");
+			test2.setGrid(0,5, level.Grid);
 		}
 		else if (caller.getName()=="move") {
 			selected=caller;
@@ -714,8 +726,16 @@ public class GameScreen implements Screen {
 			if (count>=2) map.initzoom();
 		}
 		else if (caller.getName()=="raz") {
+			LocalBase test2=new LocalBase(datatype.userdata,"local:test.db");
+			level.Grid=test2.getGrid(0,0, 1);
+			level.Grid.tiling_transmuter();
+			level.Grid.tiling_copper();
+			map.redraw(53);
 		}
 		else if (caller.getName()=="save") {
+			LocalBase test2=new LocalBase(datatype.userdata,"local:test.db");
+			for(String tester :test2.getGrids(0,0))
+				Gdx.app.debug("test",tester);
 		}
 		else if (caller.getName()=="levels") {
 			Gdx.app.debug("Barre","Affichage des niveaux.");

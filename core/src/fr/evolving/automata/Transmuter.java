@@ -1,5 +1,6 @@
 package fr.evolving.automata;
 
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Iterator;
 
@@ -10,7 +11,7 @@ import com.badlogic.gdx.utils.ObjectMap.Entry;
 import com.badlogic.gdx.utils.ObjectMap.Values;
 import com.badlogic.gdx.utils.OrderedMap;
 
-public abstract class Transmuter implements Cloneable {
+public abstract class Transmuter implements Cloneable,Serializable {
 	public enum CaseType{Rien,Cuivre_seul,Fibre_seul,Cuivre,Fibre,Tout,Nimporte};
 	public enum Class{Structure,Charge,Direction,Filtrage,Synthese,Detection,Divers,Scenario};
 	public enum Angular{A00,A90,A180,A270};

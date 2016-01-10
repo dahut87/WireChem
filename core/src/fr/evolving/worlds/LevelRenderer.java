@@ -83,38 +83,42 @@ public class LevelRenderer {
 		batcher2.setColor(Color.WHITE);
 		Texture_logobig=AssetLoader.Skin_level.getRegion("logo3");
 		batcher2.draw(Texture_logobig,120, AssetLoader.height-Texture_logobig.getRegionHeight());
-		font.draw(batcher2, LevelScreen.selected.level.Name, 15, 145);
-			if (LevelScreen.selected!=null && LevelScreen.selected.level.Tech>0)
-		font.draw(batcher2, "Recompenses", 1215, AssetLoader.height-15);
-		if (LevelScreen.selected!=null && LevelScreen.selected.level.Cout>0) {
-			font.draw(batcher2, "Ressources", 1215, 145);
-			font.draw(batcher2, "Objectifs", 1215, 295);
-		}
 
-		if (LevelScreen.selected!=null && LevelScreen.selected.level.aWorld>0)
-			font.draw(batcher2, "Handicaps", 1215, 605);
-		font.draw(batcher2, "", 1215, 145);
+		if (LevelScreen.selected!=null) {
+			font.draw(batcher2, LevelScreen.selected.level.Name, 15, 145);
+			if (LevelScreen.selected.level.Tech>0)
+				font.draw(batcher2, "Recompenses", 1215, AssetLoader.height-15);
+			if (LevelScreen.selected.level.Cout>0) {
+				font.draw(batcher2, "Ressources", 1215, 145);
+				font.draw(batcher2, "Objectifs", 1215, 295);
+			}
+
+			if (LevelScreen.selected.level.aWorld>0)
+				font.draw(batcher2, "Handicaps", 1215, 605);
+			font.draw(batcher2, "", 1215, 145);
+		}
 		batcher2.end();
 		
-		Gdx.gl.glEnable(GL20.GL_BLEND);		
+		Gdx.gl.glEnable(GL20.GL_BLEND);	
 		shapeRenderer.begin(ShapeType.Filled);
 		shapeRenderer.setProjectionMatrix(AssetLoader.Camera.combined);
 		shapeRenderer.setColor(0.5f, 0.5f, 0.5f, 0.5f);
-		shapeRenderer.rect(10, 10, 1190, 140);
-		if (LevelScreen.selected!=null && LevelScreen.selected.level.Cout>0) {
-			shapeRenderer.rect(1210, 10, 250, 140);
-			shapeRenderer.rect(1210, 160,250, 140);
+		if (LevelScreen.selected!=null) {
+			shapeRenderer.rect(10, 10, 1190, 140);
+			if (LevelScreen.selected.level.Cout>0) {
+				shapeRenderer.rect(1210, 10, 250, 140);
+				shapeRenderer.rect(1210, 160,250, 140);
+			}
+			if (LevelScreen.selected.level.aWorld>0)
+				shapeRenderer.rect(1210, 310,250, 300);
+			if (LevelScreen.selected.level.Tech>0)
+				shapeRenderer.rect(1210, 620,250, AssetLoader.height-630);
 		}
-		if (LevelScreen.selected!=null && LevelScreen.selected.level.aWorld>0)
-			shapeRenderer.rect(1210, 310,250, 300);
-		if (LevelScreen.selected!=null && LevelScreen.selected.level.Tech>0)
-			shapeRenderer.rect(1210, 620,250, AssetLoader.height-630);
 		shapeRenderer.rect(1470, 10, 440, AssetLoader.height-20);
 		shapeRenderer.end();
-		
+		if (LevelScreen.buttonLevels!=null)
         for (int i=0;i<LevelScreen.buttonLevels.length;i++) {
 			if (LevelScreen.buttonLevels[i]!=null) {
-				
 				for (int[] item : LevelScreen.buttonLevels[i].level.Link)
 				{
 					int found=-1;

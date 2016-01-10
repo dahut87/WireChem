@@ -9,6 +9,8 @@ import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
+import com.badlogic.gdx.scenes.scene2d.ui.List;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextArea;
@@ -18,6 +20,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.FillViewport;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.ScalingViewport;
@@ -26,15 +29,20 @@ import com.badlogic.gdx.utils.viewport.StretchViewport;
 import fr.evolving.worlds.LevelRenderer;
 import fr.evolving.UI.ButtonLevel;
 import fr.evolving.UI.Objectives;
+import fr.evolving.UI.ServerList;
 import fr.evolving.game.main;
 import fr.evolving.inputs.InputHandler;
+
 import java.util.Timer;
 import java.util.TimerTask;
 import fr.evolving.assets.AssetLoader;
 import fr.evolving.assets.SaveObject;
 import fr.evolving.automata.Level;
+import fr.evolving.automata.Transmuter;
+import fr.evolving.database.Base;
+import fr.evolving.database.Base.datatype;
+import fr.evolving.database.LocalBase;
 import fr.evolving.effects.Laser;
-
 
 public class LevelScreen implements Screen {
 	public ButtonLevel[] buttonLevels;
@@ -48,6 +56,8 @@ public class LevelScreen implements Screen {
     public ImageButton logosmall;
     private ImageTextButton cout,tech,cycle,temp,rayon,nrj;
 	private TextButton buttonConnect,buttonPlay,buttonStat;
+	private ServerList Statdata,Userdata,Gamedata;
+	private Label Statdatalabel, Userdatalabel, Gamedatalabel;
 	private Level[] thelevels;
 	private TextArea TextDescriptive;
 	public int world;
@@ -60,6 +70,43 @@ public class LevelScreen implements Screen {
 				if (level!=null && level.aWorld>max)
 					max=level.aWorld;
 			return	max;
+	}
+	
+	public void menu() {
+		cout.setVisible(false);
+		tech.setVisible(false);
+		cycle.setVisible(false);
+		temp.setVisible(false);
+		rayon.setVisible(false);
+		nrj.setVisible(false);
+		Previous.setVisible(false);
+		Next.setVisible(false);
+		Exit.setVisible(false);
+		buttonPlay.setVisible(false);
+		TextDescriptive.setVisible(false);
+		SetButtonStat();
+	}
+	
+	public void SetButtonConnect() {
+		buttonStat.setColor(buttonConnect.getColor());
+		buttonConnect.setColor(1f,0,0,1f);
+		Statdata.setVisible(true);
+		Userdata.setVisible(true);
+		Gamedata.setVisible(true);
+		Statdatalabel.setVisible(true);
+		Userdatalabel.setVisible(true);
+		Gamedatalabel.setVisible(true);	
+	}
+	
+	public void SetButtonStat() {
+		buttonConnect.setColor(buttonStat.getColor());
+		buttonStat.setColor(1f,0,0,1f);
+		Statdata.setVisible(false);
+		Userdata.setVisible(false);
+		Gamedata.setVisible(false);
+		Statdatalabel.setVisible(false);
+		Userdatalabel.setVisible(false);
+		Gamedatalabel.setVisible(false);	
 	}
 	
 	public void loadWorld(int aworld) {
@@ -98,7 +145,6 @@ public class LevelScreen implements Screen {
 					}		
 				});
 			}
-	
 		}
 		for (int j=0;j<10;j++) {
 			if (buttonLevels[j]!=null) {
@@ -133,18 +179,30 @@ public class LevelScreen implements Screen {
 		logosmall.setPosition(20, AssetLoader.height-175+logosmall.getHeight()/2);
 		TextDescriptive = new TextArea("Descriptif", AssetLoader.Skin_level,"Descriptif");
 		TextDescriptive.setBounds(15, 15, 1185, 100);
-		buttonConnect = new TextButton("Connexions", AssetLoader.Skin_level,"Bouton");
+		buttonConnect = new TextButton("Connexions", AssetLoader.Skin_ui);
 		buttonConnect.setBounds(1480, AssetLoader.height-60, 190, 40);
-		buttonPlay = new TextButton("Jouer", AssetLoader.Skin_level,"Bouton");
+		buttonConnect.addListener(new ClickListener() {
+			public void clicked(InputEvent event, float x, float y) {
+				if (!Statdata.isVisible())
+					SetButtonConnect();
+			}	
+		});
+		buttonPlay = new TextButton("Jouer", AssetLoader.Skin_ui);
 		buttonPlay.setBounds(1040, 20, 150, 40);
 		buttonPlay.addListener(new ClickListener(){
 	        @Override
-			public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
+			public void clicked(InputEvent event, float x, float y) {
 					((Game)Gdx.app.getApplicationListener()).setScreen(new GameScreen(selected.level));
 				}				
 			});
-		buttonStat = new TextButton("Statistiques", AssetLoader.Skin_level,"Bouton");
+		buttonStat = new TextButton("Statistiques", AssetLoader.Skin_ui);
 		buttonStat.setBounds(1710, AssetLoader.height-60, 190, 40);
+		buttonStat.addListener(new ClickListener() {
+			public void clicked(InputEvent event, float x, float y) {
+				if (Statdata.isVisible())
+					SetButtonStat();
+			}	
+		});
 		Exit=new ImageButton(AssetLoader.Skin_level,"Exit");
 		Exit.setPosition(1110, AssetLoader.height-Exit.getHeight()-5);
 		Exit.addListener(new ClickListener(){
@@ -193,9 +251,47 @@ public class LevelScreen implements Screen {
 		Victory=new Objectives();
 		Victory.setVictory(new int[]{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0});
 		Victory.setPosition(1216, 185);
-		Gdx.app.debug(getClass().getSimpleName(),"Création des boutons de niveau.");
-		thelevels= SaveObject.initObject();
+		String url="http://evolving.fr/servers/list.xml";
+		Statdata=new ServerList(url,Base.datatype.statdata,AssetLoader.Skin_ui);
+		Statdatalabel=new Label("Stockage des statistiques:", AssetLoader.Skin_ui, "grey");
+		Statdata.setBounds(1480, AssetLoader.height-300, 420, 200);
+		Statdatalabel.setPosition(1480, AssetLoader.height-100);
+		Userdata=new ServerList(url,Base.datatype.userdata,AssetLoader.Skin_ui);
+		Userdatalabel=new Label("Stockage des données du joueur:", AssetLoader.Skin_ui, "grey");
+		Userdata.setBounds(1480, AssetLoader.height-600, 420, 200);
+		Userdatalabel.setPosition(1480, AssetLoader.height-400);
+		Gamedata=new ServerList(url,Base.datatype.gamedata,AssetLoader.Skin_ui);
+		Gamedatalabel=new Label("Stockage des données du jeu:", AssetLoader.Skin_ui, "grey");
+		Gamedata.setBounds(1480, AssetLoader.height-900, 420, 200);
+		Gamedatalabel.setPosition(1480, AssetLoader.height-700);
+		//menu();
+		//Gdx.app.debug(getClass().getSimpleName(),"Création des boutons de niveau.");
+		//thelevels= SaveObject.initObject();
+		//loadWorld(world);
+		LocalBase test=new LocalBase(datatype.gamedata,"local:test.db");
+		//for(String tester :test.getworlds())
+		//	Gdx.app.debug("test",tester);
+		//test.setworld(thelevels, "test pour voir");
+		
+		
+		//thelevels=null;
+		thelevels=test.getworld("test pour voir").toArray();
+		test.getworld("test pour voire");
+		//thelevels[0].Name="anus vivant";
+		//test.setworld(thelevels, "test pour voir");
+		//test.deleteworld("pop");
 		loadWorld(world);
+		
+		LocalBase test2=new LocalBase(datatype.userdata,"local:test.db");
+		test.setlevelunlock(0, 1);	
+		Gdx.app.debug("lock",String.valueOf(test.getlevellock(0, 1)));
+		Gdx.app.debug("lock",String.valueOf(test.getlevellock(110, 1)));
+		Gdx.app.debug("research",String.valueOf(test.getResearchpoint(0)));		
+		test.setResearchpoint(0, 5000);
+		Gdx.app.debug("research",String.valueOf(test.getResearchpoint(0)));		
+		test.setTransmuters(0, AssetLoader.allTransmuter);
+		Array<Transmuter> retest=test.getTransmuters(0);
+		Gdx.app.debug("research",String.valueOf(test.getResearchpoint(0)));	
 	}
 
 	@Override
@@ -214,11 +310,6 @@ public class LevelScreen implements Screen {
 	@Override
 	public void show() {
 		Gdx.app.log("*****","Affichage du choix des mondes & niveaux.");
-		for (int i=0;i<10;i++) {
-			if (buttonLevels[i]!=null) {
-				stage.addActor(buttonLevels[i]);
-			}
-		}
         table.setFillParent(true);
         stage.addActor(TextDescriptive);
         stage.addActor(Exit);
@@ -235,6 +326,12 @@ public class LevelScreen implements Screen {
         stage.addActor(rayon);
         stage.addActor(Victory);
         stage.addActor(logosmall);
+        stage.addActor(Statdata);
+        stage.addActor(Statdatalabel);   
+        stage.addActor(Userdata);   
+        stage.addActor(Userdatalabel);   
+        stage.addActor(Gamedata);   
+        stage.addActor(Gamedatalabel);   
         Gdx.input.setInputProcessor(stage);
 		Gdx.app.debug("AssetLoader","Début dans la bande son \'intro\'");       
 		AssetLoader.intro.setLooping(true);
