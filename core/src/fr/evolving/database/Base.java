@@ -12,6 +12,9 @@ public abstract class Base {
     public Base(datatype model,String param) {
     }
     
+    public Base() {
+    }
+    
 	//Gestion type Gamebase
     
 	public Array<String> getworlds() {

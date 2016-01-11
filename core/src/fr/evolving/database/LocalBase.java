@@ -26,6 +26,8 @@ public class LocalBase extends Base {
     private String creation;
     
     //Contructeur de la base de donnée
+    public LocalBase(){
+    }
     
     public LocalBase(datatype model,String param) {
     	super(model,param);
@@ -260,7 +262,7 @@ public class LocalBase extends Base {
 	public Array<String> getGrids(int user, int level){
     	DatabaseCursor cursor=null;
     	try {
-    		cursor = dbHandler.rawQuery("select date from grids order by date desc;");
+    		cursor = dbHandler.rawQuery("select date from grids where level="+level+" and user="+user+" order by date desc;");
     	} catch (SQLiteGdxException e) {
     		return null;
     	}

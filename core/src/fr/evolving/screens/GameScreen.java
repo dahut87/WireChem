@@ -39,6 +39,8 @@ import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageTextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.scenes.scene2d.ui.List;
+import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
 import com.badlogic.gdx.scenes.scene2d.ui.SelectBox;
 import com.badlogic.gdx.scenes.scene2d.ui.Slider;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
@@ -88,7 +90,7 @@ public class GameScreen implements Screen {
 	private GameRenderer Renderer;
 	private float runTime;
 	public Level level;
-	private Window winOptions;
+	private Window winOptions,winSave;
 	private ImageButton[] Barre;
 	private CheckBox SetSound,SetVsynch,SetFullscreen,SetAnimation,Settuto,Setdebog,Setrefresh;
 	private Slider SetEffectvolume,SetMusicvolume;
@@ -96,6 +98,7 @@ public class GameScreen implements Screen {
 	private SelectBox<resolutions> selResolution;
 	private SelectBox<quality> selTexturequal;
 	private SelectBox<adaptation> selAdaptscreen;
+	private List selSaved;
 	private ImageButton Setflag,info_up_nrj,info_up_temp,info_up_rayon,info_up_cycle,info_up_nrjval,info_up_tempval,info_up_rayonval,info_up_cycleval,SetFlag;
 	private ImageTextButton cycle,temp,nrj,rayon,cout,tech,research,info_cout,info_tech,info_research,info_activation;
 	private ImageTextButton[] Barre2;	
@@ -645,6 +648,8 @@ public class GameScreen implements Screen {
 		Gdx.app.debug(getClass().getSimpleName(),"Création de la fenêtre d'option");
 		Table Optiontable=Createoption();
 		stage.addActor(winOptions);
+		Table Savetable=Createsaving();		
+		stage.addActor(winSave);
 		Gdx.app.log("*****","Affichage du niveau.");
 		for (int i=0;i<Barre2.length;i++) 
 			table2.addActor(Barre2[i]);
@@ -695,19 +700,10 @@ public class GameScreen implements Screen {
 		menu.EraseMenuTransmuterSurtile();
 		hideInfo();
 		if (caller.getName()=="run") {
-			LocalBase test2=new LocalBase(datatype.userdata,"local:test.db");
-			test2.setGrid(0,0, level.Grid);
 		}
 		else if (caller.getName()=="stop") {
-			LocalBase test2=new LocalBase(datatype.userdata,"local:test.db");
-			level.Grid=test2.getGrid(0,0,0);
-			level.Grid.tiling_transmuter();
-			level.Grid.tiling_copper();
-			map.redraw(53);
 		}
 		else if (caller.getName()=="speed") {
-			LocalBase test2=new LocalBase(datatype.userdata,"local:test.db");
-			test2.setGrid(0,5, level.Grid);
 		}
 		else if (caller.getName()=="move") {
 			selected=caller;
@@ -726,16 +722,14 @@ public class GameScreen implements Screen {
 			if (count>=2) map.initzoom();
 		}
 		else if (caller.getName()=="raz") {
-			LocalBase test2=new LocalBase(datatype.userdata,"local:test.db");
-			level.Grid=test2.getGrid(0,0, 1);
-			level.Grid.tiling_transmuter();
-			level.Grid.tiling_copper();
-			map.redraw(53);
+			winOptions.setVisible(false);
+			winSave.setVisible(!winSave.isVisible());
+			if (winSave.isVisible())
+				readsaved();
 		}
 		else if (caller.getName()=="save") {
-			LocalBase test2=new LocalBase(datatype.userdata,"local:test.db");
-			for(String tester :test2.getGrids(0,0))
-				Gdx.app.debug("test",tester);
+			AssetLoader.Datahandler.user().setGrid(0, level.aLevel, level.Grid);
+			readsaved();
 		}
 		else if (caller.getName()=="levels") {
 			Gdx.app.debug("Barre","Affichage des niveaux.");
@@ -788,6 +782,7 @@ public class GameScreen implements Screen {
 		}
 		else if (caller.getName()=="settings") {
 			winOptions.setVisible(!winOptions.isVisible());
+			winSave.setVisible(false);
 			if (winOptions.isVisible())
 				readpref();
 		}
@@ -919,6 +914,39 @@ public class GameScreen implements Screen {
 	@Override
 	public void dispose() {
 		stage.dispose();
+	}
+	
+	public Table Createsaving() {
+		winSave = new Window("Saved grids", AssetLoader.Skin_ui);
+		winSave.add(savingPanel()).row();
+		winSave.setColor(1, 1, 1, 0.8f);
+		winSave.setVisible(false);
+		winSave.pack();
+		winSave.setBounds(50, 100, 250, 450);
+		return winSave;
+	}
+	
+	private Table savingPanel() {
+		Table table = new Table();
+		table.pad(10, 10, 0, 10);
+		selSaved = new List(AssetLoader.Skin_ui);
+		selSaved.addListener(new ClickListener(){
+			public void clicked(InputEvent event, float x, float y) {
+				if (this.getTapCount()>1)
+					level.Grid=AssetLoader.Datahandler.user().getGrid(0, level.aLevel, selSaved.getSelectedIndex());
+					level.Grid.tiling_copper();
+					level.Grid.tiling_transmuter();
+					map.redraw(53);
+			}
+		});
+		ScrollPane scroll=new ScrollPane(selSaved);
+		table.add(scroll).width(250).height(440).row();
+		return table;
+	}
+	
+	public void readsaved() {
+		selSaved.setItems(AssetLoader.Datahandler.user().getGrids(0, level.aLevel));
+	
 	}
 	 
 	public Table Createoption() {

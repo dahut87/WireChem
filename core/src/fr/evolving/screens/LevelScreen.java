@@ -41,7 +41,9 @@ import fr.evolving.automata.Level;
 import fr.evolving.automata.Transmuter;
 import fr.evolving.database.Base;
 import fr.evolving.database.Base.datatype;
+import fr.evolving.database.DatabaseManager;
 import fr.evolving.database.LocalBase;
+import fr.evolving.database.SqlBase;
 import fr.evolving.effects.Laser;
 
 public class LevelScreen implements Screen {
@@ -63,6 +65,7 @@ public class LevelScreen implements Screen {
 	public int world;
 	private Objectives Victory;
 	public ButtonLevel selected;
+
 	
 	public int getMaxWorld() {
 			int max=0;
@@ -267,31 +270,11 @@ public class LevelScreen implements Screen {
 		//menu();
 		//Gdx.app.debug(getClass().getSimpleName(),"Création des boutons de niveau.");
 		//thelevels= SaveObject.initObject();
-		//loadWorld(world);
-		LocalBase test=new LocalBase(datatype.gamedata,"local:test.db");
-		//for(String tester :test.getworlds())
-		//	Gdx.app.debug("test",tester);
-		//test.setworld(thelevels, "test pour voir");
 		
 		
-		//thelevels=null;
-		thelevels=test.getworld("test pour voir").toArray();
-		test.getworld("test pour voire");
-		//thelevels[0].Name="anus vivant";
-		//test.setworld(thelevels, "test pour voir");
-		//test.deleteworld("pop");
+		thelevels=null;
+		thelevels=AssetLoader.Datahandler.game().getworld("test pour voir").toArray();
 		loadWorld(world);
-		
-		LocalBase test2=new LocalBase(datatype.userdata,"local:test.db");
-		test.setlevelunlock(0, 1);	
-		Gdx.app.debug("lock",String.valueOf(test.getlevellock(0, 1)));
-		Gdx.app.debug("lock",String.valueOf(test.getlevellock(110, 1)));
-		Gdx.app.debug("research",String.valueOf(test.getResearchpoint(0)));		
-		test.setResearchpoint(0, 5000);
-		Gdx.app.debug("research",String.valueOf(test.getResearchpoint(0)));		
-		test.setTransmuters(0, AssetLoader.allTransmuter);
-		Array<Transmuter> retest=test.getTransmuters(0);
-		Gdx.app.debug("research",String.valueOf(test.getResearchpoint(0)));	
 	}
 
 	@Override

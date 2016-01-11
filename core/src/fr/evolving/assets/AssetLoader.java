@@ -53,7 +53,10 @@ import fr.evolving.automata.Positiver_I;
 import fr.evolving.automata.Positiver_II;
 import fr.evolving.automata.Positiver_III;
 import fr.evolving.automata.Transmuter;
+import fr.evolving.database.DatabaseManager;
 import fr.evolving.database.LocalBase;
+import fr.evolving.database.SqlBase;
+import fr.evolving.database.Base.datatype;
 import fr.evolving.screens.GameScreen;
 
 public class AssetLoader {
@@ -81,6 +84,7 @@ public class AssetLoader {
     public static TooltipManager Tooltipmanager;
     public static I18NBundle french,usa,language;
     public static TextureFilter quality;
+	public static DatabaseManager Datahandler;
 	
 	public static void loadall() {
 		TextureLoader.TextureParameter params = new TextureLoader.TextureParameter();
@@ -195,6 +199,13 @@ public class AssetLoader {
         else
         	language=usa;
         I18NBundle.setExceptionOnMissingKey(true);
+        Gdx.app.debug("AssetLoader","Mise en place de la base de donnée");
+        Datahandler= new DatabaseManager();
+		Datahandler.RegisterBackend(LocalBase.class);
+		Datahandler.RegisterBackend(SqlBase.class);
+		Datahandler.Attach(datatype.userdata, "local:test.db");
+		Datahandler.Attach(datatype.statdata, "local:test.db");
+		Datahandler.Attach(datatype.gamedata, "local:test.db");
         }
 	
 	public static Transmuter getTransmuter(String Name) {
