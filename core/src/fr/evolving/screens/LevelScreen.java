@@ -26,17 +26,16 @@ import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.ScalingViewport;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 
-import fr.evolving.worlds.LevelRenderer;
+import fr.evolving.renderers.LevelRenderer;
 import fr.evolving.UI.ButtonLevel;
 import fr.evolving.UI.Objectives;
 import fr.evolving.UI.ServerList;
 import fr.evolving.game.main;
-import fr.evolving.inputs.InputHandler;
 
 import java.util.Timer;
 import java.util.TimerTask;
 import fr.evolving.assets.AssetLoader;
-import fr.evolving.assets.SaveObject;
+import fr.evolving.assets.InitWorlds;
 import fr.evolving.automata.Level;
 import fr.evolving.automata.Transmuter;
 import fr.evolving.database.Base;
@@ -60,7 +59,7 @@ public class LevelScreen implements Screen {
 	private TextButton buttonConnect,buttonPlay,buttonStat;
 	private ServerList Statdata,Userdata,Gamedata;
 	private Label Statdatalabel, Userdatalabel, Gamedatalabel;
-	private Level[] thelevels;
+	private Array<Level> thelevels;
 	private TextArea TextDescriptive;
 	public int world;
 	private Objectives Victory;
@@ -267,13 +266,13 @@ public class LevelScreen implements Screen {
 		Gamedatalabel=new Label("Stockage des données du jeu:", AssetLoader.Skin_ui, "grey");
 		Gamedata.setBounds(1480, AssetLoader.height-900, 420, 200);
 		Gamedatalabel.setPosition(1480, AssetLoader.height-700);
+		Gdx.app.debug(getClass().getSimpleName(),"Affichage du menu.");
 		//menu();
-		//Gdx.app.debug(getClass().getSimpleName(),"Création des boutons de niveau.");
-		//thelevels= SaveObject.initObject();
+
+		//thelevels= InitWorlds.go();
 		
-		
-		thelevels=null;
-		thelevels=AssetLoader.Datahandler.game().getworld("test pour voir").toArray();
+		Gdx.app.debug(getClass().getSimpleName(),"Chargement des mondes depuis la base.");		
+		thelevels=AssetLoader.Datahandler.game().getworld("test pour voir");
 		loadWorld(world);
 	}
 

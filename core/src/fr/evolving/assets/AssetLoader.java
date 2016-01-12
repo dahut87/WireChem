@@ -206,6 +206,7 @@ public class AssetLoader {
 		Datahandler.Attach(datatype.userdata, "local:test.db");
 		Datahandler.Attach(datatype.statdata, "local:test.db");
 		Datahandler.Attach(datatype.gamedata, "local:test.db");
+		
         }
 	
 	public static Transmuter getTransmuter(String Name) {

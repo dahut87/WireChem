@@ -1,4 +1,4 @@
-package fr.evolving.worlds;
+package fr.evolving.renderers;
 
 import java.util.List;
 
@@ -13,11 +13,9 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 
 import fr.evolving.assets.AssetLoader;
-import fr.evolving.inputs.InputHandler;
 import fr.evolving.screens.GameScreen;
 
 public class GameRenderer {
-	private GameWorld myWorld;
 	private ShapeRenderer shapeRenderer;
 	private SpriteBatch batcher;
 	private GameScreen GameScreen;

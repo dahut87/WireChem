@@ -59,9 +59,8 @@ import com.badlogic.gdx.utils.ObjectMap.Entry;
 import com.badlogic.gdx.utils.OrderedMap;
 
 import fr.evolving.UI.Menu;
-import fr.evolving.worlds.GameRenderer;
-import fr.evolving.worlds.GameWorld;
-import fr.evolving.worlds.LevelRenderer;
+import fr.evolving.renderers.GameRenderer;
+import fr.evolving.renderers.LevelRenderer;
 import fr.evolving.UI.ButtonLevel;
 import fr.evolving.UI.Objectives;
 import fr.evolving.UI.TouchMaptiles;
@@ -76,7 +75,6 @@ import fr.evolving.automata.Transmuter.Angular;
 import fr.evolving.automata.Transmuter.CaseType;
 import fr.evolving.database.LocalBase;
 import fr.evolving.database.Base.datatype;
-import fr.evolving.inputs.InputHandler;
 
 public class GameScreen implements Screen {
 	private InputMultiplexer multiplexer;
@@ -86,7 +84,6 @@ public class GameScreen implements Screen {
 	private Stage stage,stage_menu,stage_info,stage_tooltip;
 	private HorizontalGroup table;
 	private VerticalGroup table2;
-	private GameWorld world;
 	private GameRenderer Renderer;
 	private float runTime;
 	public Level level;
@@ -215,9 +212,7 @@ public class GameScreen implements Screen {
 		oldx=0;
 		oldy=0;
 		unroll=false;
-		world = new GameWorld(level);
 		Renderer = new GameRenderer(this);
-		world.setRenderer(Renderer);
 		Gdx.app.debug(getClass().getSimpleName(),"Mise en place du timer.");
 		ScrollTimer=new Timer();
 		ScrollTask = new TimerTask()
@@ -625,7 +620,6 @@ public class GameScreen implements Screen {
 	public void render(float delta) {
 		stage.act();
 		runTime += delta;
-		world.update(delta);
 		if (Preference.prefs.getBoolean("Refresh"))
 			fpsLabel.setText(Gdx.graphics.getFramesPerSecond()+"FPS");
 		Renderer.render(delta, runTime,0);

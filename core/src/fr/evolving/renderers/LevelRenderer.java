@@ -1,4 +1,4 @@
-package fr.evolving.worlds;
+package fr.evolving.renderers;
 
 import java.util.List;
 
@@ -17,7 +17,6 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import fr.evolving.UI.Objectives;
 import fr.evolving.assets.AssetLoader;
 import fr.evolving.effects.Laser;
-import fr.evolving.inputs.InputHandler;
 import fr.evolving.screens.LevelScreen;
 
 public class LevelRenderer {
@@ -60,7 +59,7 @@ public class LevelRenderer {
         	this.dirx = 1;
         if (this.scrolly < 0)
         	this.diry = 1;
-        Laser.i+=1f;
+        Laser.i+=0.3f;
 		if (Laser.i>10.0f) {
 			Laser.i=0;
 		}

@@ -16,7 +16,6 @@ import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 
 import fr.evolving.assets.AssetLoader;
-import fr.evolving.math.Calcul;
 
 public class Laser {
 	
@@ -35,17 +34,21 @@ public class Laser {
 		float y1=yy1+20;
 		float x2=xx2+26;
 		float y2=yy2+20;
-		Vector2 vectorall = new Vector2(x2, y2).sub(new Vector2(x1, y1));
-		float length = vectorall.len();
-		Vector2 vectoradd = vectorall.scl(10/length);
+		Vector2 vector1=new Vector2(x1, y1);
+		Vector2 vector2=new Vector2(x2, y2);		
+		Vector2 vectorall = vector2.sub(vector1);
+		final int inc=16;
+		Vector2 vectoradd = vectorall.cpy().setLength(inc);
+		Vector2 vectoraddit = vectorall.cpy().setLength(64);
 		Laser.begin();
 		Laser.setColor(colorsrc);
 		Laser.setBlendFunction(GL20.GL_SRC_ALPHA, GL20.GL_ONE);
-		Laser.draw(overlaymiddle,x1,y1,32,0,64,length,1f,1f,(float)Math.toDegrees(Calcul.getAngle(x1,y1,x2,y2)));
-		Laser.draw(middle,x1,y1,32,0,64,length,1f,1f,(float)Math.toDegrees(Calcul.getAngle(x1,y1,x2,y2)));
-		Laser.setColor(new Color(1f,1f,1f,1f));
-		Laser.draw(overlay,x1+i*vectoradd.x,y1+i*vectoradd.y,32,0,64,Calcul.getLen(x1+i*vectoradd.x,y1+i*vectoradd.y,x2,y2),1f,1f,(float)Math.toDegrees(Calcul.getAngle(x1,y1,x2,y2)));
-		Laser.draw(overlay,x1,y1,32,0,64,Calcul.getLen(x1+i*vectoradd.x,y1+i*vectoradd.y,x2,y2),1f,1f,(float)Math.toDegrees(Calcul.getAngle(x1,y1,x2,y2)));		
+		Laser.draw(overlaymiddle,x1,y1,32,0,64,vectorall.len(),1f,1f,vectorall.angle()+270);
+		Laser.draw(middle,x1,y1,32,0,64,vectorall.len(),1f,1f,vectorall.angle()+270);
+		Laser.setColor(new Color(1f,1f,1f,1f)); 
+		for(int j=0;j<(vectorall.len()-vectoradd.cpy().setLength(i*inc).len())/64-1;j++)
+			Laser.draw(overlay,x1+i*vectoradd.x+j*vectoraddit.x,y1+i*vectoradd.y+j*vectoraddit.y,32,0,64,64,1f,1f,vectorall.angle()+270);
+		Laser.draw(overlay,x1,y1,32,0,64,i*inc,1f,1f,vectorall.angle()+270);		
 		Laser.end();
 	}
 		
