@@ -15,6 +15,10 @@ public abstract class Base {
     public Base() {
     }
     
+    public String getParam() {
+    	return null;
+    }
+    
 	//Gestion type Gamebase
     
 	public Array<String> getworlds() {

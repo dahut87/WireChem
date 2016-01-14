@@ -6,7 +6,12 @@ import com.badlogic.gdx.utils.Array;
 
 public class DatabaseManager {
 	private static Base[] bases;
+	private static String[] old;
 	private static Array<Class<?>> backends;
+	
+	public Base getType(Base.datatype model) {
+		return bases[model.ordinal()];
+	}
 	
 	public Base user(){
 		return bases[Base.datatype.userdata.ordinal()];
@@ -22,20 +27,29 @@ public class DatabaseManager {
 	
 	public DatabaseManager(){
 		bases=new Base[3];
+		old=new String[3];
 		backends=new Array<Class<?>>();
 	}
 	
 	public void CloseAll() {
-		for(Base base:bases)
-			base.Close();
+		for(int i=0;i<3;i++)
+			if (bases[i]!=null) {
+				bases[i].Close();
+				bases[i]=null;
+			}
+	}
+	
+	public String getOld(Base.datatype model) {
+		return old[model.ordinal()];
 	}
 	
 	public boolean Attach(Base.datatype model, String Url) {
-		if (bases[model.ordinal()]!=null)
+		if (bases[model.ordinal()]!=null || model==null || Url==null)
 			return false;
 		Base backend=getBackend(model,Url);
 		if (backend!=null) {
 			bases[model.ordinal()]=backend;
+			old[model.ordinal()]=Url;
 			return true;
 		}
 		else
@@ -61,7 +75,23 @@ public class DatabaseManager {
 				}
 		}
 		return null;
-		
+	}
+	
+	public boolean isBackend(Base.datatype model, String Url) {
+		String Type=Url.split(":")[0];
+		for(Class<?> classe:backends) {
+				Base back;
+				try {
+					back = (Base) classe.newInstance();
+					if (back.getprefix().equals(Type))
+						return true;
+				} catch (InstantiationException | IllegalAccessException
+						| IllegalArgumentException | SecurityException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+		}
+		return false;
 	}
 	
 	public void RegisterBackend(Class<?> classe) {

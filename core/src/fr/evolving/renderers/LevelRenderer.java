@@ -68,7 +68,8 @@ public class LevelRenderer {
 	public void render(float delta, float runTime) {
 		Gdx.gl.glClearColor(0, 0, 0, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
-		font.setColor(AssetLoader.Levelcolors[LevelScreen.world]);
+		if (LevelScreen.world>=0)
+			font.setColor(AssetLoader.Levelcolors[LevelScreen.world]);
 		batcher.begin();
 		batcher.setProjectionMatrix(AssetLoader.Camera.combined);
 		batcher.setColor(0.25f,0.25f,0.25f,1f);
@@ -113,7 +114,8 @@ public class LevelRenderer {
 			if (LevelScreen.selected.level.Tech>0)
 				shapeRenderer.rect(1210, 620,250, AssetLoader.height-630);
 		}
-		shapeRenderer.rect(1470, 10, 440, AssetLoader.height-20);
+		if (!LevelScreen.MenuSolo.isVisible())
+			shapeRenderer.rect(1470, 10, 440, AssetLoader.height-20);
 		shapeRenderer.end();
 		if (LevelScreen.buttonLevels!=null)
         for (int i=0;i<LevelScreen.buttonLevels.length;i++) {

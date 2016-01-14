@@ -203,11 +203,15 @@ public class AssetLoader {
         Datahandler= new DatabaseManager();
 		Datahandler.RegisterBackend(LocalBase.class);
 		Datahandler.RegisterBackend(SqlBase.class);
-		Datahandler.Attach(datatype.userdata, "local:test.db");
-		Datahandler.Attach(datatype.statdata, "local:test.db");
-		Datahandler.Attach(datatype.gamedata, "local:test.db");
-		
+		Databasemanagerfrompref();
         }
+	
+	public static void Databasemanagerfrompref() {
+		Datahandler.CloseAll();
+		Datahandler.Attach(datatype.userdata, Preference.prefs.getString("userdata"));
+		Datahandler.Attach(datatype.statdata, Preference.prefs.getString("statdata"));
+		Datahandler.Attach(datatype.gamedata, Preference.prefs.getString("gamedata"));
+	}
 	
 	public static Transmuter getTransmuter(String Name) {
 		for(Transmuter transmuter:allTransmuter) {

@@ -2,19 +2,26 @@ package fr.evolving.database;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.nio.channels.FileChannel;
 import java.nio.charset.Charset;
 
 import javax.xml.bind.DatatypeConverter;
 
+import com.badlogic.gdx.Files.FileType;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.sql.Database;
 import com.badlogic.gdx.sql.DatabaseCursor;
 import com.badlogic.gdx.sql.DatabaseFactory;
 import com.badlogic.gdx.sql.SQLiteGdxException;
 import com.badlogic.gdx.utils.Array;
 
+import fr.evolving.assets.AssetLoader;
 import fr.evolving.automata.Grid;
 import fr.evolving.automata.Level;
 import fr.evolving.automata.Transmuter;
@@ -24,16 +31,40 @@ public class LocalBase extends Base {
 	private static Database dbHandler;
 	private String databasename = "base.db";
     private String creation;
+    private String param;
     
     //Contructeur de la base de donnée
-    public LocalBase(){
+    
+    public String getParam() {
+    	return this.param;
+    }
+    
+    public LocalBase() {
     }
     
     public LocalBase(datatype model,String param) {
     	super(model,param);
     	String[] params=param.split(":");
+    	this.param=param;
     	if (params.length>1)
     		databasename=params[1];
+    	switch(Gdx.app.getType()) {
+    	case Android:
+            try {
+             FileChannel source = ((FileInputStream) Gdx.files.internal("bases/"+databasename).read()).getChannel();
+             FileChannel destination = new FileOutputStream("/data/data/fr.evolving.game.android/databases/"+databasename).getChannel();
+			 destination.transferFrom(source, 0, source.size());
+             source.close();
+             destination.close();
+			} catch (IOException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+    	case Desktop:
+    		FileHandle newbase=Gdx.files.local(databasename);
+    		if (!newbase.exists()) 
+    			Gdx.files.internal("bases/"+databasename).copyTo(newbase);
+    	}
     	if (dbHandler!=null)
     		Gdx.app.log("Local", "Reprise de la base '"+databasename+"', table:"+model.toString());
     	else
@@ -292,7 +323,10 @@ public class LocalBase extends Base {
 	
 	public void Close() {
 		try {
-			dbHandler.closeDatabase();
+			if (dbHandler!=null) {
+				dbHandler.closeDatabase();
+				dbHandler=null;
+			}
 		} catch (SQLiteGdxException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

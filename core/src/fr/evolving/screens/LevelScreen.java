@@ -30,12 +30,14 @@ import fr.evolving.renderers.LevelRenderer;
 import fr.evolving.UI.ButtonLevel;
 import fr.evolving.UI.Objectives;
 import fr.evolving.UI.ServerList;
+import fr.evolving.UI.Worldlist;
 import fr.evolving.game.main;
 
 import java.util.Timer;
 import java.util.TimerTask;
 import fr.evolving.assets.AssetLoader;
 import fr.evolving.assets.InitWorlds;
+import fr.evolving.assets.Preference;
 import fr.evolving.automata.Level;
 import fr.evolving.automata.Transmuter;
 import fr.evolving.database.Base;
@@ -54,11 +56,12 @@ public class LevelScreen implements Screen {
     private Stage stage;
     private Table table;
     private ImageButton Previous,Next,Exit;
-    public ImageButton logosmall;
+    public ImageButton logosmall,MenuSolo,MenuMulti,MenuScenario;
     private ImageTextButton cout,tech,cycle,temp,rayon,nrj;
-	private TextButton buttonConnect,buttonPlay,buttonStat;
+	private TextButton buttonConnect,buttonPlay,buttonStat,buttonSave, buttonApply, buttonPlaythis;
 	private ServerList Statdata,Userdata,Gamedata;
-	private Label Statdatalabel, Userdatalabel, Gamedatalabel;
+	private Worldlist Worlddata;
+	private Label Statdatalabel, Userdatalabel, Gamedatalabel,Worlddatalabel;
 	private Array<Level> thelevels;
 	private TextArea TextDescriptive;
 	public int world;
@@ -74,7 +77,29 @@ public class LevelScreen implements Screen {
 			return	max;
 	}
 	
+	public void play() {
+		//thelevels= InitWorlds.go();
+		Gdx.app.debug(getClass().getSimpleName(),"Chargement des mondes depuis la base.");	
+		try {
+	    if (world<0)
+	    	world=0;
+		thelevels=AssetLoader.Datahandler.game().getworld(Preference.prefs.getString("world"));
+		loadWorld(world);
+		Previous.setVisible(true);
+		Next.setVisible(true);
+		buttonPlay.setVisible(true);
+		TextDescriptive.setVisible(true);	
+		}
+		catch (Exception e) {
+		Previous.setVisible(false);
+		Next.setVisible(false);
+		buttonPlay.setVisible(false);
+		TextDescriptive.setVisible(false);	
+		}
+	}
+	
 	public void menu() {
+		selected=null;
 		cout.setVisible(false);
 		tech.setVisible(false);
 		cycle.setVisible(false);
@@ -83,10 +108,44 @@ public class LevelScreen implements Screen {
 		nrj.setVisible(false);
 		Previous.setVisible(false);
 		Next.setVisible(false);
-		Exit.setVisible(false);
+		Victory.setVisible(false);
+		Exit.setPosition(1820,AssetLoader.height-100);
 		buttonPlay.setVisible(false);
 		TextDescriptive.setVisible(false);
+		MenuSolo.setVisible(true);
+		MenuMulti.setVisible(true);
+		MenuScenario.setVisible(true);
+		buttonConnect.setVisible(false);
+		buttonStat.setVisible(false);
+		Statdata.setVisible(false);
+		Userdata.setVisible(false);
+		Gamedata.setVisible(false);
+		Statdatalabel.setVisible(false);
+		Userdatalabel.setVisible(false);
+		Gamedatalabel.setVisible(false);
+		Worlddatalabel.setVisible(false);
+		buttonPlaythis.setVisible(false);
+		Worlddata.setVisible(false);
+		buttonSave.setVisible(false);
+		buttonApply.setVisible(false);
+		if (buttonLevels!=null)
+		for (int j=0;j<10;j++) 
+			if (buttonLevels[j]!=null) {
+				buttonLevels[j].remove();
+				buttonLevels[j]=null;
+			}
+	}
+	
+	public void level() {
+		Exit.setPosition(1110, AssetLoader.height-Exit.getHeight()-5);
+		MenuSolo.setVisible(false);
+		MenuMulti.setVisible(false);
+		MenuScenario.setVisible(false);
+		buttonConnect.setVisible(true);
+		buttonStat.setVisible(true);	
 		SetButtonStat();
+		if (Preference.prefs.contains("world"))
+			play();
 	}
 	
 	public void SetButtonConnect() {
@@ -98,6 +157,11 @@ public class LevelScreen implements Screen {
 		Statdatalabel.setVisible(true);
 		Userdatalabel.setVisible(true);
 		Gamedatalabel.setVisible(true);	
+		buttonSave.setVisible(true);
+		buttonApply.setVisible(true);
+		Worlddatalabel.setVisible(true);
+		Worlddata.setVisible(true);
+		buttonPlaythis.setVisible(true);
 	}
 	
 	public void SetButtonStat() {
@@ -108,7 +172,12 @@ public class LevelScreen implements Screen {
 		Gamedata.setVisible(false);
 		Statdatalabel.setVisible(false);
 		Userdatalabel.setVisible(false);
-		Gamedatalabel.setVisible(false);	
+		Gamedatalabel.setVisible(false);
+		buttonSave.setVisible(false);
+		buttonApply.setVisible(false);
+		Worlddatalabel.setVisible(false);
+		Worlddata.setVisible(false);
+		buttonPlaythis.setVisible(false);
 	}
 	
 	public void loadWorld(int aworld) {
@@ -117,6 +186,7 @@ public class LevelScreen implements Screen {
 		for (int j=0;j<10;j++) {
 			if (buttonLevels[j]!=null) {
 				buttonLevels[j].remove();
+				buttonLevels[j]=null;
 			}
 		}
 		buttonLevels = null;
@@ -176,11 +246,44 @@ public class LevelScreen implements Screen {
 			}	
 		};
 		ScrollTimer.scheduleAtFixedRate(ScrollTask, 0, 30);
+		Gdx.app.debug(getClass().getSimpleName(),"Création du menu.");		
+		MenuSolo=new ImageButton(AssetLoader.Skin_level,"MenuSolo");
+		MenuSolo.setPosition((AssetLoader.width-MenuSolo.getWidth())/2, AssetLoader.height-550);
+		MenuSolo.addListener(new ClickListener() {
+			public void clicked(InputEvent event, float x, float y) {
+				level();
+			}
+		});
+		MenuMulti=new ImageButton(AssetLoader.Skin_level,"MenuMulti");
+		MenuMulti.setPosition((AssetLoader.width-MenuMulti.getWidth())/2, AssetLoader.height-900);		
+		MenuScenario=new ImageButton(AssetLoader.Skin_level,"MenuScenario");
+		MenuScenario.setPosition((AssetLoader.width-MenuScenario.getWidth())/2, AssetLoader.height-1250);
 		Gdx.app.debug(getClass().getSimpleName(),"Création des boutons.");
 		logosmall=new ImageButton(AssetLoader.Skin_level,"logosmall");	
 		logosmall.setPosition(20, AssetLoader.height-175+logosmall.getHeight()/2);
 		TextDescriptive = new TextArea("Descriptif", AssetLoader.Skin_level,"Descriptif");
 		TextDescriptive.setBounds(15, 15, 1185, 100);
+		buttonApply = new TextButton("Appliquer", AssetLoader.Skin_ui);
+		buttonApply.setBounds(1680, 350, 190, 40);
+		buttonApply.addListener(new ClickListener() {
+			public void clicked(InputEvent event, float x, float y) {
+				menu();
+				AssetLoader.Datahandler.CloseAll();
+				AssetLoader.Datahandler.Attach(Userdata.getModel(),Userdata.getUrl());
+				AssetLoader.Datahandler.Attach(Gamedata.getModel(),Gamedata.getUrl());
+				AssetLoader.Datahandler.Attach(Statdata.getModel(),Statdata.getUrl());
+			}
+		});
+		buttonSave = new TextButton("Sauvegarder", AssetLoader.Skin_ui);
+		buttonSave.setBounds(1480, 350, 190, 40);
+		buttonSave.addListener(new ClickListener() {
+			public void clicked(InputEvent event, float x, float y) {
+				menu();
+				Preference.prefs.putString("userdata", Userdata.getUrl());
+				Preference.prefs.putString("gamedata", Gamedata.getUrl());
+				Preference.prefs.putString("statdata", Statdata.getUrl());
+			}
+		});
 		buttonConnect = new TextButton("Connexions", AssetLoader.Skin_ui);
 		buttonConnect.setBounds(1480, AssetLoader.height-60, 190, 40);
 		buttonConnect.addListener(new ClickListener() {
@@ -204,6 +307,15 @@ public class LevelScreen implements Screen {
 				if (Statdata.isVisible())
 					SetButtonStat();
 			}	
+		});
+		buttonPlaythis = new TextButton("Jouer ce monde", AssetLoader.Skin_ui);
+		buttonPlaythis.setBounds(1480, 50, 190, 40);
+		buttonPlaythis.addListener(new ClickListener() {
+			public void clicked(InputEvent event, float x, float y) {
+			Preference.prefs.putString("world", (String)Worlddata.getSelected());
+			Preference.prefs.flush();
+			play();
+			}
 		});
 		Exit=new ImageButton(AssetLoader.Skin_level,"Exit");
 		Exit.setPosition(1110, AssetLoader.height-Exit.getHeight()-5);
@@ -256,24 +368,29 @@ public class LevelScreen implements Screen {
 		String url="http://evolving.fr/servers/list.xml";
 		Statdata=new ServerList(url,Base.datatype.statdata,AssetLoader.Skin_ui);
 		Statdatalabel=new Label("Stockage des statistiques:", AssetLoader.Skin_ui, "grey");
-		Statdata.setBounds(1480, AssetLoader.height-300, 420, 200);
+		Statdata.setBounds(1480, AssetLoader.height-250, 420, 150);
 		Statdatalabel.setPosition(1480, AssetLoader.height-100);
 		Userdata=new ServerList(url,Base.datatype.userdata,AssetLoader.Skin_ui);
 		Userdatalabel=new Label("Stockage des données du joueur:", AssetLoader.Skin_ui, "grey");
-		Userdata.setBounds(1480, AssetLoader.height-600, 420, 200);
-		Userdatalabel.setPosition(1480, AssetLoader.height-400);
+		Userdata.setBounds(1480, AssetLoader.height-450, 420, 150);
+		Userdatalabel.setPosition(1480, AssetLoader.height-300);
 		Gamedata=new ServerList(url,Base.datatype.gamedata,AssetLoader.Skin_ui);
 		Gamedatalabel=new Label("Stockage des données du jeu:", AssetLoader.Skin_ui, "grey");
-		Gamedata.setBounds(1480, AssetLoader.height-900, 420, 200);
-		Gamedatalabel.setPosition(1480, AssetLoader.height-700);
+		Gamedata.setBounds(1480, AssetLoader.height-650, 420, 150);
+		Gamedatalabel.setPosition(1480, AssetLoader.height-500);
+		Worlddata=new Worldlist(AssetLoader.Skin_ui);
+		Worlddatalabel=new Label("Mondes disponibles:", AssetLoader.Skin_ui, "grey");
+		Worlddata.setBounds(1480, 100, 420, 200);
+		Worlddatalabel.setPosition(1480, 300);
+		Gamedata.setWorldlist(Worlddata);
+		Statdata.Refresh();
+		Userdata.Refresh();
+		Gamedata.Refresh();
 		Gdx.app.debug(getClass().getSimpleName(),"Affichage du menu.");
-		//menu();
-
-		//thelevels= InitWorlds.go();
-		
-		Gdx.app.debug(getClass().getSimpleName(),"Chargement des mondes depuis la base.");		
-		thelevels=AssetLoader.Datahandler.game().getworld("test pour voir");
-		loadWorld(world);
+		if (aworld!=-1)
+			level();
+		else
+			menu();
 	}
 
 	@Override
@@ -293,9 +410,15 @@ public class LevelScreen implements Screen {
 	public void show() {
 		Gdx.app.log("*****","Affichage du choix des mondes & niveaux.");
         table.setFillParent(true);
+        stage.addActor(MenuSolo);
+        stage.addActor(MenuMulti);
+        stage.addActor(MenuScenario);
         stage.addActor(TextDescriptive);
+        stage.addActor(buttonPlaythis);     
         stage.addActor(Exit);
         stage.addActor(Next);
+        stage.addActor(buttonApply);
+        stage.addActor(buttonSave);
         stage.addActor(buttonPlay);
         stage.addActor(buttonConnect);
         stage.addActor(buttonStat);       
@@ -314,6 +437,8 @@ public class LevelScreen implements Screen {
         stage.addActor(Userdatalabel);   
         stage.addActor(Gamedata);   
         stage.addActor(Gamedatalabel);   
+        stage.addActor(Worlddata);   
+        stage.addActor(Worlddatalabel);   
         Gdx.input.setInputProcessor(stage);
 		Gdx.app.debug("AssetLoader","Début dans la bande son \'intro\'");       
 		AssetLoader.intro.setLooping(true);

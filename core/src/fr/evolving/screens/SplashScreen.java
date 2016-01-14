@@ -46,7 +46,7 @@ public class SplashScreen implements Screen {
         }),Actions.run(new Runnable() {
             @Override
             public void run() {
-                ((Game)Gdx.app.getApplicationListener()).setScreen(new LevelScreen(0));
+                ((Game)Gdx.app.getApplicationListener()).setScreen(new LevelScreen(-1));
             }
         })));
 	}

@@ -16,6 +16,7 @@ import com.badlogic.gdx.utils.Base64Coder;
 import com.badlogic.gdx.utils.XmlReader;
 import com.badlogic.gdx.utils.XmlReader.Element;
 
+import fr.evolving.assets.AssetLoader;
 import fr.evolving.database.Base;
 import fr.evolving.database.Base.datatype;
 import fr.evolving.database.LocalBase;
@@ -25,6 +26,7 @@ public class ServerList extends List {
 	HashMap parameters;
 	String url;
 	Base.datatype model;
+	Worldlist list;
 	
 	public ServerList(String url,Base.datatype model,Skin skin) {
 		super(skin);
@@ -32,15 +34,18 @@ public class ServerList extends List {
 		this.model=model;
 		parameters = new HashMap();
 		parameters.put("version", "last");
-		Refresh();
 	}
 	
-	public boolean getBackend(String base,datatype model) {
-		String[] realbase=base.split(":");
-		if (realbase[0].contains("mysql"))
-			return SqlBase.isHandling(model);
-		else
-			return LocalBase.isHandling(model);
+	public String getUrl() {
+		return (String)this.getSelected();
+	}
+	
+	public Base.datatype getModel() {
+		return model;
+	}
+	
+	public void setWorldlist(Worldlist list) {
+		this.list=list;
 	}
 
 	public void Refresh() {
@@ -65,13 +70,25 @@ public class ServerList extends List {
 	        		XmlReader.Element xml_element = xml.parse(Response);
 	        		resultxml= xml_element.getChildrenByName("server");
 	        		for(Element child : resultxml) 
-	        			if (getBackend(child.getText(),ServerList.this.model))
+	        			if (AssetLoader.Datahandler.isBackend(ServerList.this.model,child.getText()))
 	        				resultstring.add(child.getText());
+	        		String old=AssetLoader.Datahandler.getOld(ServerList.this.model);
+	        		if (!resultstring.contains(old,false))
+	        			resultstring.add(old);
 	        		ServerList.this.setItems(resultstring);
-	        			
+	        		ServerList.this.setSelectedIndex(resultstring.indexOf(old, false));
+	        		if (list!=null && ServerList.this.model==Base.datatype.gamedata)
+	        			list.Refresh();
 	        }
 	        @Override
 	        public void failed(Throwable t) {
+	        	Array<String> resultstring=new Array<String>();
+        		String old=AssetLoader.Datahandler.getOld(ServerList.this.model);
+        		resultstring.add(old);
+        		ServerList.this.setItems(resultstring);
+        		ServerList.this.setSelectedIndex(resultstring.indexOf(old, false));
+        		if (list!=null && ServerList.this.model==Base.datatype.gamedata)
+        			list.Refresh();
 	        }
 	        
 	        public void cancelled() {
