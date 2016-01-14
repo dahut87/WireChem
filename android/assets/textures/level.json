@@ -99,6 +99,7 @@
         info_cout: { disabledFontColor:white, fontColor:white, overFontColor:red ,up: cout , down: cout, over:cout, disabled:cout, font: OpenDyslexicAlta-20, pressedOffsetY: -35, unpressedOffsetY: -37, checkedOffsetY: -37 }
         info_tech: { disabledFontColor:white, fontColor:white, overFontColor:red ,up: tech , down: tech, over:tech, disabled:tech, font: OpenDyslexicAlta-20, pressedOffsetY: -35, unpressedOffsetY: -37, checkedOffsetY: -37 } 
         default: { checkedFontColor:red,disabledFontColor:white, fontColor:white, overFontColor:red , font: OpenDyslexicAlta-25, pressedOffsetY: 0, unpressedOffsetY: -2 } 
+ 
     }
   com.badlogic.gdx.scenes.scene2d.ui.ImageButton$ImageButtonStyle: { 
         Exit: { up: exit2 , down: exit2_down, over:exit2_over}
@@ -131,7 +132,10 @@
        	info_nrjval: { up: jauge3 }
         info_cycleval: { up: jauge3 } 
         info_tempval: { up: jauge3 } 
-       	info_rayonval: { up: jauge3 }        
+       	info_rayonval: { up: jauge3 }     
+       	MenuSolo: { up: menu1 }
+       	MenuMulti: { up: menu2 }
+       	MenuScenario: { up: menu3 }
     } 
     
   com.badlogic.gdx.scenes.scene2d.ui.Label$LabelStyle: { 
