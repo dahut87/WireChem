@@ -13,6 +13,7 @@ public class InitWorlds {
     	thelevels[0]=new Level(
     	0,
     	0,
+    	(int)(Math.random()*Integer.MAX_VALUE),
     	"Introduction",
     	"Prise en main de l'interface de WireChem{#169} et amener l'électron neutre sur le senseur.",
     	"e0",
@@ -38,6 +39,7 @@ public class InitWorlds {
 	thelevels[1]=new Level(
 	0,
 	1,
+    	(int)(Math.random()*Integer.MAX_VALUE),
 	"Trajectoires",
 	"Comprendre les trajectoires empruntées par les électrons afin de mieux appréhender la conception de systèmes.",
 	"e0",
@@ -63,6 +65,7 @@ public class InitWorlds {
 	thelevels[2]=new Level(
 	0,
 	2,
+    	(int)(Math.random()*Integer.MAX_VALUE),
 	"Pistes",
 	"Utiliser des pistes afin de réaliser un circuit qui permet l'arrivée d'un électron neutre sur le senseur.",
 	"e0",
@@ -89,6 +92,7 @@ public class InitWorlds {
 	thelevels[3]=new Level(
 	0,
 	3,
+    	(int)(Math.random()*Integer.MAX_VALUE),
 	"Positiveur",
 	"Comprendre le fonctionnement de l'élément positiveur et générer 8 électrons positifs sur le senseur.",
 	"e+",
@@ -114,6 +118,7 @@ public class InitWorlds {
 	thelevels[4]=new Level(
 	0,
 	4,
+    	(int)(Math.random()*Integer.MAX_VALUE),
 	"Super-électrons",
 	"Générer 2 super-électrons negatifs par colision et les amener sur le senseur.",
 	"E-",
@@ -139,6 +144,7 @@ public class InitWorlds {
 	thelevels[5]=new Level(
 	0,
 	5,
+    	(int)(Math.random()*Integer.MAX_VALUE),
 	"Activation",
 	"L'objectif est de générer 6 électrons neutres et de découvrir les liaisons de fibres par lesquelles transitent les photons. Certains modifieurs nécessitent désormais l'activation par des photons.",
 	"e0",
@@ -164,6 +170,7 @@ public class InitWorlds {
 	thelevels[6]=new Level(
 	0,
 	6,
+    	(int)(Math.random()*Integer.MAX_VALUE),
 	"Fibres",
 	"A vous de dessiner votre infrastructure à base de fibres et de pistes mais aussi de modifieur activable afin de faire parvenir des éléctrons positifs et neutres sur les senseurs.",
 	"eX",
@@ -190,6 +197,7 @@ public class InitWorlds {
 	thelevels[7]=new Level(
 	0,
 	7,
+    	(int)(Math.random()*Integer.MAX_VALUE),
 	"Protons",
 	"Générer deux protons sur le senseur en utilisant un réacteur et un super-positron. Le réacteur est un élément qui nécessite l'activation.",
 	"p",
@@ -215,6 +223,7 @@ public class InitWorlds {
 	thelevels[8]=new Level(
 	0,
 	8,
+    	(int)(Math.random()*Integer.MAX_VALUE),
 	"Hydrogène",
 	"Générer le premier atome complet : l'hydrogène avec un proton et un électron négatif sur la couche K.",
 	"H",
@@ -240,6 +249,7 @@ public class InitWorlds {
 	thelevels[9]=new Level(
 	1,
 	0,
+    	(int)(Math.random()*Integer.MAX_VALUE),
 	"Deutérium",
 	"Générer le Deutérium, un isostope de l'hydrogène, celui-ci comporte un neutron en plus du proton et de l'électron négatif sur la couche K.",
 	"D",
@@ -265,6 +275,7 @@ public class InitWorlds {
 	thelevels[10]=new Level(
 	1,
 	1,
+    	(int)(Math.random()*Integer.MAX_VALUE),
 	"Tritium",
 	"Générer le second isostope de l'hydrogène : cet atome plus lourd que le Deutérium comporte alors deux neutrons, un proton ainsi qu'un électron négatif sur la couche K.",
 	"T",
@@ -290,6 +301,7 @@ public class InitWorlds {
 	thelevels[11]=new Level(
 	1,
 	2,
+    	(int)(Math.random()*Integer.MAX_VALUE),
 	"Hélium-4",
 	"L'isotope le plus courant de l'Hélium dans l'atmosphère terrestre est l'Hélium-4. Générer le en associant deux protons, deux neutrons et deux électrons négatifs sur la couche K.",
 	"He",
@@ -315,6 +327,7 @@ public class InitWorlds {
 	thelevels[12]=new Level(
 	1,
 	3,
+    	(int)(Math.random()*Integer.MAX_VALUE),
 	"Hélium-3",
 	"Générer le seul autre isotope stable de l'hélium, ce dernier n'étant présent qu'à l'état de traces sur Terre. Cet isotope comporte deux protons,un neutron et deux électrons négatifs sur la couche K.",
 	"He",
@@ -340,6 +353,7 @@ public class InitWorlds {
 	thelevels[13]=new Level(
 	1,
 	4,
+    	(int)(Math.random()*Integer.MAX_VALUE),
 	"Hélium-8",
 	"l'Hélium-8 est le plus étudié des isotopes lourds de l'Hélium avec l'Hélium-6. Cet isostope comporte deux protons, six neutrons et deux électrons négatifs sur la couche K.",
 	"He",
@@ -365,6 +379,7 @@ public class InitWorlds {
 	thelevels[14]=new Level(
 	1,
 	5,
+    	(int)(Math.random()*Integer.MAX_VALUE),
 	"Lithium",
 	"Générer un isostope de l'hydrogène qui comporte un proton et un neutron ainsi qu'un électron négatif sur la couche K.",
 	"Li",
@@ -390,6 +405,7 @@ public class InitWorlds {
 	thelevels[15]=new Level(
 	1,
 	6,
+    	(int)(Math.random()*Integer.MAX_VALUE),
 	"Carbone",
 	"Générer un isostope de l'hydrogène qui comporte un proton et un neutron ainsi qu'un électron négatif sur la couche K.",
 	"C",
@@ -415,6 +431,7 @@ public class InitWorlds {
 	thelevels[16]=new Level(
 	1,
 	7,
+    	(int)(Math.random()*Integer.MAX_VALUE),
 	"Oxygène",
 	"Générer un isostope de l'hydrogène qui comporte un proton et un neutron ainsi qu'un électron négatif sur la couche K.",
 	"O",
@@ -440,6 +457,7 @@ public class InitWorlds {
 	thelevels[17]=new Level(
 	1,
 	8,
+    	(int)(Math.random()*Integer.MAX_VALUE),
 	"Néon",
 	"Générer le premier atome complet : l'hydrogène avec un proton et un électron négatif sur la couche K.",
 	"Ne",
@@ -465,6 +483,7 @@ public class InitWorlds {
 	thelevels[18]=new Level(
 	    	2,
 	    	1,
+	        	(int)(Math.random()*Integer.MAX_VALUE),
 	    	"test",
 	    	"C'est un test.",
 	    	"e0",
@@ -490,6 +509,7 @@ public class InitWorlds {
 	thelevels[19]=new Level(
 	    	2,
 	    	2,
+	        	(int)(Math.random()*Integer.MAX_VALUE),
 	    	"test",
 	    	"C'est un test.",
 	    	"e0",
@@ -516,6 +536,7 @@ public class InitWorlds {
 	thelevels[20]=new Level(
 	    	3,
 	    	1,
+	        	(int)(Math.random()*Integer.MAX_VALUE),
 	    	"test",
 	    	"C'est un test.",
 	    	"e0",
@@ -543,6 +564,7 @@ public class InitWorlds {
 	thelevels[21]=new Level(
 	    	3,
 	    	2,
+	        	(int)(Math.random()*Integer.MAX_VALUE),
 	    	"test",
 	    	"C'est un test.",
 	    	"e0",
@@ -568,6 +590,7 @@ public class InitWorlds {
 	thelevels[22]=new Level(
 	    	4,
 	    	1,
+	        	(int)(Math.random()*Integer.MAX_VALUE),
 	    	"test",
 	    	"C'est un test.",
 	    	"e0",
@@ -595,6 +618,7 @@ public class InitWorlds {
 	thelevels[23]=new Level(
 	    	4,
 	    	2,
+	        	(int)(Math.random()*Integer.MAX_VALUE),
 	    	"test",
 	    	"C'est un test.",
 	    	"e0",

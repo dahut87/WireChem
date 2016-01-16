@@ -96,7 +96,7 @@ public class LocalBase extends Base {
 				creation = "create table if not exists stat (id integer)";
 			else if (model==datatype.userdata) {
 				dbHandler.execSQL("CREATE TABLE if not exists locks(date DATETIME DEFAULT CURRENT_TIMESTAMP, level INTEGER NOT NULL, user INTEGER NOT NULL, PRIMARY KEY(level,user));");
-				dbHandler.execSQL("CREATE TABLE if not exists grids(date DATETIME DEFAULT CURRENT_TIMESTAMP, level INTEGER NOT NULL, user INTEGER NOT NULL, object TEXT, PRIMARY KEY(level,user,date));");
+				dbHandler.execSQL("CREATE TABLE if not exists grids(date DATETIME DEFAULT CURRENT_TIMESTAMP, level INTEGER NOT NULL, user INTEGER NOT NULL, tag TEXT, object TEXT, PRIMARY KEY(level,user,date));");
 				dbHandler.execSQL("CREATE TABLE if not exists transmuters(date DATETIME DEFAULT CURRENT_TIMESTAMP, user INTEGER NOT NULL, object TEXT, PRIMARY KEY(user));");
 				dbHandler.execSQL("CREATE TABLE if not exists research(date DATETIME DEFAULT CURRENT_TIMESTAMP, user INTEGER NOT NULL, value INT, PRIMARY KEY(user));");
 			}
@@ -132,9 +132,7 @@ public class LocalBase extends Base {
 		Level[] mc=null;
 		if (cursor.next())
 			try {
-				Gdx.app.debug(getClass().getSimpleName(),"TEST2");	
 				byte[] bytes = Base64Coder.decodeLines(cursor.getString(0));
-				Gdx.app.debug(getClass().getSimpleName(),"TEST3");	
 				ByteArrayInputStream  bais = new ByteArrayInputStream(bytes);
 				ObjectInputStream ins = new ObjectInputStream(bais);
 				mc=(Level[]) ins.readObject();
@@ -264,7 +262,30 @@ public class LocalBase extends Base {
 	public Grid getGrid(int user,int level,int place){
 		DatabaseCursor cursor=null;
 		try {
-			cursor = dbHandler.rawQuery("select object from grids where user="+user+" and level="+level+" order by date desc limit "+place+",1;");
+			cursor = dbHandler.rawQuery("select object from grids where user="+user+" and level="+level+" and tag is null order by date desc limit "+place+",1;");
+		} catch (SQLiteGdxException e) {
+			return null;
+		}
+		Grid mc=null;
+		if (cursor.next())
+			try {
+				byte[] bytes = DatatypeConverter.parseBase64Binary(cursor.getString(0));
+				ByteArrayInputStream  bais = new ByteArrayInputStream(bytes);
+				ObjectInputStream ins = new ObjectInputStream(bais);
+				mc=(Grid) ins.readObject();
+				ins.close();
+				return mc;
+			}
+		catch (Exception e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+	
+	public Grid getGrid(int user,int level,String tag){
+		DatabaseCursor cursor=null;
+		try {
+			cursor = dbHandler.rawQuery("select object from grids where user="+user+" and level="+level+" and tag='"+tag+"' order by date desc limit 1;");
 		} catch (SQLiteGdxException e) {
 			return null;
 		}
@@ -301,11 +322,33 @@ public class LocalBase extends Base {
 		}
 		return true;
 	}
+	
+	public boolean setGrid(int user,int level, String tag, Grid data){
+		String encoded = "";
+		try {
+			ByteArrayOutputStream bos = new ByteArrayOutputStream();
+			ObjectOutputStream oos = new ObjectOutputStream(bos);
+			oos.writeObject(data);
+			oos.flush();
+			oos.close();
+			bos.close();
+			byte[] bytes = bos.toByteArray();
+			encoded = DatatypeConverter.printBase64Binary(bytes);
+			try {
+				dbHandler.rawQuery("delete from grids where user="+user+" and level="+level+" and tag='"+tag+"';");
+			} catch (Exception e) {}
+			dbHandler.rawQuery("insert into grids (user,level,tag,object) values ("+user+","+level+",'"+tag+"','"+encoded+"');");
+			return true;
+		}
+		catch (Exception e) {
+			return false;
+		}
+	}
 
 	public Array<String> getGrids(int user, int level){
 		DatabaseCursor cursor=null;
 		try {
-			cursor = dbHandler.rawQuery("select date from grids where level="+level+" and user="+user+" order by date desc;");
+			cursor = dbHandler.rawQuery("select date from grids where level="+level+" and user="+user+" and tag is null order by date desc;");
 		} catch (SQLiteGdxException e) {
 			return null;
 		}

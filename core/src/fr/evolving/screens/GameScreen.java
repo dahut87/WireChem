@@ -64,7 +64,9 @@ import fr.evolving.renderers.LevelRenderer;
 import fr.evolving.UI.ButtonLevel;
 import fr.evolving.UI.Objectives;
 import fr.evolving.UI.TouchMaptiles;
+import fr.evolving.UI.WarnDialog;
 import fr.evolving.assets.AssetLoader;
+import fr.evolving.assets.InitWorlds;
 import fr.evolving.assets.Preference;
 import fr.evolving.automata.Level;
 import fr.evolving.automata.Positiver_I;
@@ -80,6 +82,7 @@ public class GameScreen implements Screen {
 	private InputMultiplexer multiplexer;
 	private Array<InputProcessor> processors;
 	private Timer ScrollTimer;
+    private WarnDialog dialog;
 	private TimerTask ScrollTask;
 	private Stage stage,stage_menu,stage_info,stage_tooltip;
 	private HorizontalGroup table;
@@ -192,7 +195,21 @@ public class GameScreen implements Screen {
 
 	// This is the constructor, not the class declaration
 	public GameScreen(Level alevel) {
-		Gdx.app.debug(getClass().getSimpleName(),"Création des Barres verticales & horizontales");
+		this.level=alevel;
+		Gdx.app.debug(getClass().getSimpleName(),"Récupération des derniers niveaux.");
+		this.level.Grid=AssetLoader.Datahandler.user().getGrid(0, this.level.id, "LAST");
+		if (this.level.Grid==null) {
+			Gdx.app.debug(getClass().getSimpleName(),"Copie monde original.");
+			this.level.Grid=this.level.Grid_orig;
+
+		}
+		else
+		{
+			Gdx.app.debug(getClass().getSimpleName(),"Récupération de la dernière grille.");
+			this.level.Grid.tiling_copper();
+			this.level.Grid.tiling_transmuter();
+		}
+		Gdx.app.debug(getClass().getSimpleName(),"Création des Barres verticales & horizontales.");
 		table = new HorizontalGroup();
 		table.bottom().padLeft(5f).padBottom(8f).space(10f);
 		table2 = new VerticalGroup();
@@ -208,7 +225,6 @@ public class GameScreen implements Screen {
 		stage_menu = new Stage(AssetLoader.viewport);
 		stage_info = new Stage(AssetLoader.viewport);
 		stage_tooltip = new Stage(AssetLoader.viewport);
-		this.level=alevel;
 		oldx=0;
 		oldy=0;
 		unroll=false;
@@ -280,6 +296,17 @@ public class GameScreen implements Screen {
 		objectives.setPosition(890,AssetLoader.height-95);
 		buttonlevel=new ButtonLevel(level,true,1.0f);
 		buttonlevel.setPosition(1760,AssetLoader.height-125);
+		buttonlevel.addListener(new ClickListener() {
+			@Override
+			public void clicked(InputEvent event, float x, float y) {
+				Gdx.app.debug(getClass().getSimpleName(),"Remise à zéro du monde");				
+				GameScreen.this.level.Grid=GameScreen.this.level.Grid_orig;
+				level.Grid.tiling_copper();
+				level.Grid.tiling_transmuter();
+				map.redraw(53);
+				buttonlevel.setChecked(false);
+			}
+		});
 		Gdx.app.debug(getClass().getSimpleName(),"Création de la barre d'information");
 		info_tech=new ImageTextButton("0",AssetLoader.Skin_level,"info_tech");
 		info_tech.setSize(48, 48);
@@ -317,9 +344,11 @@ public class GameScreen implements Screen {
 		info_nom.setPosition(1230, AssetLoader.height-710);
 		info_desc=new TextArea("Description Description Description Description Description Description Description Description Description Description Description Description Description Description Description Description Description Description Description Description Description Description Description Description Description Description Description Description Description Description Description Description", AssetLoader.Skin_level, "info_desc") ;
 		info_desc.setBounds(1220, AssetLoader.height-965, 575, 150);
+		dialog=new WarnDialog(AssetLoader.Skin_ui);
 		Gdx.app.debug(getClass().getSimpleName(),"Création d'une tilemap");
 		map=new TouchMaptiles(level,128,128);
 		map.setBounds(0, 0, AssetLoader.width, AssetLoader.height);
+		map.redraw(53);
 		map.addListener(new ActorGestureListener(){
 			@Override
 			public void zoom(InputEvent event, float initialDistance, float distance) {
@@ -722,16 +751,18 @@ public class GameScreen implements Screen {
 				readsaved();
 		}
 		else if (caller.getName()=="save") {
-			AssetLoader.Datahandler.user().setGrid(0, level.aLevel, level.Grid);
+			AssetLoader.Datahandler.user().setGrid(0, level.id, level.Grid);
 			readsaved();
 		}
 		else if (caller.getName()=="levels") {
 			Gdx.app.debug("Barre","Affichage des niveaux.");
+			AssetLoader.Datahandler.user().setGrid(0, level.id, "LAST",this.level.Grid);
 			((Game)Gdx.app.getApplicationListener()).setScreen(new LevelScreen(level.aWorld));
 		}
 		else if (caller.getName()=="tree") {
 		}
 		else if (caller.getName()=="exits") {
+			AssetLoader.Datahandler.user().setGrid(0, level.id, "LAST",this.level.Grid);
 			Gdx.app.exit();
 		}
 		else if (caller.getName()=="screen") {
@@ -927,7 +958,7 @@ public class GameScreen implements Screen {
 		selSaved.addListener(new ClickListener(){
 			public void clicked(InputEvent event, float x, float y) {
 				if (this.getTapCount()>1)
-					level.Grid=AssetLoader.Datahandler.user().getGrid(0, level.aLevel, selSaved.getSelectedIndex());
+					level.Grid=AssetLoader.Datahandler.user().getGrid(0, level.id, selSaved.getSelectedIndex());
 					level.Grid.tiling_copper();
 					level.Grid.tiling_transmuter();
 					map.redraw(53);
@@ -939,8 +970,9 @@ public class GameScreen implements Screen {
 	}
 	
 	public void readsaved() {
-		selSaved.setItems(AssetLoader.Datahandler.user().getGrids(0, level.aLevel));
-	
+		Array<String> items=AssetLoader.Datahandler.user().getGrids(0, level.id);
+		if (items!=null)
+			selSaved.setItems(items);
 	}
 	 
 	public Table Createoption() {
@@ -1098,6 +1130,7 @@ public class GameScreen implements Screen {
 	private void onSaveClicked() {
 		winOptions.setVisible(false);
 		writepref();
+		dialog.Show("Veuillez redémmarrer pour que les préférences soient appliquées.", stage);
 	}
 	
 	private void onCancelClicked() {

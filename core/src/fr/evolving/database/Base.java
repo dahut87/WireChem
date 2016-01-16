@@ -66,6 +66,14 @@ public abstract class Base {
 		return null;
 	}
 	
+	public Grid getGrid(int user,int level, String tag){
+		return null;
+	}
+	
+	public boolean setGrid(int user,int level, String tag, Grid data){
+		return false;
+	}
+	
 	public boolean setGrid(int user,int level, Grid data){
 		return false;
 	}

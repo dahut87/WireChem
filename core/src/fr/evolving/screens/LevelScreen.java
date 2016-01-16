@@ -84,7 +84,6 @@ public class LevelScreen implements Screen {
 	}
 	
 	public void play() {
-		//thelevels= InitWorlds.go();
 		if (!AssetLoader.Datahandler.verifyall())
 			Gdx.app.debug(getClass().getSimpleName(),"Pilotes de bases de donnée défaillant.");	
 		else
@@ -94,6 +93,8 @@ public class LevelScreen implements Screen {
 				if (world<0)
 					world=0;
 				thelevels=AssetLoader.Datahandler.game().getworld(Preference.prefs.getString("world"));		
+				/*thelevels= InitWorlds.go();
+				AssetLoader.Datahandler.game().setworld(thelevels,Preference.prefs.getString("world"));	*/
 				loadWorld(world);
 				Previous.setVisible(true);
 				Next.setVisible(true);
@@ -492,19 +493,7 @@ public class LevelScreen implements Screen {
 		Worlddatalabel.setPosition(1480, 300);
 		Gamedata.setWorldlist(Worlddata);
 		Statdata.Refresh();
-		try {
-			Thread.sleep(1000);
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
 		Userdata.Refresh();
-		try {
-			Thread.sleep(1000);
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
 		Gamedata.Refresh();
 		Gdx.app.debug(getClass().getSimpleName(),"Affichage du menu.");
 		if (aworld!=-1)
