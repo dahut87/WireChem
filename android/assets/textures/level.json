@@ -132,15 +132,14 @@
        	info_nrjval: { up: jauge3 }
         info_cycleval: { up: jauge3 } 
         info_tempval: { up: jauge3 } 
-       	info_rayonval: { up: jauge3 }     
-       	MenuSolo: { up: menu1 }
-       	MenuMulti: { up: menu2 }
-       	MenuScenario: { up: menu3 }
+       	info_rayonval: { up: jauge3 }
+       	Warnerbros: { up: Warningmsg }   
     } 
     
   com.badlogic.gdx.scenes.scene2d.ui.Label$LabelStyle: { 
         Levelshort: { font : Vademecum-28 }
         FPS: { font : OpenDyslexicAlta-18 }
+        default: { font : OpenDyslexicAlta-18 }
         info_nom: { font : Vademecum-18 }
     }
   com.badlogic.gdx.scenes.scene2d.ui.TextField$TextFieldStyle: { 

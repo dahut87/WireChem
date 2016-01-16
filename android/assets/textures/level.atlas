@@ -4,6 +4,13 @@ size: 1024,1024
 format: RGBA8888
 filter: Linear,Linear
 repeat: none
+Warningmsg
+  rotate: false
+  xy: 718, 447
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
 barrebas
   rotate: false
   xy: 2, 577
@@ -83,74 +90,67 @@ separator
   index: -1
 sprite-copper
   rotate: false
-  xy: 718, 447
+  xy: 718, 317
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
   index: 0
 sprite-copper
   rotate: false
-  xy: 718, 317
+  xy: 848, 447
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
   index: 1
 sprite-copper
   rotate: false
-  xy: 848, 447
+  xy: 848, 317
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
   index: 2
 sprite-copper
   rotate: false
-  xy: 848, 317
+  xy: 617, 132
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
   index: 3
 sprite-copper
   rotate: false
-  xy: 617, 132
+  xy: 617, 2
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
   index: 4
 sprite-copper
   rotate: false
-  xy: 617, 2
+  xy: 747, 187
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
   index: 5
 sprite-copper
   rotate: false
-  xy: 747, 187
+  xy: 747, 57
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
   index: 6
 sprite-copper
   rotate: false
-  xy: 747, 57
+  xy: 877, 187
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
   index: 7
 sprite-copper
   rotate: false
-  xy: 877, 187
-  size: 128, 128
-  orig: 128, 128
-  offset: 0, 0
-  index: 8
-sprite-copper
-  rotate: false
   xy: 877, 57
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
-  index: 9
+  index: 8
 
 level2.png
 size: 1024,1024
@@ -233,189 +233,189 @@ sprite-copper
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
-  index: 10
+  index: 9
 sprite-copper
   rotate: false
   xy: 2, 9
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
-  index: 11
+  index: 10
 sprite-copper
   rotate: false
   xy: 483, 750
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
-  index: 12
+  index: 11
 sprite-copper
   rotate: false
   xy: 613, 880
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
-  index: 13
+  index: 12
 sprite-copper
   rotate: false
   xy: 132, 9
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
-  index: 14
+  index: 13
 sprite-copper
   rotate: false
   xy: 483, 620
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
-  index: 15
+  index: 14
 sprite-copper
   rotate: false
   xy: 743, 880
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
-  index: 23
+  index: 15
 sprite-copper
   rotate: false
   xy: 613, 750
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
-  index: 26
+  index: 23
 sprite-copper
   rotate: false
   xy: 262, 9
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
-  index: 27
+  index: 26
 sprite-copper
   rotate: false
   xy: 873, 880
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
-  index: 29
+  index: 27
 sprite-copper
   rotate: false
   xy: 743, 750
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
-  index: 31
+  index: 29
 sprite-copper
   rotate: false
   xy: 613, 620
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
-  index: 32
+  index: 31
 sprite-copper
   rotate: false
   xy: 392, 9
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
-  index: 33
+  index: 32
 sprite-copper
   rotate: false
   xy: 873, 750
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
-  index: 34
+  index: 33
 sprite-copper
   rotate: false
   xy: 743, 620
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
-  index: 35
+  index: 34
 sprite-copper
   rotate: false
   xy: 522, 9
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
-  index: 36
+  index: 35
 sprite-copper
   rotate: false
   xy: 873, 620
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
-  index: 37
+  index: 36
 sprite-copper
   rotate: false
   xy: 580, 490
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
-  index: 38
+  index: 37
 sprite-copper
   rotate: false
   xy: 580, 360
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
-  index: 39
+  index: 38
 sprite-copper
   rotate: false
   xy: 710, 490
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
-  index: 40
+  index: 39
 sprite-copper
   rotate: false
   xy: 710, 360
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
-  index: 41
+  index: 40
 sprite-copper
   rotate: false
   xy: 840, 490
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
-  index: 42
+  index: 41
 sprite-copper
   rotate: false
   xy: 840, 360
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
-  index: 43
+  index: 42
 sprite-copper
   rotate: false
   xy: 672, 230
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
-  index: 44
+  index: 43
 sprite-copper
   rotate: false
   xy: 802, 230
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
-  index: 45
+  index: 44
 sprite-copper
   rotate: false
   xy: 672, 100
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
-  index: 46
+  index: 45
 sprite-copper
   rotate: false
   xy: 802, 100
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
-  index: 47
+  index: 46
 
 level3.png
 size: 1024,1024
@@ -631,569 +631,576 @@ sprite-copper
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
-  index: 48
+  index: 47
 sprite-copper
   rotate: false
   xy: 2, 732
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
-  index: 49
+  index: 48
 sprite-copper
   rotate: false
   xy: 132, 862
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
-  index: 50
+  index: 49
 sprite-copper
   rotate: false
   xy: 2, 602
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
-  index: 51
+  index: 50
 sprite-copper
   rotate: false
   xy: 132, 732
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
-  index: 55
+  index: 51
 sprite-copper
   rotate: false
   xy: 262, 862
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
-  index: 56
+  index: 55
 sprite-copper
   rotate: false
   xy: 2, 472
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
-  index: 57
+  index: 56
 sprite-copper
   rotate: false
   xy: 132, 602
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
-  index: 58
+  index: 57
 sprite-copper
   rotate: false
   xy: 262, 732
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
-  index: 59
+  index: 58
 sprite-copper
   rotate: false
   xy: 392, 862
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
-  index: 62
-sprite-copper_10#1
+  index: 59
+sprite-copper
   rotate: false
   xy: 2, 342
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
-  index: -1
-sprite-copper_10#2
+  index: 62
+sprite-copper_10#1
   rotate: false
   xy: 132, 472
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
   index: -1
-sprite-copper_10#3
+sprite-copper_10#2
   rotate: false
   xy: 262, 602
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
   index: -1
-sprite-copper_10#4
+sprite-copper_10#3
   rotate: false
   xy: 392, 732
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
   index: -1
-sprite-copper_10#5
+sprite-copper_10#4
   rotate: false
   xy: 522, 862
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
   index: -1
-sprite-empty
+sprite-copper_10#5
   rotate: false
   xy: 2, 212
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
-  index: 52
+  index: -1
 sprite-empty
   rotate: false
   xy: 132, 342
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
-  index: 53
+  index: 52
 sprite-empty
   rotate: false
   xy: 262, 472
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
-  index: 54
+  index: 53
 sprite-empty
   rotate: false
   xy: 392, 602
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
-  index: 60
+  index: 54
 sprite-empty
   rotate: false
   xy: 522, 732
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
+  index: 60
+sprite-empty
+  rotate: false
+  xy: 652, 862
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
   index: 63
 sprite-fiber
   rotate: false
-  xy: 652, 862
+  xy: 2, 82
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
   index: 61
 sprite-menu
   rotate: false
-  xy: 2, 82
+  xy: 132, 212
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
   index: 70
 sprite-menu
   rotate: false
-  xy: 132, 212
+  xy: 262, 342
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
   index: 71
 sprite-menu
   rotate: false
-  xy: 262, 342
+  xy: 392, 472
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
   index: 72
 sprite-menu
   rotate: false
-  xy: 392, 472
+  xy: 522, 602
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
   index: 73
 sprite-menu
   rotate: false
-  xy: 522, 602
+  xy: 652, 732
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
   index: 74
 sprite-menu
   rotate: false
-  xy: 652, 732
+  xy: 782, 862
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
   index: 75
 sprite-menu
   rotate: false
-  xy: 782, 862
+  xy: 132, 82
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
   index: 76
 sprite-menu
   rotate: false
-  xy: 132, 82
+  xy: 262, 212
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
   index: 77
 sprite-menu
   rotate: false
-  xy: 262, 212
+  xy: 392, 342
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
   index: 78
 sprite-menu
   rotate: false
-  xy: 392, 342
+  xy: 522, 472
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
   index: 79
 sprite-surtile
   rotate: false
-  xy: 522, 472
+  xy: 652, 602
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
   index: 80
 sprite-surtile
   rotate: false
-  xy: 652, 602
+  xy: 782, 732
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
   index: 81
 sprite-surtile
   rotate: false
-  xy: 782, 732
+  xy: 262, 82
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
   index: 82
 sprite-surtile
   rotate: false
-  xy: 262, 82
+  xy: 392, 212
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
   index: 83
 sprite-surtile
   rotate: false
-  xy: 392, 212
+  xy: 522, 342
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
   index: 84
 sprite-surtile
   rotate: false
-  xy: 522, 342
+  xy: 652, 472
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
   index: 85
 sprite-surtile
   rotate: false
-  xy: 652, 472
+  xy: 782, 602
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
   index: 86
 sprite-surtile_69#1
   rotate: false
-  xy: 782, 602
+  xy: 392, 82
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
   index: -1
 sprite-surtile_69#2
   rotate: false
-  xy: 392, 82
+  xy: 522, 212
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
   index: -1
 sprite-surtile_69#3
   rotate: false
-  xy: 522, 212
+  xy: 652, 342
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
   index: -1
 sprite-surtile_69#4
   rotate: false
-  xy: 652, 342
-  size: 128, 128
-  orig: 128, 128
-  offset: 0, 0
-  index: -1
-sprite-transmuter
-  rotate: false
   xy: 782, 472
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
-  index: 100
+  index: -1
 sprite-transmuter
   rotate: false
   xy: 522, 82
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
-  index: 101
+  index: 100
 sprite-transmuter
   rotate: false
   xy: 652, 212
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
-  index: 102
+  index: 101
 sprite-transmuter
   rotate: false
   xy: 782, 342
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
-  index: 103
+  index: 102
 sprite-transmuter
   rotate: false
   xy: 652, 82
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
-  index: 104
+  index: 103
 sprite-transmuter
   rotate: false
   xy: 782, 212
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
-  index: 105
+  index: 104
 sprite-transmuter
   rotate: false
   xy: 782, 82
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
-  index: 106
+  index: 105
 
 level4.png
-size: 1024,256
+size: 1024,512
 format: RGBA8888
 filter: Linear,Linear
 repeat: none
 leveler0
   rotate: false
-  xy: 392, 129
+  xy: 132, 201
   size: 111, 125
   orig: 111, 125
   offset: 0, 0
   index: -1
 leveler1
   rotate: false
-  xy: 398, 2
+  xy: 262, 331
   size: 111, 125
   orig: 111, 125
   offset: 0, 0
   index: -1
 leveler2
   rotate: false
-  xy: 505, 129
+  xy: 132, 74
   size: 111, 125
   orig: 111, 125
   offset: 0, 0
   index: -1
 leveler3
   rotate: false
-  xy: 511, 2
+  xy: 375, 331
   size: 111, 125
   orig: 111, 125
   offset: 0, 0
   index: -1
 leveler4
   rotate: false
-  xy: 618, 129
+  xy: 488, 331
   size: 111, 125
   orig: 111, 125
   offset: 0, 0
   index: -1
 points
   rotate: false
-  xy: 2, 60
+  xy: 2, 2
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: -1
 rayon
   rotate: false
-  xy: 68, 60
+  xy: 601, 392
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: -1
 raz
   rotate: false
-  xy: 134, 60
+  xy: 667, 392
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: -1
 run
   rotate: false
-  xy: 200, 60
+  xy: 733, 392
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: -1
 save
   rotate: false
-  xy: 266, 60
+  xy: 799, 392
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: -1
 screen
   rotate: false
-  xy: 332, 60
+  xy: 865, 392
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: -1
 settings
   rotate: false
-  xy: 624, 63
+  xy: 931, 392
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: -1
 sound
   rotate: false
-  xy: 690, 63
+  xy: 68, 2
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: -1
 speed
   rotate: false
-  xy: 731, 190
+  xy: 601, 326
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: -1
 sprite-transmuter
   rotate: false
-  xy: 2, 126
+  xy: 2, 328
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: 106
+sprite-transmuter
+  rotate: false
+  xy: 2, 198
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
   index: 107
 sprite-transmuter
   rotate: false
-  xy: 132, 126
+  xy: 132, 328
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
   index: 108
 sprite-transmuter
   rotate: false
-  xy: 262, 126
+  xy: 2, 68
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
   index: 109
 sprite-transmuter
   rotate: false
-  xy: 262, 126
+  xy: 2, 68
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
-  index: 111
+  index: 112
 sprite-transmuter
   rotate: false
-  xy: 262, 126
-  size: 128, 128
-  orig: 128, 128
-  offset: 0, 0
-  index: 110
-sprite-transmuter
-  rotate: false
-  xy: 262, 126
+  xy: 2, 68
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
   index: 113
 sprite-transmuter
   rotate: false
-  xy: 262, 126
+  xy: 2, 68
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
-  index: 112
+  index: 111
+sprite-transmuter
+  rotate: false
+  xy: 2, 68
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: 110
 start
   rotate: false
-  xy: 756, 124
+  xy: 667, 326
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: -1
 stat
   rotate: false
-  xy: 797, 190
+  xy: 733, 326
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: -1
 stop
   rotate: false
-  xy: 756, 58
+  xy: 799, 326
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: -1
 tech
   rotate: false
-  xy: 822, 124
+  xy: 865, 326
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: -1
 temp
   rotate: false
-  xy: 863, 190
+  xy: 931, 326
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: -1
 tree
   rotate: false
-  xy: 929, 190
+  xy: 134, 8
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: -1
 tuto
   rotate: false
-  xy: 822, 58
+  xy: 200, 8
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: -1
 usa
   rotate: false
-  xy: 888, 124
+  xy: 245, 262
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: -1
 windows
   rotate: false
-  xy: 954, 124
+  xy: 245, 196
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: -1
 zoomm
   rotate: false
-  xy: 888, 58
+  xy: 245, 130
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: -1
 zoomp
   rotate: false
-  xy: 954, 58
+  xy: 311, 265
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
