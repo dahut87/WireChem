@@ -2,17 +2,9 @@ package fr.evolving.database;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.nio.channels.FileChannel;
-import java.nio.charset.Charset;
 
-import javax.xml.bind.DatatypeConverter;
-
-import com.badlogic.gdx.Files.FileType;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.sql.Database;
@@ -22,11 +14,9 @@ import com.badlogic.gdx.sql.SQLiteGdxException;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Base64Coder;
 
-import fr.evolving.assets.AssetLoader;
 import fr.evolving.automata.Grid;
 import fr.evolving.automata.Level;
 import fr.evolving.automata.Transmuter;
-import fr.evolving.database.Base.datatype;
 
 public class LocalBase extends Base {
 	private static Database dbHandler;
@@ -34,7 +24,7 @@ public class LocalBase extends Base {
 	private String creation;
 	private String param;
 
-	//Contructeur de la base de donnée
+	// Contructeur de la base de donnée
 
 	public String getParam() {
 		return this.param;
@@ -43,111 +33,115 @@ public class LocalBase extends Base {
 	public LocalBase() {
 	}
 
-	public LocalBase(datatype model,String param) {
-		super(model,param);
-		String[] params=param.split(":");
-		this.param=param;
-		if (params.length>1)
-			databasename=params[1];
-		switch(Gdx.app.getType()) {
+	public LocalBase(datatype model, String param) {
+		super(model, param);
+		String[] params = param.split(":");
+		this.param = param;
+		if (params.length > 1)
+			databasename = params[1];
+		switch (Gdx.app.getType()) {
 		case Android:
 			try {
-				if (!Gdx.files.absolute("/data/data/fr.evolving.game.android/databases/"+databasename).exists()) {
-				Gdx.app.log("Base", "Copie de la base de donnee android");
-				byte[] ByteSource = Gdx.files.internal("bases/"+databasename).readBytes();
-				FileOutputStream destination = new FileOutputStream("/data/data/fr.evolving.game.android/databases/"+databasename);
-				destination.write(ByteSource);
-				destination.close();
+				FileHandle newbase = Gdx.files.absolute("/data/data/fr.evolving.game.android/databases/"+ databasename);
+				if (!newbase.exists()) {
+					Gdx.app.log("Base", "Copie de la base de donnee android");
+					Gdx.files.internal("bases/" + databasename).copyTo(newbase);
 				}
-			} catch (IOException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
+			} catch (Exception e1) {
+				Gdx.app.error("Base", "Erreur de copie");
 			}
 			break;
 		case Desktop:
 			Gdx.app.log("Base", "Copie de la base de donnee desktop");
-			FileHandle newbase=Gdx.files.local(databasename);
+			FileHandle newbase = Gdx.files.local(databasename);
 			try {
-				if (!newbase.exists()) 
-					Gdx.files.internal("bases/"+databasename).copyTo(newbase);
+				if (!newbase.exists())
+					Gdx.files.internal("bases/" + databasename).copyTo(newbase);
 			} catch (Exception e1) {
-				e1.printStackTrace();
+				Gdx.app.error("Base", "Erreur de copie");
 			}
 			break;
 		}
-		if (dbHandler!=null)
-			Gdx.app.log("Local", "Reprise de la base '"+databasename+"', table:"+model.toString());
-		else
-		{
-			Gdx.app.log("Local", "Utilisation de la base '"+databasename+"', table:"+model.toString());
-			dbHandler = DatabaseFactory.getNewDatabase(databasename,1, null, null);
+		if (dbHandler != null)
+			Gdx.app.log("Local", "Reprise de la base '" + databasename
+					+ "', table:" + model.toString());
+		else {
+			Gdx.app.log("Local", "Utilisation de la base '" + databasename
+					+ "', table:" + model.toString());
+			dbHandler = DatabaseFactory.getNewDatabase(databasename, 1, null,
+					null);
 			dbHandler.setupDatabase();
 
 			try {
 				dbHandler.openOrCreateDatabase();
-			}
-			catch (SQLiteGdxException e) {
+			} catch (SQLiteGdxException e) {
 				e.printStackTrace();
 				Gdx.app.log("Local", "Erreur à l'ouverture de la base");
 			}
 		}
 		try {
-			if (model==datatype.statdata)
+			if (model == datatype.statdata)
 				creation = "create table if not exists stat (id integer)";
-			else if (model==datatype.userdata) {
-				dbHandler.execSQL("CREATE TABLE if not exists locks(date DATETIME DEFAULT CURRENT_TIMESTAMP, level INTEGER NOT NULL, user INTEGER NOT NULL, PRIMARY KEY(level,user));");
-				dbHandler.execSQL("CREATE TABLE if not exists grids(date DATETIME DEFAULT CURRENT_TIMESTAMP, level INTEGER NOT NULL, user INTEGER NOT NULL, tag TEXT, object TEXT, PRIMARY KEY(level,user,date));");
-				dbHandler.execSQL("CREATE TABLE if not exists transmuters(date DATETIME DEFAULT CURRENT_TIMESTAMP, user INTEGER NOT NULL, object TEXT, PRIMARY KEY(user));");
-				dbHandler.execSQL("CREATE TABLE if not exists research(date DATETIME DEFAULT CURRENT_TIMESTAMP, user INTEGER NOT NULL, value INT, PRIMARY KEY(user));");
-			}
-			else
-				dbHandler.execSQL("CREATE TABLE if not exists worlds(date DATETIME DEFAULT CURRENT_TIMESTAMP, desc TEXT NOT NULL, object TEXT, PRIMARY KEY(desc));");
+			else if (model == datatype.userdata) {
+				dbHandler
+						.execSQL("CREATE TABLE if not exists locks(date DATETIME DEFAULT CURRENT_TIMESTAMP, level INTEGER NOT NULL, user INTEGER NOT NULL, PRIMARY KEY(level,user));");
+				dbHandler
+						.execSQL("CREATE TABLE if not exists grids(date DATETIME DEFAULT CURRENT_TIMESTAMP, level INTEGER NOT NULL, user INTEGER NOT NULL, tag TEXT, object TEXT, PRIMARY KEY(level,user,date));");
+				dbHandler
+						.execSQL("CREATE TABLE if not exists transmuters(date DATETIME DEFAULT CURRENT_TIMESTAMP, user INTEGER NOT NULL, object TEXT, PRIMARY KEY(user));");
+				dbHandler
+						.execSQL("CREATE TABLE if not exists research(date DATETIME DEFAULT CURRENT_TIMESTAMP, user INTEGER NOT NULL, value INT, PRIMARY KEY(user));");
+			} else
+				dbHandler
+						.execSQL("CREATE TABLE if not exists worlds(date DATETIME DEFAULT CURRENT_TIMESTAMP, desc TEXT NOT NULL, object TEXT, PRIMARY KEY(desc));");
 		} catch (SQLiteGdxException e) {
 			e.printStackTrace();
 		}
 	}
 
-	//Gestion model type gamedata
+	// Gestion model type gamedata
 
 	public Array<String> getworlds() {
-		DatabaseCursor cursor=null;
+		DatabaseCursor cursor = null;
 		try {
 			cursor = dbHandler.rawQuery("select desc,date from worlds;");
 		} catch (SQLiteGdxException e) {
 			return null;
 		}
-		Array<String> returnvalue=new Array<String>();
+		Array<String> returnvalue = new Array<String>();
 		while (cursor.next())
 			returnvalue.add(cursor.getString(0));
 		return returnvalue;
 	}
 
 	public Array<Level> getworld(String description) {
-		DatabaseCursor cursor=null;
+		DatabaseCursor cursor = null;
 		try {
-			cursor = dbHandler.rawQuery("select object from worlds where desc='"+description+"';");
+			cursor = dbHandler
+					.rawQuery("select object from worlds where desc='"
+							+ description + "';");
 		} catch (SQLiteGdxException e) {
 			return null;
 		}
-		Level[] mc=null;
+		Level[] mc = null;
 		if (cursor.next())
 			try {
 				byte[] bytes = Base64Coder.decodeLines(cursor.getString(0));
-				ByteArrayInputStream  bais = new ByteArrayInputStream(bytes);
+				ByteArrayInputStream bais = new ByteArrayInputStream(bytes);
 				ObjectInputStream ins = new ObjectInputStream(bais);
-				mc=(Level[]) ins.readObject();
+				mc = (Level[]) ins.readObject();
 				ins.close();
 				return new Array<Level>(mc);
+			} catch (Exception e) {
+				e.printStackTrace();
 			}
-		catch (Exception e) {
-			e.printStackTrace();
-		}
 		return null;
 	}
 
 	public boolean deleteworld(String description) {
 		try {
-			dbHandler.rawQuery("delete from worlds where desc='"+description+"';");
+			dbHandler.rawQuery("delete from worlds where desc='" + description
+					+ "';");
 		} catch (SQLiteGdxException e) {
 			return false;
 		}
@@ -165,60 +159,66 @@ public class LocalBase extends Base {
 			bos.close();
 			byte[] bytes = bos.toByteArray();
 			encoded = Base64Coder.encodeLines(bytes);
-			dbHandler.rawQuery("replace into worlds (desc,object) values ('"+description+"','"+encoded+"');");
+			dbHandler.rawQuery("replace into worlds (desc,object) values ('"
+					+ description + "','" + encoded + "');");
 		} catch (Exception e) {
 			return false;
 		}
 		return true;
-	}	
+	}
 
-	//Gestion de données type userdata
+	// Gestion de données type userdata
 
-	public boolean getlevellock(int user,int level) {
-		DatabaseCursor cursor=null;
+	public boolean getlevellock(int user, int level) {
+		DatabaseCursor cursor = null;
 		try {
-			cursor=dbHandler.rawQuery("select user from locks where user="+user+" and level="+level+";");
+			cursor = dbHandler.rawQuery("select user from locks where user="
+					+ user + " and level=" + level + ";");
 		} catch (SQLiteGdxException e) {
 			return false;
 		}
 		if (cursor.next())
 			return true;
-		else return false;
+		else
+			return false;
 	}
 
-	public boolean setlevelunlock(int user,int level){
+	public boolean setlevelunlock(int user, int level) {
 		try {
-			dbHandler.rawQuery("insert into locks (user,level) values ("+user+","+level+");");
+			dbHandler.rawQuery("insert into locks (user,level) values (" + user
+					+ "," + level + ");");
 		} catch (SQLiteGdxException e) {
 			return false;
 		}
 		return true;
 	}
 
-	public Array<Transmuter> getTransmuters(int user){
-		DatabaseCursor cursor=null;
+	public Array<Transmuter> getTransmuters(int user) {
+		DatabaseCursor cursor = null;
 		try {
-			cursor = dbHandler.rawQuery("select object from transmuters where user="+user+";");
+			cursor = dbHandler
+					.rawQuery("select object from transmuters where user="
+							+ user + ";");
 		} catch (SQLiteGdxException e) {
 			return null;
 		}
-		Transmuter[] mc=null;
+		Transmuter[] mc = null;
 		if (cursor.next())
 			try {
-				byte[] bytes = DatatypeConverter.parseBase64Binary(cursor.getString(0));
-				ByteArrayInputStream  bais = new ByteArrayInputStream(bytes);
+				byte[] bytes = Base64Coder.decodeLines(cursor
+						.getString(0));
+				ByteArrayInputStream bais = new ByteArrayInputStream(bytes);
 				ObjectInputStream ins = new ObjectInputStream(bais);
-				mc=(Transmuter[]) ins.readObject();
+				mc = (Transmuter[]) ins.readObject();
 				ins.close();
 				return new Array<Transmuter>(mc);
+			} catch (Exception e) {
+				e.printStackTrace();
 			}
-		catch (Exception e) {
-			e.printStackTrace();
-		}
 		return null;
 	}
 
-	public boolean setTransmuters(int user,Array<Transmuter> transmuters){
+	public boolean setTransmuters(int user, Array<Transmuter> transmuters) {
 		String encoded = "";
 		try {
 			ByteArrayOutputStream bos = new ByteArrayOutputStream();
@@ -228,84 +228,93 @@ public class LocalBase extends Base {
 			oos.close();
 			bos.close();
 			byte[] bytes = bos.toByteArray();
-			encoded = DatatypeConverter.printBase64Binary(bytes);
-			dbHandler.rawQuery("replace into transmuters (user,object) values ("+user+",'"+encoded+"');");
+			encoded = Base64Coder.encodeLines(bytes);
+			dbHandler
+					.rawQuery("replace into transmuters (user,object) values ("
+							+ user + ",'" + encoded + "');");
 		} catch (Exception e) {
 			return false;
 		}
 		return true;
 	}
 
-
-	public int getResearchpoint(int user){
-		DatabaseCursor cursor=null;
+	public int getResearchpoint(int user) {
+		DatabaseCursor cursor = null;
 		try {
-			cursor = dbHandler.rawQuery("select value from research where user="+user+";");
+			cursor = dbHandler
+					.rawQuery("select value from research where user=" + user
+							+ ";");
 		} catch (SQLiteGdxException e) {
 			return 0;
 		}
 		if (cursor.next())
-			return  cursor.getInt(0);
+			return cursor.getInt(0);
 		else
 			return 0;
 	}
 
-	public boolean setResearchpoint(int user, int point){
+	public boolean setResearchpoint(int user, int point) {
 		try {
-			dbHandler.rawQuery("replace into research (user,value) values ("+user+","+point+");");
+			dbHandler.rawQuery("replace into research (user,value) values ("
+					+ user + "," + point + ");");
 		} catch (Exception e) {
 			return false;
 		}
 		return true;
 	}
 
-	public Grid getGrid(int user,int level,int place){
-		DatabaseCursor cursor=null;
+	public Grid getGrid(int user, int level, int place) {
+		DatabaseCursor cursor = null;
 		try {
-			cursor = dbHandler.rawQuery("select object from grids where user="+user+" and level="+level+" and tag is null order by date desc limit "+place+",1;");
+			cursor = dbHandler.rawQuery("select object from grids where user="
+					+ user + " and level=" + level
+					+ " and tag is null order by date desc limit " + place
+					+ ",1;");
 		} catch (SQLiteGdxException e) {
 			return null;
 		}
-		Grid mc=null;
+		Grid mc = null;
 		if (cursor.next())
 			try {
-				byte[] bytes = DatatypeConverter.parseBase64Binary(cursor.getString(0));
-				ByteArrayInputStream  bais = new ByteArrayInputStream(bytes);
+				byte[] bytes = Base64Coder.decodeLines(cursor
+						.getString(0));
+				ByteArrayInputStream bais = new ByteArrayInputStream(bytes);
 				ObjectInputStream ins = new ObjectInputStream(bais);
-				mc=(Grid) ins.readObject();
+				mc = (Grid) ins.readObject();
 				ins.close();
 				return mc;
+			} catch (Exception e) {
+				e.printStackTrace();
 			}
-		catch (Exception e) {
-			e.printStackTrace();
-		}
-		return null;
-	}
-	
-	public Grid getGrid(int user,int level,String tag){
-		DatabaseCursor cursor=null;
-		try {
-			cursor = dbHandler.rawQuery("select object from grids where user="+user+" and level="+level+" and tag='"+tag+"' order by date desc limit 1;");
-		} catch (SQLiteGdxException e) {
-			return null;
-		}
-		Grid mc=null;
-		if (cursor.next())
-			try {
-				byte[] bytes = DatatypeConverter.parseBase64Binary(cursor.getString(0));
-				ByteArrayInputStream  bais = new ByteArrayInputStream(bytes);
-				ObjectInputStream ins = new ObjectInputStream(bais);
-				mc=(Grid) ins.readObject();
-				ins.close();
-				return mc;
-			}
-		catch (Exception e) {
-			e.printStackTrace();
-		}
 		return null;
 	}
 
-	public boolean setGrid(int user,int level, Grid data){
+	public Grid getGrid(int user, int level, String tag) {
+		DatabaseCursor cursor = null;
+		try {
+			cursor = dbHandler.rawQuery("select object from grids where user="
+					+ user + " and level=" + level + " and tag='" + tag
+					+ "' order by date desc limit 1;");
+		} catch (SQLiteGdxException e) {
+			return null;
+		}
+		Grid mc = null;
+		if (cursor.next())
+			try {
+				byte[] bytes = Base64Coder.decodeLines(cursor
+						.getString(0));
+				ByteArrayInputStream bais = new ByteArrayInputStream(bytes);
+				ObjectInputStream ins = new ObjectInputStream(bais);
+				mc = (Grid) ins.readObject();
+				ins.close();
+				return mc;
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		return null;
+	}
+
+	public boolean setGrid(int user, int level, Grid data) {
 		String encoded = "";
 		try {
 			ByteArrayOutputStream bos = new ByteArrayOutputStream();
@@ -315,15 +324,16 @@ public class LocalBase extends Base {
 			oos.close();
 			bos.close();
 			byte[] bytes = bos.toByteArray();
-			encoded = DatatypeConverter.printBase64Binary(bytes);
-			dbHandler.rawQuery("insert into grids (user,level,object) values ("+user+","+level+",'"+encoded+"');");
+			encoded = Base64Coder.encodeLines(bytes);
+			dbHandler.rawQuery("insert into grids (user,level,object) values ("
+					+ user + "," + level + ",'" + encoded + "');");
 		} catch (Exception e) {
 			return false;
 		}
 		return true;
 	}
-	
-	public boolean setGrid(int user,int level, String tag, Grid data){
+
+	public boolean setGrid(int user, int level, String tag, Grid data) {
 		String encoded = "";
 		try {
 			ByteArrayOutputStream bos = new ByteArrayOutputStream();
@@ -333,37 +343,48 @@ public class LocalBase extends Base {
 			oos.close();
 			bos.close();
 			byte[] bytes = bos.toByteArray();
-			encoded = DatatypeConverter.printBase64Binary(bytes);
+			encoded = Base64Coder.encodeLines(bytes);
 			try {
-				dbHandler.rawQuery("delete from grids where user="+user+" and level="+level+" and tag='"+tag+"';");
-			} catch (Exception e) {}
-			dbHandler.rawQuery("insert into grids (user,level,tag,object) values ("+user+","+level+",'"+tag+"','"+encoded+"');");
+				dbHandler.rawQuery("delete from grids where user=" + user
+						+ " and level=" + level + " and tag='" + tag + "';");
+			} catch (Exception e) {
+			}
+			dbHandler
+					.rawQuery("insert into grids (user,level,tag,object) values ("
+							+ user
+							+ ","
+							+ level
+							+ ",'"
+							+ tag
+							+ "','"
+							+ encoded
+							+ "');");
 			return true;
-		}
-		catch (Exception e) {
+		} catch (Exception e) {
 			return false;
 		}
 	}
 
-	public Array<String> getGrids(int user, int level){
-		DatabaseCursor cursor=null;
+	public Array<String> getGrids(int user, int level) {
+		DatabaseCursor cursor = null;
 		try {
-			cursor = dbHandler.rawQuery("select date from grids where level="+level+" and user="+user+" and tag is null order by date desc;");
+			cursor = dbHandler.rawQuery("select date from grids where level="
+					+ level + " and user=" + user
+					+ " and tag is null order by date desc;");
 		} catch (SQLiteGdxException e) {
 			return null;
 		}
-		Array<String> returnvalue=new Array<String>();
+		Array<String> returnvalue = new Array<String>();
 		while (cursor.next())
 			returnvalue.add(cursor.getString(0));
 		return returnvalue;
 	}
 
-	//Gestion type Stat
+	// Gestion type Stat
 
+	// Commun
 
-	//Commun
-
-	public boolean Eraseall(datatype base){
+	public boolean Eraseall(datatype base) {
 		try {
 			dbHandler.execSQL("drop table if exists stat;");
 			dbHandler.execSQL("drop table if exists locks;");
@@ -378,9 +399,9 @@ public class LocalBase extends Base {
 
 	public void Close() {
 		try {
-			if (dbHandler!=null) {
+			if (dbHandler != null) {
 				dbHandler.closeDatabase();
-				dbHandler=null;
+				dbHandler = null;
 			}
 		} catch (SQLiteGdxException e) {
 			// TODO Auto-generated catch block
@@ -392,7 +413,7 @@ public class LocalBase extends Base {
 		return "local";
 	}
 
-	public static boolean isHandling(datatype base){
+	public static boolean isHandling(datatype base) {
 		return true;
 	}
 
