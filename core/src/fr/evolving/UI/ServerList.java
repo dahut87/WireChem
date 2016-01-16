@@ -61,10 +61,11 @@ public class ServerList extends List {
 
 	 Gdx.net.sendHttpRequest (httpGet, new HttpResponseListener() {
 	        public void handleHttpResponse(HttpResponse httpResponse) {
-	        	String Response = "";
-	        	Array<Element> resultxml;
-	        	Array<String> resultstring=new Array<String>();
 	        	if (httpResponse.getStatus().getStatusCode()==200)
+	        	{
+		        	String Response = "";
+		        	Array<Element> resultxml;
+		        	Array<String> resultstring=new Array<String>();
 	        		Response = httpResponse.getResultAsString();
 	        		XmlReader xml = new XmlReader();
 	        		XmlReader.Element xml_element = xml.parse(Response);
@@ -79,6 +80,7 @@ public class ServerList extends List {
 	        		ServerList.this.setSelectedIndex(resultstring.indexOf(old, false));
 	        		if (list!=null && ServerList.this.model==Base.datatype.gamedata)
 	        			list.Refresh();
+	        	}
 	        }
 	        @Override
 	        public void failed(Throwable t) {

@@ -1,5 +1,6 @@
 package fr.evolving.UI;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.scenes.scene2d.ui.List;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.utils.Array;
@@ -15,10 +16,11 @@ public class Worldlist extends List {
 	}
 	
 	public void Refresh() {
-		Array<String> worlds=AssetLoader.Datahandler.game().getworlds();
-		String world=Preference.prefs.getString("world");
-		if (!worlds.contains(world, false))
-			worlds.add(world);
+		Array<String> worlds=null;
+		if (AssetLoader.Datahandler.game()!=null)
+			worlds=AssetLoader.Datahandler.game().getworlds();
+		if (worlds==null)
+			worlds=new Array<String>();
 		this.setItems(worlds);
 	}
 }

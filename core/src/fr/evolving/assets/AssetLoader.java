@@ -205,12 +205,21 @@ public class AssetLoader {
 		Datahandler.RegisterBackend(SqlBase.class);
 		Databasemanagerfrompref();
         }
-	
+
 	public static void Databasemanagerfrompref() {
 		Datahandler.CloseAll();
-		Datahandler.Attach(datatype.userdata, Preference.prefs.getString("userdata"));
-		Datahandler.Attach(datatype.statdata, Preference.prefs.getString("statdata"));
-		Datahandler.Attach(datatype.gamedata, Preference.prefs.getString("gamedata"));
+		if (Datahandler.Attach(datatype.userdata, Preference.prefs.getString("userdata")))
+			Gdx.app.debug("AssetLoader","Base user ok");
+		else
+			Gdx.app.debug("AssetLoader","Base user erreur");		
+		if (Datahandler.Attach(datatype.statdata, Preference.prefs.getString("statdata")))
+			Gdx.app.debug("AssetLoader","Base stat ok");
+		else
+			Gdx.app.debug("AssetLoader","Base stat erreur");	
+		if (Datahandler.Attach(datatype.gamedata, Preference.prefs.getString("gamedata")))
+			Gdx.app.debug("AssetLoader","Base jeu ok");
+		else
+			Gdx.app.debug("AssetLoader","Base jeu erreur");	
 	}
 	
 	public static Transmuter getTransmuter(String Name) {

@@ -25,6 +25,10 @@ public class DatabaseManager {
 		return bases[Base.datatype.gamedata.ordinal()];
 	}
 	
+	public boolean verifyall() {
+		return (bases[0]!=null && bases[1]!=null && bases[2]!=null);
+	}
+	
 	public DatabaseManager(){
 		bases=new Base[3];
 		old=new String[3];
@@ -53,7 +57,11 @@ public class DatabaseManager {
 			return true;
 		}
 		else
+		{
+			bases[model.ordinal()]=null;
+			old[model.ordinal()]=null;
 			return false;
+		}
 	}
 
 	public Base getBackend(Base.datatype model, String Url) {
@@ -64,9 +72,11 @@ public class DatabaseManager {
 		for(Class<?> classe:backends) {
 				Base back;
 				try {
-					back = (Base) classe.getDeclaredConstructor(cArg).newInstance(model,Url);
-					if (back.getprefix().equals(Type))
+					back = (Base) classe.newInstance();
+					if (back.getprefix().equals(Type)) {
+						back = (Base) classe.getDeclaredConstructor(cArg).newInstance(model,Url);
 						return back;
+					}
 				} catch (InstantiationException | IllegalAccessException
 						| IllegalArgumentException | InvocationTargetException
 						| NoSuchMethodException | SecurityException e) {

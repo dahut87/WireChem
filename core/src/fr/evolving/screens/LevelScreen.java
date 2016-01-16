@@ -7,7 +7,10 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.actions.Actions;
+import com.badlogic.gdx.scenes.scene2d.actions.Actions.*;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.ui.List;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
@@ -30,6 +33,7 @@ import fr.evolving.renderers.LevelRenderer;
 import fr.evolving.UI.ButtonLevel;
 import fr.evolving.UI.Objectives;
 import fr.evolving.UI.ServerList;
+import fr.evolving.UI.WarnDialog;
 import fr.evolving.UI.Worldlist;
 import fr.evolving.game.main;
 
@@ -55,8 +59,10 @@ public class LevelScreen implements Screen {
 	private TimerTask ScrollTask;
     private Stage stage;
     private Table table;
+    private WarnDialog dialog;
     private ImageButton Previous,Next,Exit;
-    public ImageButton logosmall,MenuSolo,MenuMulti,MenuScenario;
+    public ImageButton logosmall;
+    public Image MenuSolo,MenuMulti,MenuScenario;
     private ImageTextButton cout,tech,cycle,temp,rayon,nrj;
 	private TextButton buttonConnect,buttonPlay,buttonStat,buttonSave, buttonApply, buttonPlaythis;
 	private ServerList Statdata,Userdata,Gamedata;
@@ -79,22 +85,27 @@ public class LevelScreen implements Screen {
 	
 	public void play() {
 		//thelevels= InitWorlds.go();
-		Gdx.app.debug(getClass().getSimpleName(),"Chargement des mondes depuis la base.");	
-		try {
-	    if (world<0)
-	    	world=0;
-		thelevels=AssetLoader.Datahandler.game().getworld(Preference.prefs.getString("world"));
-		loadWorld(world);
-		Previous.setVisible(true);
-		Next.setVisible(true);
-		buttonPlay.setVisible(true);
-		TextDescriptive.setVisible(true);	
-		}
-		catch (Exception e) {
-		Previous.setVisible(false);
-		Next.setVisible(false);
-		buttonPlay.setVisible(false);
-		TextDescriptive.setVisible(false);	
+		if (!AssetLoader.Datahandler.verifyall())
+			Gdx.app.debug(getClass().getSimpleName(),"Pilotes de bases de donnée défaillant.");	
+		else
+		{
+			Gdx.app.debug(getClass().getSimpleName(),"Chargement des mondes depuis la base.");	
+			try {
+				if (world<0)
+					world=0;
+				thelevels=AssetLoader.Datahandler.game().getworld(Preference.prefs.getString("world"));		
+				loadWorld(world);
+				Previous.setVisible(true);
+				Next.setVisible(true);
+				buttonPlay.setVisible(true);
+				TextDescriptive.setVisible(true);	
+			}
+			catch (Exception e) {
+				Previous.setVisible(false);
+				Next.setVisible(false);
+				buttonPlay.setVisible(false);
+				TextDescriptive.setVisible(false);	
+			}
 		}
 	}
 	
@@ -128,12 +139,44 @@ public class LevelScreen implements Screen {
 		Worlddata.setVisible(false);
 		buttonSave.setVisible(false);
 		buttonApply.setVisible(false);
+		initlevel();
+		MenuSolo.setRotation(0);
+		MenuSolo.setScale(1f);
+		MenuSolo.setColor(1f, 1f, 1f, 1f);
+		MenuSolo.setPosition(0, AssetLoader.height*17/20-300);
+		MenuMulti.setRotation(0);
+		MenuMulti.setScale(1f);
+		MenuMulti.setColor(1f, 1f, 1f, 1f);
+		MenuMulti.setPosition(0,  AssetLoader.height*12/20-300);	
+		MenuScenario.setRotation(0);
+		MenuScenario.setScale(1f);
+		MenuScenario.setColor(1f, 1f, 1f, 1f);
+		MenuScenario.setPosition(0,  AssetLoader.height*7/20-300);
+		MenuSolo.addAction(Actions.sequence(Actions.moveTo((AssetLoader.width-MenuSolo.getWidth())/2, AssetLoader.height*17/20-300, 0.25f)));
+		MenuMulti.addAction(Actions.sequence(Actions.fadeIn(0.1f),Actions.moveTo((AssetLoader.width-MenuMulti.getWidth())/2, AssetLoader.height*12/20-300, 0.25f)));
+		MenuScenario.addAction(Actions.sequence(Actions.fadeIn(0.2f),Actions.moveTo((AssetLoader.width-MenuScenario.getWidth())/2, AssetLoader.height*7/20-300, 0.25f)));
+
+	}
+	
+	public void initlevel() {
+		selected=null;
+		buttonPlay.setVisible(false);
+		TextDescriptive.setVisible(false);
+		cout.setVisible(false);
+		tech.setVisible(false);
+		cycle.setVisible(false);
+		temp.setVisible(false);
+		rayon.setVisible(false);
+		nrj.setVisible(false);
+		Previous.setVisible(false);
+		Next.setVisible(false);
+		Victory.setVisible(false);
 		if (buttonLevels!=null)
-		for (int j=0;j<10;j++) 
-			if (buttonLevels[j]!=null) {
-				buttonLevels[j].remove();
-				buttonLevels[j]=null;
-			}
+			for (int j=0;j<10;j++) 
+				if (buttonLevels[j]!=null) {
+					buttonLevels[j].remove();
+					buttonLevels[j]=null;
+				}
 	}
 	
 	public void level() {
@@ -149,7 +192,7 @@ public class LevelScreen implements Screen {
 	}
 	
 	public void SetButtonConnect() {
-		buttonStat.setColor(buttonConnect.getColor());
+		buttonStat.setColor(1f,1f,1f,1f);
 		buttonConnect.setColor(1f,0,0,1f);
 		Statdata.setVisible(true);
 		Userdata.setVisible(true);
@@ -161,11 +204,12 @@ public class LevelScreen implements Screen {
 		buttonApply.setVisible(true);
 		Worlddatalabel.setVisible(true);
 		Worlddata.setVisible(true);
-		buttonPlaythis.setVisible(true);
+		buttonPlaythis.setVisible(true);		
 	}
 	
 	public void SetButtonStat() {
-		buttonConnect.setColor(buttonStat.getColor());
+		buttonConnect.setColor(1f,1f,1f,1f);
+		buttonStat.setColor(1f,0,0,1f);
 		buttonStat.setColor(1f,0,0,1f);
 		Statdata.setVisible(false);
 		Userdata.setVisible(false);
@@ -235,6 +279,7 @@ public class LevelScreen implements Screen {
 		stage = new Stage(AssetLoader.viewport);
 		table = new Table();
 		Renderer=new LevelRenderer(this);
+		dialog=new WarnDialog(AssetLoader.Skin_ui);
 		Gdx.app.debug(getClass().getSimpleName(),"Mise en place du timer.");
 		ScrollTimer=new Timer();
 		ScrollTask = new TimerTask()
@@ -247,17 +292,48 @@ public class LevelScreen implements Screen {
 		};
 		ScrollTimer.scheduleAtFixedRate(ScrollTask, 0, 30);
 		Gdx.app.debug(getClass().getSimpleName(),"Création du menu.");		
-		MenuSolo=new ImageButton(AssetLoader.Skin_level,"MenuSolo");
-		MenuSolo.setPosition((AssetLoader.width-MenuSolo.getWidth())/2, AssetLoader.height-550);
+		MenuSolo=new Image(AssetLoader.Skin_level,"menu1");
+		MenuSolo.setOrigin(MenuSolo.getWidth()/2, MenuSolo.getHeight()/2);
 		MenuSolo.addListener(new ClickListener() {
 			public void clicked(InputEvent event, float x, float y) {
-				level();
+				MenuMulti.addAction(Actions.fadeOut(0.5f));
+				MenuScenario.addAction(Actions.fadeOut(0.5f));			
+				MenuSolo.addAction(Actions.sequence(Actions.parallel(Actions.rotateBy(640, 0.5f),Actions.scaleTo(0.05f, 0.05f, 0.5f)),Actions.run(new Runnable() {
+					public void run() {
+					level(); 
+					}
+				})));
+				
 			}
 		});
-		MenuMulti=new ImageButton(AssetLoader.Skin_level,"MenuMulti");
-		MenuMulti.setPosition((AssetLoader.width-MenuMulti.getWidth())/2, AssetLoader.height-900);		
-		MenuScenario=new ImageButton(AssetLoader.Skin_level,"MenuScenario");
-		MenuScenario.setPosition((AssetLoader.width-MenuScenario.getWidth())/2, AssetLoader.height-1250);
+		MenuMulti=new Image(AssetLoader.Skin_level,"menu2");
+		MenuMulti.setOrigin(MenuMulti.getWidth()/2, MenuMulti.getHeight()/2);
+		MenuMulti.addListener(new ClickListener() {
+			public void clicked(InputEvent event, float x, float y) {
+				MenuSolo.addAction(Actions.fadeOut(0.5f));
+				MenuScenario.addAction(Actions.fadeOut(0.5f));			
+				MenuMulti.addAction(Actions.sequence(Actions.parallel(Actions.rotateBy(640, 0.5f),Actions.scaleTo(0.05f, 0.05f, 0.5f)),Actions.run(new Runnable() {
+					public void run() {
+					level(); 
+					}
+				})));
+				
+			}
+		});
+		MenuScenario=new Image(AssetLoader.Skin_level,"menu3");
+		MenuScenario.setOrigin(MenuScenario.getWidth()/2, MenuScenario.getHeight()/2);
+		MenuScenario.addListener(new ClickListener() {
+			public void clicked(InputEvent event, float x, float y) {
+				MenuMulti.addAction(Actions.fadeOut(0.5f));
+				MenuSolo.addAction(Actions.fadeOut(0.5f));			
+				MenuScenario.addAction(Actions.sequence(Actions.parallel(Actions.rotateBy(640, 0.5f),Actions.scaleTo(0.05f, 0.05f, 0.5f)),Actions.run(new Runnable() {
+					public void run() {
+					level(); 
+					}
+				})));
+				
+			}
+		});
 		Gdx.app.debug(getClass().getSimpleName(),"Création des boutons.");
 		logosmall=new ImageButton(AssetLoader.Skin_level,"logosmall");	
 		logosmall.setPosition(20, AssetLoader.height-175+logosmall.getHeight()/2);
@@ -267,11 +343,29 @@ public class LevelScreen implements Screen {
 		buttonApply.setBounds(1680, 350, 190, 40);
 		buttonApply.addListener(new ClickListener() {
 			public void clicked(InputEvent event, float x, float y) {
-				menu();
 				AssetLoader.Datahandler.CloseAll();
 				AssetLoader.Datahandler.Attach(Userdata.getModel(),Userdata.getUrl());
-				AssetLoader.Datahandler.Attach(Gamedata.getModel(),Gamedata.getUrl());
 				AssetLoader.Datahandler.Attach(Statdata.getModel(),Statdata.getUrl());
+				AssetLoader.Datahandler.Attach(Gamedata.getModel(),Gamedata.getUrl());
+				if (!AssetLoader.Datahandler.verifyall()) {
+					dialog.Show("Un problème est survenu lors du changement de base de donnée.",stage);
+					initlevel();
+				}
+				else
+					menu();
+				if (AssetLoader.Datahandler.stat()==null)
+					Statdata.setColor(1f,0,0,1f);
+				else
+					Statdata.setColor(1f,1f,1f,1f);
+				if (AssetLoader.Datahandler.game()==null)
+					Gamedata.setColor(1f,0,0,1f);
+				else
+					Gamedata.setColor(1f,1f,1f,1f);
+				if (AssetLoader.Datahandler.user()==null)
+					Userdata.setColor(1f,0,0,1f);
+				else
+					Userdata.setColor(1f,1f,1f,1f);
+				Worlddata.Refresh();
 			}
 		});
 		buttonSave = new TextButton("Sauvegarder", AssetLoader.Skin_ui);
@@ -282,6 +376,7 @@ public class LevelScreen implements Screen {
 				Preference.prefs.putString("userdata", Userdata.getUrl());
 				Preference.prefs.putString("gamedata", Gamedata.getUrl());
 				Preference.prefs.putString("statdata", Statdata.getUrl());
+				dialog.Show("Vous devez redemarrer pour bénéfier des changements.",stage);
 			}
 		});
 		buttonConnect = new TextButton("Connexions", AssetLoader.Skin_ui);
@@ -312,9 +407,19 @@ public class LevelScreen implements Screen {
 		buttonPlaythis.setBounds(1480, 50, 190, 40);
 		buttonPlaythis.addListener(new ClickListener() {
 			public void clicked(InputEvent event, float x, float y) {
-			Preference.prefs.putString("world", (String)Worlddata.getSelected());
-			Preference.prefs.flush();
-			play();
+				if (!AssetLoader.Datahandler.verifyall())
+					dialog.Show("Impossible de jouer sans bases de données correctement configurée, cliquer sur RAZ si vous ne savez pas revenir à une situation jouable.", stage);
+				else
+				{
+					if (Worlddata.getSelected()==null)
+						dialog.Show("Aucun monde n'a été sélectionné", stage);
+					else
+					{
+						Preference.prefs.putString("world", (String)Worlddata.getSelected());
+						Preference.prefs.flush();
+						play();
+					}
+				}
 			}
 		});
 		Exit=new ImageButton(AssetLoader.Skin_level,"Exit");
@@ -322,7 +427,10 @@ public class LevelScreen implements Screen {
 		Exit.addListener(new ClickListener(){
 	        @Override
 	        public void clicked(InputEvent event, float x, float y) {
-	            Gdx.app.exit();
+	        	if (Exit.getX()<1210)
+	        		menu();
+	        	else
+	        		Gdx.app.exit();
 	        }
 		});
 		Next=new ImageButton(AssetLoader.Skin_level,"Next");
@@ -384,7 +492,19 @@ public class LevelScreen implements Screen {
 		Worlddatalabel.setPosition(1480, 300);
 		Gamedata.setWorldlist(Worlddata);
 		Statdata.Refresh();
+		try {
+			Thread.sleep(1000);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		Userdata.Refresh();
+		try {
+			Thread.sleep(1000);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		Gamedata.Refresh();
 		Gdx.app.debug(getClass().getSimpleName(),"Affichage du menu.");
 		if (aworld!=-1)
