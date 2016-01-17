@@ -970,41 +970,41 @@ sprite-transmuter
   index: 105
 
 level4.png
-size: 1024,512
+size: 1024,1024
 format: RGBA8888
 filter: Linear,Linear
 repeat: none
 leveler0
   rotate: false
-  xy: 132, 201
+  xy: 392, 461
   size: 111, 125
   orig: 111, 125
   offset: 0, 0
   index: -1
 leveler1
   rotate: false
-  xy: 262, 331
+  xy: 522, 591
   size: 111, 125
   orig: 111, 125
   offset: 0, 0
   index: -1
 leveler2
   rotate: false
-  xy: 132, 74
+  xy: 652, 721
   size: 111, 125
   orig: 111, 125
   offset: 0, 0
   index: -1
 leveler3
   rotate: false
-  xy: 375, 331
+  xy: 782, 851
   size: 111, 125
   orig: 111, 125
   offset: 0, 0
   index: -1
 leveler4
   rotate: false
-  xy: 488, 331
+  xy: 132, 71
   size: 111, 125
   orig: 111, 125
   offset: 0, 0
@@ -1018,189 +1018,308 @@ points
   index: -1
 rayon
   rotate: false
-  xy: 601, 392
+  xy: 262, 262
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: -1
 raz
   rotate: false
-  xy: 667, 392
+  xy: 392, 395
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: -1
 run
   rotate: false
-  xy: 733, 392
+  xy: 895, 912
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: -1
 save
   rotate: false
-  xy: 799, 392
+  xy: 392, 329
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: -1
 screen
   rotate: false
-  xy: 865, 392
+  xy: 68, 2
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: -1
 settings
   rotate: false
-  xy: 931, 392
+  xy: 262, 196
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: -1
 sound
   rotate: false
-  xy: 68, 2
+  xy: 328, 262
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: -1
 speed
   rotate: false
-  xy: 601, 326
+  xy: 328, 196
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: -1
 sprite-transmuter
   rotate: false
-  xy: 2, 328
+  xy: 2, 848
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
   index: 106
 sprite-transmuter
   rotate: false
-  xy: 2, 198
+  xy: 2, 718
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
   index: 107
 sprite-transmuter
   rotate: false
-  xy: 132, 328
+  xy: 132, 848
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
   index: 108
 sprite-transmuter
   rotate: false
-  xy: 2, 68
+  xy: 2, 588
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
   index: 109
 sprite-transmuter
   rotate: false
-  xy: 2, 68
+  xy: 132, 718
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
-  index: 112
+  index: 110
 sprite-transmuter
   rotate: false
-  xy: 2, 68
-  size: 128, 128
-  orig: 128, 128
-  offset: 0, 0
-  index: 113
-sprite-transmuter
-  rotate: false
-  xy: 2, 68
+  xy: 262, 848
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
   index: 111
 sprite-transmuter
   rotate: false
+  xy: 2, 458
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: 112
+sprite-transmuter
+  rotate: false
+  xy: 132, 588
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: 113
+sprite-transmuter
+  rotate: false
+  xy: 262, 718
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: 114
+sprite-transmuter
+  rotate: false
+  xy: 262, 718
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: 118
+sprite-transmuter
+  rotate: false
+  xy: 392, 848
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: 115
+sprite-transmuter
+  rotate: false
+  xy: 2, 328
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: 116
+sprite-transmuter
+  rotate: false
+  xy: 132, 458
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: 117
+sprite-transmuter
+  rotate: false
+  xy: 262, 588
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: 119
+sprite-transmuter
+  rotate: false
+  xy: 392, 718
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: 120
+sprite-transmuter
+  rotate: false
+  xy: 522, 848
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: 121
+sprite-transmuter
+  rotate: false
+  xy: 2, 198
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: 122
+sprite-transmuter
+  rotate: false
+  xy: 132, 328
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: 123
+sprite-transmuter
+  rotate: false
+  xy: 262, 458
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: 124
+sprite-transmuter
+  rotate: false
+  xy: 392, 588
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: 125
+sprite-transmuter
+  rotate: false
+  xy: 522, 718
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: 126
+sprite-transmuter
+  rotate: false
+  xy: 652, 848
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: 127
+sprite-transmuter
+  rotate: false
   xy: 2, 68
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
-  index: 110
+  index: 128
+sprite-transmuter
+  rotate: false
+  xy: 132, 198
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: 129
+sprite-transmuter
+  rotate: false
+  xy: 262, 328
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: 130
 start
   rotate: false
-  xy: 667, 326
+  xy: 134, 5
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: -1
 stat
   rotate: false
-  xy: 733, 326
+  xy: 394, 263
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: -1
 stop
   rotate: false
-  xy: 799, 326
+  xy: 394, 197
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: -1
 tech
   rotate: false
-  xy: 865, 326
+  xy: 895, 846
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: -1
 temp
   rotate: false
-  xy: 931, 326
+  xy: 245, 130
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: -1
 tree
   rotate: false
-  xy: 134, 8
+  xy: 311, 130
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: -1
 tuto
   rotate: false
-  xy: 200, 8
+  xy: 245, 64
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: -1
 usa
   rotate: false
-  xy: 245, 262
+  xy: 311, 64
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: -1
 windows
   rotate: false
-  xy: 245, 196
+  xy: 458, 395
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: -1
 zoomm
   rotate: false
-  xy: 245, 130
+  xy: 458, 329
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: -1
 zoomp
   rotate: false
-  xy: 311, 265
+  xy: 460, 263
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
