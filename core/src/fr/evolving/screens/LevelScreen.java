@@ -6,6 +6,7 @@ import java.util.TimerTask;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.Application;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -278,6 +279,7 @@ public class LevelScreen implements Screen {
 	}
 
 	public LevelScreen(int aworld) {
+		Gdx.app.log("level", "Ok");
 		this.world = aworld;
 		Gdx.app.debug(getClass().getSimpleName(),
 				"Création des elements primordiaux du screen (stage, renderer, table)");

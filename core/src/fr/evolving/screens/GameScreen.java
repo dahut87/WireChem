@@ -5,6 +5,7 @@ import java.util.Arrays;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import com.badlogic.gdx.Application;
 import com.badlogic.gdx.Application.ApplicationType;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
@@ -197,6 +198,7 @@ public class GameScreen implements Screen {
 
 	// This is the constructor, not the class declaration
 	public GameScreen(Level alevel) {
+		Gdx.app.log("game", "Ok");
 		this.level = alevel;
 		Gdx.app.debug(getClass().getSimpleName(),
 				"Récupération des derniers niveaux.");
@@ -865,6 +867,9 @@ public class GameScreen implements Screen {
 			if (winSave.isVisible())
 				readsaved();
 		} else if (caller.getName() == "save") {
+			Gdx.app.log("save", "Ok");
+			Gdx.app.debug("Barre", "Sauvegarde de la grille.");
+			Gdx.app.debug("Barre", AssetLoader.Datahandler.user().toString());			
 			AssetLoader.Datahandler.user().setGrid(0, level.id, level.Grid);
 			readsaved();
 		} else if (caller.getName() == "levels") {

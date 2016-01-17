@@ -55,7 +55,7 @@ public class Preference {
 		Preference.prefs.putFloat("Music", 0.75f);
 		Preference.prefs.putInteger("Adaptation", 0);
 		Preference.prefs.putInteger("Quality", 2);
-		Preference.prefs.putInteger("log", Gdx.app.LOG_DEBUG);
+		Preference.prefs.putInteger("log", Application.LOG_DEBUG);
 		Preference.prefs.flush();
 	}
 }

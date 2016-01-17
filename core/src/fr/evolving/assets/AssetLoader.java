@@ -27,7 +27,7 @@ import com.badlogic.gdx.utils.ObjectMap.Values;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.ScalingViewport;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
-
+import com.badlogic.gdx.Application;
 import fr.evolving.automata.Inverter_I;
 import fr.evolving.automata.Inverter_II;
 import fr.evolving.automata.Negativer;
@@ -222,6 +222,7 @@ public class AssetLoader {
 		Datahandler.RegisterBackend(LocalBase.class);
 		Datahandler.RegisterBackend(SqlBase.class);
 		Databasemanagerfrompref();
+		Gdx.app.log("init", "Ok");
 	}
 
 	public static void Databasemanagerfrompref() {

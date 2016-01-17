@@ -317,19 +317,29 @@ public class LocalBase extends Base {
 	public boolean setGrid(int user, int level, Grid data) {
 		String encoded = "";
 		try {
+			Gdx.app.log("Base", "Infos:"+user+","+level);
 			ByteArrayOutputStream bos = new ByteArrayOutputStream();
+			Gdx.app.log("Base", "CK1");
 			ObjectOutputStream oos = new ObjectOutputStream(bos);
+			Gdx.app.log("Base", "CK2");
 			oos.writeObject(data);
+			Gdx.app.log("Base", "CK3");
 			oos.flush();
+			Gdx.app.log("Base", "CK4");
 			oos.close();
 			bos.close();
 			byte[] bytes = bos.toByteArray();
+			Gdx.app.log("Base", "size"+bytes.length);
 			encoded = Base64Coder.encodeLines(bytes);
+			Gdx.app.log("Base", "size2"+encoded.length());			
 			dbHandler.rawQuery("insert into grids (user,level,object) values ("
 					+ user + "," + level + ",'" + encoded + "');");
+			Gdx.app.log("Base", "CK5");	
 		} catch (Exception e) {
+			Gdx.app.log("Base", "cancel");
 			return false;
 		}
+		Gdx.app.log("Base", "Ok");
 		return true;
 	}
 
