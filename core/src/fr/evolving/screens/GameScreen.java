@@ -56,6 +56,7 @@ import fr.evolving.UI.WarnDialog;
 import fr.evolving.assets.AssetLoader;
 import fr.evolving.assets.Preference;
 import fr.evolving.automata.Level;
+import fr.evolving.automata.Neutraliser_II;
 import fr.evolving.automata.Transmuter;
 import fr.evolving.automata.Transmuter.Angular;
 import fr.evolving.automata.Transmuter.CaseType;
@@ -966,11 +967,13 @@ public class GameScreen implements Screen {
 			menu.setMenuTransmuter(0, 3, "Neutraliseur I", Angular.A00);
 			menu.setMenuTransmuter(1, 3, "Neutraliseur II", Angular.A00);
 		} else if (menuitem == 2) {
-
+			menu.setMenuTransmuter(0, 7, "Antiretour", Angular.A00);
+			menu.setMenuTransmuter(1, 6, "Distributeur", Angular.A00);
+			menu.setMenuTransmuter(1, 2, "Insufleur 33%", Angular.A00);			
 		} else if (menuitem == 3) {
-
+			menu.setMenuTransmuter(1, 2, "Insufleur 50%", Angular.A00);		
 		} else if (menuitem == 4) {
-
+			menu.setMenuTransmuter(1, 2, "Insufleur 100%", Angular.A00);		
 		} else if (menuitem == 5) {
 
 		} else if (menuitem == 6) {

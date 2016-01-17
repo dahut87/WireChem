@@ -28,6 +28,10 @@ import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.ScalingViewport;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.badlogic.gdx.Application;
+
+import fr.evolving.automata.Insufler100;
+import fr.evolving.automata.Insufler33;
+import fr.evolving.automata.Insufler50;
 import fr.evolving.automata.Inverter_I;
 import fr.evolving.automata.Inverter_II;
 import fr.evolving.automata.Negativer;
@@ -36,11 +40,13 @@ import fr.evolving.automata.Negativer_II;
 import fr.evolving.automata.Negativer_III;
 import fr.evolving.automata.Neutraliser_I;
 import fr.evolving.automata.Neutraliser_II;
+import fr.evolving.automata.Oneway;
 import fr.evolving.automata.Positiver;
 import fr.evolving.automata.Positiver_I;
 import fr.evolving.automata.Positiver_II;
 import fr.evolving.automata.Positiver_III;
 import fr.evolving.automata.Transmuter;
+import fr.evolving.automata.distributor;
 import fr.evolving.database.Base.datatype;
 import fr.evolving.database.DatabaseManager;
 import fr.evolving.database.LocalBase;
@@ -192,6 +198,11 @@ public class AssetLoader {
 		allTransmuter.add(new Inverter_II(null));
 		allTransmuter.add(new Neutraliser_I(null));
 		allTransmuter.add(new Neutraliser_II(null));
+		allTransmuter.add(new Oneway(null));
+		allTransmuter.add(new distributor(null));
+		allTransmuter.add(new Insufler100(null));
+		allTransmuter.add(new Insufler33(null));
+		allTransmuter.add(new Insufler50(null));
 		for (Transmuter transmuter : allTransmuter) {
 			Values<Integer> allTiles = transmuter.getTilesid().iterator();
 			while (allTiles.hasNext()) {
