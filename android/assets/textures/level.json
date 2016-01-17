@@ -73,7 +73,22 @@
 		tech_disabled: { name: tech, color: lowgrey }
 		exit2_down: { name: exit2, color: veryred },
 		exit2_over: { name: exit2, color: red },
-		exit2_disabled: { name: exit2, color: lowgrey }
+		exit2_disabled: { name: exit2, color: lowgrey },
+		
+  		run_down: { name: run, color: veryred },
+        stop_down: { name: stop, color: veryred },
+        speed_down: { name: speed, color: veryred }, 
+        move_down: { name: move, color: veryred },
+        zoomp_down: { name: zoomp, color: veryred },
+        zoomm_down: { name: zoomm, color: veryred },
+        raz_down: { name: raz, color: veryred },
+        save_down: { name: save, color: veryred },
+        levels_down: { name: levels, color: veryred },
+        exits_down: { name: exits, color: veryred },
+        settings_down: { name: settings, color: veryred },
+        stat_down: { name: stat, color: veryred },
+        tree_down: { name: tree, color: veryred },
+        infos_down: { name: infos, color: veryred } 
 	}
     com.badlogic.gdx.scenes.scene2d.ui.ImageTextButton$ImageTextButtonStyle: { 
         world0: { checkedFontColor:red, disabledFontColor:white, fontColor:white, overFontColor:red ,up: leveler0 , down: leveler0_down, over:leveler0_over, disabled:leveler0_disabled, checked:leveler0_over, font: Fluoxetine-25, pressedOffsetY: -70, unpressedOffsetY: -72, checkedOffsetY: -72 }
@@ -106,25 +121,25 @@
         Next: { up: arrows , down: arrows_down, over:arrows_over}
         Previous: { up: arrows2 , down: arrows2_down, over:arrows2_over}
         logosmall: { up: logo2 , down: logo2_down, over:logo2_over,checked:logo2_down}
-        run: { up: run }   
-        stop: { up: stop }   
-        speed: { up: speed }   
-        move: { up: move }   
-        zoomp: { up: zoomp }   
-        zoomm: { up: zoomm }   
-        raz: { up: raz }   
-        save: { up: save }   
-        levels: { up: levels }   
-        exits: { up: exits }   
+        run: { up: run, down:run_down }   
+        stop: { up: stop, down:stop_down }   
+        speed: { up: speed,down:speed_down }   
+        move: { up: move,down:move_down }   
+        zoomp: { up: zoomp,down:zoomp_down }   
+        zoomm: { up: zoomm,down:zoomm_down }   
+        raz: { up: raz,down:raz_down }   
+        save: { up: save,down:save_down }   
+        levels: { up: levels,down:levels_down }   
+        exits: { up: exits,down:exits_down }   
         screen: { checked: screen, up:windows   }  
         sound: { checked:sound , up :nosound }
  		Setflag: { checked:french  , up: usa }
         tuto: { checked:tuto , up:nothing }   
-        settings: { up: settings }   
-        stat: { up: stat }
+        settings: { up: settings,down:settings_down }   
+        stat: { up: stat,down:stat_down }
         separator: { up: separator }       
-        tree: { up: tree }    
-        infos: { up: infos }
+        tree: { up: tree,down:tree_down }    
+        infos: { up: infos,down:infos_down }
         info_nrj: { up: nrj }
         info_cycle: { up: cycle } 
         info_temp: { up: temp } 
