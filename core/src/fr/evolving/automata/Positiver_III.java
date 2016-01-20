@@ -76,8 +76,8 @@ public class Positiver_III extends Transmuter {
 		return this.Desc;
 	}
 
-	public String getaClass() {
-		return this.theClass.toString();
+	public Class getaClass() {
+		return this.theClass;
 	}
 
 	public void ProcessCycle() {

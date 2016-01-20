@@ -6,6 +6,8 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.ObjectMap.Values;
 import com.badlogic.gdx.utils.OrderedMap;
 
+import fr.evolving.automata.Transmuter.Class;
+
 public class Negativer extends Transmuter {
 	private static String Name, Desc;
 	private static Class theClass;
@@ -39,7 +41,7 @@ public class Negativer extends Transmuter {
 		super(level);
 		this.Name = "Negativeur non activable";
 		this.Desc = "Negativeur avec...blabla avec...blabla avec avecave aveca vecavec avec avec avec avecavecavecavec avec avecavecavec avec avecavecavecavec avec";
-		this.theClass = Class.Charge;
+		this.theClass = Class.Scenario;
 		this.Price = 50;
 		this.Technology = 2;
 		this.Research = 0;
@@ -76,8 +78,8 @@ public class Negativer extends Transmuter {
 		return this.Desc;
 	}
 
-	public String getaClass() {
-		return this.theClass.toString();
+	public Class getaClass() {
+		return this.theClass;
 	}
 
 	public void ProcessCycle() {

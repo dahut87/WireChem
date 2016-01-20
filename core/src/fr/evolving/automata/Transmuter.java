@@ -37,8 +37,8 @@ public abstract class Transmuter implements Cloneable, Serializable {
 		return "";
 	}
 
-	public String getaClass() {
-		return "";
+	public Class getaClass() {
+		return null;
 	}
 
 	public void ProcessCycle() {

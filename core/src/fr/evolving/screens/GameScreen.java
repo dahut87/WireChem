@@ -16,6 +16,7 @@ import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture.TextureFilter;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.input.GestureDetector;
 import com.badlogic.gdx.maps.MapProperties;
 import com.badlogic.gdx.math.MathUtils;
@@ -27,6 +28,7 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.CheckBox;
 import com.badlogic.gdx.scenes.scene2d.ui.HorizontalGroup;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
+import com.badlogic.gdx.scenes.scene2d.ui.ImageButton.ImageButtonStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageTextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.List;
@@ -36,12 +38,14 @@ import com.badlogic.gdx.scenes.scene2d.ui.Slider;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextArea;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.scenes.scene2d.ui.TextButton.TextButtonStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.Tooltip;
 import com.badlogic.gdx.scenes.scene2d.ui.VerticalGroup;
 import com.badlogic.gdx.scenes.scene2d.ui.Window;
 import com.badlogic.gdx.scenes.scene2d.utils.ActorGestureListener;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ObjectMap.Entries;
@@ -86,7 +90,7 @@ public class GameScreen implements Screen {
 	private List selSaved;
 	private ImageButton Setflag, info_up_nrj, info_up_temp, info_up_rayon,
 			info_up_cycle, info_up_nrjval, info_up_tempval, info_up_rayonval,
-			info_up_cycleval, SetFlag;
+			info_up_cycleval, SetFlag, nextpage, previouspage;
 	private ImageTextButton cycle, temp, nrj, rayon, cout, tech, research,
 			info_cout, info_tech, info_research, info_activation;
 	private ImageTextButton[] Barre2;
@@ -453,7 +457,34 @@ public class GameScreen implements Screen {
 				event_coordination(x, y, 0, calling.mousedrag, exec);
 			}
 		});
-		menu = new Menu(4, 8);
+		Gdx.app.debug(getClass().getSimpleName(), "Création du menu");
+		nextpage=new ImageButton(AssetLoader.Skin_level,"extend");
+		nextpage.setPosition(1860, AssetLoader.height - 350);
+		nextpage.addListener(new ClickListener() {
+			@Override
+			public void clicked(InputEvent event, float x, float y) {
+				menu.NextPage();
+				Gdx.app.debug("menu", "Page suivante:"+menu.getPage());
+				map.tempclear();
+				map.fillempty(53);
+				selected = null;
+				hideInfo();
+			}
+		});
+		previouspage=new ImageButton(AssetLoader.Skin_level,"extend2");
+		previouspage.setPosition(1830, AssetLoader.height - 350);
+		previouspage.addListener(new ClickListener() {
+			@Override
+			public void clicked(InputEvent event, float x, float y) {
+				menu.PreviousPage();
+				Gdx.app.debug("menu", "Page précédente:"+menu.getPage());
+				map.tempclear();
+				map.fillempty(53);
+				selected = null;
+				hideInfo();
+			}
+		});
+		menu = new Menu(level);
 		map.addListener(new ClickListener() {
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
@@ -462,7 +493,7 @@ public class GameScreen implements Screen {
 				MapProperties tile = menu.getMenubyTile((int) coords.x,
 						(int) coords.y);
 				if (tile != null && tile.containsKey("name")) {
-					menu.EraseMenuTransmuterSurtile();
+					menu.EraseSurtile();
 					map.tempclear();
 					if (menuactor == null)
 						menuactor = new Actor();
@@ -480,7 +511,7 @@ public class GameScreen implements Screen {
 						if (selected_transmuter != null) {
 							selected.setName("transmuter");
 							showInfo(selected_transmuter);
-							menu.setMenuTransmuterSurtile((int) coords.x,
+							menu.setSurtile((int) coords.x,
 									(int) coords.y, selected_transmuter);
 							Gdx.app.debug("menu", "Choix transmuter:"
 									+ selected_transmuter.getName());
@@ -815,6 +846,8 @@ public class GameScreen implements Screen {
 		stage_info.addActor(info_desc);
 		stage_menu.addActor(map);
 		// stage_tooltip.addActor(tooltip);
+		stage.addActor(nextpage);
+		stage.addActor(previouspage);		
 		stage.addActor(objectives);
 		stage.addActor(buttonlevel);
 		stage.addActor(rayon);
@@ -841,7 +874,7 @@ public class GameScreen implements Screen {
 	public void preparebarre(Actor caller, int count) {
 		map.fillempty(53);
 		map.tempclear();
-		menu.EraseMenuTransmuterSurtile();
+		menu.EraseSurtile();
 		hideInfo();
 		if (caller.getName() == "run") {
 		} else if (caller.getName() == "stop") {
@@ -938,52 +971,13 @@ public class GameScreen implements Screen {
 
 	public void preparemenu(int menuitem) {
 		checkMenu(menuitem, true);
-		menu.clear();
 		map.tempclear();
 		map.fillempty(53);
 		selected = null;
-		menu.EraseMenuTransmuterSurtile();
+		menu.EraseSurtile();
 		hideInfo();
-		if (menuitem == 0) {
-			menu.setMenuTile(0, 7, 71, "copper_pen");
-			menu.setMenuTile(1, 7, 72, "copper_brush");
-			menu.setMenuTile(2, 7, 73, "copper_eraser");
-			menu.setMenuTile(1, 5, 70, "blank");
-			menu.setMenuTile(0, 6, 74, "fiber_pen");
-			menu.setMenuTile(1, 6, 75, "fiber_brush");
-			menu.setMenuTile(2, 6, 76, "fiber_eraser");
-			menu.setMenuTile(0, 5, 77, "transmuter_eraser");
-			menu.setMenuTile(2, 5, 78, "all_eraser");
-			menu.setMenuTile(3, 3, 79, "cleaner");
-		} else if (menuitem == 1) {
-			menu.setMenuTransmuter(0, 7, "Positiveur I", Angular.A00);
-			menu.setMenuTransmuter(2, 7, "Negativeur I", Angular.A00);
-			menu.setMenuTransmuter(0, 6, "Positiveur II", Angular.A00);
-			menu.setMenuTransmuter(2, 6, "Negativeur II", Angular.A00);
-			menu.setMenuTransmuter(0, 5, "Positiveur III", Angular.A00);
-			menu.setMenuTransmuter(1, 5, "Negativeur III", Angular.A00);
-			menu.setMenuTransmuter(0, 4, "Inverseur I", Angular.A00);
-			menu.setMenuTransmuter(1, 4, "Inverseur II", Angular.A00);
-			menu.setMenuTransmuter(0, 3, "Neutraliseur I", Angular.A00);
-			menu.setMenuTransmuter(1, 3, "Neutraliseur II", Angular.A00);
-		} else if (menuitem == 2) {
-			menu.setMenuTransmuter(0, 7, "Antiretour", Angular.A00);
-			menu.setMenuTransmuter(1, 6, "Distributeur", Angular.A00);
-			menu.setMenuTransmuter(1, 2, "Insufleur 33%", Angular.A00);			
-		} else if (menuitem == 3) {
-			menu.setMenuTransmuter(1, 2, "Insufleur 50%", Angular.A00);		
-		} else if (menuitem == 4) {
-			menu.setMenuTransmuter(1, 2, "Insufleur 100%", Angular.A00);		
-		} else if (menuitem == 5) {
-
-		} else if (menuitem == 6) {
-
-		} else if (menuitem == 7) {
-			menu.setMenuTransmuter(0, 7, "Positiveur non activable",
-					Angular.A00);
-			menu.setMenuTransmuter(1, 7, "Negativeur non activable",
-					Angular.A00);
-		}
+		menu.setType(menuitem);
+		menu.setPage(0);
 	}
 
 	public void showInfo(Transmuter transmuter) {

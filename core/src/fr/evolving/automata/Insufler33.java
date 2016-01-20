@@ -41,7 +41,7 @@ public class Insufler33 extends Transmuter {
 		super(level);
 		this.Name = "Insufleur 33%";
 		this.Desc = "Insufleur 33% avecave aveca vecavec avec avec avec avecavecavecavec avec avecavecavec avec avecavecavecavec avec";
-		this.theClass = Class.Charge;
+		this.theClass = Class.Direction;
 		this.Price = 50;
 		this.Technology = 2;
 		this.Research = 0;
@@ -94,8 +94,8 @@ public class Insufler33 extends Transmuter {
 		return this.Desc;
 	}
 
-	public String getaClass() {
-		return this.theClass.toString();
+	public Class getaClass() {
+		return this.theClass;
 	}
 
 	public void ProcessCycle() {

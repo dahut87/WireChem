@@ -39,7 +39,7 @@ public class Positiver extends Transmuter {
 		super(level);
 		this.Name = "Positiveur non activable";
 		this.Desc = "Positiveur ...blabla avec...blabla avec avecave aveca vecavec avec avec avec avecavecavecavec avec avecavecavec avec avecavecavecavec avec";
-		this.theClass = Class.Charge;
+		this.theClass = Class.Scenario;
 		this.Price = 50;
 		this.Technology = 2;
 		this.Research = 0;
@@ -76,8 +76,8 @@ public class Positiver extends Transmuter {
 		return this.Desc;
 	}
 
-	public String getaClass() {
-		return this.theClass.toString();
+	public Class getaClass() {
+		return this.theClass;
 	}
 
 	public void ProcessCycle() {
