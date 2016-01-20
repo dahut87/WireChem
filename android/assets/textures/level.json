@@ -88,7 +88,11 @@
         settings_down: { name: settings, color: veryred },
         stat_down: { name: stat, color: veryred },
         tree_down: { name: tree, color: veryred },
-        infos_down: { name: infos, color: veryred } 
+        infos_down: { name: infos, color: veryred },
+        extend_disabled: { name: extend, color: grey },
+        extend_down: { name: extend, color: veryred } 
+        extend2_disabled: { name: extend2, color: grey },
+        extend2_down: { name: extend2, color: veryred } 
 	}
     com.badlogic.gdx.scenes.scene2d.ui.ImageTextButton$ImageTextButtonStyle: { 
         world0: { checkedFontColor:red, disabledFontColor:white, fontColor:white, overFontColor:red ,up: leveler0 , down: leveler0_down, over:leveler0_over, disabled:leveler0_disabled, checked:leveler0_over, font: Fluoxetine-25, pressedOffsetY: -70, unpressedOffsetY: -72, checkedOffsetY: -72 }
@@ -149,6 +153,8 @@
         info_tempval: { up: jauge3 } 
        	info_rayonval: { up: jauge3 }
        	Warnerbros: { up: Warningmsg }   
+       	extend: { up: extend, disabled:extend_disabled, down:extend_down }   
+       	extend2: { up: extend2, disabled:extend2_disabled, down:extend2_down }   
     } 
     
   com.badlogic.gdx.scenes.scene2d.ui.Label$LabelStyle: { 
