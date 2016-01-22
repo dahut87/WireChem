@@ -10,7 +10,7 @@
 	OpenDyslexicAlta-28: { file: fonts/OpenDyslexicAlta-28.fnt },
     },
     com.badlogic.gdx.scenes.scene2d.ui.TextButton$TextButtonStyle: { 
-        Bouton: { up: button_up , down: button_down, font: OpenDyslexicAlta-25, pressedOffsetY: -4 }
+       // Bouton: { up: button_up , down: button_down, font: OpenDyslexicAlta-25, pressedOffsetY: -4 }
     }
     com.badlogic.gdx.graphics.Color: {
       red: { a: 1, b: 0, g: 0, r: 1 },
@@ -92,8 +92,11 @@
         extend_disabled: { name: extend, color: grey },
         extend_down: { name: extend, color: veryred } 
         extend2_disabled: { name: extend2, color: grey },
-        extend2_down: { name: extend2, color: veryred } 
+        extend2_down: { name: extend2, color: veryred } ,
+        evolution_disabled: { name: evolution, color: black }
+        evolution_down: { name: evolution, color: grey }
 	}
+	
     com.badlogic.gdx.scenes.scene2d.ui.ImageTextButton$ImageTextButtonStyle: { 
         world0: { checkedFontColor:red, disabledFontColor:white, fontColor:white, overFontColor:red ,up: leveler0 , down: leveler0_down, over:leveler0_over, disabled:leveler0_disabled, checked:leveler0_over, font: Fluoxetine-25, pressedOffsetY: -70, unpressedOffsetY: -72, checkedOffsetY: -72 }
         world1: { checkedFontColor:red, disabledFontColor:white, fontColor:white, overFontColor:red ,up: leveler1 , down: leveler1_down, over:leveler1_over, disabled:leveler1_disabled, checked:leveler1_over, font: Fluoxetine-25, pressedOffsetY: -70, unpressedOffsetY: -72, checkedOffsetY: -72 }
@@ -155,6 +158,7 @@
        	Warnerbros: { up: Warningmsg }   
        	extend: { up: extend, disabled:extend_disabled, down:extend_down }   
        	extend2: { up: extend2, disabled:extend2_disabled, down:extend2_down }   
+       	evolution: { up: evolution, disabled:evolution_disabled, down:evolution_down }
     } 
     
   com.badlogic.gdx.scenes.scene2d.ui.Label$LabelStyle: { 
