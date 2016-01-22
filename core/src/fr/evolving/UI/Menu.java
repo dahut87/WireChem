@@ -1,10 +1,13 @@
 package fr.evolving.UI;
 
 import java.util.Iterator;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.Batch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.maps.MapLayers;
 import com.badlogic.gdx.maps.MapProperties;
 import com.badlogic.gdx.maps.tiled.TiledMap;
@@ -13,6 +16,9 @@ import com.badlogic.gdx.maps.tiled.TiledMapTileLayer.Cell;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener.ChangeEvent;
+import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.ObjectMap.Entries;
 import com.badlogic.gdx.utils.ObjectMap.Entry;
 import com.badlogic.gdx.utils.OrderedMap;
@@ -36,6 +42,13 @@ public class Menu extends Actor {
 	private float decy;
 	private int size = 32;
 	private Level level;
+	private Actor selected;
+	private Transmuter selected_transmuter;
+	private TextureRegion oneselection;
+	private Timer RotateTimer;
+	private TimerTask RotateTask;
+	private float rotation;
+	ChangeEvent event;
 
 	public Menu(Level level) {
 		this.tilesizex = 4;
@@ -44,50 +57,168 @@ public class Menu extends Actor {
 		this.selpage=0;
 		this.seltype=0;
 		this.level=level;
+		
+		Gdx.app.debug(getClass().getSimpleName(), "Création du Tiledmap et Maprenderer");
 		map = new TiledMap[3][Transmuter.Class.values().length];
 		clear();
 		MapRenderer = new OrthogonalTiledMapRenderer(map[selpage][seltype], 1 / (float) size);
+		
+		Gdx.app.debug(getClass().getSimpleName(), "Caméra pour tilemap:"+ (tilesizex * size) + "x" + (tilesizey * size));
 		camera = new OrthographicCamera();
-		camera.setToOrtho(false, tilesizex * 32, tilesizex * 32
-				* AssetLoader.height / AssetLoader.width);
-		Gdx.app.debug(getClass().getSimpleName(), "Caméra pour tilemap:"
-				+ (tilesizex * size) + "x" + (tilesizey * size));
+		camera.setToOrtho(false, tilesizex * 32, tilesizex * 32	* AssetLoader.height / AssetLoader.width);
 		decx = -102f;
 		decy = -20f;
 		if (AssetLoader.ratio == 1.44f) decy -= 24;
-		camera.translate(decx, decy);
 		Gdx.app.debug(getClass().getSimpleName(), "Décalage:" + decx + "x"+ decy);
+		camera.translate(decx, decy);
+
+		
 		Gdx.app.debug(getClass().getSimpleName(), "Ajout des éléments de menu");
 		init();
+		
+		Gdx.app.debug(getClass().getSimpleName(), "Mise en place du timer de rotation.");		
+		oneselection = AssetLoader.Atlas_level.findRegion("circle");
+		selected = new Actor();
+		rotation=0;
+		RotateTimer = new Timer();
+		RotateTask = new TimerTask() {
+			@Override
+			public void run() {
+				rotation += 5;
+			}
+		};
+		RotateTimer.scheduleAtFixedRate(RotateTask, 0, 30);
+		
+		Gdx.app.debug(getClass().getSimpleName(), "Ajout de l'évènements clicked");		
+		this.addListener(new ClickListener() {
+			@Override
+			public void clicked(InputEvent event, float x, float y) {
+				Gdx.app.debug("treetree", "xy"+x+","+y);
+				Vector2 coords = screentoworld(x, y);
+				MapProperties tile = getMenubyTile((int) coords.x,
+						(int) coords.y);
+				if (tile != null && tile.containsKey("name")) {
+					selected_transmuter=null;
+					EraseSurtile();
+					if (selected==null)
+						selected=new Actor();
+					if (tile.get("type").toString().startsWith("transmuter")) {
+						if (tile.containsKey("movetox")) {
+							coords.x += (Integer) tile.get("movetox");
+							coords.y += (Integer) tile.get("movetoy");
+						}
+						MapProperties tilenew = getMenubyTile((int) coords.x, (int) coords.y);
+						selected_transmuter = (Transmuter) ((Transmuter) tilenew.get("transmuter")).clone();
+						if (selected_transmuter != null) {
+							selected.setName("transmuter");
+							setSurtile((int) coords.x,(int) coords.y, selected_transmuter);
+							Gdx.app.debug("menu", "Choix transmuter:"+ selected_transmuter.getName());
+						}
+					} 
+					else
+						selected.setName(tile.get("name").toString());
+					Vector2 coords2 = worldtoscreen((int) coords.x,
+							(int) coords.y);
+					Gdx.app.debug("menu","Coordonnées:" + x + "x" + y + " Menu:" + coords.x
+									+ "," + coords.y + " Ecran :" + coords2.x
+									+ "x" + coords2.y + " type:"
+									+ tile.get("type"));
+					selected.setBounds(coords2.x, coords2.y, 60, 60);
+					onchanged();
+				}
+			}
+		});
+	}
+	
+	public void unSelect() {
+			selected=null;
+			selected_transmuter=null;
+			 EraseSurtile();
+	}
+	
+	public String getSelection() {
+		if (selected!=null)
+			return selected.getName();
+		else
+			return null;
+	}
+	
+	public Transmuter getTransmuter() {
+			return selected_transmuter;
+	}
+	
+	public void onchanged() {
+		ChangeEvent event=new ChangeEvent();
+		event.setTarget(this);
+		event.setListenerActor(this);	
+		event.setStage(this.getStage());
+		if (event.getStage()!=null) 
+			this.fire(event);
 	}
 	
 	public void setPage(int page) {
+		selected=null;
 		this.selpage=page;
 		this.MapRenderer.setMap(map[selpage][seltype]);
 		EraseSurtile();
+		onchanged();
+	}
+	
+	public void setPageType(int page,int type) {
+		selected=null;
+		this.selpage=page;
+		this.seltype=type;
+		this.MapRenderer.setMap(map[selpage][seltype]);
+		EraseSurtile();
+		onchanged();
+	}
+	
+	public boolean isNextEmpty() {
+		if (this.selpage>=this.nbpages-2) return true;
+		TiledMapTileLayer layer=(TiledMapTileLayer)map[selpage+1][seltype].getLayers().get(0);
+		boolean test=layer.getProperties().containsKey("noempty");
+		return (!layer.getProperties().containsKey("noempty"));
+	}
+	
+	public boolean isPreviousEmpty() {
+		if (this.selpage<1) return true;
+		TiledMapTileLayer layer=(TiledMapTileLayer)map[selpage-1][seltype].getLayers().get(0);
+		return (!layer.getProperties().containsKey("noempty"));
 	}
 	
 	public void NextPage() {
-		if (this.selpage<nbpages-1)
+		if (this.selpage<nbpages-1) {
+			selected=null;
 			this.selpage++;
-		this.MapRenderer.setMap(map[selpage][seltype]);
+			this.MapRenderer.setMap(map[selpage][seltype]);
 			EraseSurtile();
+			onchanged();
+		}
 	}
 	
 	public void PreviousPage() {
-		if (this.selpage>0)
+		if (this.selpage>0) {
+			selected=null;
 			this.selpage--;
-		this.MapRenderer.setMap(map[selpage][seltype]);
-		EraseSurtile();
+			this.MapRenderer.setMap(map[selpage][seltype]);
+			EraseSurtile();
+			onchanged();
+		}
 	}
 	
 	public int getPage() {
 		return this.selpage;
 	}
 	
+	public int getMaxPage() {
+		return this.nbpages;
+	}
+	
 	public void setType(int type) {
 		this.seltype=type;
+		selected=null;
 		this.MapRenderer.setMap(map[selpage][seltype]);
+		onchanged();
 	}
 	
 	public int getType() {
@@ -148,19 +279,21 @@ public class Menu extends Actor {
 	}
 
 	private void setMenuTile(int x, int y, int tile, String title, int page) {
-		Cell cell = ((TiledMapTileLayer) map[page][0].getLayers().get(0)).getCell(x, y);
+		TiledMapTileLayer layer = ((TiledMapTileLayer) map[page][0].getLayers().get(0));
+		Cell cell = layer.getCell(x, y);
 		if (cell != null) {
 			cell.setTile(AssetLoader.tileSet.getTile(tile));
 			cell.getTile().getProperties().put("name", title);
 			cell.setRotation(0);
 			Gdx.app.debug(getClass().getSimpleName(), "Tile find:" + tile
 					+ " coords" + x + "," + y);
+			layer.getProperties().put("noempty", false);
 		}
 	}
 
 	public void setSurtile(int x, int y, Transmuter transmuter) {
 		if (transmuter != null) {
-			Cell cell = ((TiledMapTileLayer) map[selpage][seltype].getLayers().get(1)).getCell(x,y);
+			Cell cell = ((TiledMapTileLayer) map[selpage][seltype].getLayers().get(1)).getCell(x, y);
 			OrderedMap<Vector2, Integer> tiles = transmuter.getTilesidrotated();
 			Entries<Vector2, Integer> iterator = tiles.iterator();
 			while (iterator.hasNext()) {
@@ -172,7 +305,6 @@ public class Menu extends Actor {
 								tiles.keys().toArray().indexOf(all.key, false))
 						.ordinal() + 80));
 			}
-
 		}
 	}
 
@@ -195,22 +327,21 @@ public class Menu extends Actor {
 		Transmuter transmuter = AssetLoader.getTransmuter(Name);
 		if (transmuter != null) {
 			int type=transmuter.getaClass().ordinal();
-			Cell cell = ((TiledMapTileLayer) map[page][type].getLayers().get(0)).getCell(x, y);
+			TiledMapTileLayer layer = ((TiledMapTileLayer) map[page][type].getLayers().get(0));
+			Cell cell = layer.getCell(x, y);
 			if (cell != null) {
-
 				Gdx.app.debug(getClass().getSimpleName(), "Transmuter find:"
 						+ transmuter.getName() + " Angle:" + Angle + " coords"
 						+ x + "," + y+" page:"+page+" type:"+type);
 				if (transmuter.getTechnology()<=level.Tech) {
 					Gdx.app.debug(getClass().getSimpleName(), "Autorisé par le niveau");
+					layer.getProperties().put("noempty", false);
 					transmuter.setRotation(Angle);
 					Iterator<Entry<Vector2, Integer>> keySetIterator = transmuter
 							.getTilesidrotated().iterator();
 					while (keySetIterator.hasNext()) {
 						Entry<Vector2, Integer> all = keySetIterator.next();
-						Cell subcell = ((TiledMapTileLayer) map[page][type].getLayers().get(0))
-								.getCell((int) (x + all.key.x),
-										(int) (y + all.key.y));
+						Cell subcell = layer.getCell((int) (x + all.key.x),	(int) (y + all.key.y));
 						subcell.setTile(AssetLoader.tileSet.getTile(all.value));
 						subcell.setRotation(Angle.ordinal());
 						subcell.getTile().getProperties()
@@ -233,14 +364,14 @@ public class Menu extends Actor {
 	}
 
 	public Vector2 screentoworld(float x, float y) {
-		int xx = (int) ((x - 1531f) / 60f);
-		int yy = (int) ((y - (AssetLoader.height - 776f)) / 60f);
+		int xx = (int) (x / 60f);
+		int yy = (int) (y / 60f);
 		return new Vector2(xx, yy);
 	}
 
 	public Vector2 worldtoscreen(int x, int y) {
-		float xx = 1531.0f + x * 60f;
-		float yy = AssetLoader.height - 776.0f + y * 60f;
+		float xx = x * 60f;
+		float yy = y * 60f;
 		return new Vector2(xx, yy);
 	}
 
@@ -251,6 +382,15 @@ public class Menu extends Actor {
 		MapRenderer.setView(camera);
 		MapRenderer.render();
 		batch.begin();
+		if (selected != null) {
+			batch.setColor(1f, 0f, 0f, 1f);
+			batch.draw(oneselection, selected.getX()+this.getX(),
+					selected.getY()+this.getY(),
+					selected.getWidth() / 2,
+					selected.getHeight() / 2,
+					selected.getWidth(),
+					selected.getHeight(), 1f, 1f, rotation);
+		}	
 	}
 
 }

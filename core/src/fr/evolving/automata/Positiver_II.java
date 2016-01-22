@@ -107,7 +107,7 @@ public class Positiver_II extends Transmuter {
 	public void Upgrade() {
 		if (this.Upgrade == null)
 			return;
-		this.Unlock.SetShowed(true);
+		this.Upgrade.SetShowed(true);
 		this.SetShowed(false);
 	}
 

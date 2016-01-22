@@ -53,6 +53,7 @@ import com.badlogic.gdx.utils.ObjectMap.Entry;
 import com.badlogic.gdx.utils.OrderedMap;
 
 import fr.evolving.UI.ButtonLevel;
+import fr.evolving.UI.HorizBarre;
 import fr.evolving.UI.Menu;
 import fr.evolving.UI.Objectives;
 import fr.evolving.UI.TouchMaptiles;
@@ -69,17 +70,13 @@ import fr.evolving.renderers.GameRenderer;
 public class GameScreen implements Screen {
 	private InputMultiplexer multiplexer;
 	private Array<InputProcessor> processors;
-	private Timer ScrollTimer;
 	private WarnDialog dialog;
-	private TimerTask ScrollTask;
-	private Stage stage, stage_menu, stage_info, stage_tooltip;
-	private HorizontalGroup table;
+	private Stage stage, stage_map, stage_info, stage_tooltip;
 	private VerticalGroup table2;
 	private GameRenderer Renderer;
 	private float runTime;
 	public Level level;
 	private Window winOptions, winSave;
-	private ImageButton[] Barre;
 	private CheckBox SetSound, SetVsynch, SetFullscreen, SetAnimation, Settuto,
 			Setdebog, Setrefresh;
 	private Slider SetEffectvolume, SetMusicvolume;
@@ -88,23 +85,21 @@ public class GameScreen implements Screen {
 	private SelectBox<quality> selTexturequal;
 	private SelectBox<adaptation> selAdaptscreen;
 	private List selSaved;
-	private ImageButton Setflag, info_up_nrj, info_up_temp, info_up_rayon,
+	private ImageButton Setflag, info_up_nrj, info_up_temp, info_up, info_up_rayon,
 			info_up_cycle, info_up_nrjval, info_up_tempval, info_up_rayonval,
-			info_up_cycleval, SetFlag, nextpage, previouspage;
+			info_up_cycleval, nextpage, previouspage;
 	private ImageTextButton cycle, temp, nrj, rayon, cout, tech, research,
 			info_cout, info_tech, info_research, info_activation;
 	private ImageTextButton[] Barre2;
-	String[] tocreate = { "run", "stop", "speed", "separator", "move", "zoomp",
-			"zoomm", "infos", "separator", "raz", "save", "levels", "tree",
+	String[] tocreate = { "run", "stop", "speed", "separator", "move#", "zoomp#",
+			"zoomm#", "infos#", "separator", "raz", "save", "levels", "tree",
 			"exits", "separator", "screen", "sound", "tuto", "settings",
 			"separator", "stat" };
-	public Actor selected;
-	public Transmuter selected_transmuter;
 	private ButtonLevel buttonlevel;
 	private Objectives objectives;
 	private TouchMaptiles map;
 	private Menu menu;
-	private Actor menuactor;
+	private HorizBarre horizbar;
 	private float oldx, oldy;
 	private Label fpsLabel, info_nom;
 	private TextArea info_desc, tooltip;
@@ -219,12 +214,19 @@ public class GameScreen implements Screen {
 			this.level.Grid.tiling_copper();
 			this.level.Grid.tiling_transmuter();
 		}
-		Gdx.app.debug(getClass().getSimpleName(),
-				"Création des Barres verticales & horizontales.");
-		table = new HorizontalGroup();
-		table.bottom().padLeft(5f).padBottom(8f).space(10f);
+		Gdx.app.debug(getClass().getSimpleName(),"Création des Barres verticales & horizontales.");
+		horizbar=new HorizBarre(tocreate,"preparebarre");
+		horizbar.addListener(new ChangeListener() {
+			@Override
+			public void changed(ChangeEvent event, Actor actor) {
+				Gdx.app.debug("Barre", "Element changé");
+				map.tempclear();
+				map.fillempty(60);
+				menu.unSelect();
+			}
+		});
 		table2 = new VerticalGroup();
-		table2.setPosition(AssetLoader.width, AssetLoader.height - 360);
+		table2.setPosition(AssetLoader.width, AssetLoader.height - 375);
 		table2.right();
 		table2.space(10f);
 		Gdx.app.debug(
@@ -235,49 +237,21 @@ public class GameScreen implements Screen {
 		multiplexer = new InputMultiplexer();
 		processors = new Array<InputProcessor>();
 		stage = new Stage(AssetLoader.viewport);
-		stage_menu = new Stage(AssetLoader.viewport);
+		stage_map = new Stage(AssetLoader.viewport);
 		stage_info = new Stage(AssetLoader.viewport);
 		stage_tooltip = new Stage(AssetLoader.viewport);
 		oldx = 0;
 		oldy = 0;
 		unroll = false;
 		Renderer = new GameRenderer(this);
-		Gdx.app.debug(getClass().getSimpleName(), "Mise en place du timer.");
-		ScrollTimer = new Timer();
-		ScrollTask = new TimerTask() {
-			@Override
-			public void run() {
-				Renderer.evolve();
-			}
-		};
-		ScrollTimer.scheduleAtFixedRate(ScrollTask, 0, 30);
 		Gdx.app.debug(getClass().getSimpleName(), "Création des barres");
 		tooltip = new TextArea("tooltip:x\r\n tooltip:y",
 				AssetLoader.Skin_level, "info_tooltip");
 		tooltip.setBounds(541, 27, 100, 50);
-		Barre = new ImageButton[tocreate.length];
-		int i = 0;
-		Gdx.app.debug(getClass().getSimpleName(), "Barre bas:" + Barre.length
-				+ " elements");
-		for (String tocreateitem : tocreate) {
-			Barre[i] = new ImageButton(AssetLoader.Skin_level, tocreateitem);
-			Barre[i].setName(tocreateitem);
-			Barre[i].addListener(new ClickListener() {
-				@Override
-				public void clicked(InputEvent event, float x, float y) {
-					Actor caller = event.getListenerActor();
-					Gdx.app.debug("Barre", "Selection dans la Barre bas:"
-							+ caller.getName());
-					preparebarre(caller, this.getTapCount());
-				}
-			});
-			Barre[i++].addListener(new Tooltip(tooltip,
-					AssetLoader.Tooltipmanager));
-		}
 		Barre2 = new ImageTextButton[Transmuter.Class.values().length];
 		Gdx.app.debug(getClass().getSimpleName(), "Menu:" + Barre2.length
 				+ " elements");
-		for (i = 0; i < Barre2.length; i++) {
+		for (int i = 0; i < Barre2.length; i++) {
 			Barre2[i] = new ImageTextButton(
 					AssetLoader.language.get(Transmuter.Class.values()[i]
 							.toString()), AssetLoader.Skin_level);
@@ -293,35 +267,41 @@ public class GameScreen implements Screen {
 				}
 			});
 		}
-		Barre[15].setChecked(Gdx.graphics.isFullscreen());
-		Barre[16].setChecked(AssetLoader.intro.getVolume() > 0);
-		Barre[17].setChecked(AssetLoader.Tooltipmanager.enabled == true);
+
 		Gdx.app.debug(getClass().getSimpleName(),
 				"Création de la barre de gestion du haut");
 		cycle = new ImageTextButton(String.valueOf(level.Cycle),
 				AssetLoader.Skin_level, "cycle2");
+		cycle.setVisible(level.aWorld>=1);
 		cycle.setPosition(10, AssetLoader.height - 74);
 		temp = new ImageTextButton(String.valueOf(level.Temp),
 				AssetLoader.Skin_level, "temp2");
+		temp.setVisible(level.aWorld>=2);
 		temp.setPosition(210, AssetLoader.height - 74);
-		nrj = new ImageTextButton(String.valueOf(level.Nrj),
-				AssetLoader.Skin_level, "nrj2");
-		nrj.setPosition(410, AssetLoader.height - 74);
 		rayon = new ImageTextButton(String.valueOf(level.Rayon),
 				AssetLoader.Skin_level, "rayon2");
-		rayon.setPosition(610, AssetLoader.height - 74);
+		rayon.setVisible(level.aWorld>=3);
+		rayon.setPosition(410, AssetLoader.height - 74);
+		nrj = new ImageTextButton(String.valueOf(level.Nrj),
+				AssetLoader.Skin_level, "nrj2");
+		nrj.setVisible(level.aWorld>=4);
+		nrj.setPosition(610, AssetLoader.height - 74);
 		tech = new ImageTextButton(String.valueOf(level.Tech),
 				AssetLoader.Skin_level, "tech2");
 		tech.setPosition(1345, AssetLoader.height - 74);
+		tech.setVisible(level.Tech==1);
 		cout = new ImageTextButton(String.valueOf(level.Cout),
 				AssetLoader.Skin_level, "cout2");
+		cout.setVisible(level.Cout>0);
 		cout.setPosition(1445, AssetLoader.height - 74);
 		research = new ImageTextButton(String.valueOf(0),
 				AssetLoader.Skin_level, "research2");
 		research.setPosition(1545, AssetLoader.height - 74);
+		research.setVisible(level.Special || level.aWorld>0);
 		objectives = new Objectives();
 		objectives.setVictory(level.Victory);
 		objectives.setPosition(890, AssetLoader.height - 95);
+		objectives.setVisible(level.Cout>0);
 		buttonlevel = new ButtonLevel(level, true, 1.0f);
 		buttonlevel.setPosition(1760, AssetLoader.height - 125);
 		buttonlevel.addListener(new ClickListener() {
@@ -383,6 +363,15 @@ public class GameScreen implements Screen {
 				"Description Description Description Description Description Description Description Description Description Description Description Description Description Description Description Description Description Description Description Description Description Description Description Description Description Description Description Description Description Description Description Description",
 				AssetLoader.Skin_level, "info_desc");
 		info_desc.setBounds(1220, AssetLoader.height - 965, 575, 150);
+		info_up=new ImageButton(AssetLoader.Skin_level,"evolution");
+		info_up.setPosition(1375, AssetLoader.height - 720);
+		info_up.addListener(new ClickListener() {
+			@Override
+			public void clicked(InputEvent event, float x, float y) {
+				if (menu.getTransmuter()!=null && menu.getTransmuter().isUpgradable())
+					menu.getTransmuter().Upgrade();
+			}
+		});
 		dialog = new WarnDialog(AssetLoader.Skin_ui);
 		Gdx.app.debug(getClass().getSimpleName(), "Création d'une tilemap");
 		map = new TouchMaptiles(level, 128, 128);
@@ -459,89 +448,75 @@ public class GameScreen implements Screen {
 		});
 		Gdx.app.debug(getClass().getSimpleName(), "Création du menu");
 		nextpage=new ImageButton(AssetLoader.Skin_level,"extend");
-		nextpage.setPosition(1860, AssetLoader.height - 350);
+		nextpage.setPosition(1850, AssetLoader.height - 370);
 		nextpage.addListener(new ClickListener() {
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
+				if (!nextpage.isDisabled()) {
 				menu.NextPage();
 				Gdx.app.debug("menu", "Page suivante:"+menu.getPage());
 				map.tempclear();
 				map.fillempty(53);
-				selected = null;
 				hideInfo();
+				nextpage.setDisabled(menu.isNextEmpty());
+				previouspage.setDisabled(menu.isPreviousEmpty());
+				}
 			}
 		});
 		previouspage=new ImageButton(AssetLoader.Skin_level,"extend2");
-		previouspage.setPosition(1830, AssetLoader.height - 350);
+		previouspage.setPosition(1800, AssetLoader.height - 370);
 		previouspage.addListener(new ClickListener() {
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
+				if (!previouspage.isDisabled()) {
 				menu.PreviousPage();
 				Gdx.app.debug("menu", "Page précédente:"+menu.getPage());
 				map.tempclear();
 				map.fillempty(53);
-				selected = null;
 				hideInfo();
-			}
-		});
-		menu = new Menu(level);
-		map.addListener(new ClickListener() {
-			@Override
-			public void clicked(InputEvent event, float x, float y) {
-				mapexit = true;
-				Vector2 coords = menu.screentoworld(x, y);
-				MapProperties tile = menu.getMenubyTile((int) coords.x,
-						(int) coords.y);
-				if (tile != null && tile.containsKey("name")) {
-					menu.EraseSurtile();
-					map.tempclear();
-					if (menuactor == null)
-						menuactor = new Actor();
-					map.fillempty(60);
-					selected = menuactor;
-					if (tile.get("type").toString().startsWith("transmuter")) {
-						if (tile.containsKey("movetox")) {
-							coords.x += (Integer) tile.get("movetox");
-							coords.y += (Integer) tile.get("movetoy");
-						}
-						MapProperties tilenew = menu.getMenubyTile(
-								(int) coords.x, (int) coords.y);
-						selected_transmuter = (Transmuter) ((Transmuter) tilenew
-								.get("transmuter")).clone();
-						if (selected_transmuter != null) {
-							selected.setName("transmuter");
-							showInfo(selected_transmuter);
-							menu.setSurtile((int) coords.x,
-									(int) coords.y, selected_transmuter);
-							Gdx.app.debug("menu", "Choix transmuter:"
-									+ selected_transmuter.getName());
-						}
-					} else
-						selected.setName(tile.get("name").toString());
-					Vector2 coords2 = menu.worldtoscreen((int) coords.x,
-							(int) coords.y);
-					Gdx.app.debug(
-							"menu",
-							"Coordonnées:" + x + "x" + y + " Menu:" + coords.x
-									+ "," + coords.y + " Ecran :" + coords2.x
-									+ "x" + coords2.y + " type:"
-									+ tile.get("type"));
-					menuactor.setBounds(coords2.x, coords2.y, 60, 60);
+				nextpage.setDisabled(menu.isNextEmpty());
+				previouspage.setDisabled(menu.isPreviousEmpty());
 				}
 			}
 		});
+		menu = new Menu(level);
+		menu.setBounds(1531f, AssetLoader.height-780, 264, 480);
+		menu.addListener(new ChangeListener() {
+			@Override
+			public void changed(ChangeEvent event, Actor actor) {
+				Gdx.app.debug("Menu", "Element changé");
+				map.tempclear();
+				map.fillempty(60);
+				if (menu.getTransmuter() != null) 
+					showInfo(menu.getTransmuter());
+				else
+					hideInfo();
+				horizbar.unSelect();
+			}
+		});
+	}
+	
+	public String getselected() {
+		if (menu.getSelection()==null)
+			if (horizbar.getSelection()==null)
+					return null;
+				else
+					return horizbar.getSelection();
+		else
+			return menu.getSelection();
 	}
 
 	boolean event_coordination(float x, float y, int button, calling call,
 			String[] exec) {
-		if (selected != null) {
-			if (Arrays.asList(exec).contains(selected.getName())) {
+		Gdx.app.debug("menu", "xy"+x+","+y);
+		if (getselected() != null) {
+			if (Arrays.asList(exec).contains(getselected())) {
 				Vector2 coords = map.screentoworld(x, y);
 				if (level.Grid.GetXY(coords.x, coords.y) != null) {
 					mapexit = false;
 					if (call != calling.mouseover)
 						Gdx.app.debug("evenement", "mode:" + call + " outil:"
-								+ selected.getName() + " X: " + coords.x
+								+ getselected() + " X: " + coords.x
 								+ " Y: " + coords.y + " button:" + button);
 					Method method;
 					try {
@@ -551,7 +526,7 @@ public class GameScreen implements Screen {
 								int.class, int.class, boolean.class, int.class,
 								calling.class };
 						method = base.getDeclaredMethod(
-								"map_" + selected.getName(), params);
+								"map_" + getselected(), params);
 						method.invoke(this, (float) x, (float) y,
 								(int) coords.x, (int) coords.y, true,
 								(int) button, (calling) call);
@@ -575,45 +550,45 @@ public class GameScreen implements Screen {
 			int button, calling call) {
 		if (call == calling.taptap && button == 0
 				|| (call == calling.mouseclick && button == 1)) {
-			Angular angle = selected_transmuter.getRotation();
+			Angular angle = menu.getTransmuter().getRotation();
 			if (angle == Angular.A00)
-				selected_transmuter.setRotation(Angular.A90);
+				 menu.getTransmuter().setRotation(Angular.A90);
 			else if (angle == Angular.A90)
-				selected_transmuter.setRotation(Angular.A180);
+				 menu.getTransmuter().setRotation(Angular.A180);
 			else if (angle == Angular.A180)
-				selected_transmuter.setRotation(Angular.A270);
+				 menu.getTransmuter().setRotation(Angular.A270);
 			else if (angle == Angular.A270)
-				selected_transmuter.setRotation(Angular.A00);
+				 menu.getTransmuter().setRotation(Angular.A00);
 		}
 		map.tempclear();
 		boolean positionisgood = true;
 		int color = 0;
-		OrderedMap<Vector2, Integer> tiles = selected_transmuter
+		OrderedMap<Vector2, Integer> tiles =  menu.getTransmuter()
 				.getTilesidrotated();
 		Entries<Vector2, Integer> iterator = tiles.iterator();
 		while (iterator.hasNext()) {
 			Entry<Vector2, Integer> all = iterator.next();
 			color = 63;
 			int index = tiles.keys().toArray().indexOf(all.key, false);
-			if (((selected_transmuter.getTilestype(index) == CaseType.Nimporte)
+			if ((( menu.getTransmuter().getTilestype(index) == CaseType.Nimporte)
 					|| (!level.Grid.getFiber(x + all.key.x, y + all.key.y)
 							&& !level.Grid.getCopper(x + all.key.x, y
-									+ all.key.y) && selected_transmuter
+									+ all.key.y) &&  menu.getTransmuter()
 							.getTilestype(index) == CaseType.Rien)
 					|| (level.Grid.getFiber(x + all.key.x, y + all.key.y)
 							&& level.Grid.getCopper(x + all.key.x, y
-									+ all.key.y) && selected_transmuter
+									+ all.key.y) &&  menu.getTransmuter()
 							.getTilestype(index) == CaseType.Tout)
-					|| (level.Grid.getCopper(x + all.key.x, y + all.key.y) && selected_transmuter
+					|| (level.Grid.getCopper(x + all.key.x, y + all.key.y) &&  menu.getTransmuter()
 							.getTilestype(index) == CaseType.Cuivre)
-					|| (level.Grid.getFiber(x + all.key.x, y + all.key.y) && selected_transmuter
+					|| (level.Grid.getFiber(x + all.key.x, y + all.key.y) &&  menu.getTransmuter()
 							.getTilestype(index) == CaseType.Fibre)
 					|| (level.Grid.getFiber(x + all.key.x, y + all.key.y)
 							&& !level.Grid.getCopper(x + all.key.x, y
-									+ all.key.y) && selected_transmuter
+									+ all.key.y) &&  menu.getTransmuter()
 							.getTilestype(index) == CaseType.Fibre_seul) || (level.Grid
 					.getCopper(x + all.key.x, y + all.key.y)
-					&& !level.Grid.getFiber(x + all.key.x, y + all.key.y) && selected_transmuter
+					&& !level.Grid.getFiber(x + all.key.x, y + all.key.y) &&  menu.getTransmuter()
 					.getTilestype(index) == CaseType.Cuivre_seul))
 					&& (level.Grid.getTransmutercalc(x + all.key.x, y
 							+ all.key.y) == 0))
@@ -621,10 +596,10 @@ public class GameScreen implements Screen {
 			else
 				positionisgood = false;
 			map.tempdraw(x + all.key.x, y + all.key.y, all.value,
-					selected_transmuter.getRotation().ordinal(), color);
+					 menu.getTransmuter().getRotation().ordinal(), color);
 		}
 		if ((call == calling.longpress && button == 0) && positionisgood) {
-			level.Grid.GetXY(x, y).Transmuter = (Transmuter) selected_transmuter
+			level.Grid.GetXY(x, y).Transmuter = (Transmuter)  menu.getTransmuter()
 					.clone();
 			if (alone)
 				level.Grid.tiling_transmuter();
@@ -803,7 +778,7 @@ public class GameScreen implements Screen {
 		if (Preference.prefs.getBoolean("Refresh"))
 			fpsLabel.setText(Gdx.graphics.getFramesPerSecond() + "FPS");
 		Renderer.render(delta, runTime, 0);
-		stage_menu.draw();
+		stage_map.draw();
 		Renderer.render(delta, runTime, 1);
 		stage.draw();
 		if (unroll)
@@ -828,8 +803,6 @@ public class GameScreen implements Screen {
 		Gdx.app.log("*****", "Affichage du niveau.");
 		for (int i = 0; i < Barre2.length; i++)
 			table2.addActor(Barre2[i]);
-		for (int i = 0; i < Barre.length; i++)
-			table.addActor(Barre[i]);
 		stage_info.addActor(info_tech);
 		stage_info.addActor(info_research);
 		stage_info.addActor(info_activation);
@@ -843,9 +816,11 @@ public class GameScreen implements Screen {
 		stage_info.addActor(info_up_cycleval);
 		stage_info.addActor(info_nom);
 		stage_info.addActor(info_cout);
+		stage_info.addActor(info_up);
 		stage_info.addActor(info_desc);
-		stage_menu.addActor(map);
-		// stage_tooltip.addActor(tooltip);
+		stage_map.addActor(map);
+		//stage_tooltip.addActor(tooltip);
+		stage.addActor(horizbar);
 		stage.addActor(nextpage);
 		stage.addActor(previouspage);		
 		stage.addActor(objectives);
@@ -857,67 +832,72 @@ public class GameScreen implements Screen {
 		stage.addActor(temp);
 		stage.addActor(cycle);
 		stage.addActor(table2);
-		stage.addActor(table);
 		stage.addActor(tech);
 		stage.addActor(cout);
 		stage.addActor(research);
 		stage.addActor(menu);
 		// gesturedetector=new GestureDetector(null);
 		// processors.add(gesturedetector);
+		//processors.add(stage_tooltip);
+		processors.add(stage_info);
 		processors.add(stage);
-		processors.add(stage_menu);
+		processors.add(stage_map);
 		multiplexer.setProcessors(processors);
 		Gdx.input.setInputProcessor(multiplexer);
 		preparemenu(0);
 	}
 
-	public void preparebarre(Actor caller, int count) {
+	public void preparebarre(String caller, int count) {
 		map.fillempty(53);
 		map.tempclear();
 		menu.EraseSurtile();
 		hideInfo();
-		if (caller.getName() == "run") {
-		} else if (caller.getName() == "stop") {
-		} else if (caller.getName() == "speed") {
-		} else if (caller.getName() == "move") {
-			selected = caller;
+		if (caller == "run") {
+			Gdx.app.debug("pop", menu.getX()+","+menu.getY()+","+menu.getWidth()+","+menu.getHeight());
+			menu.setWidth(1920);
+			menu.setHeight(1080);
+		} else if (caller == "stop") {
+			map.setBounds(500, 200, 500, 400);
+		} else if (caller == "speed") {
+		} else if (caller == "move") {
+			//selected = caller;
 			if (count >= 2)
 				map.initzoom();
-		} else if (caller.getName() == "zoomp") {
-			selected = caller;
+		} else if (caller == "zoomp") {
+			//selected = caller;
 			if (count >= 2)
 				map.initzoom();
-		} else if (caller.getName() == "zoomm") {
-			selected = caller;
+		} else if (caller == "zoomm") {
+			//selected = caller;
 			if (count >= 2)
 				map.initzoom();
-		} else if (caller.getName() == "infos") {
-			selected = caller;
+		} else if (caller == "infos") {
+			//selected = caller;
 			if (count >= 2)
 				map.initzoom();
-		} else if (caller.getName() == "raz") {
+		} else if (caller == "raz") {
 			winOptions.setVisible(false);
 			winSave.setVisible(!winSave.isVisible());
 			if (winSave.isVisible())
 				readsaved();
-		} else if (caller.getName() == "save") {
+		} else if (caller == "save") {
 			Gdx.app.log("save", "Ok");
 			Gdx.app.debug("Barre", "Sauvegarde de la grille.");
 			Gdx.app.debug("Barre", AssetLoader.Datahandler.user().toString());			
 			AssetLoader.Datahandler.user().setGrid(0, level.id, level.Grid);
 			readsaved();
-		} else if (caller.getName() == "levels") {
+		} else if (caller == "levels") {
 			Gdx.app.debug("Barre", "Affichage des niveaux.");
 			AssetLoader.Datahandler.user().setGrid(0, level.id, "LAST",
 					this.level.Grid);
 			((Game) Gdx.app.getApplicationListener())
 					.setScreen(new LevelScreen(level.aWorld));
-		} else if (caller.getName() == "tree") {
-		} else if (caller.getName() == "exits") {
+		} else if (caller == "tree") {
+		} else if (caller == "exits") {
 			AssetLoader.Datahandler.user().setGrid(0, level.id, "LAST",
 					this.level.Grid);
 			Gdx.app.exit();
-		} else if (caller.getName() == "screen") {
+		} else if (caller == "screen") {
 			DisplayMode currentMode = Gdx.graphics.getDesktopDisplayMode();
 			if (Gdx.graphics.isFullscreen()) {
 				Gdx.app.debug("Barre", "vers fenetre.");
@@ -928,8 +908,8 @@ public class GameScreen implements Screen {
 				Gdx.graphics.setDisplayMode(currentMode.width,
 						currentMode.height, true);
 			}
-			((ImageButton) caller).setChecked(Gdx.graphics.isFullscreen());
-		} else if (caller.getName() == "sound") {
+			//((ImageButton) caller).setChecked(Gdx.graphics.isFullscreen());
+		} else if (caller == "sound") {
 			if (AssetLoader.intro.getVolume() > 0) {
 				Gdx.app.debug("Barre", "arret son.");
 				AssetLoader.intro.setVolume(0f);
@@ -937,9 +917,9 @@ public class GameScreen implements Screen {
 				Gdx.app.debug("Barre", "marche son.");
 				AssetLoader.intro.setVolume(1f);
 			}
-			((ImageButton) caller)
-					.setChecked(AssetLoader.intro.getVolume() > 0);
-		} else if (caller.getName() == "tuto") {
+			//((ImageButton) caller)
+					//.setChecked(AssetLoader.intro.getVolume() > 0);
+		} else if (caller == "tuto") {
 			if (AssetLoader.Tooltipmanager.enabled) {
 				Gdx.app.debug("Barre", "arret tuto.");
 				AssetLoader.Tooltipmanager.enabled = false;
@@ -947,14 +927,14 @@ public class GameScreen implements Screen {
 				Gdx.app.debug("Barre", "marche tuto.");
 				AssetLoader.Tooltipmanager.enabled = true;
 			}
-			((ImageButton) caller)
-					.setChecked(AssetLoader.Tooltipmanager.enabled);
-		} else if (caller.getName() == "settings") {
+			//((ImageButton) caller)
+					//.setChecked(AssetLoader.Tooltipmanager.enabled);
+		} else if (caller == "settings") {
 			winOptions.setVisible(!winOptions.isVisible());
 			winSave.setVisible(false);
 			if (winOptions.isVisible())
 				readpref();
-		} else if (caller.getName() == "flag") {
+		} else if (caller == "flag") {
 			if (AssetLoader.language.getLocale().getDisplayName()
 					.contains("français")) {
 				Gdx.app.debug("Barre", "Langue USA");
@@ -963,9 +943,9 @@ public class GameScreen implements Screen {
 				Gdx.app.debug("Barre", "Langue FR");
 				AssetLoader.language = AssetLoader.french;
 			}
-			((ImageButton) caller).setChecked(AssetLoader.language.getLocale()
-					.getDisplayName().contains("français"));
-		} else if (caller.getName() == "stat") {
+			//((ImageButton) caller).setChecked(AssetLoader.language.getLocale()
+				//	.getDisplayName().contains("français"));
+		} else if (caller == "stat") {
 		}
 	}
 
@@ -973,11 +953,11 @@ public class GameScreen implements Screen {
 		checkMenu(menuitem, true);
 		map.tempclear();
 		map.fillempty(53);
-		selected = null;
-		menu.EraseSurtile();
+		horizbar.unSelect();
 		hideInfo();
-		menu.setType(menuitem);
-		menu.setPage(0);
+		menu.setPageType(0,menuitem);		
+		nextpage.setDisabled(menu.isNextEmpty());
+		previouspage.setDisabled(true);
 	}
 
 	public void showInfo(Transmuter transmuter) {
