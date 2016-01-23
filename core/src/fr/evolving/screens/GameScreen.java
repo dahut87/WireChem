@@ -18,6 +18,7 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture.TextureFilter;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.input.GestureDetector;
+import com.badlogic.gdx.input.GestureDetector.GestureListener;
 import com.badlogic.gdx.maps.MapProperties;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
@@ -71,7 +72,7 @@ public class GameScreen implements Screen {
 	private InputMultiplexer multiplexer;
 	private Array<InputProcessor> processors;
 	private WarnDialog dialog;
-	private Stage stage, stage_map, stage_info, stage_tooltip;
+	private Stage stage, stage_info, stage_tooltip;
 	private VerticalGroup table2;
 	private GameRenderer Renderer;
 	private float runTime;
@@ -97,7 +98,7 @@ public class GameScreen implements Screen {
 			"separator", "stat" };
 	private ButtonLevel buttonlevel;
 	private Objectives objectives;
-	private TouchMaptiles map;
+	public TouchMaptiles map;
 	private Menu menu;
 	private HorizBarre horizbar;
 	private float oldx, oldy;
@@ -220,6 +221,7 @@ public class GameScreen implements Screen {
 			@Override
 			public void changed(ChangeEvent event, Actor actor) {
 				Gdx.app.debug("Barre", "Element changé");
+				hideInfo();
 				map.tempclear();
 				map.fillempty(60);
 				menu.unSelect();
@@ -238,9 +240,8 @@ public class GameScreen implements Screen {
 		multiplexer = new InputMultiplexer();
 		processors = new Array<InputProcessor>();
 		stage = new Stage(AssetLoader.viewport);
-		stage_map = new Stage(AssetLoader.viewport);
 		stage_info = new Stage(AssetLoader.viewport);
-		stage_tooltip = new Stage(AssetLoader.viewport);
+		//stage_tooltip = new Stage(AssetLoader.viewport);
 		oldx = 0;
 		oldy = 0;
 		unroll = false;
@@ -418,6 +419,7 @@ public class GameScreen implements Screen {
 			@Override
 			public void changed(ChangeEvent event, Actor actor) {
 				Gdx.app.debug("Menu", "Element changé");
+				hideInfo();
 				map.tempclear();
 				map.fillempty(60);
 				if (menu.getTransmuter() != null) 
@@ -673,13 +675,12 @@ public class GameScreen implements Screen {
 		if (Preference.prefs.getBoolean("Refresh"))
 			fpsLabel.setText(Gdx.graphics.getFramesPerSecond() + "FPS");
 		Renderer.render(delta, runTime, 0);
-		stage_map.draw();
 		Renderer.render(delta, runTime, 1);
 		stage.draw();
 		if (unroll)
 			stage_info.draw();
 		Renderer.render(delta, runTime, 2);
-		stage_tooltip.draw();
+		//stage_tooltip.draw();
 	}
 
 	@Override
@@ -713,7 +714,6 @@ public class GameScreen implements Screen {
 		stage_info.addActor(info_cout);
 		stage_info.addActor(info_up);
 		stage_info.addActor(info_desc);
-		stage_map.addActor(map);
 		//stage_tooltip.addActor(tooltip);
 		stage.addActor(horizbar);
 		stage.addActor(nextpage);
@@ -731,12 +731,13 @@ public class GameScreen implements Screen {
 		stage.addActor(cout);
 		stage.addActor(research);
 		stage.addActor(menu);
-		//gesturedetector=new GestureDetector(null);
-		//processors.add(gesturedetector);
+		gesturedetector=new GestureDetector(map);
+		
 		//processors.add(stage_tooltip);
 		processors.add(stage_info);
 		processors.add(stage);
-		processors.add(stage_map);
+		processors.add(map);
+		processors.add(gesturedetector);
 		multiplexer.setProcessors(processors);
 		Gdx.input.setInputProcessor(multiplexer);
 		preparemenu(0);

@@ -27,6 +27,9 @@ public class GameRenderer {
 		if (layer == 0) {
 			Gdx.gl.glClearColor(0, 0, 0, 1);
 			Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+			batcher.begin();
+			GameScreen.map.draw(batcher, 1f);
+			batcher.end();
 		} else if (layer == 1) {
 			batcher.begin();
 			batcher.setColor(0.25f, 0.25f, 0.25f, 1f);

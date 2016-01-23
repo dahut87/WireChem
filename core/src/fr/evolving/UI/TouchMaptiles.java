@@ -5,8 +5,10 @@ import java.util.Arrays;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.Batch;
+import com.badlogic.gdx.input.GestureDetector.GestureListener;
 import com.badlogic.gdx.maps.MapLayers;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
@@ -25,7 +27,7 @@ import fr.evolving.assets.AssetLoader;
 import fr.evolving.automata.Level;
 import fr.evolving.screens.GameScreen.calling;
 
-public class TouchMaptiles extends Actor {
+public class TouchMaptiles extends Actor implements GestureListener,InputProcessor {
 
 	private TiledMap map;
 	private OrthogonalTiledMapRenderer MapRenderer;
@@ -35,11 +37,13 @@ public class TouchMaptiles extends Actor {
 	private int sizey;
 	private float viewwidth, viewheight, decx, decy;
 	private String selected;
+	private boolean mapexit;
 
 	public TouchMaptiles(Level level, int sizex, int sizey) {
 		this.level = level;
 		this.sizex = sizex;
 		this.sizey = sizey;
+		this.mapexit=false;
 		map = new TiledMap();
 		map.getTileSets().addTileSet(AssetLoader.tileSet);
 		MapLayers layers = map.getLayers();
@@ -60,85 +64,17 @@ public class TouchMaptiles extends Actor {
 		MapRenderer = new OrthogonalTiledMapRenderer(map, 1 / 128.0f);
 		camera = new OrthographicCamera();
 		initzoom();
-		this.addListener(new ActorGestureListener() {
-			@Override
-			public void zoom(InputEvent event, float initialDistance,
-					float distance) {
-				String[] exec = { "zoomp", "zoomm" };
-				int zooming = (int) (distance / initialDistance * 1000f);
-				event_coordination(0, 0, zooming, calling.zoom, exec);
-			}
-
-			@Override
-			public void pinch(InputEvent event, Vector2 initialPointer1,
-					Vector2 initialPointer2, Vector2 pointer1, Vector2 pointer2) {
-				float deltaX = pointer2.x - pointer1.x;
-				float deltaY = pointer2.y - pointer1.y;
-				int angle = (int) ((float) Math.atan2((double) deltaY,
-						(double) deltaX) * MathUtils.radiansToDegrees);
-				angle += 90;
-				if (angle < 0)
-					angle = 360 - (-angle);
-				String[] exec = { "transmuter" };
-				event_coordination(initialPointer1.x, initialPointer1.y, angle,
-						calling.pinch, exec);
-			}
-
-			@Override
-			public boolean longPress(Actor actor, float x, float y) {
-				String[] exec = { "transmuter" };
-				return event_coordination(x, y, 0, calling.longpress, exec);
-			}
-
-			@Override
-			public void tap(InputEvent event, float x, float y, int count,
-					int button) {
-				String[] exec = { "transmuter" };
-				if (count == 1)
-					event_coordination(x, y, button, calling.tap, exec);
-				else if (count >= 2)
-					event_coordination(x, y, button, calling.taptap, exec);
-			}
-		});
-		this.addListener(new InputListener() {
-			@Override
-			public boolean mouseMoved(InputEvent event, float x, float y) {
-				String[] exec = { "transmuter" };
-				return event_coordination(x, y, 0, calling.mouseover, exec);
-			}
-
-			@Override
-			public boolean touchDown(InputEvent event, float x, float y,
-					int pointer, int button) {
-				//oldx = 0;
-				//oldy = 0;
-				String[] exec = { "cleaner", "infos", "zoomp", "zoomm",
-						"copper_pen", "fiber_pen", "copper_eraser",
-						"fiber_eraser", "transmuter_eraser", "all_eraser",
-						"blank", "transmuter", "copper_brush", "fiber_brush" };
-				return event_coordination(x, y, button, calling.mouseclick,
-						exec);
-			}
-
-			@Override
-			public void touchDragged(InputEvent event, float x, float y,
-					int pointer) {
-				String[] exec = { "transmuter", "move", "copper_brush",
-						"fiber_brush", "copper_eraser", "fiber_eraser",
-						"transmuter_eraser", "all_eraser", "blank" };
-				event_coordination(x, y, 0, calling.mousedrag, exec);
-			}
-		});
 	}
 	
 	boolean event_coordination(float x, float y, int button, calling call,
 			String[] exec) {
-		Gdx.app.debug("menu", "xy"+x+","+y);
 		if (selected != null) {
 			if (Arrays.asList(exec).contains(selected)) {
-				Vector2 coords = this.screentoworld(x, y);
+				Vector3 coordsscreen = new Vector3();
+				AssetLoader.Camera.unproject(coordsscreen.set(x, y, 0));	
+				Vector2 coords = this.screentoworld(coordsscreen.x, coordsscreen.y);
 				if (level.Grid.GetXY(coords.x, coords.y) != null) {
-					//mapexit = false;
+					mapexit = false;
 					if (call != calling.mouseover)
 						Gdx.app.debug("evenement", "mode:" + call + " outil:"
 								+ selected + " X: " + coords.x
@@ -148,17 +84,17 @@ public class TouchMaptiles extends Actor {
 						Class<?> base = Class.forName("fr.evolving.screens.GameScreen");
 						Class<?>[] params = { float.class, float.class,	int.class, int.class, boolean.class, int.class,	calling.class };
 						method = base.getDeclaredMethod("map_" + selected, params);
-						method.invoke(((Game) Gdx.app.getApplicationListener()).getScreen(), (float) x, (float) y,(int) coords.x, (int) coords.y, true,(int) button, (calling) call);
+						method.invoke(((Game) Gdx.app.getApplicationListener()).getScreen(), (float) coordsscreen.x, (float) coordsscreen.y,(int) coords.x, (int) coords.y, true,(int) button, (calling) call);
 					} catch (Exception e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
-				} /*else {
+				} else {
 					if (mapexit == false) {
 						mapexit = true;
-						map.tempclear();
+						this.tempclear();
 					}
-				}*/
+				}
 			}
 
 		}
@@ -272,8 +208,7 @@ public class TouchMaptiles extends Actor {
 		camera.setToOrtho(false, viewwidth, viewheight);
 		decx = (level.Grid.sizeX - viewwidth) / 2.0f;
 		decy = (level.Grid.sizeY - viewheight) / 2.0f;
-		Gdx.app.debug(getClass().getSimpleName(), "Décalage:" + decx + "x"
-				+ decy);
+		Gdx.app.debug(getClass().getSimpleName(), "Décalage:" + decx + "x"	+ decy);
 		camera.translate(decx, decy);
 	}
 
@@ -319,12 +254,125 @@ public class TouchMaptiles extends Actor {
 	@Override
 	public void draw(Batch batch, float parentAlpha) {
 		batch.end();
-		// batch.setProjectionMatrix(camera.combined);
 		camera.update();
 		MapRenderer.setView(camera);
-		// MapRenderer.setView(camera.combined,0,0,maxx,maxx);
 		MapRenderer.render();
 		batch.begin();
+	}
+
+	@Override
+	public boolean touchDown(float x, float y, int pointer, int button) {
+		String[] exec = { "cleaner", "infos", "zoomp", "zoomm",
+				"copper_pen", "fiber_pen", "copper_eraser",
+				"fiber_eraser", "transmuter_eraser", "all_eraser",
+				"blank", "transmuter", "copper_brush", "fiber_brush" };
+		return event_coordination(x, y, button, calling.mouseclick,
+				exec);
+	}
+
+	@Override
+	public boolean tap(float x, float y, int count, int button) {
+		String[] exec = { "transmuter" };
+		if (count == 1)
+			event_coordination(x, y, button, calling.tap, exec);
+		else if (count >= 2)
+			event_coordination(x, y, button, calling.taptap, exec);
+		return false;
+	}
+
+	@Override
+	public boolean longPress(float x, float y) {
+		String[] exec = { "transmuter" };
+		return event_coordination(x, y, 0, calling.longpress, exec);
+	}
+
+	@Override
+	public boolean fling(float velocityX, float velocityY, int button) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public boolean pan(float x, float y, float deltaX, float deltaY) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public boolean panStop(float x, float y, int pointer, int button) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public boolean zoom(float initialDistance, float distance) {
+		String[] exec = { "zoomp", "zoomm" };
+		int zooming = (int) (distance / initialDistance * 1000f);
+		return event_coordination(0, 0, zooming, calling.zoom, exec);
+	}
+
+	@Override
+	public boolean pinch(Vector2 initialPointer1, Vector2 initialPointer2,
+			Vector2 pointer1, Vector2 pointer2) {
+			float deltaX = pointer2.x - pointer1.x;
+			float deltaY = pointer2.y - pointer1.y;
+			int angle = (int) ((float) Math.atan2((double) deltaY,
+					(double) deltaX) * MathUtils.radiansToDegrees);
+			angle += 90;
+			if (angle < 0)
+				angle = 360 - (-angle);
+			String[] exec = { "transmuter" };
+			return event_coordination(initialPointer1.x, initialPointer1.y, angle,	calling.pinch, exec);
+	}
+
+	@Override
+	public boolean keyDown(int keycode) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public boolean keyUp(int keycode) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public boolean keyTyped(char character) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public boolean touchDown(int screenX, int screenY, int pointer, int button) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public boolean touchUp(int screenX, int screenY, int pointer, int button) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public boolean touchDragged(int screenX, int screenY, int pointer) {
+		String[] exec = { "transmuter", "move", "copper_brush",
+				"fiber_brush", "copper_eraser", "fiber_eraser",
+				"transmuter_eraser", "all_eraser", "blank" };
+		return event_coordination(screenX, screenY, 0, calling.mousedrag, exec);
+	}
+
+	@Override
+	public boolean mouseMoved(int screenX, int screenY) {
+		String[] exec = { "transmuter" };
+		return event_coordination(screenX, screenY, 0, calling.mouseover, exec);
+	}
+
+	@Override
+	public boolean scrolled(int amount) {
+		// TODO Auto-generated method stub
+		return false;
 	}
 
 }
