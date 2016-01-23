@@ -103,7 +103,7 @@ public class GameScreen implements Screen {
 	private float oldx, oldy;
 	private Label fpsLabel, info_nom;
 	private TextArea info_desc, tooltip;
-	public boolean unroll, mapexit;
+	public boolean unroll;
 
 	public enum calling {
 		mouseover, mouseclick, mousedrag, longpress, tap, taptap, zoom, fling, pan, pinch
@@ -223,6 +223,7 @@ public class GameScreen implements Screen {
 				map.tempclear();
 				map.fillempty(60);
 				menu.unSelect();
+				map.setSelected(getselected());
 			}
 		});
 		table2 = new VerticalGroup();
@@ -377,75 +378,7 @@ public class GameScreen implements Screen {
 		map = new TouchMaptiles(level, 128, 128);
 		map.setBounds(0, 0, AssetLoader.width, AssetLoader.height);
 		map.redraw(53);
-		map.addListener(new ActorGestureListener() {
-			@Override
-			public void zoom(InputEvent event, float initialDistance,
-					float distance) {
-				String[] exec = { "zoomp", "zoomm" };
-				int zooming = (int) (distance / initialDistance * 1000f);
-				event_coordination(0, 0, zooming, calling.zoom, exec);
-			}
-
-			@Override
-			public void pinch(InputEvent event, Vector2 initialPointer1,
-					Vector2 initialPointer2, Vector2 pointer1, Vector2 pointer2) {
-				float deltaX = pointer2.x - pointer1.x;
-				float deltaY = pointer2.y - pointer1.y;
-				int angle = (int) ((float) Math.atan2((double) deltaY,
-						(double) deltaX) * MathUtils.radiansToDegrees);
-				angle += 90;
-				if (angle < 0)
-					angle = 360 - (-angle);
-				String[] exec = { "transmuter" };
-				event_coordination(initialPointer1.x, initialPointer1.y, angle,
-						calling.pinch, exec);
-			}
-
-			@Override
-			public boolean longPress(Actor actor, float x, float y) {
-				String[] exec = { "transmuter" };
-				return event_coordination(x, y, 0, calling.longpress, exec);
-			}
-
-			@Override
-			public void tap(InputEvent event, float x, float y, int count,
-					int button) {
-				String[] exec = { "transmuter" };
-				if (count == 1)
-					event_coordination(x, y, button, calling.tap, exec);
-				else if (count >= 2)
-					event_coordination(x, y, button, calling.taptap, exec);
-			}
-		});
-		map.addListener(new InputListener() {
-			@Override
-			public boolean mouseMoved(InputEvent event, float x, float y) {
-				String[] exec = { "transmuter" };
-				return event_coordination(x, y, 0, calling.mouseover, exec);
-			}
-
-			@Override
-			public boolean touchDown(InputEvent event, float x, float y,
-					int pointer, int button) {
-				oldx = 0;
-				oldy = 0;
-				String[] exec = { "cleaner", "infos", "zoomp", "zoomm",
-						"copper_pen", "fiber_pen", "copper_eraser",
-						"fiber_eraser", "transmuter_eraser", "all_eraser",
-						"blank", "transmuter", "copper_brush", "fiber_brush" };
-				return event_coordination(x, y, button, calling.mouseclick,
-						exec);
-			}
-
-			@Override
-			public void touchDragged(InputEvent event, float x, float y,
-					int pointer) {
-				String[] exec = { "transmuter", "move", "copper_brush",
-						"fiber_brush", "copper_eraser", "fiber_eraser",
-						"transmuter_eraser", "all_eraser", "blank" };
-				event_coordination(x, y, 0, calling.mousedrag, exec);
-			}
-		});
+		
 		Gdx.app.debug(getClass().getSimpleName(), "Création du menu");
 		nextpage=new ImageButton(AssetLoader.Skin_level,"extend");
 		nextpage.setPosition(1850, AssetLoader.height - 370);
@@ -492,6 +425,7 @@ public class GameScreen implements Screen {
 				else
 					hideInfo();
 				horizbar.unSelect();
+				map.setSelected(getselected());
 			}
 		});
 	}
@@ -506,47 +440,8 @@ public class GameScreen implements Screen {
 			return menu.getSelection();
 	}
 
-	boolean event_coordination(float x, float y, int button, calling call,
-			String[] exec) {
-		Gdx.app.debug("menu", "xy"+x+","+y);
-		if (getselected() != null) {
-			if (Arrays.asList(exec).contains(getselected())) {
-				Vector2 coords = map.screentoworld(x, y);
-				if (level.Grid.GetXY(coords.x, coords.y) != null) {
-					mapexit = false;
-					if (call != calling.mouseover)
-						Gdx.app.debug("evenement", "mode:" + call + " outil:"
-								+ getselected() + " X: " + coords.x
-								+ " Y: " + coords.y + " button:" + button);
-					Method method;
-					try {
-						Class<?> base = Class
-								.forName("fr.evolving.screens.GameScreen");
-						Class<?>[] params = { float.class, float.class,
-								int.class, int.class, boolean.class, int.class,
-								calling.class };
-						method = base.getDeclaredMethod(
-								"map_" + getselected(), params);
-						method.invoke(this, (float) x, (float) y,
-								(int) coords.x, (int) coords.y, true,
-								(int) button, (calling) call);
-					} catch (Exception e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
-				} else {
-					if (mapexit == false) {
-						mapexit = true;
-						map.tempclear();
-					}
-				}
-			}
 
-		}
-		return true;
-	}
-
-	void map_transmuter(float realx, float realy, int x, int y, boolean alone,
+	public void map_transmuter(float realx, float realy, int x, int y, boolean alone,
 			int button, calling call) {
 		if (call == calling.taptap && button == 0
 				|| (call == calling.mouseclick && button == 1)) {
@@ -608,7 +503,7 @@ public class GameScreen implements Screen {
 		}
 	}
 
-	void map_infos(float realx, float realy, int x, int y, boolean alone,
+	public void map_infos(float realx, float realy, int x, int y, boolean alone,
 			int button, calling call) {
 		if (level.Grid.GetXY(x, y) != null) {
 			Gdx.app.debug("map", "Etat extension:" + unroll);
@@ -638,21 +533,21 @@ public class GameScreen implements Screen {
 
 	}
 
-	void map_zoomp(float realx, float realy, int x, int y, boolean alone,
+	public void map_zoomp(float realx, float realy, int x, int y, boolean alone,
 			int button, calling call) {
 		map.setZoom(0.9f);
 		map.setDec((AssetLoader.width / 2 - realx) / 2,
 				(AssetLoader.height / 2 - realy) / 2);
 	}
 
-	void map_zoomm(float realx, float realy, int x, int y, boolean alone,
+	public void map_zoomm(float realx, float realy, int x, int y, boolean alone,
 			int button, calling call) {
 		map.setZoom(1.1f);
 		map.setDec((AssetLoader.width / 2 - realx) / 2,
 				(AssetLoader.height / 2 - realy) / 2);
 	}
 
-	void map_move(float realx, float realy, int x, int y, boolean alone,
+	public void map_move(float realx, float realy, int x, int y, boolean alone,
 			int button, calling call) {
 		if (oldx != 0 && oldy != 0) {
 			map.setDec(realx - oldx, realy - oldy);
@@ -663,13 +558,13 @@ public class GameScreen implements Screen {
 		oldy = realy;
 	}
 
-	void map_blank(float realx, float realy, int x, int y, boolean alone,
+	public void map_blank(float realx, float realy, int x, int y, boolean alone,
 			int button, calling call) {
 		map_fiber_eraser(0, 0, x, y, false, button, call);
 		map_copper_eraser(0, 0, x, y, alone, button, call);
 	}
 
-	void map_cleaner(float realx, float realy, int x, int y, boolean alone,
+	public void map_cleaner(float realx, float realy, int x, int y, boolean alone,
 			int button, calling call) {
 		for (x = 0; x < level.Grid.sizeX; x++)
 			for (y = 0; y < level.Grid.sizeY; y++)
@@ -684,14 +579,14 @@ public class GameScreen implements Screen {
 		map.redraw(60);
 	}
 
-	void map_all_eraser(float realx, float realy, int x, int y, boolean alone,
+	public void map_all_eraser(float realx, float realy, int x, int y, boolean alone,
 			int button, calling call) {
 		map_transmuter_eraser(0, 0, x, y, alone, button, call);
 		map_fiber_eraser(0, 0, x, y, false, button, call);
 		map_copper_eraser(0, 0, x, y, alone, button, call);
 	}
 
-	void map_transmuter_eraser(float realx, float realy, int x, int y,
+	public void map_transmuter_eraser(float realx, float realy, int x, int y,
 			boolean alone, int button, calling call) {
 		if (level.Grid.GetXY(x, y).Transmuter_calc != 0) {
 			level.Grid.GetXY(x + level.Grid.GetXY(x, y).Transmuter_movex, y
@@ -708,7 +603,7 @@ public class GameScreen implements Screen {
 		}
 	}
 
-	void map_fiber_eraser(float realx, float realy, int x, int y,
+	public void map_fiber_eraser(float realx, float realy, int x, int y,
 			boolean alone, int button, calling call) {
 		if (level.Grid.GetXY(x, y).Transmuter_calc == 0) {
 			level.Grid.GetXY(x, y).Fiber = 0;
@@ -719,7 +614,7 @@ public class GameScreen implements Screen {
 		}
 	}
 
-	void map_fiber_pen(float realx, float realy, int x, int y, boolean alone,
+	public void map_fiber_pen(float realx, float realy, int x, int y, boolean alone,
 			int button, calling call) {
 		if (level.Grid.GetXY(x, y).Transmuter_calc == 0)
 			level.Grid.GetXY(x, y).Fiber = -1 * level.Grid.GetXY(x, y).Fiber
@@ -730,7 +625,7 @@ public class GameScreen implements Screen {
 		}
 	}
 
-	void map_fiber_brush(float realx, float realy, int x, int y, boolean alone,
+	public void map_fiber_brush(float realx, float realy, int x, int y, boolean alone,
 			int button, calling call) {
 		if (level.Grid.GetXY(x, y).Transmuter_calc == 0)
 			level.Grid.GetXY(x, y).Fiber = 1;
@@ -740,7 +635,7 @@ public class GameScreen implements Screen {
 		}
 	}
 
-	void map_copper_eraser(float realx, float realy, int x, int y,
+	public void map_copper_eraser(float realx, float realy, int x, int y,
 			boolean alone, int button, calling call) {
 		if (level.Grid.GetXY(x, y).Transmuter_calc == 0) {
 			level.Grid.GetXY(x, y).Copper = false;
@@ -751,7 +646,7 @@ public class GameScreen implements Screen {
 		}
 	}
 
-	void map_copper_pen(float realx, float realy, int x, int y, boolean alone,
+	public void map_copper_pen(float realx, float realy, int x, int y, boolean alone,
 			int button, calling call) {
 		if (level.Grid.GetXY(x, y).Transmuter_calc == 0)
 			level.Grid.GetXY(x, y).Copper = !level.Grid.GetXY(x, y).Copper;
@@ -761,7 +656,7 @@ public class GameScreen implements Screen {
 		}
 	}
 
-	void map_copper_brush(float realx, float realy, int x, int y,
+	public void map_copper_brush(float realx, float realy, int x, int y,
 			boolean alone, int button, calling call) {
 		if (level.Grid.GetXY(x, y).Transmuter_calc == 0)
 			level.Grid.GetXY(x, y).Copper = true;
@@ -836,8 +731,8 @@ public class GameScreen implements Screen {
 		stage.addActor(cout);
 		stage.addActor(research);
 		stage.addActor(menu);
-		// gesturedetector=new GestureDetector(null);
-		// processors.add(gesturedetector);
+		//gesturedetector=new GestureDetector(null);
+		//processors.add(gesturedetector);
 		//processors.add(stage_tooltip);
 		processors.add(stage_info);
 		processors.add(stage);
@@ -853,26 +748,18 @@ public class GameScreen implements Screen {
 		menu.EraseSurtile();
 		hideInfo();
 		if (caller == "run") {
-			Gdx.app.debug("pop", menu.getX()+","+menu.getY()+","+menu.getWidth()+","+menu.getHeight());
-			menu.setWidth(1920);
-			menu.setHeight(1080);
 		} else if (caller == "stop") {
-			map.setBounds(500, 200, 500, 400);
 		} else if (caller == "speed") {
 		} else if (caller == "move") {
-			//selected = caller;
 			if (count >= 2)
 				map.initzoom();
 		} else if (caller == "zoomp") {
-			//selected = caller;
 			if (count >= 2)
 				map.initzoom();
 		} else if (caller == "zoomm") {
-			//selected = caller;
 			if (count >= 2)
 				map.initzoom();
 		} else if (caller == "infos") {
-			//selected = caller;
 			if (count >= 2)
 				map.initzoom();
 		} else if (caller == "raz") {
@@ -908,7 +795,6 @@ public class GameScreen implements Screen {
 				Gdx.graphics.setDisplayMode(currentMode.width,
 						currentMode.height, true);
 			}
-			//((ImageButton) caller).setChecked(Gdx.graphics.isFullscreen());
 		} else if (caller == "sound") {
 			if (AssetLoader.intro.getVolume() > 0) {
 				Gdx.app.debug("Barre", "arret son.");
@@ -917,8 +803,6 @@ public class GameScreen implements Screen {
 				Gdx.app.debug("Barre", "marche son.");
 				AssetLoader.intro.setVolume(1f);
 			}
-			//((ImageButton) caller)
-					//.setChecked(AssetLoader.intro.getVolume() > 0);
 		} else if (caller == "tuto") {
 			if (AssetLoader.Tooltipmanager.enabled) {
 				Gdx.app.debug("Barre", "arret tuto.");
@@ -927,8 +811,6 @@ public class GameScreen implements Screen {
 				Gdx.app.debug("Barre", "marche tuto.");
 				AssetLoader.Tooltipmanager.enabled = true;
 			}
-			//((ImageButton) caller)
-					//.setChecked(AssetLoader.Tooltipmanager.enabled);
 		} else if (caller == "settings") {
 			winOptions.setVisible(!winOptions.isVisible());
 			winSave.setVisible(false);
@@ -943,8 +825,6 @@ public class GameScreen implements Screen {
 				Gdx.app.debug("Barre", "Langue FR");
 				AssetLoader.language = AssetLoader.french;
 			}
-			//((ImageButton) caller).setChecked(AssetLoader.language.getLocale()
-				//	.getDisplayName().contains("français"));
 		} else if (caller == "stat") {
 		}
 	}
@@ -954,10 +834,10 @@ public class GameScreen implements Screen {
 		map.tempclear();
 		map.fillempty(53);
 		horizbar.unSelect();
-		hideInfo();
 		menu.setPageType(0,menuitem);		
 		nextpage.setDisabled(menu.isNextEmpty());
 		previouspage.setDisabled(true);
+		hideInfo();
 	}
 
 	public void showInfo(Transmuter transmuter) {

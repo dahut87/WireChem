@@ -76,10 +76,10 @@ public class HorizBarre extends Actor {
 				Barre[i++].addListener(new ClickListener() {
 					@Override
 					public void clicked(InputEvent event, float x, float y) {
-						onchanged();
 						if (selected==null)	selected = new Actor();
 						selected.setName(itemtocreate);
 						selected.setBounds(event.getListenerActor().getX(), event.getListenerActor().getY(), 64, 64);
+						onchanged();
 					}
 				});
 			}
