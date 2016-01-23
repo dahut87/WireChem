@@ -185,6 +185,16 @@ public class AssetLoader {
 				}
 			}
 		}
+		Gdx.app.debug("AssetLoader", "Ajout de la gestion des locales");
+		FileHandle baseFileHandle = Gdx.files.internal("i18n/messages/messages");
+		usa = I18NBundle.createBundle(baseFileHandle, new Locale("en"));
+		french = I18NBundle.createBundle(baseFileHandle, new Locale("fr"));
+		if (Preference.prefs.getBoolean("Language"))
+			language = french;
+		else
+			language = usa;
+		I18NBundle.setExceptionOnMissingKey(true);
+		Gdx.app.debug("AssetLoader", "Ajout des transmuters");	
 		allTransmuter = new Array<Transmuter>();
 		allTransmuter.add(new Positiver(null));
 		allTransmuter.add(new Positiver_I(null));
@@ -218,16 +228,6 @@ public class AssetLoader {
 		}
 		Gdx.app.debug("AssetLoader", "Ajout de la gestion des tooltips");
 		Tooltipmanager = new TooltipManager();
-		Gdx.app.debug("AssetLoader", "Ajout de la gestion des locales");
-		FileHandle baseFileHandle = Gdx.files
-				.internal("i18n/messages/messages");
-		usa = I18NBundle.createBundle(baseFileHandle, new Locale("en"));
-		french = I18NBundle.createBundle(baseFileHandle, new Locale("fr"));
-		if (Preference.prefs.getBoolean("Language"))
-			language = french;
-		else
-			language = usa;
-		I18NBundle.setExceptionOnMissingKey(true);
 		Gdx.app.debug("AssetLoader", "Mise en place de la base de donnée");
 		Datahandler = new DatabaseManager();
 		Datahandler.RegisterBackend(LocalBase.class);
@@ -257,7 +257,7 @@ public class AssetLoader {
 
 	public static Transmuter getTransmuter(String Name) {
 		for (Transmuter transmuter : allTransmuter) {
-			if (transmuter.isTransmuter(Name))
+			if (transmuter.getID()==Name)
 				return transmuter;
 		}
 		return null;

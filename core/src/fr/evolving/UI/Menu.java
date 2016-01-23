@@ -93,7 +93,6 @@ public class Menu extends Actor {
 		this.addListener(new ClickListener() {
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
-				Gdx.app.debug("treetree", "xy"+x+","+y);
 				Vector2 coords = screentoworld(x, y);
 				MapProperties tile = getMenubyTile((int) coords.x,
 						(int) coords.y);
@@ -236,23 +235,23 @@ public class Menu extends Actor {
 			this.setMenuTile(0, 5, 77, "transmuter_eraser",0);
 			this.setMenuTile(2, 5, 78, "all_eraser",0);
 			this.setMenuTile(3, 3, 79, "cleaner",0);
-			this.setMenuTransmuter(0, 7, "Positiveur I", Angular.A00,0);
-			this.setMenuTransmuter(2, 7, "Negativeur I", Angular.A00,0);
-			this.setMenuTransmuter(0, 6, "Positiveur II", Angular.A00,0);
-			this.setMenuTransmuter(2, 6, "Negativeur II", Angular.A00,0);
-			this.setMenuTransmuter(0, 5, "Positiveur III", Angular.A00,0);
-			this.setMenuTransmuter(1, 5, "Negativeur III", Angular.A00,0);
-			this.setMenuTransmuter(0, 4, "Inverseur I", Angular.A00,0);
-			this.setMenuTransmuter(1, 4, "Inverseur II", Angular.A00,0);
-			this.setMenuTransmuter(0, 3, "Neutraliseur I", Angular.A00,0);
-			this.setMenuTransmuter(1, 3, "Neutraliseur II", Angular.A00,0);
-			this.setMenuTransmuter(0, 7, "Antiretour", Angular.A00,0);
-			this.setMenuTransmuter(1, 6, "Distributeur", Angular.A00,1);
-			this.setMenuTransmuter(1, 4, "Insufleur 33%", Angular.A00,0);			
-			this.setMenuTransmuter(1, 1, "Insufleur 50%", Angular.A00,0);		
-			this.setMenuTransmuter(1, 2, "Insufleur 100%", Angular.A00,1);		
-			this.setMenuTransmuter(0, 7, "Positiveur non activable",Angular.A00,0);
-			this.setMenuTransmuter(1, 7, "Negativeur non activable",Angular.A00,0);
+			this.setMenuTransmuter(0, 7, "+", Angular.A00,0);
+			this.setMenuTransmuter(2, 7, "-", Angular.A00,0);
+			this.setMenuTransmuter(0, 6, "++", Angular.A00,0);
+			this.setMenuTransmuter(2, 6, "--", Angular.A00,0);
+			this.setMenuTransmuter(0, 5, "+++", Angular.A00,0);
+			this.setMenuTransmuter(1, 5, "---", Angular.A00,0);
+			this.setMenuTransmuter(0, 4, "+-", Angular.A00,0);
+			this.setMenuTransmuter(1, 4, "+-+-", Angular.A00,0);
+			this.setMenuTransmuter(0, 3, "0", Angular.A00,0);
+			this.setMenuTransmuter(1, 3, "00", Angular.A00,0);
+			this.setMenuTransmuter(0, 7, ">", Angular.A00,0);
+			this.setMenuTransmuter(1, 6, "<>", Angular.A00,1);
+			this.setMenuTransmuter(1, 4, ">33", Angular.A00,0);			
+			this.setMenuTransmuter(1, 1, ">50", Angular.A00,0);		
+			this.setMenuTransmuter(1, 2, ">100", Angular.A00,1);		
+			this.setMenuTransmuter(0, 7, "+/",Angular.A00,0);
+			this.setMenuTransmuter(1, 7, "-/",Angular.A00,0);
 	}
 
 	public void clear() {

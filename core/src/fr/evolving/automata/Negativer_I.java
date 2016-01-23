@@ -6,6 +6,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.ObjectMap.Values;
 import com.badlogic.gdx.utils.OrderedMap;
 
+import fr.evolving.assets.AssetLoader;
 import fr.evolving.automata.Transmuter.Class;
 
 public class Negativer_I extends Transmuter {
@@ -34,20 +35,22 @@ public class Negativer_I extends Transmuter {
 	private static boolean Activable;
 	private int ActivationLevel;
 	private int Rotation;
+	private String id;
 	private static OrderedMap<Vector2, CaseType> Tilestype;
 	private static OrderedMap<Vector2, Integer> Tilesid;
 
 	public Negativer_I(Level level) {
 		super(level);
-		this.Name = "Negativeur I";
-		this.Desc = "Negativeur de degré 1 avec...blabla avec...blabla avec avecave aveca vecavec avec avec avec avecavecavecavec avec avecavecavec avec avecavecavecavec avec";
+		this.id="-";
+		this.Name = AssetLoader.language.get("[negativeri-name]");
+		this.Desc = AssetLoader.language.get("[negativeri-desc]");
 		this.theClass = Class.Charge;
 		this.Price = 50;
-		this.Technology = 2;
+		this.Technology = 4;
 		this.Research = 0;
 		this.Upgrade = new Negativer_II(level);
 		this.Unlock = null;
-		this.showed = true;
+		this.showed = false;
 		this.CanUpgradeTemp = true;
 		this.CanUpgradeCycle = true;
 		this.CanUpgradeRayon = false;
@@ -74,6 +77,10 @@ public class Negativer_I extends Transmuter {
 
 	public String getName() {
 		return this.Name;
+	}
+	
+	public String getID() {
+		return this.id;
 	}
 
 	public String getDesc() {

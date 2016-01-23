@@ -6,6 +6,8 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.ObjectMap.Values;
 import com.badlogic.gdx.utils.OrderedMap;
 
+import fr.evolving.assets.AssetLoader;
+
 public class Positiver_III extends Transmuter {
 	private static String Name, Desc;
 	private static Class theClass;
@@ -32,20 +34,22 @@ public class Positiver_III extends Transmuter {
 	private static boolean Activable;
 	private int ActivationLevel;
 	private int Rotation;
+	private String id;
 	private static OrderedMap<Vector2, CaseType> Tilestype;
 	private static OrderedMap<Vector2, Integer> Tilesid;
 
 	public Positiver_III(Level level) {
 		super(level);
-		this.Name = "Positiveur III";
-		this.Desc = "Positiveur de degré 3 avec...blabla avec...blabla avec avecave aveca vecavec avec avec avec avecavecavecavec avec avecavecavec avec avecavecavecavec avec";
+		this.id="+++";
+		this.Name = AssetLoader.language.get("[positiveriii-name]");
+		this.Desc = AssetLoader.language.get("[positiveriii-desc]");
 		this.theClass = Class.Charge;
-		this.Price = 50;
+		this.Price = 150;
 		this.Technology = 2;
-		this.Research = 0;
+		this.Research = 120;
 		this.Upgrade = null;
 		this.Unlock = null;
-		this.showed = true;
+		this.showed = false;
 		this.CanUpgradeTemp = true;
 		this.CanUpgradeCycle = true;
 		this.CanUpgradeRayon = false;
@@ -54,7 +58,7 @@ public class Positiver_III extends Transmuter {
 		this.UpgradedCycle = 1f;
 		this.UpgradedRayon = 1f;
 		this.UpgradedNrj = 1f;
-		this.UsedTemp = 0.5f;
+		this.UsedTemp = 0.2f;
 		this.UsedRayon = 0f;
 		this.UsedNrj = 0f;
 		this.TurnTemp = 0f;
@@ -70,6 +74,10 @@ public class Positiver_III extends Transmuter {
 
 	public String getName() {
 		return this.Name;
+	}
+	
+	public String getID() {
+		return this.id;
 	}
 
 	public String getDesc() {

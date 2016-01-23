@@ -8,14 +8,32 @@ import com.badlogic.gdx.utils.ObjectMap.Entry;
 import com.badlogic.gdx.utils.ObjectMap.Values;
 import com.badlogic.gdx.utils.OrderedMap;
 
+import fr.evolving.assets.AssetLoader;
+
 public abstract class Transmuter implements Cloneable, Serializable {
 	public enum CaseType {
 		Rien, Cuivre_seul, Fibre_seul, Cuivre, Fibre, Tout, Nimporte
 	};
 
 	public enum Class {
-		Structure, Charge, Direction, Filtrage, Synthese, Detection, Divers, Scenario
-	};
+		Structure("[class-structure]"),
+		Charge("[class-charge]"),
+		Direction("[class-direction]"), 
+		Filtrage("[class-filtrage]"), 
+		Synthese("[class-synthese]"), 
+		Detection("[class-detection]"), 
+		Divers("[class-divers]"), 
+		Scenario("[class-scenario]");
+		
+		private final String text;
+		private Class(final String text) {
+			this.text = text;
+		}
+		@Override
+		public String toString() {
+				return AssetLoader.language.get(text);
+		}
+	}
 
 	public enum Angular {
 		A00, A90, A180, A270
@@ -30,6 +48,10 @@ public abstract class Transmuter implements Cloneable, Serializable {
 	}
 
 	public String getName() {
+		return "";
+	}
+	
+	public String getID() {
 		return "";
 	}
 

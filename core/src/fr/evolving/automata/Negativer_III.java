@@ -6,6 +6,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.ObjectMap.Values;
 import com.badlogic.gdx.utils.OrderedMap;
 
+import fr.evolving.assets.AssetLoader;
 import fr.evolving.automata.Transmuter.Class;
 
 public class Negativer_III extends Transmuter {
@@ -34,20 +35,22 @@ public class Negativer_III extends Transmuter {
 	private static boolean Activable;
 	private int ActivationLevel;
 	private int Rotation;
+	private String id;
 	private static OrderedMap<Vector2, CaseType> Tilestype;
 	private static OrderedMap<Vector2, Integer> Tilesid;
 
 	public Negativer_III(Level level) {
 		super(level);
-		this.Name = "Negativeur III";
-		this.Desc = "Negativeur de degré 3 avec...blabla avec...blabla avec avecave aveca vecavec avec avec avec avecavecavecavec avec avecavecavec avec avecavecavecavec avec";
+		this.id="---";
+		this.Name = AssetLoader.language.get("[negativeriii-name]");
+		this.Desc = AssetLoader.language.get("[negativeriii-desc]");
 		this.theClass = Class.Charge;
-		this.Price = 50;
-		this.Technology = 2;
-		this.Research = 0;
+		this.Price = 150;
+		this.Technology = 4;
+		this.Research = 120;
 		this.Upgrade = null;
 		this.Unlock = null;
-		this.showed = true;
+		this.showed = false;
 		this.CanUpgradeTemp = true;
 		this.CanUpgradeCycle = true;
 		this.CanUpgradeRayon = false;
@@ -65,7 +68,6 @@ public class Negativer_III extends Transmuter {
 		this.Activable = true;
 		this.ActivationLevel = 0;
 		this.Tilestype = new OrderedMap<Vector2, CaseType>();
-		this.Tilestype = new OrderedMap<Vector2, CaseType>();
 		this.Tilestype.put(new Vector2(0, 0), CaseType.Tout);
 		this.Tilesid = new OrderedMap<Vector2, Integer>();
 		this.Tilesid.put(new Vector2(0, 0), 103);
@@ -73,6 +75,10 @@ public class Negativer_III extends Transmuter {
 
 	public String getName() {
 		return this.Name;
+	}
+	
+	public String getID() {
+		return this.id;
 	}
 
 	public String getDesc() {

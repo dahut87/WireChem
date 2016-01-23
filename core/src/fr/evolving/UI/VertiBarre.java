@@ -32,7 +32,7 @@ public class VertiBarre extends Actor {
 		Gdx.app.debug(getClass().getSimpleName(), "Menu:" + Barre.length+ " elements");
 		for (int i = 0; i < Barre.length; i++)
 		{
-			Barre[i] = new ImageTextButton(AssetLoader.language.get(Transmuter.Class.values()[i].toString()), AssetLoader.Skin_level);
+			Barre[i] = new ImageTextButton(Transmuter.Class.values()[i].toString(), AssetLoader.Skin_level);
 			table.addActor(Barre[i]);
 			buttonGroup.add(Barre[i]);
 			Barre[i].setName(String.valueOf(i));

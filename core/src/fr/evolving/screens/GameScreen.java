@@ -299,32 +299,32 @@ public class GameScreen implements Screen {
 		info_activation.setSize(48, 48);
 		info_activation.setPosition(1440, AssetLoader.height - 775);
 		info_up_cycleval = new ImageButton(AssetLoader.Skin_level,"info_cycleval");
-		info_up_cycleval.setPosition(1819, AssetLoader.height - 765);
+		info_up_cycleval.setPosition(1775, AssetLoader.height - 855);
 		info_up_tempval = new ImageButton(AssetLoader.Skin_level,"info_tempval");
-		info_up_tempval.setPosition(1819, AssetLoader.height - 832);
+		info_up_tempval.setPosition(1775, AssetLoader.height - 925);
 		info_up_rayonval = new ImageButton(AssetLoader.Skin_level,"info_rayonval");
-		info_up_rayonval.setPosition(1819, AssetLoader.height - 900);
+		info_up_rayonval.setPosition(1850, AssetLoader.height - 855);
 		info_up_nrjval = new ImageButton(AssetLoader.Skin_level, "info_nrjval");
-		info_up_nrjval.setPosition(1819, AssetLoader.height - 967);
+		info_up_nrjval.setPosition(1850, AssetLoader.height - 925);
 		info_up_cycle = new ImageButton(AssetLoader.Skin_level, "info_cycle");
 		info_up_cycle.setSize(32, 32);
-		info_up_cycle.setPosition(1835, AssetLoader.height - 747);
+		info_up_cycle.setPosition(1790, AssetLoader.height - 839);
 		info_up_temp = new ImageButton(AssetLoader.Skin_level, "info_temp");
 		info_up_temp.setSize(32, 32);
-		info_up_temp.setPosition(1837, AssetLoader.height - 816);
+		info_up_temp.setPosition(1792, AssetLoader.height - 910);
 		info_up_rayon = new ImageButton(AssetLoader.Skin_level, "info_rayon");
 		info_up_rayon.setSize(32, 32);
-		info_up_rayon.setPosition(1835, AssetLoader.height - 884);
+		info_up_rayon.setPosition(1866, AssetLoader.height - 839);
 		info_up_nrj = new ImageButton(AssetLoader.Skin_level, "info_nrj");
 		info_up_nrj.setSize(32, 32);
-		info_up_nrj.setPosition(1835, AssetLoader.height - 950);
+		info_up_nrj.setPosition(1865, AssetLoader.height - 910);
 		info_nom = new Label("Unknow", AssetLoader.Skin_level, "info_nom");
 		info_nom.setPosition(1230, AssetLoader.height - 710);
 		info_desc = new TextArea("Description Description Description Description Description Description Description Description Description Description Description Description Description Description Description Description Description Description Description Description Description Description Description Description Description Description Description Description Description Description Description Description",
 				AssetLoader.Skin_level, "info_desc");
-		info_desc.setBounds(1220, AssetLoader.height - 965, 575, 150);
+		info_desc.setBounds(1220, AssetLoader.height - 965, 560, 150);
 		info_up=new ImageButton(AssetLoader.Skin_level,"evolution");
-		info_up.setPosition(1375, AssetLoader.height - 720);
+		info_up.setPosition(1450, AssetLoader.height - 720);
 		info_up.addListener(new ClickListener() {
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
@@ -818,7 +818,7 @@ public class GameScreen implements Screen {
 		info_up_cycleval.getStyle().up = new TextureRegionDrawable(
 				AssetLoader.Atlas_level.findRegion("jauge"
 						+ transmuter.getUpgradeCycle()));
-		info_up_cycleval.setColor(AssetLoader.Levelcolors[0]);
+		info_up_cycleval.setColor(AssetLoader.Levelcolors[1]);
 		info_up_nrjval.getStyle().up = new TextureRegionDrawable(
 				AssetLoader.Atlas_level.findRegion("jauge"
 						+ transmuter.getUpgradeNrj()));
@@ -826,7 +826,7 @@ public class GameScreen implements Screen {
 		info_up_tempval.getStyle().up = new TextureRegionDrawable(
 				AssetLoader.Atlas_level.findRegion("jauge"
 						+ transmuter.getUpgradeTemp()));
-		info_up_tempval.setColor(AssetLoader.Levelcolors[1]);
+		info_up_tempval.setColor(AssetLoader.Levelcolors[2]);
 		info_up_rayonval.getStyle().up = new TextureRegionDrawable(
 				AssetLoader.Atlas_level.findRegion("jauge"
 						+ transmuter.getUpgradeRayon()));

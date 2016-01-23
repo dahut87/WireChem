@@ -6,6 +6,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.ObjectMap.Values;
 import com.badlogic.gdx.utils.OrderedMap;
 
+import fr.evolving.assets.AssetLoader;
 import fr.evolving.automata.Transmuter.Class;
 
 public class Negativer extends Transmuter {
@@ -34,22 +35,24 @@ public class Negativer extends Transmuter {
 	private static boolean Activable;
 	private int ActivationLevel;
 	private int Rotation;
+	private String id;
 	private static OrderedMap<Vector2, CaseType> Tilestype;
 	private static OrderedMap<Vector2, Integer> Tilesid;
 
 	public Negativer(Level level) {
 		super(level);
-		this.Name = "Negativeur non activable";
-		this.Desc = "Negativeur avec...blabla avec...blabla avec avecave aveca vecavec avec avec avec avecavecavecavec avec avecavecavec avec avecavecavecavec avec";
+		this.id="-/";
+		this.Name = AssetLoader.language.get("[negativer-name]");
+		this.Desc = AssetLoader.language.get("[negativer-desc]");
 		this.theClass = Class.Scenario;
-		this.Price = 50;
-		this.Technology = 2;
+		this.Price = 0;
+		this.Technology = 0;
 		this.Research = 0;
 		this.Upgrade = null;
 		this.Unlock = null;
 		this.showed = true;
-		this.CanUpgradeTemp = true;
-		this.CanUpgradeCycle = true;
+		this.CanUpgradeTemp = false;
+		this.CanUpgradeCycle = false;
 		this.CanUpgradeRayon = false;
 		this.CanUpgradeNrj = false;
 		this.UpgradedTemp = 1f;
@@ -62,7 +65,7 @@ public class Negativer extends Transmuter {
 		this.TurnTemp = 0f;
 		this.TurnRayon = 0f;
 		this.TurnNrj = 0f;
-		this.Activable = true;
+		this.Activable = false;
 		this.ActivationLevel = 0;
 		this.Tilestype = new OrderedMap<Vector2, CaseType>();
 		this.Tilestype.put(new Vector2(0, 0), CaseType.Nimporte);
@@ -72,6 +75,10 @@ public class Negativer extends Transmuter {
 
 	public String getName() {
 		return this.Name;
+	}
+	
+	public String getID() {
+		return this.id;
 	}
 
 	public String getDesc() {
@@ -144,9 +151,9 @@ public class Negativer extends Transmuter {
 
 	public OrderedMap<Vector2, Integer> getTilesidrotated() {
 		OrderedMap<Vector2, Integer> newTiles = new OrderedMap<Vector2, Integer>();
-		Iterator<Vector2> keySetIterator = this.Tilesid.keys();
-		while (keySetIterator.hasNext()) {
-			Vector2 key = keySetIterator.next();
+		Iterator<Vector2> tiles = this.Tilesid.keys();
+		while (tiles.hasNext()) {
+			Vector2 key = tiles.next();
 			double delta = key.len();
 			double alpha = key.angleRad() + this.getRotation().ordinal()
 					* Math.PI / 2;

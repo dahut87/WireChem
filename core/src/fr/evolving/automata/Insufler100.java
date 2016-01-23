@@ -6,6 +6,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.ObjectMap.Values;
 import com.badlogic.gdx.utils.OrderedMap;
 
+import fr.evolving.assets.AssetLoader;
 import fr.evolving.automata.Transmuter.Class;
 
 public class Insufler100 extends Transmuter {
@@ -34,35 +35,37 @@ public class Insufler100 extends Transmuter {
 	private static boolean Activable;
 	private int ActivationLevel;
 	private int Rotation;
+	private String id;
 	private static OrderedMap<Vector2, CaseType> Tilestype;
 	private static OrderedMap<Vector2, Integer> Tilesid;
 
 	public Insufler100(Level level) {
 		super(level);
-		this.Name = "Insufleur 100%";
-		this.Desc = "Insufleur blabla avec avecave aveca vecavec avec avec avec avecavecavecavec avec avecavecavec avec avecavecavecavec avec";
+		this.id=">100";
+		this.Name = AssetLoader.language.get("[insufler100-name]");
+		this.Desc = AssetLoader.language.get("[insufler100-desc]");
 		this.theClass = Class.Direction;
-		this.Price = 50;
-		this.Technology = 2;
-		this.Research = 0;
-		this.Upgrade = new Positiver_II(level);
+		this.Price = 200;
+		this.Technology = 3;
+		this.Research = 350;
+		this.Upgrade = null;
 		this.Unlock = null;
-		this.showed = true;
+		this.showed = false;
 		this.CanUpgradeTemp = true;
-		this.CanUpgradeCycle = true;
+		this.CanUpgradeCycle = false;
 		this.CanUpgradeRayon = false;
 		this.CanUpgradeNrj = false;
 		this.UpgradedTemp = 1f;
 		this.UpgradedCycle = 1f;
 		this.UpgradedRayon = 1f;
 		this.UpgradedNrj = 1f;
-		this.UsedTemp = 0.5f;
+		this.UsedTemp = 0.1f;
 		this.UsedRayon = 0f;
 		this.UsedNrj = 0f;
 		this.TurnTemp = 0f;
 		this.TurnRayon = 0f;
 		this.TurnNrj = 0f;
-		this.Activable = true;
+		this.Activable = false;
 		this.ActivationLevel = 0;
 		this.Tilestype = new OrderedMap<Vector2, CaseType>();
 		this.Tilestype.put(new Vector2(-1, 1), CaseType.Cuivre);
@@ -89,7 +92,11 @@ public class Insufler100 extends Transmuter {
 	public String getName() {
 		return this.Name;
 	}
-
+	
+	public String getID() {
+		return this.id;
+	}
+	
 	public String getDesc() {
 		return this.Desc;
 	}

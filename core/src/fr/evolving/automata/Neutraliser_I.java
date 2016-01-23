@@ -6,6 +6,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.ObjectMap.Values;
 import com.badlogic.gdx.utils.OrderedMap;
 
+import fr.evolving.assets.AssetLoader;
 import fr.evolving.automata.Transmuter.Class;
 
 public class Neutraliser_I extends Transmuter {
@@ -34,22 +35,24 @@ public class Neutraliser_I extends Transmuter {
 	private static boolean Activable;
 	private int ActivationLevel;
 	private int Rotation;
+	private String id;
 	private static OrderedMap<Vector2, CaseType> Tilestype;
 	private static OrderedMap<Vector2, Integer> Tilesid;
 
 	public Neutraliser_I(Level level) {
 		super(level);
-		this.Name = "Neutraliseur I";
-		this.Desc = "Neutraliseur de degré 1 avec...blabla avec...blabla avec avecave aveca vecavec avec avec avec avecavecavecavec avec avecavecavec avec avecavecavecavec avec";
+		this.id="0";
+		this.Name = AssetLoader.language.get("[neutraliseri-name]");
+		this.Desc = AssetLoader.language.get("[neutraliseri-desc]");
 		this.theClass = Class.Charge;
-		this.Price = 50;
-		this.Technology = 2;
+		this.Price = 20;
+		this.Technology = 4;
 		this.Research = 0;
-		this.Upgrade = new Neutraliser_II(level);
+		this.Upgrade = null;
 		this.Unlock = null;
-		this.showed = true;
+		this.showed = false;
 		this.CanUpgradeTemp = true;
-		this.CanUpgradeCycle = true;
+		this.CanUpgradeCycle = false;
 		this.CanUpgradeRayon = false;
 		this.CanUpgradeNrj = false;
 		this.UpgradedTemp = 1f;
@@ -62,7 +65,7 @@ public class Neutraliser_I extends Transmuter {
 		this.TurnTemp = 0f;
 		this.TurnRayon = 0f;
 		this.TurnNrj = 0f;
-		this.Activable = true;
+		this.Activable = false;
 		this.ActivationLevel = 0;
 		this.Tilestype = new OrderedMap<Vector2, CaseType>();
 		this.Tilestype.put(new Vector2(0, 0), CaseType.Cuivre_seul);
@@ -72,6 +75,10 @@ public class Neutraliser_I extends Transmuter {
 
 	public String getName() {
 		return this.Name;
+	}
+	
+	public String getID() {
+		return this.id;
 	}
 
 	public String getDesc() {
