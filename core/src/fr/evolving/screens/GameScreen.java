@@ -58,6 +58,7 @@ import fr.evolving.UI.HorizBarre;
 import fr.evolving.UI.Menu;
 import fr.evolving.UI.Objectives;
 import fr.evolving.UI.TouchMaptiles;
+import fr.evolving.UI.VertiBarre;
 import fr.evolving.UI.WarnDialog;
 import fr.evolving.assets.AssetLoader;
 import fr.evolving.assets.Preference;
@@ -73,7 +74,6 @@ public class GameScreen implements Screen {
 	private Array<InputProcessor> processors;
 	private WarnDialog dialog;
 	private Stage stage, stage_info, stage_tooltip;
-	private VerticalGroup table2;
 	private GameRenderer Renderer;
 	private float runTime;
 	public Level level;
@@ -91,7 +91,6 @@ public class GameScreen implements Screen {
 			info_up_cycleval, nextpage, previouspage;
 	private ImageTextButton cycle, temp, nrj, rayon, cout, tech, research,
 			info_cout, info_tech, info_research, info_activation;
-	private ImageTextButton[] Barre2;
 	String[] tocreate = { "run", "stop", "speed", "separator", "move#", "zoomp#",
 			"zoomm#", "infos#", "separator", "raz", "save", "levels", "tree",
 			"exits", "separator", "screen", "sound", "tuto", "settings",
@@ -101,6 +100,7 @@ public class GameScreen implements Screen {
 	public TouchMaptiles map;
 	private Menu menu;
 	private HorizBarre horizbar;
+	private VertiBarre vertibar;	
 	private float oldx, oldy;
 	private Label fpsLabel, info_nom;
 	private TextArea info_desc, tooltip;
@@ -228,13 +228,8 @@ public class GameScreen implements Screen {
 				map.setSelected(getselected());
 			}
 		});
-		table2 = new VerticalGroup();
-		table2.setPosition(AssetLoader.width, AssetLoader.height - 375);
-		table2.right();
-		table2.space(10f);
-		Gdx.app.debug(
-				getClass().getSimpleName(),
-				"Création des elements primordiaux du screen (stage, renderer, table, level, world)");
+		vertibar=new VertiBarre();
+		Gdx.app.debug(getClass().getSimpleName(),"Création des elements primordiaux du screen (stage, renderer, table, level, world)");
 		fpsLabel = new Label("0 FPS", AssetLoader.Skin_level, "FPS");
 		fpsLabel.setPosition(AssetLoader.width - 75, AssetLoader.height - 220);
 		multiplexer = new InputMultiplexer();
@@ -247,57 +242,29 @@ public class GameScreen implements Screen {
 		unroll = false;
 		Renderer = new GameRenderer(this);
 		Gdx.app.debug(getClass().getSimpleName(), "Création des barres");
-		tooltip = new TextArea("tooltip:x\r\n tooltip:y",
-				AssetLoader.Skin_level, "info_tooltip");
+		tooltip = new TextArea("tooltip:x\r\n tooltip:y",AssetLoader.Skin_level, "info_tooltip");
 		tooltip.setBounds(541, 27, 100, 50);
-		Barre2 = new ImageTextButton[Transmuter.Class.values().length];
-		Gdx.app.debug(getClass().getSimpleName(), "Menu:" + Barre2.length
-				+ " elements");
-		for (int i = 0; i < Barre2.length; i++) {
-			Barre2[i] = new ImageTextButton(
-					AssetLoader.language.get(Transmuter.Class.values()[i]
-							.toString()), AssetLoader.Skin_level);
-			Barre2[i].setName(String.valueOf(i));
-			Barre2[i].addListener(new ClickListener() {
-				@Override
-				public void clicked(InputEvent event, float x, float y) {
-					int caller = Integer.parseInt(event.getListenerActor()
-							.getName());
-					Gdx.app.debug("Barre2", "Selection dans la Barre droite:"
-							+ caller);
-					preparemenu(caller);
-				}
-			});
-		}
-
 		Gdx.app.debug(getClass().getSimpleName(),
 				"Création de la barre de gestion du haut");
-		cycle = new ImageTextButton(String.valueOf(level.Cycle),
-				AssetLoader.Skin_level, "cycle2");
+		cycle = new ImageTextButton(String.valueOf(level.Cycle),AssetLoader.Skin_level, "cycle2");
 		cycle.setVisible(level.aWorld>=1);
 		cycle.setPosition(10, AssetLoader.height - 74);
-		temp = new ImageTextButton(String.valueOf(level.Temp),
-				AssetLoader.Skin_level, "temp2");
+		temp = new ImageTextButton(String.valueOf(level.Temp),AssetLoader.Skin_level, "temp2");
 		temp.setVisible(level.aWorld>=2);
 		temp.setPosition(210, AssetLoader.height - 74);
-		rayon = new ImageTextButton(String.valueOf(level.Rayon),
-				AssetLoader.Skin_level, "rayon2");
+		rayon = new ImageTextButton(String.valueOf(level.Rayon),AssetLoader.Skin_level, "rayon2");
 		rayon.setVisible(level.aWorld>=3);
 		rayon.setPosition(410, AssetLoader.height - 74);
-		nrj = new ImageTextButton(String.valueOf(level.Nrj),
-				AssetLoader.Skin_level, "nrj2");
+		nrj = new ImageTextButton(String.valueOf(level.Nrj),AssetLoader.Skin_level, "nrj2");
 		nrj.setVisible(level.aWorld>=4);
 		nrj.setPosition(610, AssetLoader.height - 74);
-		tech = new ImageTextButton(String.valueOf(level.Tech),
-				AssetLoader.Skin_level, "tech2");
+		tech = new ImageTextButton(String.valueOf(level.Tech),AssetLoader.Skin_level, "tech2");
 		tech.setPosition(1345, AssetLoader.height - 74);
 		tech.setVisible(level.Tech==1);
-		cout = new ImageTextButton(String.valueOf(level.Cout),
-				AssetLoader.Skin_level, "cout2");
+		cout = new ImageTextButton(String.valueOf(level.Cout),AssetLoader.Skin_level, "cout2");
 		cout.setVisible(level.Cout>0);
 		cout.setPosition(1445, AssetLoader.height - 74);
-		research = new ImageTextButton(String.valueOf(0),
-				AssetLoader.Skin_level, "research2");
+		research = new ImageTextButton(String.valueOf(0),AssetLoader.Skin_level, "research2");
 		research.setPosition(1545, AssetLoader.height - 74);
 		research.setVisible(level.Special || level.aWorld>0);
 		objectives = new Objectives();
@@ -309,8 +276,7 @@ public class GameScreen implements Screen {
 		buttonlevel.addListener(new ClickListener() {
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
-				Gdx.app.debug(getClass().getSimpleName(),
-						"Remise à zéro du monde");
+				Gdx.app.debug(getClass().getSimpleName(),"Remise à zéro du monde");
 				GameScreen.this.level.Grid = GameScreen.this.level.Grid_orig;
 				level.Grid.tiling_copper();
 				level.Grid.tiling_transmuter();
@@ -320,30 +286,23 @@ public class GameScreen implements Screen {
 		});
 		Gdx.app.debug(getClass().getSimpleName(),
 				"Création de la barre d'information");
-		info_tech = new ImageTextButton("0", AssetLoader.Skin_level,
-				"info_tech");
+		info_tech = new ImageTextButton("0", AssetLoader.Skin_level,"info_tech");
 		info_tech.setSize(48, 48);
 		info_tech.setPosition(1200, AssetLoader.height - 775);
-		info_cout = new ImageTextButton("0", AssetLoader.Skin_level,
-				"info_cout");
+		info_cout = new ImageTextButton("0", AssetLoader.Skin_level,"info_cout");
 		info_cout.setSize(48, 48);
 		info_cout.setPosition(1280, AssetLoader.height - 775);
-		info_research = new ImageTextButton("0", AssetLoader.Skin_level,
-				"info_research");
+		info_research = new ImageTextButton("0", AssetLoader.Skin_level,"info_research");
 		info_research.setSize(48, 48);
 		info_research.setPosition(1360, AssetLoader.height - 775);
-		info_activation = new ImageTextButton("0", AssetLoader.Skin_level,
-				"info_activation");
+		info_activation = new ImageTextButton("0", AssetLoader.Skin_level,"info_activation");
 		info_activation.setSize(48, 48);
 		info_activation.setPosition(1440, AssetLoader.height - 775);
-		info_up_cycleval = new ImageButton(AssetLoader.Skin_level,
-				"info_cycleval");
+		info_up_cycleval = new ImageButton(AssetLoader.Skin_level,"info_cycleval");
 		info_up_cycleval.setPosition(1819, AssetLoader.height - 765);
-		info_up_tempval = new ImageButton(AssetLoader.Skin_level,
-				"info_tempval");
+		info_up_tempval = new ImageButton(AssetLoader.Skin_level,"info_tempval");
 		info_up_tempval.setPosition(1819, AssetLoader.height - 832);
-		info_up_rayonval = new ImageButton(AssetLoader.Skin_level,
-				"info_rayonval");
+		info_up_rayonval = new ImageButton(AssetLoader.Skin_level,"info_rayonval");
 		info_up_rayonval.setPosition(1819, AssetLoader.height - 900);
 		info_up_nrjval = new ImageButton(AssetLoader.Skin_level, "info_nrjval");
 		info_up_nrjval.setPosition(1819, AssetLoader.height - 967);
@@ -361,8 +320,7 @@ public class GameScreen implements Screen {
 		info_up_nrj.setPosition(1835, AssetLoader.height - 950);
 		info_nom = new Label("Unknow", AssetLoader.Skin_level, "info_nom");
 		info_nom.setPosition(1230, AssetLoader.height - 710);
-		info_desc = new TextArea(
-				"Description Description Description Description Description Description Description Description Description Description Description Description Description Description Description Description Description Description Description Description Description Description Description Description Description Description Description Description Description Description Description Description",
+		info_desc = new TextArea("Description Description Description Description Description Description Description Description Description Description Description Description Description Description Description Description Description Description Description Description Description Description Description Description Description Description Description Description Description Description Description Description",
 				AssetLoader.Skin_level, "info_desc");
 		info_desc.setBounds(1220, AssetLoader.height - 965, 575, 150);
 		info_up=new ImageButton(AssetLoader.Skin_level,"evolution");
@@ -519,9 +477,7 @@ public class GameScreen implements Screen {
 						+ level.Grid.GetXY(x, y).Transmuter_movey + " coords:"
 						+ (x + level.Grid.GetXY(x, y).Transmuter_movex) + "x"
 						+ (y + level.Grid.GetXY(x, y).Transmuter_movey));
-				Gdx.app.debug(
-						"map",
-						level.Grid.getTransmuter(
+				Gdx.app.debug("map",level.Grid.getTransmuter(
 								x + level.Grid.GetXY(x, y).Transmuter_movex,
 								y + level.Grid.GetXY(x, y).Transmuter_movey)
 								.getInformations());
@@ -553,8 +509,7 @@ public class GameScreen implements Screen {
 			int button, calling call) {
 		if (oldx != 0 && oldy != 0) {
 			map.setDec(realx - oldx, realy - oldy);
-			Gdx.app.debug("map", "Decalage absolue en pixel:" + (realx - oldx)
-					+ "x" + (realy - oldy));
+			Gdx.app.debug("map", "Decalage absolue en pixel:" + (realx - oldx)+ "x" + (realy - oldy));
 		}
 		oldx = realx;
 		oldy = realy;
@@ -697,8 +652,6 @@ public class GameScreen implements Screen {
 		Table Savetable = Createsaving();
 		stage.addActor(winSave);
 		Gdx.app.log("*****", "Affichage du niveau.");
-		for (int i = 0; i < Barre2.length; i++)
-			table2.addActor(Barre2[i]);
 		stage_info.addActor(info_tech);
 		stage_info.addActor(info_research);
 		stage_info.addActor(info_activation);
@@ -716,6 +669,7 @@ public class GameScreen implements Screen {
 		stage_info.addActor(info_desc);
 		//stage_tooltip.addActor(tooltip);
 		stage.addActor(horizbar);
+		stage.addActor(vertibar);
 		stage.addActor(nextpage);
 		stage.addActor(previouspage);		
 		stage.addActor(objectives);
@@ -726,13 +680,11 @@ public class GameScreen implements Screen {
 			stage.addActor(fpsLabel);
 		stage.addActor(temp);
 		stage.addActor(cycle);
-		stage.addActor(table2);
 		stage.addActor(tech);
 		stage.addActor(cout);
 		stage.addActor(research);
 		stage.addActor(menu);
 		gesturedetector=new GestureDetector(map);
-		
 		//processors.add(stage_tooltip);
 		processors.add(stage_info);
 		processors.add(stage);
@@ -831,7 +783,6 @@ public class GameScreen implements Screen {
 	}
 
 	public void preparemenu(int menuitem) {
-		checkMenu(menuitem, true);
 		map.tempclear();
 		map.fillempty(53);
 		horizbar.unSelect();
@@ -884,12 +835,6 @@ public class GameScreen implements Screen {
 
 	public void hideInfo() {
 		unroll = false;
-	}
-
-	public void checkMenu(int menu, boolean check) {
-		for (int i = 0; i < Barre2.length; i++)
-			Barre2[i].setChecked(false);
-		Barre2[menu].setChecked(true);
 	}
 
 	@Override
@@ -968,21 +913,16 @@ public class GameScreen implements Screen {
 		Setflag.setChecked(Preference.prefs.getBoolean("Language"));
 		SetEffectvolume.setValue(Preference.prefs.getFloat("Effect"));
 		SetMusicvolume.setValue(Preference.prefs.getFloat("Music"));
-		selResolution.setSelectedIndex(Preference.prefs
-				.getInteger("Resolution"));
-		selAdaptscreen.setSelectedIndex(Preference.prefs
-				.getInteger("Adaptation"));
+		selResolution.setSelectedIndex(Preference.prefs.getInteger("Resolution"));
+		selAdaptscreen.setSelectedIndex(Preference.prefs.getInteger("Adaptation"));
 		selTexturequal.setSelectedIndex(Preference.prefs.getInteger("Quality"));
 		Setdebog.setChecked(Preference.prefs.getInteger("log") == Gdx.app.LOG_DEBUG);
 	}
 
 	public void writepref() {
-		Preference.prefs.putInteger("ResolutionX", selResolution.getSelected()
-				.getResolutionX());
-		Preference.prefs.putInteger("ResolutionY", selResolution.getSelected()
-				.getResolutionY());
-		Preference.prefs.putInteger("Resolution",
-				selResolution.getSelectedIndex());
+		Preference.prefs.putInteger("ResolutionX", selResolution.getSelected().getResolutionX());
+		Preference.prefs.putInteger("ResolutionY", selResolution.getSelected().getResolutionY());
+		Preference.prefs.putInteger("Resolution",  selResolution.getSelectedIndex());
 		Preference.prefs.putBoolean("Fullscreen", SetFullscreen.isChecked());
 		Preference.prefs.putBoolean("Sound", SetSound.isChecked());
 		Preference.prefs.putBoolean("Tutorial", Settuto.isChecked());
@@ -992,10 +932,8 @@ public class GameScreen implements Screen {
 		Preference.prefs.putBoolean("Language", Setflag.isChecked());
 		Preference.prefs.putFloat("Effect", SetEffectvolume.getValue());
 		Preference.prefs.putFloat("Music", SetMusicvolume.getValue());
-		Preference.prefs.putInteger("Adaptation",
-				selAdaptscreen.getSelectedIndex());
-		Preference.prefs.putInteger("Quality",
-				selTexturequal.getSelectedIndex());
+		Preference.prefs.putInteger("Adaptation",selAdaptscreen.getSelectedIndex());
+		Preference.prefs.putInteger("Quality",selTexturequal.getSelectedIndex());
 		if (Setdebog.isChecked())
 			Preference.prefs.putInteger("log", Gdx.app.LOG_DEBUG);
 		else
@@ -1006,9 +944,7 @@ public class GameScreen implements Screen {
 	private Table SettingsOther() {
 		Table table = new Table();
 		table.pad(10, 10, 0, 10);
-		table.add(
-				new Label("Divers", AssetLoader.Skin_level, "Fluoxetine-25",
-						Color.ORANGE)).colspan(3);
+		table.add(new Label("Divers", AssetLoader.Skin_level, "Fluoxetine-25",Color.ORANGE)).colspan(3);
 		table.row();
 		table.columnDefaults(0).padRight(10);
 		table.columnDefaults(1).padRight(10);
@@ -1018,13 +954,10 @@ public class GameScreen implements Screen {
 		Setdebog = new CheckBox("Mode debugage", AssetLoader.Skin_ui);
 		table.add(Setdebog).left();
 		table.row();
-		Setrefresh = new CheckBox("Afficher le rafraichissement",
-				AssetLoader.Skin_ui);
+		Setrefresh = new CheckBox("Afficher le rafraichissement",AssetLoader.Skin_ui);
 		table.add(Setrefresh).left();
 		table.row();
-		table.add(
-				new Label("Choix de la langue", AssetLoader.Skin_ui,
-						"default-font", Color.WHITE)).left();
+		table.add(new Label("Choix de la langue", AssetLoader.Skin_ui,"default-font", Color.WHITE)).left();
 		Setflag = new ImageButton(AssetLoader.Skin_level, "Setflag");
 		table.add(Setflag);
 		table.row();
@@ -1034,20 +967,15 @@ public class GameScreen implements Screen {
 	private Table SettingsVideo() {
 		Table table = new Table();
 		table.pad(10, 10, 0, 10);
-		table.add(
-				new Label("Video", AssetLoader.Skin_level, "Fluoxetine-25",
-						Color.ORANGE)).colspan(3);
+		table.add(new Label("Video",AssetLoader.Skin_level, "Fluoxetine-25",Color.ORANGE)).colspan(3);
 		table.row();
 		table.columnDefaults(0).padRight(10);
 		table.columnDefaults(1).padRight(10);
 
-		SetVsynch = new CheckBox("Synchronisation verticale",
-				AssetLoader.Skin_ui);
+		SetVsynch = new CheckBox("Synchronisation verticale",AssetLoader.Skin_ui);
 		table.add(SetVsynch).left();
 		Table tablev1 = new Table();
-		tablev1.add(
-				new Label("Resolution:", AssetLoader.Skin_ui, "default-font",
-						Color.WHITE)).left().row();
+		tablev1.add(new Label("Resolution:", AssetLoader.Skin_ui, "default-font",Color.WHITE)).left().row();
 		selResolution = new SelectBox<resolutions>(AssetLoader.Skin_ui);
 		selResolution.setItems(resolutions.values());
 		tablev1.add(selResolution).left().row();
@@ -1057,9 +985,7 @@ public class GameScreen implements Screen {
 		SetFullscreen = new CheckBox("Plein ecran", AssetLoader.Skin_ui);
 		table.add(SetFullscreen).left();
 		Table tablev2 = new Table();
-		tablev2.add(
-				new Label("Remplissage de l'ecran:", AssetLoader.Skin_ui,
-						"default-font", Color.WHITE)).left().row();
+		tablev2.add(new Label("Remplissage de l'ecran:", AssetLoader.Skin_ui,"default-font", Color.WHITE)).left().row();
 		selAdaptscreen = new SelectBox<adaptation>(AssetLoader.Skin_ui);
 		selAdaptscreen.setItems(adaptation.values());
 		tablev2.add(selAdaptscreen).left().row();
@@ -1067,11 +993,8 @@ public class GameScreen implements Screen {
 		table.row();
 
 		Table tablev3 = new Table();
-		tablev3.add(
-				new Label("Qualite des textures:", AssetLoader.Skin_ui,
-						"default-font", Color.WHITE)).left().row();
-		SetAnimation = new CheckBox("Activer les animations",
-				AssetLoader.Skin_ui);
+		tablev3.add(new Label("Qualite des textures:", AssetLoader.Skin_ui,	"default-font", Color.WHITE)).left().row();
+		SetAnimation = new CheckBox("Activer les animations",AssetLoader.Skin_ui);
 		table.add(SetAnimation).left();
 		selTexturequal = new SelectBox<quality>(AssetLoader.Skin_ui);
 		selTexturequal.setItems(quality.values());
@@ -1099,9 +1022,7 @@ public class GameScreen implements Screen {
 	private Table SettingsAudio() {
 		Table table = new Table();
 		table.pad(10, 10, 0, 10);
-		table.add(
-				new Label("Audio", AssetLoader.Skin_level, "Fluoxetine-25",
-						Color.ORANGE)).colspan(3);
+		table.add(new Label("Audio", AssetLoader.Skin_level, "Fluoxetine-25",	Color.ORANGE)).colspan(3);
 		table.row();
 		table.columnDefaults(0).padRight(10);
 		table.columnDefaults(1).padRight(10);
@@ -1109,13 +1030,11 @@ public class GameScreen implements Screen {
 		table.add(SetSound).left();
 		table.row();
 		table.add(new Label("Volume des effets", AssetLoader.Skin_ui));
-		SetEffectvolume = new Slider(0.0f, 1.0f, 0.1f, false,
-				AssetLoader.Skin_ui);
+		SetEffectvolume = new Slider(0.0f, 1.0f, 0.1f, false,AssetLoader.Skin_ui);
 		table.add(SetEffectvolume).left();
 		table.row();
 		table.add(new Label("Volume de la musiques", AssetLoader.Skin_ui));
-		SetMusicvolume = new Slider(0.0f, 1.0f, 0.1f, false,
-				AssetLoader.Skin_ui);
+		SetMusicvolume = new Slider(0.0f, 1.0f, 0.1f, false,AssetLoader.Skin_ui);
 		table.add(SetMusicvolume).left();
 		table.row();
 		return table;
