@@ -141,7 +141,8 @@
         screen: { checked: screen, up:windows   }  
         sound: { checked:sound , up :nosound }
  		Setflag: { checked:french  , up: usa }
-        tuto: { checked:tuto , up:nothing }   
+        tuto: { checked:tuto , up:nothing }  
+        grid: { checked: grid, up:nogrid } 
         settings: { up: settings,down:settings_down }   
         stat: { up: stat,down:stat_down }
         separator: { up: separator }       
