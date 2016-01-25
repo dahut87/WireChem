@@ -27,6 +27,7 @@ import fr.evolving.UI.ServerList;
 import fr.evolving.UI.WarnDialog;
 import fr.evolving.UI.Worldlist;
 import fr.evolving.assets.AssetLoader;
+import fr.evolving.assets.InitWorlds;
 import fr.evolving.assets.Preference;
 import fr.evolving.automata.Level;
 import fr.evolving.database.Base;
@@ -77,9 +78,9 @@ public class LevelScreen implements Screen {
 				thelevels = AssetLoader.Datahandler.game().getworld(
 						Preference.prefs.getString("world"));
 				/*
-				 * thelevels= InitWorlds.go();
-				 * AssetLoader.Datahandler.game().setworld
-				 * (thelevels,Preference.prefs.getString("world"));
+				 thelevels= InitWorlds.go();
+				 AssetLoader.Datahandler.game().setworld
+				 (thelevels,Preference.prefs.getString("world"));
 				 */
 				loadWorld(world);
 				Previous.setVisible(true);
@@ -229,6 +230,10 @@ public class LevelScreen implements Screen {
 		buttonLevels = new ButtonLevel[10];
 		for (Level level : thelevels) {
 			if (level != null && level.aWorld == aworld) {
+				if (level.Name.isEmpty())
+					level.Name=AssetLoader.language.get("[level"+(level.aWorld+1)+"/"+(level.aLevel+1)+"-name]");
+				if (level.Description.isEmpty())
+					level.Description=AssetLoader.language.get("[level"+(level.aWorld+1)+"/"+(level.aLevel+1)+"-desc]");		
 				buttonLevels[i] = new ButtonLevel(level, true,
 						AssetLoader.ratio);
 				Gdx.app.debug(getClass().getSimpleName(), "Ajout du niveau :"
@@ -353,7 +358,7 @@ public class LevelScreen implements Screen {
 				AssetLoader.height - 175 + logosmall.getHeight() / 2);
 		TextDescriptive = new TextArea("Descriptif", AssetLoader.Skin_level,
 				"Descriptif");
-		TextDescriptive.setBounds(15, 15, 1185, 100);
+		TextDescriptive.setBounds(15, 15, 1185, 110);
 		buttonApply = new TextButton(AssetLoader.language.get("[buttonApply-levelscreen]"), AssetLoader.Skin_ui);
 		buttonApply.setBounds(1680, 350, 190, 40);
 		buttonApply.addListener(new ClickListener() {
@@ -453,7 +458,7 @@ public class LevelScreen implements Screen {
 			}
 		});
 		Next = new ImageButton(AssetLoader.Skin_level, "Next");
-		Next.setPosition(1030, 170);
+		Next.setPosition(1030, 185);
 		Next.addListener(new ClickListener() {
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
@@ -467,7 +472,7 @@ public class LevelScreen implements Screen {
 			}
 		});
 		Previous = new ImageButton(AssetLoader.Skin_level, "Previous");
-		Previous.setPosition(1110, 170);
+		Previous.setPosition(1110, 185);
 		Previous.addListener(new ClickListener() {
 			@Override
 			public void clicked(InputEvent event, float x, float y) {

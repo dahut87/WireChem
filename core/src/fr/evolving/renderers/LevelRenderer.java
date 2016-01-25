@@ -91,7 +91,7 @@ public class LevelRenderer {
 				- Texture_logobig.getRegionHeight());
 
 		if (LevelScreen.selected != null) {
-			font.draw(batcher2, LevelScreen.selected.level.Name, 15, 145);
+			font.draw(batcher2, LevelScreen.selected.level.Name, 15, 165);
 			if (LevelScreen.selected.level.Tech > 0)
 				font.draw(batcher2, this.reward, 1215,
 						AssetLoader.height - 15);
@@ -102,7 +102,7 @@ public class LevelRenderer {
 
 			if (LevelScreen.selected.level.aWorld > 0)
 				font.draw(batcher2, this.handicap, 1215, 605);
-			font.draw(batcher2, "", 1215, 145);
+			//font.draw(batcher2, "", 1215, 145);
 		}
 		batcher2.end();
 
@@ -111,7 +111,7 @@ public class LevelRenderer {
 		shapeRenderer.setProjectionMatrix(AssetLoader.Camera.combined);
 		shapeRenderer.setColor(0.5f, 0.5f, 0.5f, 0.5f);
 		if (LevelScreen.selected != null) {
-			shapeRenderer.rect(10, 10, 1190, 140);
+			shapeRenderer.rect(10, 10, 1190, 165);
 			if (LevelScreen.selected.level.Cout > 0) {
 				shapeRenderer.rect(1210, 10, 250, 140);
 				shapeRenderer.rect(1210, 160, 250, 140);
