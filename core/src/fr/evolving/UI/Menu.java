@@ -94,8 +94,7 @@ public class Menu extends Actor {
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
 				Vector2 coords = screentoworld(x, y);
-				MapProperties tile = getMenubyTile((int) coords.x,
-						(int) coords.y);
+				MapProperties tile = getMenubyTile((int) coords.x,(int) coords.y);
 				if (tile != null && tile.containsKey("name")) {
 					selected_transmuter=null;
 					EraseSurtile();
@@ -266,8 +265,8 @@ public class Menu extends Actor {
 					for (int x = 0; x < layer.getWidth(); x++) {
 						for (int y = 0; y < layer.getHeight(); y++) {
 							Cell cell = new Cell();
-							if (i == 0)
-								cell.setTile(AssetLoader.tileSet.getTile(54));
+							/*if (i == 0)
+								cell.setTile(AssetLoader.tileSet.getTile(54));*/
 							layer.setCell(x, y, cell);
 						}
 					}
@@ -356,7 +355,7 @@ public class Menu extends Actor {
 
 	public MapProperties getMenubyTile(int x, int y) {
 		Cell cell = ((TiledMapTileLayer) map[selpage][seltype].getLayers().get(0)).getCell(x, y);
-		if (cell != null)
+		if (cell != null && cell.getTile()!=null)
 			return cell.getTile().getProperties();
 		else
 			return null;

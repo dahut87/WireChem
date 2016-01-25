@@ -354,7 +354,7 @@ public class LevelScreen implements Screen {
 		TextDescriptive = new TextArea("Descriptif", AssetLoader.Skin_level,
 				"Descriptif");
 		TextDescriptive.setBounds(15, 15, 1185, 100);
-		buttonApply = new TextButton("Appliquer", AssetLoader.Skin_ui);
+		buttonApply = new TextButton(AssetLoader.language.get("[buttonApply-levelscreen]"), AssetLoader.Skin_ui);
 		buttonApply.setBounds(1680, 350, 190, 40);
 		buttonApply.addListener(new ClickListener() {
 			public void clicked(InputEvent event, float x, float y) {
@@ -367,8 +367,7 @@ public class LevelScreen implements Screen {
 						Gamedata.getUrl());
 				if (!AssetLoader.Datahandler.verifyall()) {
 					dialog.Show(
-							"Un problème est survenu lors du changement de base de donnée.",
-							stage);
+							AssetLoader.language.get("[dialog-levelscreen-errorloading]"),stage);
 					initlevel();
 				} else
 					menu();
@@ -387,7 +386,7 @@ public class LevelScreen implements Screen {
 				Worlddata.Refresh();
 			}
 		});
-		buttonSave = new TextButton("Sauvegarder", AssetLoader.Skin_ui);
+		buttonSave = new TextButton(AssetLoader.language.get("[buttonSave-levelscreen]"), AssetLoader.Skin_ui);
 		buttonSave.setBounds(1480, 350, 190, 40);
 		buttonSave.addListener(new ClickListener() {
 			public void clicked(InputEvent event, float x, float y) {
@@ -396,11 +395,10 @@ public class LevelScreen implements Screen {
 				Preference.prefs.putString("gamedata", Gamedata.getUrl());
 				Preference.prefs.putString("statdata", Statdata.getUrl());
 				dialog.Show(
-						"Vous devez redemarrer pour bénéfier des changements.",
-						stage);
+						AssetLoader.language.get("[dialog-levelscreen-savedatabase]"),stage);
 			}
 		});
-		buttonConnect = new TextButton("Connexions", AssetLoader.Skin_ui);
+		buttonConnect = new TextButton(AssetLoader.language.get("[buttonConnect-levelscreen]"), AssetLoader.Skin_ui);
 		buttonConnect.setBounds(1480, AssetLoader.height - 60, 190, 40);
 		buttonConnect.addListener(new ClickListener() {
 			public void clicked(InputEvent event, float x, float y) {
@@ -408,7 +406,7 @@ public class LevelScreen implements Screen {
 					SetButtonConnect();
 			}
 		});
-		buttonPlay = new TextButton("Jouer", AssetLoader.Skin_ui);
+		buttonPlay = new TextButton(AssetLoader.language.get("[buttonPlay-levelscreen]"), AssetLoader.Skin_ui);
 		buttonPlay.setBounds(1040, 20, 150, 40);
 		buttonPlay.addListener(new ClickListener() {
 			@Override
@@ -417,7 +415,7 @@ public class LevelScreen implements Screen {
 						.setScreen(new GameScreen(selected.level));
 			}
 		});
-		buttonStat = new TextButton("Statistiques", AssetLoader.Skin_ui);
+		buttonStat = new TextButton(AssetLoader.language.get("[buttonStat-levelscreen]"), AssetLoader.Skin_ui);
 		buttonStat.setBounds(1710, AssetLoader.height - 60, 190, 40);
 		buttonStat.addListener(new ClickListener() {
 			public void clicked(InputEvent event, float x, float y) {
@@ -425,17 +423,15 @@ public class LevelScreen implements Screen {
 					SetButtonStat();
 			}
 		});
-		buttonPlaythis = new TextButton("Jouer ce monde", AssetLoader.Skin_ui);
+		buttonPlaythis = new TextButton(AssetLoader.language.get("[buttonPlaythis-levelscreen]"), AssetLoader.Skin_ui);
 		buttonPlaythis.setBounds(1480, 50, 190, 40);
 		buttonPlaythis.addListener(new ClickListener() {
 			public void clicked(InputEvent event, float x, float y) {
 				if (!AssetLoader.Datahandler.verifyall())
-					dialog.Show(
-							"Impossible de jouer sans bases de données correctement configurée, cliquer sur RAZ si vous ne savez pas revenir à une situation jouable.",
-							stage);
+					dialog.Show(AssetLoader.language.get("[dialog-levelscreen-errorlevels]"),stage);
 				else {
 					if (Worlddata.getSelected() == null)
-						dialog.Show("Aucun monde n'a été sélectionné", stage);
+						dialog.Show(AssetLoader.language.get("[dialog-levelscreen-errornoworld]"), stage);
 					else {
 						Preference.prefs.putString("world",
 								(String) Worlddata.getSelected());
@@ -503,24 +499,24 @@ public class LevelScreen implements Screen {
 		String url = "http://evolving.fr/servers/list.xml";
 		Statdata = new ServerList(url, Base.datatype.statdata,
 				AssetLoader.Skin_ui);
-		Statdatalabel = new Label("Stockage des statistiques:",
+		Statdatalabel = new Label(AssetLoader.language.get("[Statdatalabel-levelscreen]"),
 				AssetLoader.Skin_ui, "grey");
 		Statdata.setBounds(1480, AssetLoader.height - 250, 420, 150);
 		Statdatalabel.setPosition(1480, AssetLoader.height - 100);
 		Userdata = new ServerList(url, Base.datatype.userdata,
 				AssetLoader.Skin_ui);
-		Userdatalabel = new Label("Stockage des données du joueur:",
+		Userdatalabel = new Label(AssetLoader.language.get("[Userdatalabel-levelscreen]"),
 				AssetLoader.Skin_ui, "grey");
 		Userdata.setBounds(1480, AssetLoader.height - 450, 420, 150);
 		Userdatalabel.setPosition(1480, AssetLoader.height - 300);
 		Gamedata = new ServerList(url, Base.datatype.gamedata,
 				AssetLoader.Skin_ui);
-		Gamedatalabel = new Label("Stockage des données du jeu:",
+		Gamedatalabel = new Label(AssetLoader.language.get("[Gamedatalabel-levelscreen]"),
 				AssetLoader.Skin_ui, "grey");
 		Gamedata.setBounds(1480, AssetLoader.height - 650, 420, 150);
 		Gamedatalabel.setPosition(1480, AssetLoader.height - 500);
 		Worlddata = new Worldlist(AssetLoader.Skin_ui);
-		Worlddatalabel = new Label("Mondes disponibles:", AssetLoader.Skin_ui,
+		Worlddatalabel = new Label(AssetLoader.language.get("[Worlddatalabel-levelscreen]"), AssetLoader.Skin_ui,
 				"grey");
 		Worlddata.setBounds(1480, 100, 420, 200);
 		Worlddatalabel.setPosition(1480, 300);

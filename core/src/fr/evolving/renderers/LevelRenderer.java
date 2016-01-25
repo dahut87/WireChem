@@ -25,8 +25,17 @@ public class LevelRenderer {
 	Laser Laser;
 	public TextureRegion Texture_logobig;
 	BitmapFont font;
+	String reward,goal,ressource,handicap;
+	
+	
+	
+
 
 	public LevelRenderer(LevelScreen LevelScreen) {
+		this.reward=AssetLoader.language.get("[reward-levelscreen]");
+		this.goal=AssetLoader.language.get("[goal-levelscreen]");
+		this.ressource=AssetLoader.language.get("[ressource-levelscreen]");
+		this.handicap=AssetLoader.language.get("[handicap-levelscreen]");
 		this.LevelScreen = LevelScreen;
 		this.scrollx = 0;
 		this.scrolly = 0;
@@ -84,15 +93,15 @@ public class LevelRenderer {
 		if (LevelScreen.selected != null) {
 			font.draw(batcher2, LevelScreen.selected.level.Name, 15, 145);
 			if (LevelScreen.selected.level.Tech > 0)
-				font.draw(batcher2, "Recompenses", 1215,
+				font.draw(batcher2, this.reward, 1215,
 						AssetLoader.height - 15);
 			if (LevelScreen.selected.level.Cout > 0) {
-				font.draw(batcher2, "Ressources", 1215, 145);
-				font.draw(batcher2, "Objectifs", 1215, 295);
+				font.draw(batcher2, this.ressource, 1215, 145);
+				font.draw(batcher2, this.goal, 1215, 295);
 			}
 
 			if (LevelScreen.selected.level.aWorld > 0)
-				font.draw(batcher2, "Handicaps", 1215, 605);
+				font.draw(batcher2, this.handicap, 1215, 605);
 			font.draw(batcher2, "", 1215, 145);
 		}
 		batcher2.end();

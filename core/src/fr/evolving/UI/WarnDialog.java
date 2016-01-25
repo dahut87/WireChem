@@ -13,12 +13,12 @@ public class WarnDialog extends Dialog {
 	Label thelabel;
 
 	public WarnDialog(Skin skin) {
-		super("Informations", skin);
+		super(AssetLoader.language.get("[dialog-window]"), skin);
 		// TODO Auto-generated constructor stub
 		this.getContentTable()
 				.add(new ImageButton(AssetLoader.Skin_level, "Warnerbros"))
 				.left();
-		thelabel = new Label("MenuScenario", AssetLoader.Skin_level);
+		thelabel = new Label("", AssetLoader.Skin_level);
 		this.getContentTable().add(thelabel).right();
 		this.setModal(true);
 		this.button("Ok");

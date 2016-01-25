@@ -38,6 +38,7 @@ public class TouchMaptiles extends Actor implements GestureListener,InputProcess
 	private float viewwidth, viewheight, decx, decy;
 	private String selected;
 	private boolean mapexit;
+	private int clearsprite;
 
 	public TouchMaptiles(Level level, int sizex, int sizey) {
 		this.level = level;
@@ -104,6 +105,15 @@ public class TouchMaptiles extends Actor implements GestureListener,InputProcess
 	public void setSelected(String selected) {
 		this.selected=selected;
 	}
+	
+	public void setClearsprite(int sprite) {
+		this.clearsprite=sprite;
+	}
+	
+	public int getClearsprite() {
+		return this.clearsprite;
+	}
+	
 
 	public Vector2 screentoworld(float x, float y) {
 		x = (int) ((x / AssetLoader.width * camera.viewportWidth) + decx);
@@ -141,7 +151,7 @@ public class TouchMaptiles extends Actor implements GestureListener,InputProcess
 			}
 	}
 
-	public void redraw(int tile) {
+	public void redraw() {
 		for (int x = 0; x < level.Grid.sizeX; x++)
 			for (int y = 0; y < level.Grid.sizeY; y++) {
 				((TiledMapTileLayer) map.getLayers().get(2)).getCell((int) x,
@@ -149,7 +159,7 @@ public class TouchMaptiles extends Actor implements GestureListener,InputProcess
 				((TiledMapTileLayer) map.getLayers().get(1)).getCell((int) x,
 						(int) y).setTile(null);
 				((TiledMapTileLayer) map.getLayers().get(0)).getCell((int) x,
-						(int) y).setTile(AssetLoader.tileSet.getTile(tile));
+						(int) y).setTile(AssetLoader.tileSet.getTile(this.clearsprite));
 			}
 		for (int x = 0; x < level.Grid.sizeX; x++)
 			for (int y = 0; y < level.Grid.sizeY; y++) {

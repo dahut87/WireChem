@@ -79,7 +79,7 @@ public class GameScreen implements Screen {
 	public Level level;
 	private Window winOptions, winSave;
 	private CheckBox SetSound, SetVsynch, SetFullscreen, SetAnimation, Settuto,
-			Setdebog, Setrefresh;
+			Setdebog, Setgrid, Setrefresh;
 	private Slider SetEffectvolume, SetMusicvolume;
 	private TextButton Setcancel, Setsave;
 	private SelectBox<resolutions> selResolution;
@@ -93,7 +93,7 @@ public class GameScreen implements Screen {
 			info_cout, info_tech, info_research, info_activation;
 	String[] tocreate = { "run", "stop", "speed", "separator", "move#", "zoomp#",
 			"zoomm#", "infos#", "separator", "raz", "save", "levels", "tree",
-			"exits", "separator", "screen", "sound", "tuto", "settings",
+			"exits", "separator", "screen", "sound", "tuto", "grid", "settings",
 			"separator", "stat" };
 	private ButtonLevel buttonlevel;
 	private Objectives objectives;
@@ -111,8 +111,8 @@ public class GameScreen implements Screen {
 	};
 
 	public enum quality {
-		Bas("Bas", TextureFilter.Nearest), Moyen("Moyen", TextureFilter.MipMap), Eleve(
-				"Eleve", TextureFilter.Linear);
+		Bas(AssetLoader.language.get("[quality-gamescreen-low]"), TextureFilter.Nearest), Moyen(AssetLoader.language.get("[quality-gamescreen-medium]"), TextureFilter.MipMap), Eleve(
+				AssetLoader.language.get("[quality-gamescreen-high]"), TextureFilter.Linear);
 		private final String text;
 		private final TextureFilter aquality;
 
@@ -132,7 +132,7 @@ public class GameScreen implements Screen {
 	};
 
 	public enum adaptation {
-		fit("Aspect conserve"), fill("Remplissage");
+		fit(AssetLoader.language.get("[adaptation-gamescreen-fit]")), fill(AssetLoader.language.get("[adaptation-gamescreen-fill]"));
 		private final String text;
 
 		private adaptation(final String text) {
@@ -169,7 +169,7 @@ public class GameScreen implements Screen {
 		@Override
 		public String toString() {
 			if (full)
-				return text + " Fullscreen";
+				return text + " "+AssetLoader.language.get("[resolutions-gamescreen-fullscreen]");
 			else
 				return text;
 		}
@@ -223,7 +223,7 @@ public class GameScreen implements Screen {
 				Gdx.app.debug("Barre", "Element changé");
 				hideInfo();
 				map.tempclear();
-				map.fillempty(60);
+				//map.fillempty(60);
 				menu.unSelect();
 				map.setSelected(getselected());
 			}
@@ -280,7 +280,7 @@ public class GameScreen implements Screen {
 				GameScreen.this.level.Grid = GameScreen.this.level.Grid_orig;
 				level.Grid.tiling_copper();
 				level.Grid.tiling_transmuter();
-				map.redraw(53);
+				map.redraw();
 				buttonlevel.setChecked(false);
 			}
 		});
@@ -335,8 +335,12 @@ public class GameScreen implements Screen {
 		dialog = new WarnDialog(AssetLoader.Skin_ui);
 		Gdx.app.debug(getClass().getSimpleName(), "Création d'une tilemap");
 		map = new TouchMaptiles(level, 128, 128);
+		if (Preference.prefs.getBoolean("Grid"))
+			map.setClearsprite(60);
+		else
+			map.setClearsprite(53);
 		map.setBounds(0, 0, AssetLoader.width, AssetLoader.height);
-		map.redraw(53);
+		map.redraw();
 		
 		Gdx.app.debug(getClass().getSimpleName(), "Création du menu");
 		nextpage=new ImageButton(AssetLoader.Skin_level,"extend");
@@ -348,7 +352,7 @@ public class GameScreen implements Screen {
 				menu.NextPage();
 				Gdx.app.debug("menu", "Page suivante:"+menu.getPage());
 				map.tempclear();
-				map.fillempty(53);
+				//map.fillempty(53);
 				hideInfo();
 				nextpage.setDisabled(menu.isNextEmpty());
 				previouspage.setDisabled(menu.isPreviousEmpty());
@@ -364,7 +368,7 @@ public class GameScreen implements Screen {
 				menu.PreviousPage();
 				Gdx.app.debug("menu", "Page précédente:"+menu.getPage());
 				map.tempclear();
-				map.fillempty(53);
+				//map.fillempty(53);
 				hideInfo();
 				nextpage.setDisabled(menu.isNextEmpty());
 				previouspage.setDisabled(menu.isPreviousEmpty());
@@ -379,7 +383,7 @@ public class GameScreen implements Screen {
 				Gdx.app.debug("Menu", "Element changé");
 				hideInfo();
 				map.tempclear();
-				map.fillempty(60);
+				//map.fillempty(60);
 				if (menu.getTransmuter() != null) 
 					showInfo(menu.getTransmuter());
 				else
@@ -458,8 +462,8 @@ public class GameScreen implements Screen {
 					.clone();
 			if (alone)
 				level.Grid.tiling_transmuter();
-			map.redraw(60);
-			Gdx.input.vibrate(new long[] { 0, 400, 500, 400 }, -1);
+			map.redraw();
+			Gdx.input.vibrate(new long[] { 0, 200, 200, 200 }, -1);
 		}
 	}
 
@@ -533,7 +537,7 @@ public class GameScreen implements Screen {
 				map_copper_eraser(0, 0, x, y, false, button, call);
 			}
 		level.Grid.tiling_copper();
-		map.redraw(60);
+		map.redraw();
 	}
 
 	public void map_all_eraser(float realx, float realy, int x, int y, boolean alone,
@@ -556,7 +560,7 @@ public class GameScreen implements Screen {
 		}
 		if (alone) {
 			level.Grid.tiling_transmuter();
-			map.redraw(60);
+			map.redraw();
 		}
 	}
 
@@ -566,7 +570,7 @@ public class GameScreen implements Screen {
 			level.Grid.GetXY(x, y).Fiber = 0;
 			if (alone) {
 				level.Grid.tiling_copper();
-				map.redraw(60);
+				map.redraw();
 			}
 		}
 	}
@@ -578,7 +582,7 @@ public class GameScreen implements Screen {
 					+ 1;
 		if (alone) {
 			level.Grid.tiling_copper();
-			map.redraw(60);
+			map.redraw();
 		}
 	}
 
@@ -588,7 +592,7 @@ public class GameScreen implements Screen {
 			level.Grid.GetXY(x, y).Fiber = 1;
 		if (alone) {
 			level.Grid.tiling_copper();
-			map.redraw(60);
+			map.redraw();
 		}
 	}
 
@@ -598,7 +602,7 @@ public class GameScreen implements Screen {
 			level.Grid.GetXY(x, y).Copper = false;
 			if (alone) {
 				level.Grid.tiling_copper();
-				map.redraw(60);
+				map.redraw();
 			}
 		}
 	}
@@ -609,7 +613,7 @@ public class GameScreen implements Screen {
 			level.Grid.GetXY(x, y).Copper = !level.Grid.GetXY(x, y).Copper;
 		if (alone) {
 			level.Grid.tiling_copper();
-			map.redraw(60);
+			map.redraw();
 		}
 	}
 
@@ -619,7 +623,7 @@ public class GameScreen implements Screen {
 			level.Grid.GetXY(x, y).Copper = true;
 		if (alone) {
 			level.Grid.tiling_copper();
-			map.redraw(60);
+			map.redraw();
 		}
 	}
 
@@ -696,7 +700,7 @@ public class GameScreen implements Screen {
 	}
 
 	public void preparebarre(String caller, int count) {
-		map.fillempty(53);
+		//map.fillempty(53);
 		map.tempclear();
 		menu.EraseSurtile();
 		hideInfo();
@@ -764,6 +768,17 @@ public class GameScreen implements Screen {
 				Gdx.app.debug("Barre", "marche tuto.");
 				AssetLoader.Tooltipmanager.enabled = true;
 			}
+		} else if (caller=="grid") {
+			if (map.getClearsprite()==53)
+			{
+				map.fillempty(60);
+				map.setClearsprite(60);
+			}
+				else
+				{
+				map.fillempty(53);
+				map.setClearsprite(53);
+				}
 		} else if (caller == "settings") {
 			winOptions.setVisible(!winOptions.isVisible());
 			winSave.setVisible(false);
@@ -784,7 +799,7 @@ public class GameScreen implements Screen {
 
 	public void preparemenu(int menuitem) {
 		map.tempclear();
-		map.fillempty(53);
+		//map.fillempty(53);
 		horizbar.unSelect();
 		menu.setPageType(0,menuitem);		
 		nextpage.setDisabled(menu.isNextEmpty());
@@ -855,7 +870,7 @@ public class GameScreen implements Screen {
 	}
 
 	public Table Createsaving() {
-		winSave = new Window("Saved grids", AssetLoader.Skin_ui);
+		winSave = new Window(AssetLoader.language.get("[winSave-gamescreen]"), AssetLoader.Skin_ui);
 		winSave.add(savingPanel()).row();
 		winSave.setColor(1, 1, 1, 0.8f);
 		winSave.setVisible(false);
@@ -875,7 +890,9 @@ public class GameScreen implements Screen {
 							level.id, selSaved.getSelectedIndex());
 				level.Grid.tiling_copper();
 				level.Grid.tiling_transmuter();
-				map.redraw(53);
+				map.redraw();
+				map.tempclear();
+				hideInfo();
 			}
 		});
 		ScrollPane scroll = new ScrollPane(selSaved);
@@ -891,7 +908,7 @@ public class GameScreen implements Screen {
 	}
 
 	public Table Createoption() {
-		winOptions = new Window("Options", AssetLoader.Skin_ui);
+		winOptions = new Window(AssetLoader.language.get("[winOptions-gamescreen]"), AssetLoader.Skin_ui);
 		winOptions.add(SettingsVideo()).row();
 		winOptions.add(SettingsAudio()).row();
 		winOptions.add(SettingsOther()).row();
@@ -912,6 +929,7 @@ public class GameScreen implements Screen {
 		SetAnimation.setChecked(Preference.prefs.getBoolean("Animation"));
 		Setflag.setChecked(Preference.prefs.getBoolean("Language"));
 		SetEffectvolume.setValue(Preference.prefs.getFloat("Effect"));
+		Setgrid.setChecked(Preference.prefs.getBoolean("Grid"));		
 		SetMusicvolume.setValue(Preference.prefs.getFloat("Music"));
 		selResolution.setSelectedIndex(Preference.prefs.getInteger("Resolution"));
 		selAdaptscreen.setSelectedIndex(Preference.prefs.getInteger("Adaptation"));
@@ -925,6 +943,7 @@ public class GameScreen implements Screen {
 		Preference.prefs.putInteger("Resolution",  selResolution.getSelectedIndex());
 		Preference.prefs.putBoolean("Fullscreen", SetFullscreen.isChecked());
 		Preference.prefs.putBoolean("Sound", SetSound.isChecked());
+		Preference.prefs.putBoolean("Grid", Setgrid.isChecked());
 		Preference.prefs.putBoolean("Tutorial", Settuto.isChecked());
 		Preference.prefs.putBoolean("VSync", SetVsynch.isChecked());
 		Preference.prefs.putBoolean("Refresh", Setrefresh.isChecked());
@@ -944,20 +963,23 @@ public class GameScreen implements Screen {
 	private Table SettingsOther() {
 		Table table = new Table();
 		table.pad(10, 10, 0, 10);
-		table.add(new Label("Divers", AssetLoader.Skin_level, "Fluoxetine-25",Color.ORANGE)).colspan(3);
+		table.add(new Label(AssetLoader.language.get("[WinOptions-gamescreen-Game]"), AssetLoader.Skin_level, "Fluoxetine-25",Color.ORANGE)).colspan(3);
 		table.row();
 		table.columnDefaults(0).padRight(10);
 		table.columnDefaults(1).padRight(10);
-		Settuto = new CheckBox("Activation du tutoriel", AssetLoader.Skin_ui);
+		Settuto = new CheckBox(AssetLoader.language.get("[WinOptions-gamescreen-tuto]"), AssetLoader.Skin_ui);
 		table.add(Settuto).left();
 		table.row();
-		Setdebog = new CheckBox("Mode debugage", AssetLoader.Skin_ui);
+		Setdebog = new CheckBox(AssetLoader.language.get("[WinOptions-gamescreen-debug]"), AssetLoader.Skin_ui);
 		table.add(Setdebog).left();
 		table.row();
-		Setrefresh = new CheckBox("Afficher le rafraichissement",AssetLoader.Skin_ui);
+		Setgrid = new CheckBox(AssetLoader.language.get("[WinOptions-gamescreen-grid]"),AssetLoader.Skin_ui);
+		table.add(Setgrid).left();
+		table.row();
+		Setrefresh = new CheckBox(AssetLoader.language.get("[WinOptions-gamescreen-refresh]"),AssetLoader.Skin_ui);
 		table.add(Setrefresh).left();
 		table.row();
-		table.add(new Label("Choix de la langue", AssetLoader.Skin_ui,"default-font", Color.WHITE)).left();
+		table.add(new Label(AssetLoader.language.get("[WinOptions-gamescreen-language]"), AssetLoader.Skin_ui,"default-font", Color.WHITE)).left();
 		Setflag = new ImageButton(AssetLoader.Skin_level, "Setflag");
 		table.add(Setflag);
 		table.row();
@@ -967,25 +989,25 @@ public class GameScreen implements Screen {
 	private Table SettingsVideo() {
 		Table table = new Table();
 		table.pad(10, 10, 0, 10);
-		table.add(new Label("Video",AssetLoader.Skin_level, "Fluoxetine-25",Color.ORANGE)).colspan(3);
+		table.add(new Label(AssetLoader.language.get("[WinOptions-gamescreen-Video]"),AssetLoader.Skin_level, "Fluoxetine-25",Color.ORANGE)).colspan(3);
 		table.row();
 		table.columnDefaults(0).padRight(10);
 		table.columnDefaults(1).padRight(10);
 
-		SetVsynch = new CheckBox("Synchronisation verticale",AssetLoader.Skin_ui);
+		SetVsynch = new CheckBox(AssetLoader.language.get("[WinOptions-gamescreen-sync]"),AssetLoader.Skin_ui);
 		table.add(SetVsynch).left();
 		Table tablev1 = new Table();
-		tablev1.add(new Label("Resolution:", AssetLoader.Skin_ui, "default-font",Color.WHITE)).left().row();
+		tablev1.add(new Label(AssetLoader.language.get("[WinOptions-gamescreen-resolution]"), AssetLoader.Skin_ui, "default-font",Color.WHITE)).left().row();
 		selResolution = new SelectBox<resolutions>(AssetLoader.Skin_ui);
 		selResolution.setItems(resolutions.values());
 		tablev1.add(selResolution).left().row();
 		table.add(tablev1).left();
 		table.row();
 
-		SetFullscreen = new CheckBox("Plein ecran", AssetLoader.Skin_ui);
+		SetFullscreen = new CheckBox(AssetLoader.language.get("[WinOptions-gamescreen-full]"), AssetLoader.Skin_ui);
 		table.add(SetFullscreen).left();
 		Table tablev2 = new Table();
-		tablev2.add(new Label("Remplissage de l'ecran:", AssetLoader.Skin_ui,"default-font", Color.WHITE)).left().row();
+		tablev2.add(new Label(AssetLoader.language.get("[WinOptions-gamescreen-fill]"), AssetLoader.Skin_ui,"default-font", Color.WHITE)).left().row();
 		selAdaptscreen = new SelectBox<adaptation>(AssetLoader.Skin_ui);
 		selAdaptscreen.setItems(adaptation.values());
 		tablev2.add(selAdaptscreen).left().row();
@@ -993,8 +1015,8 @@ public class GameScreen implements Screen {
 		table.row();
 
 		Table tablev3 = new Table();
-		tablev3.add(new Label("Qualite des textures:", AssetLoader.Skin_ui,	"default-font", Color.WHITE)).left().row();
-		SetAnimation = new CheckBox("Activer les animations",AssetLoader.Skin_ui);
+		tablev3.add(new Label(AssetLoader.language.get("[WinOptions-gamescreen-quality]"), AssetLoader.Skin_ui,	"default-font", Color.WHITE)).left().row();
+		SetAnimation = new CheckBox(AssetLoader.language.get("[WinOptions-gamescreen-animation]"),AssetLoader.Skin_ui);
 		table.add(SetAnimation).left();
 		selTexturequal = new SelectBox<quality>(AssetLoader.Skin_ui);
 		selTexturequal.setItems(quality.values());
@@ -1022,18 +1044,18 @@ public class GameScreen implements Screen {
 	private Table SettingsAudio() {
 		Table table = new Table();
 		table.pad(10, 10, 0, 10);
-		table.add(new Label("Audio", AssetLoader.Skin_level, "Fluoxetine-25",	Color.ORANGE)).colspan(3);
+		table.add(new Label(AssetLoader.language.get("[WinOptions-gamescreen-Audio]"), AssetLoader.Skin_level, "Fluoxetine-25",	Color.ORANGE)).colspan(3);
 		table.row();
 		table.columnDefaults(0).padRight(10);
 		table.columnDefaults(1).padRight(10);
-		SetSound = new CheckBox("Activation du son", AssetLoader.Skin_ui);
+		SetSound = new CheckBox(AssetLoader.language.get("[WinOptions-gamescreen-sound]"), AssetLoader.Skin_ui);
 		table.add(SetSound).left();
 		table.row();
-		table.add(new Label("Volume des effets", AssetLoader.Skin_ui));
+		table.add(new Label(AssetLoader.language.get("[WinOptions-gamescreen-effect]"), AssetLoader.Skin_ui));
 		SetEffectvolume = new Slider(0.0f, 1.0f, 0.1f, false,AssetLoader.Skin_ui);
 		table.add(SetEffectvolume).left();
 		table.row();
-		table.add(new Label("Volume de la musiques", AssetLoader.Skin_ui));
+		table.add(new Label(AssetLoader.language.get("[WinOptions-gamescreen-music]"), AssetLoader.Skin_ui));
 		SetMusicvolume = new Slider(0.0f, 1.0f, 0.1f, false,AssetLoader.Skin_ui);
 		table.add(SetMusicvolume).left();
 		table.row();
@@ -1044,7 +1066,7 @@ public class GameScreen implements Screen {
 		winOptions.setVisible(false);
 		writepref();
 		dialog.Show(
-				"Veuillez redémmarrer pour que les préférences soient appliquées.",
+				AssetLoader.language.get("[dialog-gamescreen-preference]"),
 				stage);
 	}
 
@@ -1055,7 +1077,7 @@ public class GameScreen implements Screen {
 	private Table SettingsButtons() {
 		Table table = new Table();
 		table.pad(10, 10, 0, 10);
-		Setsave = new TextButton("Save", AssetLoader.Skin_ui);
+		Setsave = new TextButton(AssetLoader.language.get("[WinOptions-gamescreen-save]"), AssetLoader.Skin_ui);
 		table.add(Setsave).padRight(30);
 		Setsave.addListener(new ChangeListener() {
 			@Override
@@ -1063,7 +1085,7 @@ public class GameScreen implements Screen {
 				onSaveClicked();
 			}
 		});
-		Setcancel = new TextButton("Cancel", AssetLoader.Skin_ui);
+		Setcancel = new TextButton(AssetLoader.language.get("[WinOptions-gamescreen-cancel]"), AssetLoader.Skin_ui);
 		table.add(Setcancel);
 		Setcancel.addListener(new ChangeListener() {
 			@Override

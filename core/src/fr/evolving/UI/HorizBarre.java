@@ -4,6 +4,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import com.badlogic.gdx.Application;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.Batch;
@@ -19,6 +20,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener.ChangeEvent;
 import com.badlogic.gdx.utils.reflect.Method;
 
 import fr.evolving.assets.AssetLoader;
+import fr.evolving.assets.Preference;
 import fr.evolving.screens.GameScreen;
 import fr.evolving.screens.GameScreen.calling;
 
@@ -105,9 +107,10 @@ public class HorizBarre extends Actor {
 					}
 				});
 		}
-		Barre[15].setChecked(Gdx.graphics.isFullscreen());
-		Barre[16].setChecked(AssetLoader.intro.getVolume() > 0);
-		Barre[17].setChecked(AssetLoader.Tooltipmanager.enabled == true);
+		Barre[15].setChecked(Preference.prefs.getBoolean("Fullscreen"));
+		Barre[16].setChecked(Preference.prefs.getBoolean("Sound"));
+		Barre[17].setChecked(Preference.prefs.getBoolean("Tutorial"));
+		Barre[18].setChecked(Preference.prefs.getBoolean("Grid"));
 		table = new HorizontalGroup();
 		table.bottom().padLeft(5f).padBottom(8f).space(10f);
 		this.setTouchable(Touchable.enabled);

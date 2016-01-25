@@ -185,15 +185,7 @@ public class AssetLoader {
 				}
 			}
 		}
-		Gdx.app.debug("AssetLoader", "Ajout de la gestion des locales");
-		FileHandle baseFileHandle = Gdx.files.internal("i18n/messages/messages");
-		usa = I18NBundle.createBundle(baseFileHandle, new Locale("en"));
-		french = I18NBundle.createBundle(baseFileHandle, new Locale("fr"));
-		if (Preference.prefs.getBoolean("Language"))
-			language = french;
-		else
-			language = usa;
-		I18NBundle.setExceptionOnMissingKey(true);
+	
 		Gdx.app.debug("AssetLoader", "Ajout des transmuters");	
 		allTransmuter = new Array<Transmuter>();
 		allTransmuter.add(new Positiver(null));
@@ -299,9 +291,18 @@ public class AssetLoader {
 	}
 
 	public static void load() {
+		Gdx.app.debug("AssetLoader", "Ajout de la gestion des locales");
+		FileHandle baseFileHandle = Gdx.files.internal("i18n/messages/messages");
+		usa = I18NBundle.createBundle(baseFileHandle, new Locale("en"));
+		french = I18NBundle.createBundle(baseFileHandle, new Locale("fr"));
+		if (Preference.prefs.getBoolean("Language"))
+			language = french;
+		else
+			language = usa;
+		I18NBundle.setExceptionOnMissingKey(true);
+		
 		Gdx.app.debug("AssetLoader", "Réglage de la qualité des textures");
-		quality = GameScreen.quality.values()[Preference.prefs
-				.getInteger("Quality")].getQuality();
+		quality = GameScreen.quality.values()[Preference.prefs.getInteger("Quality")].getQuality();
 		Gdx.app.debug("AssetLoader", "Chargements des éléments minimalistes");
 		Texture_logo = new Texture(Gdx.files.internal("pictures/logo.png"),
 				quality == TextureFilter.MipMap);

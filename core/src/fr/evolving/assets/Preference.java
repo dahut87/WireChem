@@ -50,6 +50,7 @@ public class Preference {
 		Preference.prefs.putBoolean("Refresh", false);
 		Preference.prefs.putBoolean("Animation", true);
 		Preference.prefs.putBoolean("Language", false);
+		Preference.prefs.putBoolean("Grid", false);
 		Preference.prefs.putString("world", "test pour voir");
 		Preference.prefs.putFloat("Effect", 1.0f);
 		Preference.prefs.putFloat("Music", 0.75f);
