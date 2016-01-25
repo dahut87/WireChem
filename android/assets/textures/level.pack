@@ -1172,13 +1172,6 @@ sprite-transmuter
   index: 114
 sprite-transmuter
   rotate: false
-  xy: 261, 457
-  size: 128, 128
-  orig: 128, 128
-  offset: 0, 0
-  index: 118
-sprite-transmuter
-  rotate: false
   xy: 391, 587
   size: 128, 128
   orig: 128, 128
@@ -1204,84 +1197,126 @@ sprite-transmuter
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
-  index: 119
+  index: 118
 sprite-transmuter
   rotate: false
   xy: 131, 197
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
-  index: 120
+  index: 119
 sprite-transmuter
   rotate: false
   xy: 261, 327
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
-  index: 121
+  index: 120
 sprite-transmuter
   rotate: false
   xy: 391, 457
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
-  index: 122
+  index: 121
 sprite-transmuter
   rotate: false
   xy: 521, 587
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
-  index: 123
+  index: 122
 sprite-transmuter
   rotate: false
   xy: 651, 717
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
-  index: 124
+  index: 123
 sprite-transmuter
   rotate: false
   xy: 781, 847
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
-  index: 125
+  index: 124
 sprite-transmuter
   rotate: false
   xy: 131, 67
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
-  index: 126
+  index: 125
 sprite-transmuter
   rotate: false
   xy: 261, 197
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
-  index: 127
+  index: 126
 sprite-transmuter
   rotate: false
   xy: 391, 327
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
-  index: 128
+  index: 127
 sprite-transmuter
   rotate: false
   xy: 521, 457
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
-  index: 129
+  index: 128
 sprite-transmuter
   rotate: false
   xy: 651, 587
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
+  index: 129
+sprite-transmuter
+  rotate: false
+  xy: 781, 717
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
   index: 130
+sprite-transmuter
+  rotate: false
+  xy: 261, 67
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: 131
+sprite-transmuter
+  rotate: false
+  xy: 391, 197
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: 132
+sprite-transmuter
+  rotate: false
+  xy: 521, 327
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: 133
+sprite-transmuter
+  rotate: false
+  xy: 651, 457
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: 134
+sprite-transmuter
+  rotate: false
+  xy: 781, 587
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: 135
 usa
   rotate: false
   xy: 1, 1
@@ -1291,21 +1326,21 @@ usa
   index: -1
 windows
   rotate: false
-  xy: 781, 781
+  xy: 911, 911
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: -1
 zoomm
   rotate: false
-  xy: 911, 911
+  xy: 391, 131
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: -1
 zoomp
   rotate: false
-  xy: 261, 131
+  xy: 521, 261
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
