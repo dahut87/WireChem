@@ -3,6 +3,7 @@ package fr.evolving.automata;
 import java.io.Serializable;
 
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ObjectMap.Entries;
 import com.badlogic.gdx.utils.ObjectMap.Entry;
 import com.badlogic.gdx.utils.ObjectMap.Values;
@@ -39,8 +40,8 @@ public abstract class Transmuter implements Cloneable, Serializable {
 		A00, A90, A180, A270
 	};
 
-	protected Level level;
-	protected Angular Rotation;
+	protected transient Level level;
+	protected transient Angular Rotation;
 
 	public Transmuter(Level level) {
 		this.level = level;
@@ -67,12 +68,6 @@ public abstract class Transmuter implements Cloneable, Serializable {
 	}
 
 	public void Run() {
-	}
-
-	public void Unlock() {
-	}
-
-	public void Upgrade() {
 	}
 
 	public void Activate() {
@@ -133,12 +128,42 @@ public abstract class Transmuter implements Cloneable, Serializable {
 	public int getResearch() {
 		return 0;
 	}
-
-	public boolean isUpgradable() {
-		return false;
+	
+	public void Unlock(Transmuter transmuter) {
+		Array<Transmuter> transmuters=this.getUnlock();
+		if (transmuters != null) {
+			for(Transmuter transmuter2:transmuters) {
+				if (transmuter2==transmuter)
+					transmuter.SetShowed(true);
+			}
+		}
+	}
+	
+	public void Unlock() {
+		this.SetShowed(true);
 	}
 
-	public boolean isUnlockable() {
+	public void Upgrade() {
+		Transmuter transmuter=this.getUpgrade();
+		if (transmuter == null)
+			return;
+		transmuter.SetShowed(true);
+		this.SetShowed(false);
+	}
+
+	public boolean isUpgradable(int value) {
+		Transmuter transmuter=this.getUpgrade();
+		return transmuter!= null && !transmuter.isShowed() && transmuter.getResearch()>=value;
+	}
+
+	public boolean isUnlockable(int value) {
+		Array<Transmuter> transmuters=this.getUnlock();
+		if (transmuters != null) {
+			for(Transmuter transmuter:transmuters) {
+				if (!transmuter.isShowed() && transmuter.getResearch()>=value)
+					return true;
+			}
+		}
 		return false;
 	}
 
@@ -173,7 +198,7 @@ public abstract class Transmuter implements Cloneable, Serializable {
 		return null;
 	}
 
-	public Transmuter getUnlock() {
+	public Array<Transmuter> getUnlock() {
 		return null;
 	}
 
@@ -242,11 +267,11 @@ public abstract class Transmuter implements Cloneable, Serializable {
 				+ " Visible:"
 				+ this.isShowed()
 				+ "\nUpgradable:"
-				+ ((this.isUpgradable()) ? this.getUpgrade().getName() : this
-						.isUpgradable())
+				+ ((this.isUpgradable(0)) ? this.getUpgrade().getName() : this
+						.isUpgradable(0))
 				+ " Unlockable:"
-				+ ((this.isUnlockable()) ? this.getUnlock().getName() : this
-						.isUnlockable()) + "\nUpgrade Cycle:"
+				+ ((this.isUnlockable(0)) ? this.getUnlock().size : this
+						.isUnlockable(0)) + "\nUpgrade Cycle:"
 				+ this.getUpgradeCycle() + " upgrade:"
 				+ this.isUpgradableCycle() + "\nUpgrade Temperature:"
 				+ this.getUpgradeTemp() + " upgrade:" + this.isUpgradableTemp()

@@ -101,7 +101,7 @@ public class LocalBase extends Base {
 
 	// Gestion model type gamedata
 
-	public Array<String> getworlds() {
+	public Array<String> getCampaigns() {
 		DatabaseCursor cursor = null;
 		try {
 			cursor = dbHandler.rawQuery("select desc,date from worlds;");
@@ -114,7 +114,7 @@ public class LocalBase extends Base {
 		return returnvalue;
 	}
 
-	public Array<Level> getworld(String description) {
+	public Array<Level> getCampaign(String description) {
 		DatabaseCursor cursor = null;
 		try {
 			cursor = dbHandler
@@ -138,7 +138,7 @@ public class LocalBase extends Base {
 		return null;
 	}
 
-	public boolean deleteworld(String description) {
+	public boolean deleteCampaign(String description) {
 		try {
 			dbHandler.rawQuery("delete from worlds where desc='" + description
 					+ "';");
@@ -148,7 +148,7 @@ public class LocalBase extends Base {
 		return true;
 	}
 
-	public boolean setworld(Array<Level> world, String description) {
+	public boolean setCampaign(Array<Level> world, String description) {
 		String encoded = "";
 		try {
 			ByteArrayOutputStream bos = new ByteArrayOutputStream();
@@ -169,7 +169,7 @@ public class LocalBase extends Base {
 
 	// Gestion de données type userdata
 
-	public boolean getlevellock(int user, int level) {
+	public boolean getLevellock(int user, int level) {
 		DatabaseCursor cursor = null;
 		try {
 			cursor = dbHandler.rawQuery("select user from locks where user="
@@ -183,7 +183,7 @@ public class LocalBase extends Base {
 			return false;
 	}
 
-	public boolean setlevelunlock(int user, int level) {
+	public boolean setLevelunlock(int user, int level) {
 		try {
 			dbHandler.rawQuery("insert into locks (user,level) values (" + user
 					+ "," + level + ");");
@@ -317,29 +317,19 @@ public class LocalBase extends Base {
 	public boolean setGrid(int user, int level, Grid data) {
 		String encoded = "";
 		try {
-			Gdx.app.log("Base", "Infos:"+user+","+level);
 			ByteArrayOutputStream bos = new ByteArrayOutputStream();
-			Gdx.app.log("Base", "CK1");
 			ObjectOutputStream oos = new ObjectOutputStream(bos);
-			Gdx.app.log("Base", "CK2");
 			oos.writeObject(data);
-			Gdx.app.log("Base", "CK3");
 			oos.flush();
-			Gdx.app.log("Base", "CK4");
 			oos.close();
 			bos.close();
 			byte[] bytes = bos.toByteArray();
-			Gdx.app.log("Base", "size"+bytes.length);
-			encoded = Base64Coder.encodeLines(bytes);
-			Gdx.app.log("Base", "size2"+encoded.length());			
+			encoded = Base64Coder.encodeLines(bytes);			
 			dbHandler.rawQuery("insert into grids (user,level,object) values ("
 					+ user + "," + level + ",'" + encoded + "');");
-			Gdx.app.log("Base", "CK5");	
 		} catch (Exception e) {
-			Gdx.app.log("Base", "cancel");
 			return false;
 		}
-		Gdx.app.log("Base", "Ok");
 		return true;
 	}
 
@@ -419,7 +409,7 @@ public class LocalBase extends Base {
 		}
 	}
 
-	public String getprefix() {
+	public String getPrefix() {
 		return "local";
 	}
 

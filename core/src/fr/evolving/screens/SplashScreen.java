@@ -10,6 +10,8 @@ import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 
 import fr.evolving.assets.AssetLoader;
+import fr.evolving.assets.Preference;
+import fr.evolving.automata.Worlds;
 import fr.evolving.game.main;
 
 public class SplashScreen implements Screen {
@@ -48,8 +50,7 @@ public class SplashScreen implements Screen {
 				}), Actions.run(new Runnable() {
 					@Override
 					public void run() {
-						((Game) Gdx.app.getApplicationListener())
-								.setScreen(new LevelScreen(-1));
+						((Game) Gdx.app.getApplicationListener()).setScreen(new LevelScreen(new Worlds(Preference.prefs.getString("world"))));
 					}
 				})));
 	}

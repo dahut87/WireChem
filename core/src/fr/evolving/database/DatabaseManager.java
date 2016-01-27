@@ -71,7 +71,7 @@ public class DatabaseManager {
 			Base back;
 			try {
 				back = (Base) classe.newInstance();
-				if (back.getprefix().equals(Type)) {
+				if (back.getPrefix().equals(Type)) {
 					back = (Base) classe.getDeclaredConstructor(cArg)
 							.newInstance(model, Url);
 					return back;
@@ -92,7 +92,7 @@ public class DatabaseManager {
 			Base back;
 			try {
 				back = (Base) classe.newInstance();
-				if (back.getprefix().equals(Type))
+				if (back.getPrefix().equals(Type))
 					return true;
 			} catch (InstantiationException | IllegalAccessException
 					| IllegalArgumentException | SecurityException e) {

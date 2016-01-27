@@ -3,6 +3,7 @@ package fr.evolving.automata;
 import java.util.Iterator;
 
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ObjectMap.Values;
 import com.badlogic.gdx.utils.OrderedMap;
 
@@ -16,7 +17,7 @@ public class Oneway extends Transmuter {
 	private static int Technology;
 	private static int Research;
 	private static Transmuter Upgrade;
-	private static Transmuter Unlock;
+	private static Array<Transmuter> Unlock;
 	private static boolean showed;
 	private static boolean CanUpgradeTemp;
 	private static boolean CanUpgradeCycle;
@@ -49,7 +50,8 @@ public class Oneway extends Transmuter {
 		this.Technology = 5;
 		this.Research = 0;
 		this.Upgrade = null;
-		this.Unlock = new distributor(level);
+		this.Unlock = new Array<Transmuter>();
+		this.Unlock.add(new distributor(level));
 		this.showed = false;
 		this.CanUpgradeTemp = true;
 		this.CanUpgradeCycle = false;
@@ -101,19 +103,6 @@ public class Oneway extends Transmuter {
 		this.level.Temp += UsedTemp * UpgradedTemp;
 		this.level.Rayon += UsedRayon * UpgradedRayon;
 		this.level.Nrj += UsedNrj * UpgradedNrj;
-	}
-
-	public void Unlock() {
-		if (this.Unlock == null)
-			return;
-		this.Unlock.SetShowed(true);
-	}
-
-	public void Upgrade() {
-		if (this.Upgrade == null)
-			return;
-		this.Unlock.SetShowed(true);
-		this.SetShowed(false);
 	}
 
 	public void Activate() {
@@ -203,14 +192,6 @@ public class Oneway extends Transmuter {
 		return Research;
 	}
 
-	public boolean isUpgradable() {
-		return this.Upgrade != null && this.Upgrade.isShowed();
-	}
-
-	public boolean isUnlockable() {
-		return this.Unlock != null && this.Unlock.isShowed();
-	}
-
 	public boolean isShowed() {
 		return this.showed;
 	}
@@ -279,7 +260,7 @@ public class Oneway extends Transmuter {
 		return this.Upgrade;
 	}
 
-	public Transmuter getUnlock() {
+	public Array<Transmuter> getUnlock() {
 		return this.Unlock;
 	}
 

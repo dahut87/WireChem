@@ -9,7 +9,7 @@ public class SqlBase extends Base {
 	public SqlBase() {
 	}
 
-	public String getprefix() {
+	public String getPrefix() {
 		return "mysql";
 	}
 

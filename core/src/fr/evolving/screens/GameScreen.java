@@ -67,6 +67,7 @@ import fr.evolving.automata.Neutraliser_II;
 import fr.evolving.automata.Transmuter;
 import fr.evolving.automata.Transmuter.Angular;
 import fr.evolving.automata.Transmuter.CaseType;
+import fr.evolving.automata.Worlds;
 import fr.evolving.renderers.GameRenderer;
 
 public class GameScreen implements Screen {
@@ -105,6 +106,7 @@ public class GameScreen implements Screen {
 	private Label fpsLabel, info_nom;
 	private TextArea info_desc, tooltip;
 	public boolean unroll;
+	private Worlds worlds;
 
 	public enum calling {
 		mouseover, mouseclick, mousedrag, longpress, tap, taptap, zoom, fling, pan, pinch
@@ -198,13 +200,12 @@ public class GameScreen implements Screen {
 	GestureDetector gesturedetector;
 
 	// This is the constructor, not the class declaration
-	public GameScreen(Level alevel) {
+	public GameScreen(Worlds aworlds) {
 		Gdx.app.log("game", "Ok");
-		this.level = alevel;
-		Gdx.app.debug(getClass().getSimpleName(),
-				"Récupération des derniers niveaux.");
-		this.level.Grid = AssetLoader.Datahandler.user().getGrid(0,
-				this.level.id, "LAST");
+		this.worlds = aworlds;
+		this.level=worlds.getInformations();
+		Gdx.app.debug(getClass().getSimpleName(),"Récupération des derniers niveaux.");
+		this.level.Grid = AssetLoader.Datahandler.user().getGrid(0,	this.level.id, "LAST");
 		if (this.level.Grid == null) {
 			Gdx.app.debug(getClass().getSimpleName(), "Copie monde original.");
 			this.level.Grid = this.level.Grid_orig;
@@ -223,7 +224,6 @@ public class GameScreen implements Screen {
 				Gdx.app.debug("Barre", "Element changé");
 				hideInfo();
 				map.tempclear();
-				//map.fillempty(60);
 				menu.unSelect();
 				map.setSelected(getselected());
 			}
@@ -244,8 +244,7 @@ public class GameScreen implements Screen {
 		Gdx.app.debug(getClass().getSimpleName(), "Création des barres");
 		tooltip = new TextArea("tooltip:x\r\n tooltip:y",AssetLoader.Skin_level, "info_tooltip");
 		tooltip.setBounds(541, 27, 100, 50);
-		Gdx.app.debug(getClass().getSimpleName(),
-				"Création de la barre de gestion du haut");
+		Gdx.app.debug(getClass().getSimpleName(),"Création de la barre de gestion du haut");
 		cycle = new ImageTextButton(String.valueOf(level.Cycle),AssetLoader.Skin_level, "cycle2");
 		cycle.setVisible(level.aWorld>=1);
 		cycle.setPosition(10, AssetLoader.height - 74);
@@ -271,7 +270,7 @@ public class GameScreen implements Screen {
 		objectives.setVictory(level.Victory);
 		objectives.setPosition(890, AssetLoader.height - 95);
 		objectives.setVisible(level.Cout>0);
-		buttonlevel = new ButtonLevel(level, true, 1.0f);
+		buttonlevel = new ButtonLevel(level, true, 1.0f, false);
 		buttonlevel.setPosition(1760, AssetLoader.height - 125);
 		buttonlevel.addListener(new ClickListener() {
 			@Override
@@ -328,7 +327,7 @@ public class GameScreen implements Screen {
 		info_up.addListener(new ClickListener() {
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
-				if (menu.getTransmuter()!=null && menu.getTransmuter().isUpgradable())
+				if (menu.getTransmuter()!=null && menu.getTransmuter().isUpgradable(0))
 					menu.getTransmuter().Upgrade();
 			}
 		});
@@ -352,7 +351,6 @@ public class GameScreen implements Screen {
 				menu.NextPage();
 				Gdx.app.debug("menu", "Page suivante:"+menu.getPage());
 				map.tempclear();
-				//map.fillempty(53);
 				hideInfo();
 				nextpage.setDisabled(menu.isNextEmpty());
 				previouspage.setDisabled(menu.isPreviousEmpty());
@@ -368,7 +366,6 @@ public class GameScreen implements Screen {
 				menu.PreviousPage();
 				Gdx.app.debug("menu", "Page précédente:"+menu.getPage());
 				map.tempclear();
-				//map.fillempty(53);
 				hideInfo();
 				nextpage.setDisabled(menu.isNextEmpty());
 				previouspage.setDisabled(menu.isPreviousEmpty());
@@ -383,7 +380,6 @@ public class GameScreen implements Screen {
 				Gdx.app.debug("Menu", "Element changé");
 				hideInfo();
 				map.tempclear();
-				//map.fillempty(60);
 				if (menu.getTransmuter() != null) 
 					showInfo(menu.getTransmuter());
 				else
@@ -700,7 +696,6 @@ public class GameScreen implements Screen {
 	}
 
 	public void preparebarre(String caller, int count) {
-		//map.fillempty(53);
 		map.tempclear();
 		menu.EraseSurtile();
 		hideInfo();
@@ -725,21 +720,17 @@ public class GameScreen implements Screen {
 			if (winSave.isVisible())
 				readsaved();
 		} else if (caller == "save") {
-			Gdx.app.log("save", "Ok");
 			Gdx.app.debug("Barre", "Sauvegarde de la grille.");
 			Gdx.app.debug("Barre", AssetLoader.Datahandler.user().toString());			
-			AssetLoader.Datahandler.user().setGrid(0, level.id, level.Grid);
+			worlds.SaveGrid();
 			readsaved();
 		} else if (caller == "levels") {
 			Gdx.app.debug("Barre", "Affichage des niveaux.");
-			AssetLoader.Datahandler.user().setGrid(0, level.id, "LAST",
-					this.level.Grid);
-			((Game) Gdx.app.getApplicationListener())
-					.setScreen(new LevelScreen(level.aWorld));
+			worlds.SaveLastGrid();
+			((Game) Gdx.app.getApplicationListener()).setScreen(new LevelScreen(worlds));
 		} else if (caller == "tree") {
 		} else if (caller == "exits") {
-			AssetLoader.Datahandler.user().setGrid(0, level.id, "LAST",
-					this.level.Grid);
+			worlds.SaveLastGrid();
 			Gdx.app.exit();
 		} else if (caller == "screen") {
 			DisplayMode currentMode = Gdx.graphics.getDesktopDisplayMode();
@@ -799,7 +790,6 @@ public class GameScreen implements Screen {
 
 	public void preparemenu(int menuitem) {
 		map.tempclear();
-		//map.fillempty(53);
 		horizbar.unSelect();
 		menu.setPageType(0,menuitem);		
 		nextpage.setDisabled(menu.isNextEmpty());
@@ -820,8 +810,7 @@ public class GameScreen implements Screen {
 		info_research.setVisible(transmuter.getResearch() > 0);
 		info_research.setText(String.valueOf(transmuter.getResearch()));
 		info_activation.setVisible(transmuter.isActivable());
-		info_activation.setText(String.valueOf(transmuter
-				.getMaxActivationLevel()));
+		info_activation.setText(String.valueOf(transmuter.getMaxActivationLevel()));
 		info_up_cycle.setVisible(transmuter.isUpgradableCycle());
 		info_up_nrj.setVisible(transmuter.isUpgradableNrj());
 		info_up_temp.setVisible(transmuter.isUpgradableTemp());
@@ -846,6 +835,8 @@ public class GameScreen implements Screen {
 				AssetLoader.Atlas_level.findRegion("jauge"
 						+ transmuter.getUpgradeRayon()));
 		info_up_rayonval.setColor(AssetLoader.Levelcolors[2]);
+		info_up.setVisible(transmuter.isUnlockable(0)||transmuter.isUpgradable(0));
+		
 	}
 
 	public void hideInfo() {

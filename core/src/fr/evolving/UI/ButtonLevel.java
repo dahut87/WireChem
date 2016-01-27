@@ -14,16 +14,18 @@ import fr.evolving.automata.Level;
 public class ButtonLevel extends ImageTextButton {
 	public Level level;
 	public boolean Activated;
-	TextureRegion Finalled, Locked;
-	Label Thelabel;
-	float scale;
-	float ratio;
-	ImageTextButtonStyle style;
-	LabelStyle stylelabel;
+	private TextureRegion Finalled, Locked;
+	private Label Thelabel;
+	private float scale;
+	private float ratio;
+	private ImageTextButtonStyle style;
+	private LabelStyle stylelabel;
+	private boolean modifyxy;
 
-	public ButtonLevel(Level level, boolean Activated, float ratio) {
+	public ButtonLevel(Level level, boolean Activated, float ratio, boolean modifyxy) {
 		super(level.Name, AssetLoader.Skin_level, "world"
 				+ String.valueOf(level.aWorld));
+		this.modifyxy=modifyxy;
 		this.level = level;
 		this.ratio = ratio;
 		this.Activated = Activated;
@@ -70,11 +72,12 @@ public class ButtonLevel extends ImageTextButton {
 	@Override
 	public void setPosition(float x, float y) {
 		super.setPosition(x, y);
-		level.X = x;
-		level.Y = y;
+		if (modifyxy) {
+			level.X = x;
+			level.Y = y/ratio;
+		}
 		Thelabel.setColor(level.X / 1024f, level.X / 1024f, level.X / 1024f, 1f);
-		Thelabel.setPosition(level.X + 54 * scale,
-				level.Y * ratio + 20 * scale, Align.bottom | Align.center);
+		Thelabel.setPosition(x + 54 * scale,y  + 20 * scale, Align.bottom | Align.center);
 		this.setColor(1f, 0.47f + (float) level.X / 1024f * 0.529f,
 				0.607f + (float) level.X / 768f * 0.392f, 1f);
 	}
@@ -83,15 +86,15 @@ public class ButtonLevel extends ImageTextButton {
 	public void draw(Batch batch, float parentAlpha) {
 		super.draw(batch, parentAlpha);
 		if (level.Special) {
-			batch.draw(Finalled, level.X, level.Y * ratio,
+			batch.draw(Finalled, getX(), getY() ,
 					Finalled.getRegionWidth() * scale,
 					Finalled.getRegionHeight() * scale);
 		}
 		if (!Activated) {
 			batch.draw(
 					Locked,
-					level.X + this.getWidth() - Locked.getRegionWidth(),
-					level.Y * ratio + this.getHeight()
+					getX() + this.getWidth() - Locked.getRegionWidth(),
+					getY() + this.getHeight()
 							- Locked.getRegionHeight(), Locked.getRegionWidth()
 							* scale, Locked.getRegionHeight() * scale);
 		}

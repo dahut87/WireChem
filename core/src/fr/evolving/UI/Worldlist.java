@@ -16,7 +16,7 @@ public class Worldlist extends List {
 	public void Refresh() {
 		Array<String> worlds = null;
 		if (AssetLoader.Datahandler.game() != null)
-			worlds = AssetLoader.Datahandler.game().getworlds();
+			worlds = AssetLoader.Datahandler.game().getCampaigns();
 		if (worlds == null)
 			worlds = new Array<String>();
 		this.setItems(worlds);

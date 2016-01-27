@@ -18,7 +18,9 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextArea;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener.ChangeEvent;
 import com.badlogic.gdx.utils.Array;
 
 import fr.evolving.UI.ButtonLevel;
@@ -30,6 +32,8 @@ import fr.evolving.assets.AssetLoader;
 import fr.evolving.assets.InitWorlds;
 import fr.evolving.assets.Preference;
 import fr.evolving.automata.Level;
+import fr.evolving.automata.Worlds;
+import fr.evolving.automata.Worlds.State;
 import fr.evolving.database.Base;
 import fr.evolving.renderers.LevelRenderer;
 
@@ -51,48 +55,18 @@ public class LevelScreen implements Screen {
 	private ServerList Statdata, Userdata, Gamedata;
 	private Worldlist Worlddata;
 	private Label Statdatalabel, Userdatalabel, Gamedatalabel, Worlddatalabel;
-	private Array<Level> thelevels;
 	private TextArea TextDescriptive;
-	public int world;
+	public Worlds worlds;
 	private Objectives Victory;
 	public ButtonLevel selected;
 
-	public int getMaxWorld() {
-		int max = 0;
-		for (Level level : thelevels)
-			if (level != null && level.aWorld > max)
-				max = level.aWorld;
-		return max;
-	}
 
 	public void play() {
-		if (!AssetLoader.Datahandler.verifyall())
-			Gdx.app.debug(getClass().getSimpleName(),
-					"Pilotes de bases de donnée défaillant.");
-		else {
-			Gdx.app.debug(getClass().getSimpleName(),
-					"Chargement des mondes depuis la base.");
-			try {
-				if (world < 0)
-					world = 0;
-				thelevels = AssetLoader.Datahandler.game().getworld(
-						Preference.prefs.getString("world"));
-				/*
-				 thelevels= InitWorlds.go();
-				 AssetLoader.Datahandler.game().setworld
-				 (thelevels,Preference.prefs.getString("world"));
-				 */
-				loadWorld(world);
-				Previous.setVisible(true);
-				Next.setVisible(true);
-				buttonPlay.setVisible(true);
-				TextDescriptive.setVisible(true);
-			} catch (Exception e) {
-				Previous.setVisible(false);
-				Next.setVisible(false);
-				buttonPlay.setVisible(false);
-				TextDescriptive.setVisible(false);
-			}
+		if (worlds.getState()!=State.notloaded && worlds.getState()!=State.databasefailed) {
+			Gdx.app.debug(getClass().getSimpleName(),"Afficher le monde 0");
+			if (worlds.getWorld() < 0)
+				worlds.setWorld(0);
+			worlds.Forcereload();
 		}
 	}
 
@@ -180,8 +154,7 @@ public class LevelScreen implements Screen {
 		buttonConnect.setVisible(true);
 		buttonStat.setVisible(true);
 		SetButtonStat();
-		if (Preference.prefs.contains("world"))
-			play();
+		play();
 	}
 
 	public void SetButtonConnect() {
@@ -217,7 +190,7 @@ public class LevelScreen implements Screen {
 		buttonPlaythis.setVisible(false);
 	}
 
-	public void loadWorld(int aworld) {
+	public void loadWorld() {
 		int i = 0;
 		if (buttonLevels != null)
 			for (int j = 0; j < 10; j++) {
@@ -228,14 +201,13 @@ public class LevelScreen implements Screen {
 			}
 		buttonLevels = null;
 		buttonLevels = new ButtonLevel[10];
-		for (Level level : thelevels) {
-			if (level != null && level.aWorld == aworld) {
+		for (Level level : worlds.getLevels()) {
+			if (level != null) {
 				if (level.Name.isEmpty())
 					level.Name=AssetLoader.language.get("[level"+(level.aWorld+1)+"/"+(level.aLevel+1)+"-name]");
 				if (level.Description.isEmpty())
 					level.Description=AssetLoader.language.get("[level"+(level.aWorld+1)+"/"+(level.aLevel+1)+"-desc]");		
-				buttonLevels[i] = new ButtonLevel(level, true,
-						AssetLoader.ratio);
+				buttonLevels[i] = new ButtonLevel(level, true, AssetLoader.ratio, true);
 				Gdx.app.debug(getClass().getSimpleName(), "Ajout du niveau :"
 						+ level.Name + " N°" + String.valueOf(level.aLevel));
 				buttonLevels[i++].addListener(new ClickListener() {
@@ -278,14 +250,43 @@ public class LevelScreen implements Screen {
 			}
 		}
 		Gdx.app.debug(getClass().getSimpleName(), "Mise en place du level 0.");
-		world = world;
-		buttonLevels[0].setChecked(true);
+		buttonLevels[0].setChecked(true); 
 		showlevel(buttonLevels[0]);
 	}
 
-	public LevelScreen(int aworld) {
-		Gdx.app.log("level", "Ok");
-		this.world = aworld;
+	public LevelScreen(Worlds aworlds) {
+		this.worlds = aworlds;
+		worlds.addListener(new ChangeListener() {
+			@Override
+			public void changed(ChangeEvent event, Actor actor) {
+				if (worlds.getState()!=Worlds.State.notloaded && worlds.getWorld()>=0)
+				{
+					LevelScreen.this.loadWorld();
+					if (buttonLevels!=null)
+						for (int j = 0; j < 10; j++)
+						{
+							if (buttonLevels[j]!=null) {
+								buttonLevels[j].setChecked(false);
+								if (worlds.getInformations()!=null && buttonLevels[j].level.id == worlds.getInformations().id) {
+									selected=buttonLevels[j];
+									selected.setChecked(true);
+									break;
+								}
+							}
+						}
+					Previous.setVisible(true);
+					Next.setVisible(true);
+					buttonPlay.setVisible(true);
+					TextDescriptive.setVisible(true);
+				}
+				else {
+					Previous.setVisible(false);
+					Next.setVisible(false);
+					buttonPlay.setVisible(false);
+					TextDescriptive.setVisible(false);
+				}
+			}
+		});
 		Gdx.app.debug(getClass().getSimpleName(),
 				"Création des elements primordiaux du screen (stage, renderer, table)");
 		stage = new Stage(AssetLoader.viewport);
@@ -371,8 +372,7 @@ public class LevelScreen implements Screen {
 				AssetLoader.Datahandler.Attach(Gamedata.getModel(),
 						Gamedata.getUrl());
 				if (!AssetLoader.Datahandler.verifyall()) {
-					dialog.Show(
-							AssetLoader.language.get("[dialog-levelscreen-errorloading]"),stage);
+					dialog.Show(AssetLoader.language.get("[dialog-levelscreen-errorloading]"),stage);
 					initlevel();
 				} else
 					menu();
@@ -389,6 +389,7 @@ public class LevelScreen implements Screen {
 				else
 					Userdata.setColor(1f, 1f, 1f, 1f);
 				Worlddata.Refresh();
+				worlds.init();
 			}
 		});
 		buttonSave = new TextButton(AssetLoader.language.get("[buttonSave-levelscreen]"), AssetLoader.Skin_ui);
@@ -399,6 +400,7 @@ public class LevelScreen implements Screen {
 				Preference.prefs.putString("userdata", Userdata.getUrl());
 				Preference.prefs.putString("gamedata", Gamedata.getUrl());
 				Preference.prefs.putString("statdata", Statdata.getUrl());
+				Preference.prefs.flush();
 				dialog.Show(
 						AssetLoader.language.get("[dialog-levelscreen-savedatabase]"),stage);
 			}
@@ -416,8 +418,8 @@ public class LevelScreen implements Screen {
 		buttonPlay.addListener(new ClickListener() {
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
-				((Game) Gdx.app.getApplicationListener())
-						.setScreen(new GameScreen(selected.level));
+				worlds.setLevel(selected.level.aLevel);
+				((Game) Gdx.app.getApplicationListener()).setScreen(new GameScreen(worlds));
 			}
 		});
 		buttonStat = new TextButton(AssetLoader.language.get("[buttonStat-levelscreen]"), AssetLoader.Skin_ui);
@@ -429,7 +431,7 @@ public class LevelScreen implements Screen {
 			}
 		});
 		buttonPlaythis = new TextButton(AssetLoader.language.get("[buttonPlaythis-levelscreen]"), AssetLoader.Skin_ui);
-		buttonPlaythis.setBounds(1480, 50, 190, 40);
+		buttonPlaythis.setBounds(1480, 50, 230, 40);
 		buttonPlaythis.addListener(new ClickListener() {
 			public void clicked(InputEvent event, float x, float y) {
 				if (!AssetLoader.Datahandler.verifyall())
@@ -438,8 +440,7 @@ public class LevelScreen implements Screen {
 					if (Worlddata.getSelected() == null)
 						dialog.Show(AssetLoader.language.get("[dialog-levelscreen-errornoworld]"), stage);
 					else {
-						Preference.prefs.putString("world",
-								(String) Worlddata.getSelected());
+						worlds.set((String) Worlddata.getSelected());
 						Preference.prefs.flush();
 						play();
 					}
@@ -462,13 +463,10 @@ public class LevelScreen implements Screen {
 		Next.addListener(new ClickListener() {
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
-				if (world < getMaxWorld()) {
-					world++;
-					loadWorld(world);
-				}
+				worlds.NextWorld();
 				Gdx.app.debug(event.getListenerActor().toString(),
-						"World:" + String.valueOf(world) + " Maxworld:"
-								+ String.valueOf(getMaxWorld()));
+						"World:" + String.valueOf(worlds.getWorld()) + " Maxworld:"
+								+ String.valueOf(worlds.getMaxWorlds()));
 			}
 		});
 		Previous = new ImageButton(AssetLoader.Skin_level, "Previous");
@@ -476,13 +474,10 @@ public class LevelScreen implements Screen {
 		Previous.addListener(new ClickListener() {
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
-				if (world > 0) {
-					world--;
-					loadWorld(world);
-				}
+				worlds.PreviousWorld();
 				Gdx.app.debug(event.getListenerActor().toString(),
-						"World:" + String.valueOf(world) + " Maxworld:"
-								+ String.valueOf(getMaxWorld()));
+						"World:" + String.valueOf(worlds.getWorld()) + " Maxworld:"
+								+ String.valueOf(worlds.getMaxWorlds()));
 			}
 		});
 		cout = new ImageTextButton("5", AssetLoader.Skin_level, "cout");
@@ -530,7 +525,7 @@ public class LevelScreen implements Screen {
 		Userdata.Refresh();
 		Gamedata.Refresh();
 		Gdx.app.debug(getClass().getSimpleName(), "Affichage du menu.");
-		if (aworld != -1)
+		if (worlds.getWorld() != -1)
 			level();
 		else
 			menu();
@@ -553,6 +548,7 @@ public class LevelScreen implements Screen {
 	public void show() {
 		Gdx.app.log("*****", "Affichage du choix des mondes & niveaux.");
 		table.setFillParent(true);
+		stage.addActor(worlds);
 		stage.addActor(MenuSolo);
 		stage.addActor(MenuMulti);
 		stage.addActor(MenuScenario);

@@ -23,28 +23,28 @@ public abstract class Base {
 
 	// Gestion type Gamebase
 
-	public Array<String> getworlds() {
+	public Array<String> getCampaigns() {
 		return null;
 	}
 
-	public Array<Level> getworld(String description) {
+	public Array<Level> getCampaign(String description) {
 		return null;
 	}
 
-	public boolean setworld(Array<Level> world, String description) {
+	public boolean setCampaign(Array<Level> campaign, String description) {
 		return false;
 	}
 
-	public boolean deleteworld(String description) {
+	public boolean deleteCampaign(String description) {
 		return false;
 	}
 
 	// Gestion type Userbase
-	public boolean getlevellock(int user, int level) {
+	public boolean getLevellock(int user, int level) {
 		return false;
 	}
 
-	public boolean setlevelunlock(int user, int level) {
+	public boolean setLevelunlock(int user, int level) {
 		return false;
 	}
 
@@ -99,7 +99,7 @@ public abstract class Base {
 	public void Close() {
 	}
 
-	public String getprefix() {
+	public String getPrefix() {
 		return "";
 	}
 

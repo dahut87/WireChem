@@ -225,7 +225,6 @@ public class AssetLoader {
 		Datahandler.RegisterBackend(LocalBase.class);
 		Datahandler.RegisterBackend(SqlBase.class);
 		Databasemanagerfrompref();
-		Gdx.app.log("init", "Ok");
 	}
 
 	public static void Databasemanagerfrompref() {

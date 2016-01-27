@@ -27,10 +27,6 @@ public class LevelRenderer {
 	BitmapFont font;
 	String reward,goal,ressource,handicap;
 	
-	
-	
-
-
 	public LevelRenderer(LevelScreen LevelScreen) {
 		this.reward=AssetLoader.language.get("[reward-levelscreen]");
 		this.goal=AssetLoader.language.get("[goal-levelscreen]");
@@ -71,8 +67,8 @@ public class LevelRenderer {
 	public void render(float delta, float runTime) {
 		Gdx.gl.glClearColor(0, 0, 0, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
-		if (LevelScreen.world >= 0)
-			font.setColor(AssetLoader.Levelcolors[LevelScreen.world]);
+		if (LevelScreen.worlds.getWorld() >= 0)
+			font.setColor(AssetLoader.Levelcolors[LevelScreen.worlds.getWorld()]);
 		batcher.begin();
 		batcher.setProjectionMatrix(AssetLoader.Camera.combined);
 		batcher.setColor(0.25f, 0.25f, 0.25f, 1f);

@@ -25,6 +25,7 @@ public class Level implements Serializable {
 	public int Maxtemp;
 	public int Maxrayon;
 	public int Maxnrj;
+	public int Research;
 	public boolean Special;
 	public String Tuto;
 	public int[][] Link;
