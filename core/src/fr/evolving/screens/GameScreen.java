@@ -205,7 +205,7 @@ public class GameScreen implements Screen {
 		this.worlds = aworlds;
 		this.level=worlds.getInformations();
 		Gdx.app.debug(getClass().getSimpleName(),"Récupération des derniers niveaux.");
-		this.level.Grid = AssetLoader.Datahandler.user().getGrid(0,	this.level.id, "LAST");
+		worlds.ReadLastGrid();
 		if (this.level.Grid == null) {
 			Gdx.app.debug(getClass().getSimpleName(), "Copie monde original.");
 			this.level.Grid = this.level.Grid_orig;
@@ -228,7 +228,7 @@ public class GameScreen implements Screen {
 				map.setSelected(getselected());
 			}
 		});
-		vertibar=new VertiBarre();
+		vertibar=new VertiBarre(worlds);
 		Gdx.app.debug(getClass().getSimpleName(),"Création des elements primordiaux du screen (stage, renderer, table, level, world)");
 		fpsLabel = new Label("0 FPS", AssetLoader.Skin_level, "FPS");
 		fpsLabel.setPosition(AssetLoader.width - 75, AssetLoader.height - 220);
@@ -259,7 +259,7 @@ public class GameScreen implements Screen {
 		nrj.setPosition(610, AssetLoader.height - 74);
 		tech = new ImageTextButton(String.valueOf(level.Tech),AssetLoader.Skin_level, "tech2");
 		tech.setPosition(1345, AssetLoader.height - 74);
-		tech.setVisible(level.Tech==1);
+		tech.setVisible(level.Tech>=1);
 		cout = new ImageTextButton(String.valueOf(level.Cout),AssetLoader.Skin_level, "cout2");
 		cout.setVisible(level.Cout>0);
 		cout.setPosition(1445, AssetLoader.height - 74);
@@ -327,8 +327,12 @@ public class GameScreen implements Screen {
 		info_up.addListener(new ClickListener() {
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
-				if (menu.getTransmuter()!=null && menu.getTransmuter().isUpgradable(0))
+				if (menu.getTransmuter()!=null && menu.getTransmuter().isUpgradable(worlds.ReadResearch()))
+					worlds.ModResearch(-menu.getTransmuter().getUpgrade().getResearch());
 					menu.getTransmuter().Upgrade();
+					menu.update();
+					info_up.setVisible(false);
+					hideInfo();
 			}
 		});
 		dialog = new WarnDialog(AssetLoader.Skin_ui);
@@ -372,7 +376,7 @@ public class GameScreen implements Screen {
 				}
 			}
 		});
-		menu = new Menu(level);
+		menu = new Menu(worlds);
 		menu.setBounds(1531f, AssetLoader.height-780, 264, 480);
 		menu.addListener(new ChangeListener() {
 			@Override
@@ -623,6 +627,13 @@ public class GameScreen implements Screen {
 		}
 	}
 
+	public void exit()
+	{
+		worlds.SaveLastGrid();
+		worlds.SaveTransmuters();
+		worlds.SaveResearch();
+	}
+	
 	@Override
 	public void render(float delta) {
 		stage.act();
@@ -720,17 +731,16 @@ public class GameScreen implements Screen {
 			if (winSave.isVisible())
 				readsaved();
 		} else if (caller == "save") {
-			Gdx.app.debug("Barre", "Sauvegarde de la grille.");
-			Gdx.app.debug("Barre", AssetLoader.Datahandler.user().toString());			
+			Gdx.app.debug("Barre", "Sauvegarde de la grille.");	
 			worlds.SaveGrid();
 			readsaved();
 		} else if (caller == "levels") {
 			Gdx.app.debug("Barre", "Affichage des niveaux.");
-			worlds.SaveLastGrid();
+			exit();
 			((Game) Gdx.app.getApplicationListener()).setScreen(new LevelScreen(worlds));
 		} else if (caller == "tree") {
 		} else if (caller == "exits") {
-			worlds.SaveLastGrid();
+			exit();
 			Gdx.app.exit();
 		} else if (caller == "screen") {
 			DisplayMode currentMode = Gdx.graphics.getDesktopDisplayMode();
@@ -835,7 +845,7 @@ public class GameScreen implements Screen {
 				AssetLoader.Atlas_level.findRegion("jauge"
 						+ transmuter.getUpgradeRayon()));
 		info_up_rayonval.setColor(AssetLoader.Levelcolors[2]);
-		info_up.setVisible(transmuter.isUnlockable(0)||transmuter.isUpgradable(0));
+		info_up.setVisible(transmuter.isUpgradable(worlds.ReadResearch()));
 		
 	}
 
@@ -877,8 +887,7 @@ public class GameScreen implements Screen {
 		selSaved.addListener(new ClickListener() {
 			public void clicked(InputEvent event, float x, float y) {
 				if (this.getTapCount() > 1)
-					level.Grid = AssetLoader.Datahandler.user().getGrid(0,
-							level.id, selSaved.getSelectedIndex());
+					worlds.ReadGrid(selSaved.getSelectedIndex());
 				level.Grid.tiling_copper();
 				level.Grid.tiling_transmuter();
 				map.redraw();
@@ -892,8 +901,7 @@ public class GameScreen implements Screen {
 	}
 
 	public void readsaved() {
-		Array<String> items = AssetLoader.Datahandler.user().getGrids(0,
-				level.id);
+		Array<String> items = worlds.ViewGrids();
 		if (items != null)
 			selSaved.setItems(items);
 	}

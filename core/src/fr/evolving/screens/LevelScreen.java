@@ -236,7 +236,7 @@ public class LevelScreen implements Screen {
 							float y, int pointer) {
 						ButtonLevel abutton = (ButtonLevel) event
 								.getListenerActor();
-						if (logosmall.isChecked()) {
+						if (worlds.isDebug()) {
 							abutton.setPosition(event.getStageX() - 56,
 									event.getStageY() - 20);
 						}
@@ -355,8 +355,16 @@ public class LevelScreen implements Screen {
 		});
 		Gdx.app.debug(getClass().getSimpleName(), "Création des boutons.");
 		logosmall = new ImageButton(AssetLoader.Skin_level, "logosmall");
-		logosmall.setPosition(20,
-				AssetLoader.height - 175 + logosmall.getHeight() / 2);
+		logosmall.setPosition(20,AssetLoader.height - 175 + logosmall.getHeight() / 2);
+		logosmall.setChecked(worlds.isDebug());
+		logosmall.addListener(new ClickListener() {
+			public void clicked(InputEvent event, float x, float y) {
+				if (logosmall.isChecked())
+					worlds.ActivateDebug();
+				else
+					worlds.DesactivateDebug();
+			}
+		});
 		TextDescriptive = new TextArea("Descriptif", AssetLoader.Skin_level,
 				"Descriptif");
 		TextDescriptive.setBounds(15, 15, 1185, 110);
@@ -389,7 +397,7 @@ public class LevelScreen implements Screen {
 				else
 					Userdata.setColor(1f, 1f, 1f, 1f);
 				Worlddata.Refresh();
-				worlds.init();
+				worlds.initialize();
 			}
 		});
 		buttonSave = new TextButton(AssetLoader.language.get("[buttonSave-levelscreen]"), AssetLoader.Skin_ui);

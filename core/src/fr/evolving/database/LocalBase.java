@@ -202,16 +202,21 @@ public class LocalBase extends Base {
 		} catch (SQLiteGdxException e) {
 			return null;
 		}
-		Transmuter[] mc = null;
+		Array<Transmuter> mc=new Array<Transmuter>();
 		if (cursor.next())
 			try {
 				byte[] bytes = Base64Coder.decodeLines(cursor
 						.getString(0));
 				ByteArrayInputStream bais = new ByteArrayInputStream(bytes);
 				ObjectInputStream ins = new ObjectInputStream(bais);
-				mc = (Transmuter[]) ins.readObject();
+				//mc = (Transmuter[]) ins.readObject();
+				Object[] objects=(Object[])ins.readObject();
+				for(Object object:objects)
+					mc.add((Transmuter)object);
 				ins.close();
-				return new Array<Transmuter>(mc);
+				for(Transmuter transmuter:mc)
+					transmuter.restorestatic();
+				return mc;
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
@@ -221,6 +226,8 @@ public class LocalBase extends Base {
 	public boolean setTransmuters(int user, Array<Transmuter> transmuters) {
 		String encoded = "";
 		try {
+			for(Transmuter transmuter:transmuters)
+				transmuter.savestatic();
 			ByteArrayOutputStream bos = new ByteArrayOutputStream();
 			ObjectOutputStream oos = new ObjectOutputStream(bos);
 			oos.writeObject(transmuters.toArray());

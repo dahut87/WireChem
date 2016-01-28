@@ -41,8 +41,22 @@ public abstract class Transmuter implements Cloneable, Serializable {
 	};
 
 	protected transient Level level;
-	protected transient Angular Rotation;
-
+	protected Angular Rotation;
+	
+	protected boolean temp_showed;
+	protected float temp_UpgradedNrj;
+	protected float temp_UpgradedRayon;
+	protected float temp_UpgradedCycle;
+	protected float temp_UpgradedTemp;
+	
+	public void SetTemp(boolean temp_showed,float temp_UpgradedCycle,float temp_UpgradedTemp,float temp_UpgradedRayon,float temp_UpgradedNrj) {
+		this.temp_showed=temp_showed; 
+		this.temp_UpgradedCycle=temp_UpgradedCycle;
+		this.temp_UpgradedTemp=temp_UpgradedTemp;
+		this.temp_UpgradedRayon=temp_UpgradedRayon;
+		this.temp_UpgradedNrj=temp_UpgradedNrj;
+	}
+	
 	public Transmuter(Level level) {
 		this.level = level;
 		this.Rotation = Angular.A00;
@@ -63,7 +77,13 @@ public abstract class Transmuter implements Cloneable, Serializable {
 	public Class getaClass() {
 		return null;
 	}
-
+	
+	public void savestatic() {
+	}
+	
+	public void restorestatic() {
+	}
+	
 	public void ProcessCycle() {
 	}
 
@@ -153,16 +173,25 @@ public abstract class Transmuter implements Cloneable, Serializable {
 
 	public boolean isUpgradable(int value) {
 		Transmuter transmuter=this.getUpgrade();
-		return transmuter!= null && !transmuter.isShowed() && transmuter.getResearch()>=value;
+		return transmuter!= null && !transmuter.isShowed() && (transmuter.getResearch()<=value || value==-1);
 	}
 
 	public boolean isUnlockable(int value) {
 		Array<Transmuter> transmuters=this.getUnlock();
 		if (transmuters != null) {
 			for(Transmuter transmuter:transmuters) {
-				if (!transmuter.isShowed() && transmuter.getResearch()>=value)
+				if (!transmuter.isShowed() && (transmuter.getResearch()<=value || value==-1))
 					return true;
 			}
+		}
+		return false;
+	}
+	
+	public boolean isUpgraded () {
+		Transmuter transmuter=this;
+		while(transmuter!=null) {
+			transmuter=transmuter.getUpgrade();
+			if (transmuter!=null && transmuter.isShowed()) return true;
 		}
 		return false;
 	}

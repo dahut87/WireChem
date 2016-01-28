@@ -17,17 +17,21 @@ public class Worlds extends Actor {
 	private Level usedlevel;
 	private Array<Transmuter> Transmuters;
 	private State state;
+	private boolean Debug;
+	private int research;
 	
 	public enum State {pause,simulating,notloaded,databasefailed};
 	
 	public Worlds(String campaign) {
 		name=campaign;
-		init();
+		initialize();
 	}
 	
-	public void init() {
+	public void initialize() {
+		Debug=false;
 		levels=null;
 		usedworld=-1;
+		research=-2;
 		usedlevel=null;
 		if (!AssetLoader.Datahandler.verifyall()) {
 			Gdx.app.debug(getClass().getSimpleName(),"Pilotes de bases de donnée défaillant.");
@@ -36,14 +40,73 @@ public class Worlds extends Actor {
 		else
 			state=State.notloaded;
 		this.load(name);
+		this.ReadTransmuters();
 		if (state==State.notloaded)
-			this.init(name);
+			create(name);
 		onchanged();
-	}	
+	}
+	
+	public void ModResearch(int addsub) {
+		research+=addsub;
+		SaveResearch();
+	}
+	
+	public int ReadResearch() {
+		if (research==-2)
+			research=AssetLoader.Datahandler.user().getResearchpoint(0);
+		return research;
+	}
+	
+	public void SaveResearch() {
+		this.research=research;
+		AssetLoader.Datahandler.user().setResearchpoint(0,research);
+	}
+	
+	public void ActivateDebug() {
+		this.Debug=true;
+	}
+	
+	public void DesactivateDebug() {
+		this.Debug=false;
+	}
+	
+	public boolean isDebug() {
+		return this.Debug;
+	}
+	
+	public void SaveTransmuters() {
+		AssetLoader.Datahandler.user().setTransmuters(0,Transmuters);
+	}
+	
+	public void ReadTransmuters() {
+		Transmuters=AssetLoader.Datahandler.user().getTransmuters(0);
+		//String test=Transmuters.get(1).getInformations();
+		if (Transmuters==null)
+			state=State.notloaded;
+		else
+			state=State.pause;
+	}
+	
+	public Array<String> ViewGrids() {
+		if (usedlevel!=null)
+			return AssetLoader.Datahandler.user().getGrids(0,usedlevel.id);
+		else
+			return null;
+	}
+	
+	public void ReadGrid(int number) {
+		if (usedlevel!=null)
+			usedlevel.Grid = AssetLoader.Datahandler.user().getGrid(0,	usedlevel.id, number);
+	}
 	
 	public void SaveGrid() {
 		if (usedlevel!=null)
 			AssetLoader.Datahandler.user().setGrid(0, usedlevel.id, usedlevel.Grid);
+	}
+	
+	public void ReadLastGrid() {
+		if (usedlevel!=null)
+			usedlevel.Grid = AssetLoader.Datahandler.user().getGrid(0,	usedlevel.id, "LAST");
 	}
 	
 	public void SaveLastGrid() {
@@ -116,7 +179,7 @@ public class Worlds extends Actor {
 	
 	public void NextWorld() {
 		if (state!=State.notloaded)
-		if (usedworld<getMaxWorlds()-1) {
+		if (usedworld<getMaxWorlds()) {
 			usedworld++;
 			onchanged();
 		}
@@ -149,15 +212,12 @@ public class Worlds extends Actor {
 		levels=AssetLoader.Datahandler.game().getCampaign(campaign);
 		name=campaign;
 		if (levels==null)
-
-		{
 			state=State.notloaded;
-		}
 		else
 			state=State.pause;
 	}
 	
-	public void init(String campaign) {
+	public void create(String campaign) {
 		Gdx.app.log("*****", "initialisation de la compagne "+campaign);
 		try {
 			levels=InitWorlds.go();
@@ -166,6 +226,10 @@ public class Worlds extends Actor {
 			name=campaign;
 			AssetLoader.Datahandler.game().setCampaign(levels,name);
 			state=State.pause;
+			research=0;
+			Transmuters=AssetLoader.allTransmuter;
+			SaveTransmuters();
+			SaveResearch();
 		}
 		catch (Exception e) {
 			state=State.notloaded;

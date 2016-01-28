@@ -135,7 +135,7 @@ public class LevelRenderer {
 							}
 						}
 						if (found != -1) {
-							if (!LevelScreen.logosmall.isChecked())
+							if (!LevelScreen.worlds.isDebug())
 								Laser.draw(
 										batcher,
 										LevelScreen.buttonLevels[i].level.X,

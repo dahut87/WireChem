@@ -34,9 +34,8 @@ public class Neutraliser_II extends Transmuter {
 	private static float TurnRayon;
 	private static float TurnNrj;
 	private static boolean Activable;
-	private int ActivationLevel;
-	private int Rotation;
-	private String id;
+	private transient int ActivationLevel;
+	private static String id;
 	private static OrderedMap<Vector2, CaseType> Tilestype;
 	private static OrderedMap<Vector2, Integer> Tilesid;
 
@@ -89,7 +88,19 @@ public class Neutraliser_II extends Transmuter {
 	public Class getaClass() {
 		return this.theClass;
 	}
-
+	
+	public void savestatic() {
+		SetTemp(showed,UpgradedCycle,UpgradedTemp,UpgradedRayon,UpgradedNrj);
+	}
+	
+	public void restorestatic() {
+		this.UpgradedTemp = this.temp_UpgradedTemp;
+		this.UpgradedCycle = this.temp_UpgradedCycle;
+		this.UpgradedRayon = this.temp_UpgradedRayon;
+		this.UpgradedNrj = this.temp_UpgradedNrj;
+		this.showed=this.temp_showed;
+	}
+	
 	public void ProcessCycle() {
 		this.level.Temp += TurnTemp * UpgradedTemp;
 		this.level.Rayon += TurnRayon * UpgradedRayon;
