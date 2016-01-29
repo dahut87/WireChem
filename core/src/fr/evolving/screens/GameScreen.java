@@ -106,7 +106,7 @@ public class GameScreen implements Screen {
 	private Label fpsLabel, info_nom;
 	private TextArea info_desc, tooltip;
 	public boolean unroll;
-	private Worlds worlds;
+	public Worlds worlds;
 
 	public enum calling {
 		mouseover, mouseclick, mousedrag, longpress, tap, taptap, zoom, fling, pan, pinch
@@ -680,11 +680,14 @@ public class GameScreen implements Screen {
 		stage_info.addActor(info_desc);
 		//stage_tooltip.addActor(tooltip);
 		stage.addActor(horizbar);
-		stage.addActor(vertibar);
+		if (worlds.getInformations().Cout>0 || worlds.getInformations().Tech>=1 ) {
+			stage.addActor(vertibar);
+			stage.addActor(buttonlevel);
+			stage.addActor(menu);
+		}
 		stage.addActor(nextpage);
 		stage.addActor(previouspage);		
 		stage.addActor(objectives);
-		stage.addActor(buttonlevel);
 		stage.addActor(rayon);
 		stage.addActor(nrj);
 		if (Preference.prefs.getBoolean("Refresh"))
@@ -694,7 +697,6 @@ public class GameScreen implements Screen {
 		stage.addActor(tech);
 		stage.addActor(cout);
 		stage.addActor(research);
-		stage.addActor(menu);
 		gesturedetector=new GestureDetector(map);
 		//processors.add(stage_tooltip);
 		processors.add(stage_info);

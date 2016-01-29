@@ -249,9 +249,9 @@ public class LevelScreen implements Screen {
 				stage.addActor(buttonLevels[j]);
 			}
 		}
-		Gdx.app.debug(getClass().getSimpleName(), "Mise en place du level 0.");
+		/*Gdx.app.debug(getClass().getSimpleName(), "Mise en place du level 0.");
 		buttonLevels[0].setChecked(true); 
-		showlevel(buttonLevels[0]);
+		showlevel(buttonLevels[0]);*/
 	}
 
 	public LevelScreen(Worlds aworlds) {
@@ -269,11 +269,14 @@ public class LevelScreen implements Screen {
 								buttonLevels[j].setChecked(false);
 								if (worlds.getInformations()!=null && buttonLevels[j].level.id == worlds.getInformations().id) {
 									selected=buttonLevels[j];
-									selected.setChecked(true);
 									break;
 								}
 							}
 						}
+					if (worlds.getInformations()==null)
+						selected=buttonLevels[0];
+					selected.setChecked(true);
+					showlevel(selected);
 					Previous.setVisible(true);
 					Next.setVisible(true);
 					buttonPlay.setVisible(true);

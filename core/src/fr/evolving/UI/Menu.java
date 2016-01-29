@@ -230,16 +230,25 @@ public class Menu extends Actor {
 
 	public void update() {
 		clearall();
-		this.setMenuTile(0, 7, 71, "copper_pen",0);
-		this.setMenuTile(1, 7, 72, "copper_brush",0);
-		this.setMenuTile(2, 7, 73, "copper_eraser",0);
-		this.setMenuTile(1, 5, 70, "blank",0);
-		this.setMenuTile(0, 6, 74, "fiber_pen",0);
-		this.setMenuTile(1, 6, 75, "fiber_brush",0);
-		this.setMenuTile(2, 6, 76, "fiber_eraser",0);
-		this.setMenuTile(0, 5, 77, "transmuter_eraser",0);
-		this.setMenuTile(2, 5, 78, "all_eraser",0);
-		this.setMenuTile(3, 3, 79, "cleaner",0);
+		if (worlds.getInformations().Cout>=0)
+		{
+			this.setMenuTile(0, 7, 71, "copper_pen",0);
+			this.setMenuTile(1, 7, 72, "copper_brush",0);
+			this.setMenuTile(2, 7, 73, "copper_eraser",0);
+			this.setMenuTile(3, 3, 79, "cleaner",0);
+		}
+		if (worlds.getInformations().Tech>=0)
+		{
+			this.setMenuTile(0, 5, 77, "transmuter_eraser",0);
+		}
+		if (worlds.getInformations().Tech>=2)
+		{
+			this.setMenuTile(1, 5, 70, "blank",0);
+			this.setMenuTile(0, 6, 74, "fiber_pen",0);
+			this.setMenuTile(1, 6, 75, "fiber_brush",0);
+			this.setMenuTile(2, 6, 76, "fiber_eraser",0);
+			this.setMenuTile(2, 5, 78, "all_eraser",0);
+		}
 		this.setMenuTransmuter(0, 7, "+", Angular.A00,0);
 		this.setMenuTransmuter(2, 7, "-", Angular.A00,0);
 		this.setMenuTransmuter(0, 6, "++", Angular.A00,0);

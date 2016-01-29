@@ -41,7 +41,7 @@ public class Worlds extends Actor {
 			state=State.notloaded;
 		this.load(name);
 		this.ReadTransmuters();
-		if (state==State.notloaded)
+		//if (state==State.notloaded)
 			create(name);
 		onchanged();
 	}
@@ -172,6 +172,7 @@ public class Worlds extends Actor {
 	public void setWorld(int world) {
 		if (state!=State.notloaded)
 		if (world<getMaxWorlds()) {
+			delLevel();
 			usedworld=world;
 			onchanged();
 		}
@@ -180,6 +181,7 @@ public class Worlds extends Actor {
 	public void NextWorld() {
 		if (state!=State.notloaded)
 		if (usedworld<getMaxWorlds()) {
+			delLevel();
 			usedworld++;
 			onchanged();
 		}
@@ -188,6 +190,7 @@ public class Worlds extends Actor {
 	public void PreviousWorld() {
 		if (state!=State.notloaded)
 		if (usedworld>0) {
+			delLevel();
 			usedworld--;
 			onchanged();
 		}

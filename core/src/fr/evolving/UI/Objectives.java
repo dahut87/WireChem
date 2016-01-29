@@ -35,19 +35,19 @@ public class Objectives extends Actor {
 				batch.end();
 				shaperenderer.begin(ShapeType.Filled);
 				shaperenderer.setColor(AssetLoader.Typecolors[type]);
-				shaperenderer.rect(this.getX() + element * 40, this.getY(), 40,
+				shaperenderer.rect(this.getX() + element * 48, this.getY(), 48,
 						68);
 				shaperenderer.end();
 				shaperenderer.begin(ShapeType.Line);
 				shaperenderer.setColor(1, 1, 1, 1);
-				shaperenderer.rect(this.getX() + element * 40, this.getY(), 40,
+				shaperenderer.rect(this.getX() + element * 48, this.getY(), 48,
 						68);
 				shaperenderer.end();
 				batch.begin();
 				font.draw(batch, AssetLoader.Typenames[type], this.getX()
-						+ element * 40 + 2, this.getY() + 69);
+						+ element * 48 + 2, this.getY() + 69);
 				font2.draw(batch, String.valueOf(vict), this.getX() + element
-						* 40 + 11, this.getY() + 35);
+						* 48 + 11, this.getY() + 35);
 				element += 1;
 			}
 			type += 1;

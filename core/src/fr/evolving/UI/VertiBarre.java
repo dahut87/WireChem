@@ -35,7 +35,7 @@ public class VertiBarre extends Actor {
 		Gdx.app.debug(getClass().getSimpleName(), "Menu:" + Barre.length+ " elements");
 		for (int i = 0; i < Barre.length; i++)
 		{
-			if (Transmuter.Class.values()[i]!=Transmuter.Class.Scenario || worlds.isDebug())
+			if ((Transmuter.Class.values()[i]!=Transmuter.Class.Scenario && (worlds.getInformations().Tech>=0 || Transmuter.Class.values()[i]==Transmuter.Class.Structure)) || worlds.isDebug())
 			{
 				Barre[i] = new ImageTextButton(Transmuter.Class.values()[i].toString(), AssetLoader.Skin_level);
 				table.addActor(Barre[i]);
@@ -61,7 +61,7 @@ public class VertiBarre extends Actor {
 			}
 		}
 		buttonGroup.setMaxCheckCount(1);
-		buttonGroup.setMinCheckCount(0);
+		buttonGroup.setMinCheckCount(1);
 		buttonGroup.setUncheckLast(true);
 		this.setBounds(table.getX(),table.getY(),table.getWidth(),table.getHeight());
 	}
