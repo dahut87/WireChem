@@ -207,7 +207,7 @@ public class LevelScreen implements Screen {
 					level.Name=AssetLoader.language.get("[level"+(level.aWorld+1)+"/"+(level.aLevel+1)+"-name]");
 				if (level.Description.isEmpty())
 					level.Description=AssetLoader.language.get("[level"+(level.aWorld+1)+"/"+(level.aLevel+1)+"-desc]");		
-				buttonLevels[i] = new ButtonLevel(level, true, AssetLoader.ratio, true);
+				buttonLevels[i] = new ButtonLevel(level, AssetLoader.ratio, true);
 				Gdx.app.debug(getClass().getSimpleName(), "Ajout du niveau :"
 						+ level.Name + " N°" + String.valueOf(level.aLevel));
 				buttonLevels[i++].addListener(new ClickListener() {

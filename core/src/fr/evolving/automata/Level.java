@@ -16,11 +16,10 @@ public class Level implements Serializable {
 	public int Tech;
 	public int Cout;
 	public Grid Grid_orig;
-	public transient Grid Grid;
-	public int Cycle;
-	public int Temp;
-	public int Rayon;
-	public int Nrj;
+	public int Cycle_orig;
+	public int Temp_orig;
+	public int Rayon_orig;
+	public int Nrj_orig;
 	public int Maxcycle;
 	public int Maxtemp;
 	public int Maxrayon;
@@ -29,6 +28,13 @@ public class Level implements Serializable {
 	public boolean Special;
 	public String Tuto;
 	public int[][] Link;
+	
+	public transient Grid Grid;
+	public transient int Cycle;
+	public transient int Temp;
+	public transient int Rayon;
+	public transient int Nrj;
+	public transient boolean Locked;
 
 	public Level(int aWorld, int aLevel, int id, String Name,
 			String Description, String Element, int[] Current, int[] Victory,

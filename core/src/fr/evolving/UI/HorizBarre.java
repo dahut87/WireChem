@@ -107,10 +107,10 @@ public class HorizBarre extends Actor {
 					}
 				});
 		}
-		Barre[15].setChecked(Preference.prefs.getBoolean("Fullscreen"));
+		/*Barre[15].setChecked(Preference.prefs.getBoolean("Fullscreen"));
 		Barre[16].setChecked(Preference.prefs.getBoolean("Sound"));
 		Barre[17].setChecked(Preference.prefs.getBoolean("Tutorial"));
-		Barre[18].setChecked(Preference.prefs.getBoolean("Grid"));
+		Barre[18].setChecked(Preference.prefs.getBoolean("Grid"));*/
 		table = new HorizontalGroup();
 		table.bottom().padLeft(5f).padBottom(8f).space(10f);
 		this.setTouchable(Touchable.enabled);

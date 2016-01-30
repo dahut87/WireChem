@@ -13,7 +13,6 @@ import fr.evolving.automata.Level;
 
 public class ButtonLevel extends ImageTextButton {
 	public Level level;
-	public boolean Activated;
 	private TextureRegion Finalled, Locked;
 	private Label Thelabel;
 	private float scale;
@@ -22,17 +21,16 @@ public class ButtonLevel extends ImageTextButton {
 	private LabelStyle stylelabel;
 	private boolean modifyxy;
 
-	public ButtonLevel(Level level, boolean Activated, float ratio, boolean modifyxy) {
+	public ButtonLevel(Level level, float ratio, boolean modifyxy) {
 		super(level.Name, AssetLoader.Skin_level, "world"
 				+ String.valueOf(level.aWorld));
 		this.modifyxy=modifyxy;
 		this.level = level;
 		this.ratio = ratio;
-		this.Activated = Activated;
 		if (level.Special == true) {
 			Finalled = AssetLoader.Skin_level.getAtlas().findRegion("boss");
 		}
-		if (Activated == false) {
+		if (level.Locked == false) {
 			this.setDisabled(true);
 			Locked = AssetLoader.Skin_level.getAtlas().findRegion("locked");
 		}
@@ -90,7 +88,7 @@ public class ButtonLevel extends ImageTextButton {
 					Finalled.getRegionWidth() * scale,
 					Finalled.getRegionHeight() * scale);
 		}
-		if (!Activated) {
+		if (!level.Locked) {
 			batch.draw(
 					Locked,
 					getX() + this.getWidth() - Locked.getRegionWidth(),

@@ -41,7 +41,7 @@ public class Worlds extends Actor {
 			state=State.notloaded;
 		this.load(name);
 		this.ReadTransmuters();
-		//if (state==State.notloaded)
+		if (state==State.notloaded)
 			create(name);
 		onchanged();
 	}
@@ -58,7 +58,6 @@ public class Worlds extends Actor {
 	}
 	
 	public void SaveResearch() {
-		this.research=research;
 		AssetLoader.Datahandler.user().setResearchpoint(0,research);
 	}
 	
@@ -133,7 +132,13 @@ public class Worlds extends Actor {
 		{
 			for(Level level:levels)
 				if (level!=null && level.aWorld==usedworld)
+				{
+					if (level.aLevel==0)
+						level.Locked=true;
+					else
+						level.Locked=AssetLoader.Datahandler.user().getLevellock(0, level.aLevel);
 					tempworld.add(level);
+				}
 			return tempworld;
 		}
 		else

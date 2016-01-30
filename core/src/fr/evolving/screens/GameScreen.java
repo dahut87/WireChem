@@ -92,10 +92,7 @@ public class GameScreen implements Screen {
 			info_up_cycleval, nextpage, previouspage;
 	private ImageTextButton cycle, temp, nrj, rayon, cout, tech, research,
 			info_cout, info_tech, info_research, info_activation;
-	String[] tocreate = { "run", "stop", "speed", "separator", "move#", "zoomp#",
-			"zoomm#", "infos#", "separator", "raz", "save", "levels", "tree",
-			"exits", "separator", "screen", "sound", "tuto", "grid", "settings",
-			"separator", "stat" };
+	String[] tocreate;
 	private ButtonLevel buttonlevel;
 	private Objectives objectives;
 	public TouchMaptiles map;
@@ -201,9 +198,15 @@ public class GameScreen implements Screen {
 
 	// This is the constructor, not the class declaration
 	public GameScreen(Worlds aworlds) {
-		Gdx.app.log("game", "Ok");
+		Gdx.app.debug(getClass().getSimpleName(),"Préparation du screen");
 		this.worlds = aworlds;
 		this.level=worlds.getInformations();
+		if (level.Tech<1)
+			tocreate = new String[] { "run", "stop", "speed", "separator", "move#", "zoomp#","zoomm#", "separator", "levels", "exits", "separator", "screen", "sound", "settings" };
+		else if (level.aWorld<1)
+			tocreate = new String[] { "run", "stop", "speed", "separator", "move#", "zoomp#","zoomm#", "infos#", "separator", "raz", "save", "levels", "exits", "separator", "screen", "sound", "grid", "settings" };
+		else
+			tocreate = new String[] { "run", "stop", "speed", "separator", "move#", "zoomp#","zoomm#", "infos#", "separator", "raz", "save", "levels", "tree",	"exits", "separator", "screen", "sound", "tuto", "grid", "settings", "separator", "stat" };
 		Gdx.app.debug(getClass().getSimpleName(),"Récupération des derniers niveaux.");
 		worlds.ReadLastGrid();
 		if (this.level.Grid == null) {
@@ -270,7 +273,7 @@ public class GameScreen implements Screen {
 		objectives.setVictory(level.Victory);
 		objectives.setPosition(890, AssetLoader.height - 95);
 		objectives.setVisible(level.Cout>0);
-		buttonlevel = new ButtonLevel(level, true, 1.0f, false);
+		buttonlevel = new ButtonLevel(level, 1.0f, false);
 		buttonlevel.setPosition(1760, AssetLoader.height - 125);
 		buttonlevel.addListener(new ClickListener() {
 			@Override

@@ -15,22 +15,25 @@ public class Laser {
 
 	public float i = 0;
 	TextureRegion overlaymiddle, middle, overlay;
-
+	ShapeRenderer shaperenderer;
+	
 	public Laser() {
 		i = 0;
-		overlaymiddle = AssetLoader.Skin_level.getAtlas().findRegion(
-				"overlay-middle");
+		overlaymiddle = AssetLoader.Skin_level.getAtlas().findRegion("overlay-middle");
 		middle = AssetLoader.Skin_level.getAtlas().findRegion("middle");
 		overlay = AssetLoader.Skin_level.getAtlas().findRegion("overlay");
+		shaperenderer=new ShapeRenderer();
+		shaperenderer.setProjectionMatrix(AssetLoader.Camera.combined);
 	}
 
 	public void draw(Batch Laser, float xx1, float yy1, float xx2, float yy2,
 			float maxwidth, float power, boolean active, Color colorsrc,
 			Color colordst) {
-		float x1 = xx1 + 26;
 		float y1 = yy1 + 20;
-		float x2 = xx2 + 26;
 		float y2 = yy2 + 20;
+		if (active) {
+			float x1 = xx1 + 26;
+			float x2 = xx2 + 26;
 		Vector2 vector1 = new Vector2(x1, y1);
 		Vector2 vector2 = new Vector2(x2, y2);
 		Vector2 vectorall = vector2.sub(vector1);
@@ -40,19 +43,23 @@ public class Laser {
 		Laser.begin();
 		Laser.setColor(colorsrc);
 		Laser.setBlendFunction(GL20.GL_SRC_ALPHA, GL20.GL_ONE);
-		Laser.draw(overlaymiddle, x1, y1, 32, 0, 64, vectorall.len(), 1f, 1f,
-				vectorall.angle() + 270);
-		Laser.draw(middle, x1, y1, 32, 0, 64, vectorall.len(), 1f, 1f,
-				vectorall.angle() + 270);
+		Laser.draw(overlaymiddle, x1, y1, 32, 0, 64, vectorall.len(), 1f, 1f,vectorall.angle() + 270);
+		Laser.draw(middle, x1, y1, 32, 0, 64, vectorall.len(), 1f, 1f,vectorall.angle() + 270);
 		Laser.setColor(new Color(1f, 1f, 1f, 1f));
-		for (int j = 0; j < (vectorall.len() - vectoradd.cpy()
-				.setLength(i * inc).len()) / 64 - 1; j++)
-			Laser.draw(overlay, x1 + i * vectoradd.x + j * vectoraddit.x, y1
-					+ i * vectoradd.y + j * vectoraddit.y, 32, 0, 64, 64, 1f,
-					1f, vectorall.angle() + 270);
+		for (int j = 0; j < (vectorall.len() - vectoradd.cpy().setLength(i * inc).len()) / 64 - 1; j++)
+			Laser.draw(overlay, x1 + i * vectoradd.x + j * vectoraddit.x, y1+ i * vectoradd.y + j * vectoraddit.y, 32, 0, 64, 64, 1f,1f, vectorall.angle() + 270);
 		Laser.draw(overlay, x1, y1, 32, 0, 64, i * inc, 1f, 1f,
 				vectorall.angle() + 270);
 		Laser.end();
+		} else {
+			float x1 = xx1 + 56;
+			float x2 = xx2 + 56;
+			shaperenderer.begin(ShapeType.Filled);
+			Color Acolor = new Color(0.5f, 0.5f, 0.5f, 1f);
+			shaperenderer.setColor(Acolor);
+			shaperenderer.rectLine(x1, y1, x2, y2, 2);
+			shaperenderer.end();
+		}
 	}
 
 	public void drawnotsoold(ShapeRenderer Laser, float xx1, float yy1,
@@ -64,7 +71,7 @@ public class Laser {
 		float y2 = yy2 + 20;
 		Laser.begin(ShapeType.Filled);
 		Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
-		if (active) {
+		if (true) {
 			Vector2 vectorall = new Vector2(x2, y2).sub(new Vector2(x1, y1));
 			float length = vectorall.len();
 			float size = 20;
@@ -74,13 +81,10 @@ public class Laser {
 				float width = (float) (maxwidth - Math.random() * 2);
 				while (width >= 0) {
 					adding = (width * power / maxwidth);
-					Color Acolor = colorsrc.cpy().lerp(colordst.cpy(),
-							(i / (length / size)));
+					Color Acolor = colorsrc.cpy().lerp(colordst.cpy(),(i / (length / size)));
 					Laser.setColor(Acolor.add(adding, adding, adding, 0.5f));
 					if (Math.random() > 0.4)
-						Laser.rectLine(x1 + i * vectoradd.x, y1 + i
-								* vectoradd.y, x1 + (i + 1) * vectoradd.x, y1
-								+ (i + 1) * vectoradd.y, width);
+						Laser.rectLine(x1 + i * vectoradd.x, y1 + i	* vectoradd.y, x1 + (i + 1) * vectoradd.x, y1+ (i + 1) * vectoradd.y, width);
 					width = width - 1;
 				}
 			}
@@ -115,14 +119,10 @@ public class Laser {
 			vec2.clamp(length - i, length - i);
 			while (width >= 0) {
 				adding = (width * power / maxwidth);
-				Color Acolor = colordst.cpy()
-						.lerp(colorsrc.cpy(), (i / length));
+				Color Acolor = colordst.cpy().lerp(colorsrc.cpy(), (i / length));
 				Laser.setColor(Acolor.add(adding, adding, adding, 1f));
-				if (size > 0.4f) {
-					Laser.point(x1 + vec2.x - width / 2, y1 + vec2.y + width
-							/ 2, 0);
-					Laser.point(x1 + vec2.x + width / 2, y1 + vec2.y - width
-							/ 2, 0);
+				if (size > 0.4f) {Laser.point(x1 + vec2.x - width / 2, y1 + vec2.y + width/ 2, 0);
+				Laser.point(x1 + vec2.x + width / 2, y1 + vec2.y - width/ 2, 0);
 				}
 				width = width - 1;
 			}
