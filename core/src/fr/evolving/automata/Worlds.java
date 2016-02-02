@@ -144,6 +144,7 @@ public class Worlds extends Actor {
 	}
 	
 	public void updateUnlockLevels() {
+		if (levels!=null)
 		for(Level level:levels)
 			if (level!=null)
 			level.Locked=AssetLoader.Datahandler.user().getLevellock(0, level.id);
@@ -151,6 +152,28 @@ public class Worlds extends Actor {
 	
 	public State getState() {
 		return state;
+	}
+	
+	public void prepareLevel(boolean force) {
+		Gdx.app.debug(getClass().getSimpleName(),"Récupération des conditions initiales.");
+		usedlevel.Cout=usedlevel.Cout_orig;
+		usedlevel.Cycle=usedlevel.Cycle_orig;
+		usedlevel.Temp=usedlevel.Temp_orig;
+		usedlevel.Rayon=usedlevel.Rayon_orig;
+		usedlevel.Nrj=usedlevel.Nrj_orig;
+		usedlevel.Victory=usedlevel.Victory_orig.clone();	
+		Gdx.app.debug(getClass().getSimpleName(),"Récupération des derniers niveaux.");
+		ReadLastGrid();
+		if (usedlevel.Grid == null || force) {
+			Gdx.app.debug(getClass().getSimpleName(), "Copie monde original.");
+			usedlevel.Grid = usedlevel.Grid_orig;
+
+		} else {
+			Gdx.app.debug(getClass().getSimpleName(),
+					"Récupération de la dernière grille.");
+			usedlevel.Grid.tiling_copper();
+			usedlevel.Grid.tiling_transmuter();
+		}
 	}
 	
 	public void setLevel(int alevel) {
@@ -171,7 +194,10 @@ public class Worlds extends Actor {
 	}
 	
 	public int getLevel() {
-		return usedlevel.aLevel;
+		if (usedlevel!=null)
+			return usedlevel.aLevel;
+		else
+			return 0;
 	}
 	
 	public void delLevel() {

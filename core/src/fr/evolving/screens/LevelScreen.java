@@ -646,8 +646,8 @@ public class LevelScreen implements Screen {
 			rayon.setVisible(true);
 		} else
 			rayon.setVisible(false);
-		if (button.level.Cout > 0) {
-			cout.setText(String.valueOf(button.level.Cout));
+		if (button.level.Cout_orig > 0) {
+			cout.setText(String.valueOf(button.level.Cout_orig));
 			cout.setVisible(true);
 		} else
 			cout.setVisible(false);
@@ -656,8 +656,8 @@ public class LevelScreen implements Screen {
 			tech.setVisible(true);
 		} else
 			tech.setVisible(false);
-		Victory.setVisible(button.level.Cout > 0);
-		Victory.setVictory(button.level.Victory);
+		Victory.setVisible(button.level.Cout_orig > 0);
+		Victory.setVictory(button.level.Victory_orig);
 		if (selected != null)
 			selected.setChecked(false);
 		selected = button;

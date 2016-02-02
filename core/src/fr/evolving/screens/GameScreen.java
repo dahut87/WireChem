@@ -203,6 +203,7 @@ public class GameScreen implements Screen {
 	public GameScreen(Worlds aworlds) {
 		Gdx.app.debug(getClass().getSimpleName(),"Préparation du screen");
 		this.worlds = aworlds;
+		this.worlds.prepareLevel(false);
 		this.level=worlds.getInformations();
 		if (level.Tech<1)
 			tocreate = new String[] { "run", "stop", "speed", "separator", "move#", "zoomp#","zoomm#", "separator", "levels", "exits", "separator", "screen", "sound", "settings" };
@@ -210,18 +211,6 @@ public class GameScreen implements Screen {
 			tocreate = new String[] { "run", "stop", "speed", "separator", "move#", "zoomp#","zoomm#", "infos#", "separator", "raz", "save", "levels", "exits", "separator", "screen", "sound", "grid", "settings" };
 		else
 			tocreate = new String[] { "run", "stop", "speed", "separator", "move#", "zoomp#","zoomm#", "infos#", "separator", "raz", "save", "levels", "tree",	"exits", "separator", "screen", "sound", "tuto", "grid", "settings", "separator", "stat" };
-		Gdx.app.debug(getClass().getSimpleName(),"Récupération des derniers niveaux.");
-		worlds.ReadLastGrid();
-		if (this.level.Grid == null) {
-			Gdx.app.debug(getClass().getSimpleName(), "Copie monde original.");
-			this.level.Grid = this.level.Grid_orig;
-
-		} else {
-			Gdx.app.debug(getClass().getSimpleName(),
-					"Récupération de la dernière grille.");
-			this.level.Grid.tiling_copper();
-			this.level.Grid.tiling_transmuter();
-		}
 		Gdx.app.debug(getClass().getSimpleName(),"Création des Barres verticales & horizontales.");
 		horizbar=new HorizBarre(tocreate,"preparebarre");
 		horizbar.addListener(new ChangeListener() {
@@ -275,9 +264,7 @@ public class GameScreen implements Screen {
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
 				Gdx.app.debug(getClass().getSimpleName(),"Remise à zéro du monde");
-				GameScreen.this.level.Grid = GameScreen.this.level.Grid_orig;
-				level.Grid.tiling_copper();
-				level.Grid.tiling_transmuter();
+				worlds.prepareLevel(true);
 				map.redraw();
 				buttonlevel.setChecked(false);
 			}

@@ -91,7 +91,7 @@ public class LevelRenderer {
 			if (LevelScreen.selected.level.Tech > 0)
 				font.draw(batcher2, this.reward, 1215,
 						AssetLoader.height - 15);
-			if (LevelScreen.selected.level.Cout > 0) {
+			if (LevelScreen.selected.level.Cout_orig > 0) {
 				font.draw(batcher2, this.ressource, 1215, 145);
 				font.draw(batcher2, this.goal, 1215, 295);
 			}
@@ -108,7 +108,7 @@ public class LevelRenderer {
 		shapeRenderer.setColor(0.5f, 0.5f, 0.5f, 0.5f);
 		if (LevelScreen.selected != null) {
 			shapeRenderer.rect(10, 10, 1190, 165);
-			if (LevelScreen.selected.level.Cout > 0) {
+			if (LevelScreen.selected.level.Cout_orig > 0) {
 				shapeRenderer.rect(1210, 10, 250, 140);
 				shapeRenderer.rect(1210, 160, 250, 140);
 			}
