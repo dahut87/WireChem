@@ -190,6 +190,7 @@ public class Worlds extends Actor {
 	public void setMaxWorldLevel() {
 		usedworld=getMaxUnlockWorlds();
 		usedlevel=getMaxUnlockLevel();
+		onchanged();
 	}
 	
 	public boolean isFirstWorld() {

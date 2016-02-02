@@ -245,9 +245,6 @@ public class LevelScreen implements Screen {
 				stage.addActor(buttonLevels[j]);
 			}
 		}
-		/*Gdx.app.debug(getClass().getSimpleName(), "Mise en place du level 0.");
-		buttonLevels[0].setChecked(true); 
-		showlevel(buttonLevels[0]);*/
 	}
 
 	public LevelScreen(Worlds aworlds) {
@@ -378,8 +375,6 @@ public class LevelScreen implements Screen {
 					worlds.DesactivateDebug();
 					worlds.updateUnlockLevels();
 					worlds.setMaxWorldLevel();
-					loadWorld();
-					
 				}
 			}
 		});
