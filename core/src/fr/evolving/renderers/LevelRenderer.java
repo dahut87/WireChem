@@ -42,7 +42,7 @@ public class LevelRenderer {
 		shapeRenderer = new ShapeRenderer();
 		Laser = new Laser();
 		AssetLoader.viewport.apply();
-		font = AssetLoader.Skin_level.getFont("OpenDyslexicAlta-22");
+		font = AssetLoader.Skin_level.getFont("OpenDyslexicAlta-25");
 	}
 
 	public void evolve() {
@@ -146,7 +146,7 @@ public class LevelRenderer {
 												* AssetLoader.ratio,
 										10,
 										0.5f,
-										!LevelScreen.buttonLevels[i].level.Locked,
+										!LevelScreen.buttonLevels[found].level.Locked,
 										LevelScreen.buttonLevels[i]
 												.getLevelcolor(),
 										LevelScreen.buttonLevels[found]
@@ -162,7 +162,7 @@ public class LevelRenderer {
 												* AssetLoader.ratio,
 										10,
 										0.5f,
-										!LevelScreen.buttonLevels[i].level.Locked,
+										!LevelScreen.buttonLevels[found].level.Locked,
 										LevelScreen.buttonLevels[i]
 												.getLevelcolor(),
 										LevelScreen.buttonLevels[found]

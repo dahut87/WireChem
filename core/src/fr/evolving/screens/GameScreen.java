@@ -35,6 +35,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.List;
 import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
 import com.badlogic.gdx.scenes.scene2d.ui.SelectBox;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Slider;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextArea;
@@ -55,11 +56,13 @@ import com.badlogic.gdx.utils.OrderedMap;
 
 import fr.evolving.UI.ButtonLevel;
 import fr.evolving.UI.HorizBarre;
+import fr.evolving.UI.IconValue;
 import fr.evolving.UI.Menu;
 import fr.evolving.UI.Objectives;
 import fr.evolving.UI.TouchMaptiles;
 import fr.evolving.UI.VertiBarre;
 import fr.evolving.UI.WarnDialog;
+import fr.evolving.UI.IconValue.Icon;
 import fr.evolving.assets.AssetLoader;
 import fr.evolving.assets.Preference;
 import fr.evolving.automata.Level;
@@ -90,8 +93,8 @@ public class GameScreen implements Screen {
 	private ImageButton Setflag, info_up_nrj, info_up_temp, info_up, info_up_rayon,
 			info_up_cycle, info_up_nrjval, info_up_tempval, info_up_rayonval,
 			info_up_cycleval, nextpage, previouspage;
-	private ImageTextButton cycle, temp, nrj, rayon, cout, tech, research,
-			info_cout, info_tech, info_research, info_activation;
+	private ImageTextButton info_cout, info_tech, info_research, info_activation;
+	private IconValue cycle, temp, nrj, rayon, cout, tech, research;
 	String[] tocreate;
 	private ButtonLevel buttonlevel;
 	private Objectives objectives;
@@ -248,27 +251,20 @@ public class GameScreen implements Screen {
 		tooltip = new TextArea("tooltip:x\r\n tooltip:y",AssetLoader.Skin_level, "info_tooltip");
 		tooltip.setBounds(541, 27, 100, 50);
 		Gdx.app.debug(getClass().getSimpleName(),"Création de la barre de gestion du haut");
-		cycle = new ImageTextButton(String.valueOf(level.Cycle),AssetLoader.Skin_level, "cycle2");
-		cycle.setVisible(level.aWorld>=1);
+		cycle = new IconValue(Icon.cycle,worlds, AssetLoader.Skin_level);
 		cycle.setPosition(10, AssetLoader.height - 74);
-		temp = new ImageTextButton(String.valueOf(level.Temp),AssetLoader.Skin_level, "temp2");
-		temp.setVisible(level.aWorld>=2);
+		temp = new IconValue(Icon.temp,worlds, AssetLoader.Skin_level);
 		temp.setPosition(210, AssetLoader.height - 74);
-		rayon = new ImageTextButton(String.valueOf(level.Rayon),AssetLoader.Skin_level, "rayon2");
-		rayon.setVisible(level.aWorld>=3);
+		rayon = new IconValue(Icon.rayon,worlds, AssetLoader.Skin_level);
 		rayon.setPosition(410, AssetLoader.height - 74);
-		nrj = new ImageTextButton(String.valueOf(level.Nrj),AssetLoader.Skin_level, "nrj2");
-		nrj.setVisible(level.aWorld>=4);
+		nrj = new IconValue(Icon.nrj,worlds, AssetLoader.Skin_level);
 		nrj.setPosition(610, AssetLoader.height - 74);
-		tech = new ImageTextButton(String.valueOf(level.Tech),AssetLoader.Skin_level, "tech2");
+		tech = new IconValue(Icon.tech,worlds, AssetLoader.Skin_level);
 		tech.setPosition(1345, AssetLoader.height - 74);
-		tech.setVisible(level.Tech>=1);
-		cout = new ImageTextButton(String.valueOf(level.Cout),AssetLoader.Skin_level, "cout2");
-		cout.setVisible(level.Cout>0);
+		cout = new IconValue(Icon.cout,worlds, AssetLoader.Skin_level);
 		cout.setPosition(1445, AssetLoader.height - 74);
-		research = new ImageTextButton(String.valueOf(0),AssetLoader.Skin_level, "research2");
+		research = new IconValue(Icon.research,worlds, AssetLoader.Skin_level);
 		research.setPosition(1545, AssetLoader.height - 74);
-		research.setVisible(level.Special || level.aWorld>0);
 		objectives = new Objectives();
 		objectives.setVictory(level.Victory);
 		objectives.setPosition(890, AssetLoader.height - 95);
@@ -716,6 +712,7 @@ public class GameScreen implements Screen {
 		menu.EraseSurtile();
 		hideInfo();
 		if (caller == "run") {
+			worlds.getInformations().Cout-=15;
 		} else if (caller == "stop") {
 		} else if (caller == "speed") {
 		} else if (caller == "move") {
