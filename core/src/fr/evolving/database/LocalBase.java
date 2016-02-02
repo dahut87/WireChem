@@ -178,9 +178,9 @@ public class LocalBase extends Base {
 			return false;
 		}
 		if (cursor.next())
-			return true;
-		else
 			return false;
+		else
+			return true;
 	}
 
 	public boolean setLevelunlock(int user, int level) {

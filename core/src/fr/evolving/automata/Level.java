@@ -35,6 +35,7 @@ public class Level implements Serializable {
 	public transient int Rayon;
 	public transient int Nrj;
 	public transient boolean Locked;
+	public transient boolean Locked_old;
 
 	public Level(int aWorld, int aLevel, int id, String Name,
 			String Description, String Element, int[] Current, int[] Victory,

@@ -146,7 +146,7 @@ public class LevelRenderer {
 												* AssetLoader.ratio,
 										10,
 										0.5f,
-										LevelScreen.buttonLevels[i].level.Locked,
+										!LevelScreen.buttonLevels[i].level.Locked,
 										LevelScreen.buttonLevels[i]
 												.getLevelcolor(),
 										LevelScreen.buttonLevels[found]
@@ -162,7 +162,7 @@ public class LevelRenderer {
 												* AssetLoader.ratio,
 										10,
 										0.5f,
-										LevelScreen.buttonLevels[i].level.Locked,
+										!LevelScreen.buttonLevels[i].level.Locked,
 										LevelScreen.buttonLevels[i]
 												.getLevelcolor(),
 										LevelScreen.buttonLevels[found]

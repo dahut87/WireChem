@@ -24,15 +24,14 @@ public class ButtonLevel extends ImageTextButton {
 	public ButtonLevel(Level level, float ratio, boolean modifyxy) {
 		super(level.Name, AssetLoader.Skin_level, "world"
 				+ String.valueOf(level.aWorld));
+		Locked = AssetLoader.Skin_level.getAtlas().findRegion("locked");
+		Finalled = AssetLoader.Skin_level.getAtlas().findRegion("boss");
 		this.modifyxy=modifyxy;
 		this.level = level;
 		this.ratio = ratio;
-		if (level.Special == true) {
-			Finalled = AssetLoader.Skin_level.getAtlas().findRegion("boss");
-		}
-		if (level.Locked == false) {
+		if (level.Locked) {
 			this.setDisabled(true);
-			Locked = AssetLoader.Skin_level.getAtlas().findRegion("locked");
+			
 		}
 		this.setColor(1f, 0.47f + (float) level.X / 1024f * 0.529f,
 				0.607f + (float) level.X / 768f * 0.392f, 1f);
@@ -88,7 +87,7 @@ public class ButtonLevel extends ImageTextButton {
 					Finalled.getRegionWidth() * scale,
 					Finalled.getRegionHeight() * scale);
 		}
-		if (!level.Locked) {
+		if (level.Locked) {
 			batch.draw(
 					Locked,
 					getX() + this.getWidth() - Locked.getRegionWidth(),

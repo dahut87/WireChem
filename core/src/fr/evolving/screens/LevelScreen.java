@@ -51,7 +51,7 @@ public class LevelScreen implements Screen {
 	public Image MenuSolo, MenuMulti, MenuScenario;
 	private ImageTextButton cout, tech, cycle, temp, rayon, nrj;
 	private TextButton buttonConnect, buttonPlay, buttonStat, buttonSave,
-			buttonApply, buttonPlaythis;
+	buttonApply, buttonPlaythis;
 	private ServerList Statdata, Userdata, Gamedata;
 	private Worldlist Worlddata;
 	private Label Statdatalabel, Userdatalabel, Gamedatalabel, Worlddatalabel;
@@ -63,9 +63,9 @@ public class LevelScreen implements Screen {
 
 	public void play() {
 		if (worlds.getState()!=State.notloaded && worlds.getState()!=State.databasefailed) {
-			Gdx.app.debug(getClass().getSimpleName(),"Afficher le monde 0");
 			if (worlds.getWorld() < 0)
-				worlds.setWorld(0);
+				worlds.setMaxWorldLevel();
+			Gdx.app.debug(getClass().getSimpleName(),"Afficher derniere réalisation, monde :"+worlds.getWorld()+" niveau:"+worlds.getLevel());
 			worlds.Forcereload();
 		}
 	}
@@ -208,17 +208,16 @@ public class LevelScreen implements Screen {
 				if (level.Description.isEmpty())
 					level.Description=AssetLoader.language.get("[level"+(level.aWorld+1)+"/"+(level.aLevel+1)+"-desc]");		
 				buttonLevels[i] = new ButtonLevel(level, AssetLoader.ratio, true);
-				Gdx.app.debug(getClass().getSimpleName(), "Ajout du niveau :"
-						+ level.Name + " N°" + String.valueOf(level.aLevel));
+				if (worlds.isDebug()) buttonLevels[i].setDisabled(false);
+				Gdx.app.debug(getClass().getSimpleName(), "Ajout du niveau :"+ level.Name + " N°" + String.valueOf(level.aLevel));
 				buttonLevels[i++].addListener(new ClickListener() {
 					@Override
 					public void enter(InputEvent event, float x, float y,
 							int pointer, Actor fromActor) {
 						ButtonLevel abutton = (ButtonLevel) event
 								.getListenerActor();
-						Gdx.app.debug(event.getListenerActor().toString(),
-								"Enter button ");
-						if (!abutton.isChecked())
+						Gdx.app.debug(event.getListenerActor().toString(),"Enter button ");
+						if (!abutton.isChecked() && (!abutton.level.Locked || worlds.isDebug()))
 							showlevel(abutton);
 					}
 
@@ -226,19 +225,16 @@ public class LevelScreen implements Screen {
 							int pointer, Actor fromActor) {
 						ButtonLevel abutton = (ButtonLevel) event
 								.getListenerActor();
-						Gdx.app.debug(event.getListenerActor().toString(),
-								"Enter button ");
-						if (!abutton.isChecked())
+						Gdx.app.debug(event.getListenerActor().toString(),"Enter button ");
+						if (!abutton.isChecked() && (!abutton.level.Locked || worlds.isDebug()))
 							showlevel(abutton);
 					}
 
 					public void touchDragged(InputEvent event, float x,
 							float y, int pointer) {
-						ButtonLevel abutton = (ButtonLevel) event
-								.getListenerActor();
+						ButtonLevel abutton = (ButtonLevel) event.getListenerActor();
 						if (worlds.isDebug()) {
-							abutton.setPosition(event.getStageX() - 56,
-									event.getStageY() - 20);
+							abutton.setPosition(event.getStageX() - 56,	event.getStageY() - 20);
 						}
 					}
 				});
@@ -277,8 +273,11 @@ public class LevelScreen implements Screen {
 						selected=buttonLevels[0];
 					selected.setChecked(true);
 					showlevel(selected);
-					Previous.setVisible(true);
-					Next.setVisible(true);
+					Previous.setVisible(!worlds.isFirstWorld());
+					if (worlds.isDebug())
+						Next.setVisible(!worlds.isRealLastWorld());
+					else
+						Next.setVisible(!worlds.isLastWorld());
 					buttonPlay.setVisible(true);
 					TextDescriptive.setVisible(true);
 				}
@@ -290,8 +289,7 @@ public class LevelScreen implements Screen {
 				}
 			}
 		});
-		Gdx.app.debug(getClass().getSimpleName(),
-				"Création des elements primordiaux du screen (stage, renderer, table)");
+		Gdx.app.debug(getClass().getSimpleName(),"Création des elements primordiaux du screen (stage, renderer, table)");
 		stage = new Stage(AssetLoader.viewport);
 		table = new Table();
 		Renderer = new LevelRenderer(this);
@@ -315,16 +313,16 @@ public class LevelScreen implements Screen {
 				MenuSolo.addAction(Actions.sequence(
 						Actions.parallel(Actions.rotateBy(640, 0.5f),
 								Actions.scaleTo(0.05f, 0.05f, 0.5f)),
-						Actions.run(new Runnable() {
-							public void run() {
-								level();
-							}
-						})));
+								Actions.run(new Runnable() {
+									public void run() {
+										level();
+									}
+								})));
 			}
 		});
 		MenuMulti = new Image(AssetLoader.Skin_level, "menu2");
 		MenuMulti
-				.setOrigin(MenuMulti.getWidth() / 2, MenuMulti.getHeight() / 2);
+		.setOrigin(MenuMulti.getWidth() / 2, MenuMulti.getHeight() / 2);
 		MenuMulti.addListener(new ClickListener() {
 			public void clicked(InputEvent event, float x, float y) {
 				MenuSolo.addAction(Actions.fadeOut(0.5f));
@@ -332,11 +330,11 @@ public class LevelScreen implements Screen {
 				MenuMulti.addAction(Actions.sequence(
 						Actions.parallel(Actions.rotateBy(640, 0.5f),
 								Actions.scaleTo(0.05f, 0.05f, 0.5f)),
-						Actions.run(new Runnable() {
-							public void run() {
-								level();
-							}
-						})));
+								Actions.run(new Runnable() {
+									public void run() {
+										level();
+									}
+								})));
 			}
 		});
 		MenuScenario = new Image(AssetLoader.Skin_level, "menu3");
@@ -349,11 +347,11 @@ public class LevelScreen implements Screen {
 				MenuScenario.addAction(Actions.sequence(
 						Actions.parallel(Actions.rotateBy(640, 0.5f),
 								Actions.scaleTo(0.05f, 0.05f, 0.5f)),
-						Actions.run(new Runnable() {
-							public void run() {
-								level();
-							}
-						})));
+								Actions.run(new Runnable() {
+									public void run() {
+										level();
+									}
+								})));
 			}
 		});
 		Gdx.app.debug(getClass().getSimpleName(), "Création des boutons.");
@@ -362,10 +360,27 @@ public class LevelScreen implements Screen {
 		logosmall.setChecked(worlds.isDebug());
 		logosmall.addListener(new ClickListener() {
 			public void clicked(InputEvent event, float x, float y) {
-				if (logosmall.isChecked())
+				if (logosmall.isChecked()) {
+					if (buttonLevels != null)
+						for (int j = 0; j < 10; j++) {
+							if (buttonLevels[j] != null)
+								buttonLevels[j].setDisabled(false);
+						}
 					worlds.ActivateDebug();
-				else
+					Next.setVisible(!worlds.isRealLastWorld());
+				}
+				else {
+					if (buttonLevels != null)
+						for (int j = 0; j < 10; j++) {
+							if (buttonLevels[j] != null) 
+								buttonLevels[j].setDisabled(buttonLevels[j].level.Locked);
+							}
 					worlds.DesactivateDebug();
+					worlds.updateUnlockLevels();
+					worlds.setMaxWorldLevel();
+					loadWorld();
+					
+				}
 			}
 		});
 		TextDescriptive = new TextArea("Descriptif", AssetLoader.Skin_level,

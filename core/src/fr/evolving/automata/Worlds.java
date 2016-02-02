@@ -134,15 +134,19 @@ public class Worlds extends Actor {
 				if (level!=null && level.aWorld==usedworld)
 				{
 					if (level.aLevel==0)
-						level.Locked=true;
-					else
-						level.Locked=AssetLoader.Datahandler.user().getLevellock(0, level.aLevel);
+						level.Locked=false;
 					tempworld.add(level);
 				}
 			return tempworld;
 		}
 		else
 			return null;
+	}
+	
+	public void updateUnlockLevels() {
+		for(Level level:levels)
+			if (level!=null)
+			level.Locked=AssetLoader.Datahandler.user().getLevellock(0, level.id);
 	}
 	
 	public State getState() {
@@ -183,6 +187,24 @@ public class Worlds extends Actor {
 		}
 	}
 	
+	public void setMaxWorldLevel() {
+		usedworld=getMaxUnlockWorlds();
+		usedlevel=getMaxUnlockLevel();
+	}
+	
+	public boolean isFirstWorld() {
+		return (usedworld==0);
+	}
+	
+	public boolean isLastWorld() {
+		return (usedworld==getMaxUnlockWorlds());
+	}
+	
+	public boolean isRealLastWorld() {
+		return (usedworld==getMaxWorlds());
+	}
+	
+	
 	public void NextWorld() {
 		if (state!=State.notloaded)
 		if (usedworld<getMaxWorlds()) {
@@ -218,6 +240,7 @@ public class Worlds extends Actor {
 	public void load(String campaign) {
 		Gdx.app.log("*****", "Chargement de la compagne "+campaign);
 		levels=AssetLoader.Datahandler.game().getCampaign(campaign);
+		updateUnlockLevels();
 		name=campaign;
 		if (levels==null)
 			state=State.notloaded;
@@ -255,6 +278,26 @@ public class Worlds extends Actor {
 			if (level != null && level.aWorld > max)
 				max = level.aWorld;
 		return max;
+	}
+	
+	public int getMaxUnlockWorlds() {
+		int maxworld=0;
+		for (Level level : levels)
+			if (!level.Locked && level.aWorld>maxworld)
+				maxworld=level.aWorld;
+		return maxworld;
+	}
+	
+	public Level getMaxUnlockLevel() {
+		Array<Level> tempworld=getLevels();
+		int maxlevel=0;
+		Level themaxlevel=null;
+		for (Level level : tempworld)
+			if (!level.Locked && level.aLevel>maxlevel) {
+				maxlevel=level.aLevel;
+				themaxlevel=level;
+			}
+		return themaxlevel;
 	}
 	
 	public String getName() {
