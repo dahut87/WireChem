@@ -201,7 +201,9 @@ public class LevelScreen implements Screen {
 			}
 		buttonLevels = null;
 		buttonLevels = new ButtonLevel[10];
-		for (Level level : worlds.getLevels()) {
+		Array<Level> levels=worlds.getLevels();
+		if (levels!=null)
+		for (Level level : levels) {
 			if (level != null) {
 				if (level.Name.isEmpty())
 					level.Name=AssetLoader.language.get("[level"+(level.aWorld+1)+"/"+(level.aLevel+1)+"-name]");
@@ -268,15 +270,17 @@ public class LevelScreen implements Screen {
 						}
 					if (worlds.getInformations()==null)
 						selected=buttonLevels[0];
-					selected.setChecked(true);
-					showlevel(selected);
+					if (selected!=null) {
+						selected.setChecked(true);
+						buttonPlay.setVisible(true);
+						TextDescriptive.setVisible(true);
+						showlevel(selected);
+					}
 					Previous.setVisible(!worlds.isFirstWorld());
 					if (worlds.isDebug())
 						Next.setVisible(!worlds.isRealLastWorld());
 					else
 						Next.setVisible(!worlds.isLastWorld());
-					buttonPlay.setVisible(true);
-					TextDescriptive.setVisible(true);
 				}
 				else {
 					Previous.setVisible(false);
@@ -623,8 +627,9 @@ public class LevelScreen implements Screen {
 	}
 
 	public void showlevel(ButtonLevel button) {
-		Gdx.app.debug(getClass().getSimpleName(), "Reading button "
-				+ button.level.Name);
+		if (button==null)
+			return;
+		Gdx.app.debug(getClass().getSimpleName(), "Reading button "	+ button.level.Name);
 		TextDescriptive.setText(button.level.Description);
 		if (button.level.Maxcycle < 99999 && button.level.Maxcycle > 0) {
 			cycle.setText(String.valueOf(button.level.Maxcycle));

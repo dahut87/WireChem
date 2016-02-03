@@ -2,12 +2,13 @@ package fr.evolving.automata;
 
 import java.io.Serializable;
 
-public class Cell implements Serializable {
+public class Cell implements Serializable,Cloneable {
 	public int Fiber;
 	public boolean Copper;
+	public Transmuter Transmuter;
+	
 	public transient int Copper_calc;
 	public transient int Fiber_old;
-	public Transmuter Transmuter;
 	public transient int Transmuter_calc;
 	public transient int Transmuter_movex;
 	public transient int Transmuter_movey;
@@ -21,5 +22,13 @@ public class Cell implements Serializable {
 		this.Transmuter_movex = 0;
 		this.Transmuter_movey = 0;
 	}
-
+	
+	public Object clone() {
+		Cell result = new Cell();
+		result.Copper=this.Copper;
+		result.Fiber=this.Fiber;
+		if (this.Transmuter!=null)
+			result.Transmuter=(Transmuter)this.Transmuter.clone();
+		return result;
+	}
 }

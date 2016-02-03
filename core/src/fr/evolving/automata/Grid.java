@@ -7,7 +7,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.ObjectMap.Entry;
 
-public class Grid implements Serializable {
+public class Grid implements Serializable,Cloneable {
 	public Cell[][] Cells;
 	public Integer sizeX, sizeY;
 
@@ -268,6 +268,14 @@ public class Grid implements Serializable {
 			return 0;
 		else
 			return cell.Copper_calc;
+	}
+	
+	public Object clone() {
+		Grid result = new Grid(this.sizeX,this.sizeY);
+		for (int x = 0; x < this.sizeX; x++)
+			for (int y = 0; y < this.sizeY; y++)
+				result.Cells[x][y] = (Cell)this.Cells[x][y].clone();
+		return result;
 	}
 
 }

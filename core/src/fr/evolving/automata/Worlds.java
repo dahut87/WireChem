@@ -166,14 +166,14 @@ public class Worlds extends Actor {
 		ReadLastGrid();
 		if (usedlevel.Grid == null || force) {
 			Gdx.app.debug(getClass().getSimpleName(), "Copie monde original.");
-			usedlevel.Grid = usedlevel.Grid_orig;
+			usedlevel.Grid = (Grid)usedlevel.Grid_orig.clone();
 
 		} else {
-			Gdx.app.debug(getClass().getSimpleName(),
-					"Récupération de la dernière grille.");
-			usedlevel.Grid.tiling_copper();
-			usedlevel.Grid.tiling_transmuter();
+			Gdx.app.debug(getClass().getSimpleName(),"Récupération de la dernière grille.");
+			ReadLastGrid();
 		}
+		usedlevel.Grid.tiling_copper();
+		usedlevel.Grid.tiling_transmuter();
 	}
 	
 	public void setLevel(int alevel) {
