@@ -447,7 +447,7 @@ public class GameScreen implements Screen {
 			level.Grid.GetXY(x, y).Transmuter = (Transmuter)  menu.getTransmuter()
 					.clone();
 			if (alone)
-				level.Grid.tiling_transmuter();
+				level.Cout_transmuter=level.Grid.tiling_transmuter();
 			map.redraw();
 			Gdx.input.vibrate(new long[] { 0, 200, 200, 200 }, -1);
 		}
@@ -516,13 +516,13 @@ public class GameScreen implements Screen {
 		for (x = 0; x < level.Grid.sizeX; x++)
 			for (y = 0; y < level.Grid.sizeY; y++)
 				map_transmuter_eraser(0, 0, x, y, false, button, call);
-		level.Grid.tiling_transmuter();
+		level.Cout_transmuter=level.Grid.tiling_transmuter();
 		for (x = 0; x < level.Grid.sizeX; x++)
 			for (y = 0; y < level.Grid.sizeY; y++) {
 				map_fiber_eraser(0, 0, x, y, false, button, call);
 				map_copper_eraser(0, 0, x, y, false, button, call);
 			}
-		level.Grid.tiling_copper();
+		level.Cout_copperfiber=level.Grid.tiling_copper();
 		map.redraw();
 	}
 
@@ -545,7 +545,7 @@ public class GameScreen implements Screen {
 					+ (y + level.Grid.GetXY(x, y).Transmuter_movey));
 		}
 		if (alone) {
-			level.Grid.tiling_transmuter();
+			level.Cout_transmuter=level.Grid.tiling_transmuter();
 			map.redraw();
 		}
 	}
@@ -555,7 +555,7 @@ public class GameScreen implements Screen {
 		if (level.Grid.GetXY(x, y).Transmuter_calc == 0) {
 			level.Grid.GetXY(x, y).Fiber = 0;
 			if (alone) {
-				level.Grid.tiling_copper();
+				level.Cout_copperfiber=level.Grid.tiling_copper();
 				map.redraw();
 			}
 		}
@@ -567,7 +567,7 @@ public class GameScreen implements Screen {
 			level.Grid.GetXY(x, y).Fiber = -1 * level.Grid.GetXY(x, y).Fiber
 					+ 1;
 		if (alone) {
-			level.Grid.tiling_copper();
+			level.Cout_copperfiber=level.Grid.tiling_copper();
 			map.redraw();
 		}
 	}
@@ -577,7 +577,7 @@ public class GameScreen implements Screen {
 		if (level.Grid.GetXY(x, y).Transmuter_calc == 0)
 			level.Grid.GetXY(x, y).Fiber = 1;
 		if (alone) {
-			level.Grid.tiling_copper();
+			level.Cout_copperfiber=level.Grid.tiling_copper();
 			map.redraw();
 		}
 	}
@@ -587,7 +587,7 @@ public class GameScreen implements Screen {
 		if (level.Grid.GetXY(x, y).Transmuter_calc == 0) {
 			level.Grid.GetXY(x, y).Copper = false;
 			if (alone) {
-				level.Grid.tiling_copper();
+				level.Cout_copperfiber=level.Grid.tiling_copper();
 				map.redraw();
 			}
 		}
@@ -598,7 +598,7 @@ public class GameScreen implements Screen {
 		if (level.Grid.GetXY(x, y).Transmuter_calc == 0)
 			level.Grid.GetXY(x, y).Copper = !level.Grid.GetXY(x, y).Copper;
 		if (alone) {
-			level.Grid.tiling_copper();
+			level.Cout_copperfiber=level.Grid.tiling_copper();
 			map.redraw();
 		}
 	}
@@ -608,7 +608,7 @@ public class GameScreen implements Screen {
 		if (level.Grid.GetXY(x, y).Transmuter_calc == 0)
 			level.Grid.GetXY(x, y).Copper = true;
 		if (alone) {
-			level.Grid.tiling_copper();
+			level.Cout_copperfiber=level.Grid.tiling_copper();
 			map.redraw();
 		}
 	}
@@ -699,7 +699,6 @@ public class GameScreen implements Screen {
 		menu.EraseSurtile();
 		hideInfo();
 		if (caller == "run") {
-			worlds.getInformations().Cout-=15;
 		} else if (caller == "stop") {
 		} else if (caller == "speed") {
 		} else if (caller == "move") {
@@ -877,8 +876,8 @@ public class GameScreen implements Screen {
 			public void clicked(InputEvent event, float x, float y) {
 				if (this.getTapCount() > 1)
 					worlds.ReadGrid(selSaved.getSelectedIndex());
-				level.Grid.tiling_copper();
-				level.Grid.tiling_transmuter();
+				level.Cout_copperfiber=level.Grid.tiling_copper();
+				level.Cout_transmuter=level.Grid.tiling_transmuter();
 				map.redraw();
 				map.tempclear();
 				hideInfo();

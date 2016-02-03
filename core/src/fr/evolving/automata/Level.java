@@ -30,7 +30,9 @@ public class Level implements Serializable {
 	public int Nrj_orig;
 	
 	public transient int[] Victory;
-	public transient int Cout;
+	public transient int Cout_transmuter;
+	public transient int Cout_copperfiber;
+	public transient int Cout;	
 	public transient Grid Grid;
 	public transient int Cycle;
 	public transient int Temp;

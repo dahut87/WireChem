@@ -309,6 +309,7 @@ public class Worlds extends Actor {
 	
 	public int getMaxUnlockWorlds() {
 		int maxworld=0;
+		if (levels!=null)
 		for (Level level : levels)
 			if (!level.Locked && level.aWorld>maxworld)
 				maxworld=level.aWorld;
@@ -319,6 +320,7 @@ public class Worlds extends Actor {
 		Array<Level> tempworld=getLevels();
 		int maxlevel=0;
 		Level themaxlevel=null;
+		if (tempworld!=null)
 		for (Level level : tempworld)
 			if (!level.Locked && level.aLevel>maxlevel) {
 				maxlevel=level.aLevel;

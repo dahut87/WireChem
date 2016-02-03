@@ -22,10 +22,15 @@ public class Grid implements Serializable {
 		}
 	}
 
-	public void tiling_transmuter() {
+	public int tiling_transmuter() {
+		int result=0;
 		for (int x = 0; x < this.sizeX; x++)
 			for (int y = 0; y < this.sizeY; y++)
+			{
 				GetXY(x, y).Transmuter_calc = 0;
+				if (GetXY(x, y).Transmuter!=null)
+					result+=GetXY(x, y).Transmuter.getPrice();
+			}
 		for (int x = 0; x < this.sizeX; x++)
 			for (int y = 0; y < this.sizeY; y++) {
 				Transmuter transmuter = getTransmuter(x, y);
@@ -48,12 +53,19 @@ public class Grid implements Serializable {
 					Gdx.app.debug("info", x + "," + y + ">"
 							+ GetXY(x, y).Transmuter_calc);
 			}
+		return result;
 	}
 
-	public void tiling_copper() {
+	public int tiling_copper() {
+		int result=0;
 		for (int x = 0; x < this.sizeX; x++)
-			for (int y = 0; y < this.sizeY; y++)
+			for (int y = 0; y < this.sizeY; y++) {
+				if (getFiber(x,y))
+					result+=5;
 				if (getCopper(x, y)) {
+					result++;
+					if (getFiber(x,y))
+					result+=45;
 					int value = 0;
 					if (getCopper(x, y + 1))
 						value++;
@@ -66,6 +78,7 @@ public class Grid implements Serializable {
 					GetXY(x, y).Copper_calc = value;
 				} else
 					GetXY(x, y).Copper_calc = -1;
+			}
 		for (int x = 0; x < this.sizeX; x++)
 			for (int y = 0; y < this.sizeY; y++) {
 				int value = 0;
@@ -199,7 +212,7 @@ public class Grid implements Serializable {
 					GetXY(x, y).Copper_calc = value;
 
 			}
-		return;
+		return result;
 	}
 
 	public Cell GetXY(float X, float Y) {

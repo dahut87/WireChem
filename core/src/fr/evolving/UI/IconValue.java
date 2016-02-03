@@ -32,8 +32,15 @@ public class IconValue extends ImageTextButton{
 			this.setVisible(worlds.getInformations().Tech>=1);
 			break;
 		case cout:
+			worlds.getInformations().Cout=worlds.getInformations().Cout_orig-worlds.getInformations().Cout_copperfiber-worlds.getInformations().Cout_transmuter;
 			this.setText(String.valueOf(worlds.getInformations().Cout));
-			this.setVisible(worlds.getInformations().Cout>0);
+			if (worlds.getInformations().Cout>0.25*worlds.getInformations().Cout_orig)
+				this.setColor(1f, 1f, 1f, 1f);
+			else if  (worlds.getInformations().Cout>0) 
+				this.setColor(1f, 0.5f, 0.5f, 1f);
+			else 
+				this.setColor(1f, 0, 0, 1f);
+			this.setVisible(worlds.getInformations().Cout_orig>0);
 			break;
 		case research:
 			this.setText(String.valueOf(worlds.ReadResearch()));
