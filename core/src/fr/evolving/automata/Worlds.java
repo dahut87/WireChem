@@ -257,6 +257,10 @@ public class Worlds extends Actor {
 			return -1;
 	}
 	
+	public void unLockLevel() {
+		AssetLoader.Datahandler.user().setLevelunlock(0, usedlevel.id);
+	}
+	
 	public void set(String campaign) {
 		Gdx.app.log("*****", "Définition de la compagne "+campaign);
 		Preference.prefs.putString("world", campaign);

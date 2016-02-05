@@ -205,7 +205,9 @@ public class GameScreen implements Screen {
 		this.worlds = aworlds;
 		this.worlds.prepareLevel(false);
 		this.level=worlds.getInformations();
-		if (level.Tech<1)
+		if (worlds.isDebug())
+			tocreate = new String[] { "run", "stop", "speed", "separator", "move#", "zoomp#","zoomm#", "infos#", "separator", "raz", "save", "levels", "tree",	"exits", "separator", "screen", "sound", "tuto", "grid", "settings", "separator", "stat","separator","unlocked" };
+		else if (level.Tech<1)
 			tocreate = new String[] { "run", "stop", "speed", "separator", "move#", "zoomp#","zoomm#", "separator", "levels", "exits", "separator", "screen", "sound", "settings" };
 		else if (level.aWorld<1)
 			tocreate = new String[] { "run", "stop", "speed", "separator", "move#", "zoomp#","zoomm#", "infos#", "separator", "raz", "save", "levels", "exits", "separator", "screen", "sound", "grid", "settings" };
@@ -231,7 +233,7 @@ public class GameScreen implements Screen {
 		processors = new Array<InputProcessor>();
 		stage = new Stage(AssetLoader.viewport);
 		stage_info = new Stage(AssetLoader.viewport);
-		//stage_tooltip = new Stage(AssetLoader.viewport);
+		stage_tooltip = new Stage(AssetLoader.viewport);
 		oldx = 0;
 		oldy = 0;
 		unroll = false;
@@ -250,6 +252,7 @@ public class GameScreen implements Screen {
 		nrj.setPosition(610, AssetLoader.height - 74);
 		tech = new IconValue(Icon.tech,worlds, AssetLoader.Skin_level);
 		tech.setPosition(1345, AssetLoader.height - 74);
+		tech.addListener(new Tooltip(tooltip,AssetLoader.Tooltipmanager));
 		cout = new IconValue(Icon.cout,worlds, AssetLoader.Skin_level);
 		cout.setPosition(1445, AssetLoader.height - 74);
 		research = new IconValue(Icon.research,worlds, AssetLoader.Skin_level);
@@ -265,8 +268,7 @@ public class GameScreen implements Screen {
 			public void clicked(InputEvent event, float x, float y) {
 				Gdx.app.debug(getClass().getSimpleName(),"Remise à zéro du monde");
 				worlds.prepareLevel(true);
-				map.redraw();
-				buttonlevel.setChecked(false);
+				prepare();
 			}
 		});
 		Gdx.app.debug(getClass().getSimpleName(),
@@ -378,6 +380,7 @@ public class GameScreen implements Screen {
 				map.setSelected(getselected());
 			}
 		});
+		prepare();
 	}
 	
 	public String getselected() {
@@ -391,8 +394,9 @@ public class GameScreen implements Screen {
 	}
 
 
-	public void map_transmuter(float realx, float realy, int x, int y, boolean alone,
-			int button, calling call) {
+	public void map_transmuter(float realx, float realy, int x, int y, boolean alone,int button, calling call) {
+		if (!worlds.isDebug() && level.Cout<menu.getTransmuter().getPrice())
+			return;
 		if (call == calling.taptap && button == 0
 				|| (call == calling.mouseclick && button == 1)) {
 			Angular angle = menu.getTransmuter().getRotation();
@@ -563,6 +567,8 @@ public class GameScreen implements Screen {
 
 	public void map_fiber_pen(float realx, float realy, int x, int y, boolean alone,
 			int button, calling call) {
+		if (!worlds.isDebug() && level.Cout<5)
+			return;
 		if (level.Grid.GetXY(x, y).Transmuter_calc == 0)
 			level.Grid.GetXY(x, y).Fiber = -1 * level.Grid.GetXY(x, y).Fiber
 					+ 1;
@@ -574,6 +580,8 @@ public class GameScreen implements Screen {
 
 	public void map_fiber_brush(float realx, float realy, int x, int y, boolean alone,
 			int button, calling call) {
+		if (!worlds.isDebug() && level.Cout<5)
+			return;
 		if (level.Grid.GetXY(x, y).Transmuter_calc == 0)
 			level.Grid.GetXY(x, y).Fiber = 1;
 		if (alone) {
@@ -595,6 +603,8 @@ public class GameScreen implements Screen {
 
 	public void map_copper_pen(float realx, float realy, int x, int y, boolean alone,
 			int button, calling call) {
+		if (!worlds.isDebug() && level.Cout<1)
+			return;
 		if (level.Grid.GetXY(x, y).Transmuter_calc == 0)
 			level.Grid.GetXY(x, y).Copper = !level.Grid.GetXY(x, y).Copper;
 		if (alone) {
@@ -603,8 +613,9 @@ public class GameScreen implements Screen {
 		}
 	}
 
-	public void map_copper_brush(float realx, float realy, int x, int y,
-			boolean alone, int button, calling call) {
+	public void map_copper_brush(float realx, float realy, int x, int y,boolean alone, int button, calling call) {
+		if (!worlds.isDebug() && level.Cout<1)
+			return;
 		if (level.Grid.GetXY(x, y).Transmuter_calc == 0)
 			level.Grid.GetXY(x, y).Copper = true;
 		if (alone) {
@@ -620,6 +631,14 @@ public class GameScreen implements Screen {
 		worlds.SaveResearch();
 	}
 	
+	public void prepare() {
+		level.Cout_copperfiber=level.Grid.tiling_copper();
+		level.Cout_transmuter=level.Grid.tiling_transmuter();
+		map.redraw();
+		map.tempclear();
+		hideInfo();
+	}
+	
 	@Override
 	public void render(float delta) {
 		stage.act();
@@ -632,7 +651,7 @@ public class GameScreen implements Screen {
 		if (unroll)
 			stage_info.draw();
 		Renderer.render(delta, runTime, 2);
-		//stage_tooltip.draw();
+		stage_tooltip.draw();
 	}
 
 	@Override
@@ -664,7 +683,7 @@ public class GameScreen implements Screen {
 		stage_info.addActor(info_cout);
 		stage_info.addActor(info_up);
 		stage_info.addActor(info_desc);
-		//stage_tooltip.addActor(tooltip);
+		stage_tooltip.addActor(tooltip);
 		stage.addActor(horizbar);
 		if (worlds.getInformations().Cout>0 || worlds.getInformations().Tech>=1 ) {
 			stage.addActor(vertibar);
@@ -684,7 +703,7 @@ public class GameScreen implements Screen {
 		stage.addActor(cout);
 		stage.addActor(research);
 		gesturedetector=new GestureDetector(map);
-		//processors.add(stage_tooltip);
+		processors.add(stage_tooltip);
 		processors.add(stage_info);
 		processors.add(stage);
 		processors.add(map);
@@ -783,6 +802,10 @@ public class GameScreen implements Screen {
 				AssetLoader.language = AssetLoader.french;
 			}
 		} else if (caller == "stat") {
+		} else if (caller == "unlocked") {
+			level.Locked=false;
+			buttonlevel.setDisabled(false);
+			worlds.unLockLevel();
 		}
 	}
 
@@ -874,13 +897,10 @@ public class GameScreen implements Screen {
 		selSaved = new List(AssetLoader.Skin_ui);
 		selSaved.addListener(new ClickListener() {
 			public void clicked(InputEvent event, float x, float y) {
-				if (this.getTapCount() > 1)
+				if (this.getTapCount() > 1) {
 					worlds.ReadGrid(selSaved.getSelectedIndex());
-				level.Cout_copperfiber=level.Grid.tiling_copper();
-				level.Cout_transmuter=level.Grid.tiling_transmuter();
-				map.redraw();
-				map.tempclear();
-				hideInfo();
+					prepare();
+				}
 			}
 		});
 		ScrollPane scroll = new ScrollPane(selSaved);
