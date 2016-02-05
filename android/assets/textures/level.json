@@ -88,6 +88,8 @@
         settings_down: { name: settings, color: veryred },
         stat_down: { name: stat, color: veryred },
         tree_down: { name: tree, color: veryred },
+        unlocked_down: { name: unlocked, color: veryred },
+
         infos_down: { name: infos, color: veryred },
         extend_disabled: { name: extend, color: grey },
         extend_down: { name: extend, color: veryred } 
@@ -95,6 +97,7 @@
         extend2_down: { name: extend2, color: veryred } ,
         evolution_disabled: { name: evolution, color: black }
         evolution_down: { name: evolution, color: grey }
+        
 	}
 	
     com.badlogic.gdx.scenes.scene2d.ui.ImageTextButton$ImageTextButtonStyle: { 
@@ -147,6 +150,7 @@
         stat: { up: stat,down:stat_down }
         separator: { up: separator }       
         tree: { up: tree,down:tree_down }    
+        unlocked:{ up:unlocked, down:unlocked_down }
         infos: { up: infos,down:infos_down }
         info_nrj: { up: nrj }
         info_cycle: { up: cycle } 

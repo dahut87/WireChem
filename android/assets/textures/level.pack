@@ -76,7 +76,7 @@ barrehaut
   index: -1
 boss
   rotate: false
-  xy: 970, 747
+  xy: 970, 697
   size: 40, 40
   orig: 40, 40
   offset: 0, 0
@@ -132,7 +132,7 @@ menu3
   index: -1
 separator
   rotate: false
-  xy: 970, 681
+  xy: 970, 631
   size: 24, 64
   orig: 24, 64
   offset: 0, 0
@@ -235,6 +235,13 @@ sprite-copper
   orig: 128, 128
   offset: 0, 0
   index: 13
+unlocked
+  rotate: false
+  xy: 970, 739
+  size: 48, 48
+  orig: 48, 48
+  offset: 0, 0
+  index: -1
 
 level2.png
 size: 1024,1024
