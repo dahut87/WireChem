@@ -14,6 +14,6 @@ public class DesktopLauncher {
 		config.width = 1024;
 		config.height = 768;
 		new LwjglApplication(new main(), config);
-		Gdx.app.log("****", "Lancement de l'application \'Desktop\' WireChem...");
+		Gdx.app.log("wirechem-DesktopLauncher", "***** Lancement de l'application \'Desktop\' WireChem...");
 	}
 }
