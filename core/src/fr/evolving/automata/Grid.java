@@ -50,8 +50,7 @@ public class Grid implements Serializable,Cloneable {
 		for (int x = 0; x < this.sizeX; x++)
 			for (int y = 0; y < this.sizeY; y++) {
 				if (GetXY(x, y).Transmuter_calc > 0)
-					Gdx.app.debug("info", x + "," + y + ">"
-							+ GetXY(x, y).Transmuter_calc);
+					Gdx.app.debug("wirechem-Grid", x + "," + y + ">"+ GetXY(x, y).Transmuter_calc);
 			}
 		return result;
 	}
@@ -275,6 +274,17 @@ public class Grid implements Serializable,Cloneable {
 		for (int x = 0; x < this.sizeX; x++)
 			for (int y = 0; y < this.sizeY; y++)
 				result.Cells[x][y] = (Cell)this.Cells[x][y].clone();
+		return result;
+	}
+	
+	public Object clone(int newsizex,int newsizey) {
+		if (newsizex<3) newsizex=3;
+		if (newsizey<3) newsizey=3;		
+		Grid result = new Grid(newsizex,newsizey);
+		for (int x = 0; x < newsizex; x++)
+			for (int y = 0; y < newsizey; y++)
+				if (x<this.sizeX && y<this.sizeY)
+					result.Cells[x][y] = (Cell)this.Cells[x][y].clone();
 		return result;
 	}
 

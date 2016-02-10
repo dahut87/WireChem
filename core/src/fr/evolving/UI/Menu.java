@@ -59,25 +59,25 @@ public class Menu extends Actor {
 		this.selpage=0;
 		this.seltype=0;
 
-		Gdx.app.debug(getClass().getSimpleName(), "Création du Tiledmap et Maprenderer");
+		Gdx.app.debug("wirechem-Menu", "Création du Tiledmap et Maprenderer");
 		map = new TiledMap[3][Transmuter.Class.values().length];
 		initialize();
 		MapRenderer = new OrthogonalTiledMapRenderer(map[selpage][seltype], 1 / (float) size);
 
-		Gdx.app.debug(getClass().getSimpleName(), "Caméra pour tilemap:"+ (tilesizex * size) + "x" + (tilesizey * size));
+		Gdx.app.debug("wirechem-Menu", "Caméra pour tilemap:"+ (tilesizex * size) + "x" + (tilesizey * size));
 		camera = new OrthographicCamera();
 		camera.setToOrtho(false, tilesizex * 32, tilesizex * 32	* AssetLoader.height / AssetLoader.width);
 		decx = -102f;
 		decy = -20f;
 		if (AssetLoader.ratio == 1.44f) decy -= 24;
-		Gdx.app.debug(getClass().getSimpleName(), "Décalage:" + decx + "x"+ decy);
+		Gdx.app.debug("wirechem-Menu", "Décalage:" + decx + "x"+ decy);
 		camera.translate(decx, decy);
 
 
-		Gdx.app.debug(getClass().getSimpleName(), "Ajout des éléments de menu");
+		Gdx.app.debug("wirechem-Menu", "Ajout des éléments de menu");
 		update();
 
-		Gdx.app.debug(getClass().getSimpleName(), "Mise en place du timer de rotation.");		
+		Gdx.app.debug("wirechem-Menu", "Mise en place du timer de rotation.");		
 		oneselection = AssetLoader.Atlas_level.findRegion("circle");
 		selected = new Actor();
 		rotation=0;
@@ -90,7 +90,7 @@ public class Menu extends Actor {
 		};
 		RotateTimer.scheduleAtFixedRate(RotateTask, 0, 30);
 
-		Gdx.app.debug(getClass().getSimpleName(), "Ajout de l'évènements clicked");		
+		Gdx.app.debug("wirechem-Menu", "Ajout de l'évènements clicked");		
 		this.addListener(new ClickListener() {
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
@@ -111,14 +111,14 @@ public class Menu extends Actor {
 						if (selected_transmuter != null) {
 							selected.setName("transmuter");
 							setSurtile((int) coords.x,(int) coords.y, selected_transmuter);
-							Gdx.app.debug("menu", "Choix transmuter:"+ selected_transmuter.getName());
+							Gdx.app.debug("wirechem-Menu", "Choix transmuter:"+ selected_transmuter.getName());
 						}
 					} 
 					else
 						selected.setName(tile.get("name").toString());
 					Vector2 coords2 = worldtoscreen((int) coords.x,
 							(int) coords.y);
-					Gdx.app.debug("menu","Coordonnées:" + x + "x" + y + " Menu:" + coords.x
+					Gdx.app.debug("wirechem-Menu","Coordonnées:" + x + "x" + y + " Menu:" + coords.x
 							+ "," + coords.y + " Ecran :" + coords2.x
 							+ "x" + coords2.y + " type:"
 							+ tile.get("type"));
@@ -230,18 +230,18 @@ public class Menu extends Actor {
 
 	public void update() {
 		clearall();
-		if (worlds.getInformations().Cout>=0)
+		if (worlds.getInformations().Cout>=0 || worlds.isDebug())
 		{
 			this.setMenuTile(0, 7, 71, "copper_pen",0);
 			this.setMenuTile(1, 7, 72, "copper_brush",0);
 			this.setMenuTile(2, 7, 73, "copper_eraser",0);
 			this.setMenuTile(3, 3, 79, "cleaner",0);
 		}
-		if (worlds.getInformations().Tech>=0)
+		if (worlds.getInformations().Tech>=0 || worlds.isDebug())
 		{
 			this.setMenuTile(0, 5, 77, "transmuter_eraser",0);
 		}
-		if (worlds.getInformations().Tech>=2)
+		if (worlds.getInformations().Tech>=2 || worlds.isDebug())
 		{
 			this.setMenuTile(1, 5, 70, "blank",0);
 			this.setMenuTile(0, 6, 74, "fiber_pen",0);
@@ -314,8 +314,7 @@ public class Menu extends Actor {
 			cell.setTile(AssetLoader.tileSet.getTile(tile));
 			cell.getTile().getProperties().put("name", title);
 			cell.setRotation(0);
-			Gdx.app.debug(getClass().getSimpleName(), "Tile find:" + tile
-					+ " coords" + x + "," + y);
+			Gdx.app.debug("wirechem-Menu", "Tile find:" + tile	+ " coords" + x + "," + y);
 			layer.getProperties().put("noempty", false);
 		}
 	}
@@ -353,11 +352,9 @@ public class Menu extends Actor {
 		TiledMapTileLayer layer;
 		if (transmuter != null) {
 			int type=transmuter.getaClass().ordinal();
-			Gdx.app.debug(getClass().getSimpleName(), "Transmuter find:"
-					+ transmuter.getName() + " Angle:" + Angle + " coords"
-					+ x + "," + y+" page:"+page+" type:"+type);
+			Gdx.app.debug("wirechem-Menu", "Transmuter find:"+ transmuter.getName() + " Angle:" + Angle + " coords"	+ x + "," + y+" page:"+page+" type:"+type);
 			if (transmuter.getTechnology()<=worlds.getInformations().Tech || worlds.isDebug()) {
-				Gdx.app.debug(getClass().getSimpleName(), "Autorisé par le niveau");
+				Gdx.app.debug("wirechem-Menu", "Autorisé par le niveau");
 				if (!transmuter.isShowed() && transmuter.isUpgraded() && !worlds.isDebug())
 					layer = ((TiledMapTileLayer) map[page][type].getLayers().get(2));
 				else if (transmuter.isShowed() || worlds.isDebug())

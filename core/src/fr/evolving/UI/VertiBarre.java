@@ -32,7 +32,7 @@ public class VertiBarre extends Actor {
 		table.space(10f);
 		buttonGroup=new ButtonGroup<ImageTextButton>();
 		Barre = new ImageTextButton[Transmuter.Class.values().length];
-		Gdx.app.debug(getClass().getSimpleName(), "Menu:" + Barre.length+ " elements");
+		Gdx.app.debug("wirechem-VertiBarre", "Menu:" + Barre.length+ " elements");
 		for (int i = 0; i < Barre.length; i++)
 		{
 			if ((Transmuter.Class.values()[i]!=Transmuter.Class.Scenario && (worlds.getInformations().Tech>=0 || Transmuter.Class.values()[i]==Transmuter.Class.Structure)) || worlds.isDebug())
@@ -45,7 +45,7 @@ public class VertiBarre extends Actor {
 					@Override
 					public void clicked(InputEvent event, float x, float y) {
 						int caller = Integer.parseInt(event.getListenerActor().getName());
-						Gdx.app.debug("Barre2", "Selection dans la Barre droite:"+ caller);
+						Gdx.app.debug("wirechem-VertiBarre", "Selection dans la Barre droite:"+ caller);
 						Method method;
 						try {
 							Class<?> base = Class.forName("fr.evolving.screens.GameScreen");

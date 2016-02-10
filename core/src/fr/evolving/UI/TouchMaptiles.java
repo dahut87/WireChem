@@ -9,6 +9,7 @@ import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.input.GestureDetector.GestureListener;
+import com.badlogic.gdx.maps.MapLayer;
 import com.badlogic.gdx.maps.MapLayers;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
@@ -47,24 +48,33 @@ public class TouchMaptiles extends Actor implements GestureListener,InputProcess
 		this.mapexit=false;
 		map = new TiledMap();
 		map.getTileSets().addTileSet(AssetLoader.tileSet);
+		MapRenderer = new OrthogonalTiledMapRenderer(map, 1 / 128.0f);
+		this.setBounds(80, 0, AssetLoader.width, AssetLoader.height);
+		camera = new OrthographicCamera();
+		this.resize();
+	}
+	
+	public void resize() {
 		MapLayers layers = map.getLayers();
+		int max=layers.getCount();
+		for(int i=0;i<max;i++)
+			if (layers.get(0)!=null)
+				layers.remove(0);
 		for (int i = 0; i < 5; i++) {
-			TiledMapTileLayer layer = new TiledMapTileLayer(level.Grid.sizeX,
-					level.Grid.sizeY, sizex, sizey);
+			TiledMapTileLayer layer = new TiledMapTileLayer(level.Grid.sizeX, level.Grid.sizeY, sizex, sizey);
 			for (int x = 0; x < layer.getWidth(); x++) {
 				for (int y = 0; y < layer.getHeight(); y++) {
 					Cell cell = new Cell();
 					if (i == 0)
-						cell.setTile(AssetLoader.tileSet.getTile(53));
+						cell.setTile(AssetLoader.tileSet.getTile(this.clearsprite));
 					layer.setCell(x, y, cell);
 				}
 			}
 			layers.add(layer);
 		}
 		layers.get(3).setOpacity(0.9f);
-		MapRenderer = new OrthogonalTiledMapRenderer(map, 1 / 128.0f);
-		camera = new OrthographicCamera();
-		initzoom();
+		this.redraw();
+		this.initzoom();
 	}
 	
 	boolean event_coordination(float x, float y, int button, calling call,
@@ -77,9 +87,7 @@ public class TouchMaptiles extends Actor implements GestureListener,InputProcess
 				if (level.Grid.GetXY(coords.x, coords.y) != null) {
 					mapexit = false;
 					if (call != calling.mouseover)
-						Gdx.app.debug("evenement", "mode:" + call + " outil:"
-								+ selected + " X: " + coords.x
-								+ " Y: " + coords.y + " button:" + button);
+						Gdx.app.debug("wirechem-Touchmaptiles", "mode:" + call + " outil:"	+ selected + " X: " + coords.x	+ " Y: " + coords.y + " button:" + button);
 					Method method;
 					try {
 						Class<?> base = Class.forName("fr.evolving.screens.GameScreen");
@@ -116,14 +124,14 @@ public class TouchMaptiles extends Actor implements GestureListener,InputProcess
 	
 
 	public Vector2 screentoworld(float x, float y) {
-		x = (int) ((x / AssetLoader.width * camera.viewportWidth) + decx);
-		y = (int) ((y / AssetLoader.height * camera.viewportHeight) + decy);
+		x = (int) ((x / this.getWidth() * camera.viewportWidth) + decx);
+		y = (int) ((y / this.getHeight() * camera.viewportHeight) + decy);
 		return new Vector2(x, y);
 	}
 
 	public Vector2 screentoworldsize(float x, float y) {
-		x = ((x / AssetLoader.width * camera.viewportWidth));
-		y = ((y / AssetLoader.height * camera.viewportHeight));
+		x = ((x / this.getWidth() * camera.viewportWidth));
+		y = ((y / this.getHeight() * camera.viewportHeight));
 		return new Vector2(x, y);
 	}
 
@@ -154,12 +162,9 @@ public class TouchMaptiles extends Actor implements GestureListener,InputProcess
 	public void redraw() {
 		for (int x = 0; x < level.Grid.sizeX; x++)
 			for (int y = 0; y < level.Grid.sizeY; y++) {
-				((TiledMapTileLayer) map.getLayers().get(2)).getCell((int) x,
-						(int) y).setTile(null);
-				((TiledMapTileLayer) map.getLayers().get(1)).getCell((int) x,
-						(int) y).setTile(null);
-				((TiledMapTileLayer) map.getLayers().get(0)).getCell((int) x,
-						(int) y).setTile(AssetLoader.tileSet.getTile(this.clearsprite));
+				((TiledMapTileLayer) map.getLayers().get(2)).getCell((int) x,(int) y).setTile(null);
+				((TiledMapTileLayer) map.getLayers().get(1)).getCell((int) x,(int) y).setTile(null);
+				((TiledMapTileLayer) map.getLayers().get(0)).getCell((int) x,(int) y).setTile(AssetLoader.tileSet.getTile(this.clearsprite));
 			}
 		for (int x = 0; x < level.Grid.sizeX; x++)
 			for (int y = 0; y < level.Grid.sizeY; y++) {
@@ -204,21 +209,20 @@ public class TouchMaptiles extends Actor implements GestureListener,InputProcess
 	}
 
 	public void initzoom() {
-		if ((level.Grid.sizeX / (float) level.Grid.sizeY) > (AssetLoader.width / AssetLoader.height)) {
+		if ((level.Grid.sizeX / (float) level.Grid.sizeY) > (this.getWidth() / this.getHeight())) {
 			viewwidth = level.Grid.sizeX;
 			viewheight = level.Grid.sizeX
-					/ ((float) AssetLoader.width / AssetLoader.height);
+					/ ((float) this.getWidth() / this.getHeight());
 		} else {
 			viewheight = level.Grid.sizeY;
 			viewwidth = level.Grid.sizeY
-					* ((float) AssetLoader.width / AssetLoader.height);
+					* ((float) this.getWidth() / this.getHeight());
 		}
-		Gdx.app.debug(getClass().getSimpleName(), "Caméra pour tilemap:"
-				+ viewwidth + "x" + viewheight);
+		Gdx.app.debug("wirechem-Touchmaptiles", "Caméra pour tilemap:" + viewwidth + "x" + viewheight);
 		camera.setToOrtho(false, viewwidth, viewheight);
 		decx = (level.Grid.sizeX - viewwidth) / 2.0f;
 		decy = (level.Grid.sizeY - viewheight) / 2.0f;
-		Gdx.app.debug(getClass().getSimpleName(), "Décalage:" + decx + "x"	+ decy);
+		Gdx.app.debug("wirechem-Touchmaptiles", "Décalage:" + decx + "x"	+ decy);
 		camera.translate(decx, decy);
 	}
 
@@ -237,9 +241,7 @@ public class TouchMaptiles extends Actor implements GestureListener,InputProcess
 		viewheight *= factor;
 		camera.setToOrtho(false, viewwidth, viewheight);
 		camera.translate(decx, decy);
-		Gdx.app.debug(getClass().getSimpleName(), "Caméra pour tilemap:"
-				+ camera.viewportWidth + "x" + camera.viewportHeight + " zoom:"
-				+ factor);
+		Gdx.app.debug("wirechem-Touchmaptiles", "Caméra pour tilemap:"	+ camera.viewportWidth + "x" + camera.viewportHeight + " zoom:"	+ factor);
 	}
 
 	public float getDecx() {
@@ -256,8 +258,7 @@ public class TouchMaptiles extends Actor implements GestureListener,InputProcess
 		decy = decy - dec.y;
 		camera.setToOrtho(false, viewwidth, viewheight);
 		camera.translate(decx, decy);
-		Gdx.app.debug(getClass().getSimpleName(), "Decalage:" + dec.x + "x"
-				+ dec.y + "  newxy:" + decx + "x" + decy);
+		Gdx.app.debug("wirechem-Touchmaptiles", "Decalage:" + dec.x + "x"	+ dec.y + "  newxy:" + decx + "x" + decy);
 		return;
 	}
 

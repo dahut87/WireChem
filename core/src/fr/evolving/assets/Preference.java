@@ -34,9 +34,7 @@ public class Preference {
 
 	public static void defaults() {
 		Vector2 maxres = getmaxresolution();
-		Gdx.app.log("Preferences",
-				"Preference par defaut avec resolution native :" + maxres.x
-						+ "x" + maxres.y);
+		Gdx.app.log("Preferences","Preference par defaut avec resolution native :" + maxres.x	+ "x" + maxres.y);
 		Preference.prefs.putString("userdata", "local:test.db");
 		Preference.prefs.putString("gamedata", "local:test.db");
 		Preference.prefs.putString("statdata", "local:test.db");

@@ -33,7 +33,7 @@ public class SplashScreen implements Screen {
 
 	@Override
 	public void show() {
-		Gdx.app.log("****", "Affichage du SplashScreen");
+		Gdx.app.log("wirechem-LevelScreen", "***** Affichage du SplashScreen");
 		scale = 2;
 		splashImage.setScale(scale);
 		splashImage.setPosition(

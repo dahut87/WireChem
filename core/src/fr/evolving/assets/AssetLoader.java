@@ -85,10 +85,9 @@ public class AssetLoader {
 		params.minFilter = quality;
 		params.magFilter = quality;
 		params.genMipMaps = (quality == TextureFilter.MipMap);
-		Gdx.app.debug("AssetLoader", "Initialisation du asset manager");
+		Gdx.app.debug("wirechem-AssetLoader", "Initialisation du asset manager");
 		manager = new AssetManager();
-		Gdx.app.debug("AssetLoader",
-				"Initialisation du chargement des éléments multimédia");
+		Gdx.app.debug("wirechem-AssetLoader", "Initialisation du chargement des éléments multimédia");
 		manager.load("textures/level.pack", TextureAtlas.class);
 		manager.load("textures/ui.pack", TextureAtlas.class);
 		manager.load("pictures/fond.png", Texture.class, params);
@@ -101,9 +100,9 @@ public class AssetLoader {
 	}
 
 	public static void finishall() {
-		Gdx.app.debug("AssetLoader", "Attente fin chargement...");
+		Gdx.app.debug("wirechem-AssetLoader", "Attente fin chargement...");
 		manager.finishLoading();
-		Gdx.app.debug("AssetLoader", "Affectation des éléments multimédia");
+		Gdx.app.debug("wirechem-AssetLoader", "Affectation des éléments multimédia");
 		Atlas_level = manager.get("textures/level.pack");
 		intro = manager.get("musics/intro.mp3");
 		Texture_fond = manager.get("pictures/fond.png");
@@ -114,7 +113,7 @@ public class AssetLoader {
 		Texture_fond2.setFilter(quality, quality);
 		Skin_level = manager.get("textures/level.json");
 		Skin_ui = manager.get("textures/ui.json");
-		Gdx.app.debug("AssetLoader", "Definition des constantes");
+		Gdx.app.debug("wirechem-AssetLoader", "Definition des constantes");
 		Levelcolors = new Color[5];
 		Levelcolors = new Color[] { AssetLoader.Skin_level.getColor("world0"),
 				AssetLoader.Skin_level.getColor("world1"),
@@ -133,10 +132,10 @@ public class AssetLoader {
 		Typenames = new String[13];
 		Typenames = new String[] { "E-", "e-", "Ph", "e0", "E0", "e+", "E+",
 				"K", "L", "M", "N", "n", "p" };
-		Gdx.app.debug("AssetLoader", "Création des tiles...");
+		Gdx.app.debug("wirechem-AssetLoader", "Création des tiles...");
 		tileSet = new TiledMapTileSet();
 		Array<TextureAtlas.AtlasRegion> allregions = Atlas_level.getRegions();
-		Gdx.app.debug("AssetLoader", allregions.size + " régions disponibles");
+		Gdx.app.debug("wirechem-AssetLoader", allregions.size + " régions disponibles");
 		for (int i = 0; i < allregions.size; i++) {
 			allregions.get(i).getTexture().setFilter(quality, quality);
 			if (allregions.get(i).name.startsWith("sprite")) {
@@ -146,7 +145,7 @@ public class AssetLoader {
 					if (name[0].contains("sprite")) {
 						int id = Integer.parseInt(name[1].split("#")[0]);
 						if (tileSet.getTile(1000 + id) == null) {
-							Gdx.app.debug("AssetLoader", "Animated Tiles N°:"
+							Gdx.app.debug("wirechem-AssetLoader", "Animated Tiles N°:"
 									+ String.valueOf(id + 1000));
 							int maxid = 0;
 							for (int j = 1; Atlas_level.findRegion("sprite-"
@@ -163,8 +162,7 @@ public class AssetLoader {
 																+ id + "#" + j))));
 							AnimatedTiledMapTile atile = new AnimatedTiledMapTile(
 									0.15f, frameTiles);
-							Gdx.app.debug("AssetLoader",
-									"Taille:" + String.valueOf(frameTiles.size));
+							Gdx.app.debug("wirechem-AssetLoader","Taille:" + String.valueOf(frameTiles.size));
 							atile.setId(1000 + id);
 							atile.getProperties().put("type", type[1]);
 							tileSet.putTile(1000 + id, atile);
@@ -178,15 +176,12 @@ public class AssetLoader {
 					atile.setId(allregions.get(i).index);
 					atile.getProperties().put("type", type[1]);
 					tileSet.putTile(allregions.get(i).index, atile);
-					Gdx.app.debug(
-							"AssetLoader",
-							"Type:" + type[1] + " Tiles N°:"
-									+ String.valueOf(allregions.get(i).index));
+					Gdx.app.debug("wirechem-AssetLoader","Type:" + type[1] + " Tiles N°:" + String.valueOf(allregions.get(i).index));
 				}
 			}
 		}
 	
-		Gdx.app.debug("AssetLoader", "Ajout des transmuters");	
+		Gdx.app.debug("wirechem-AssetLoader", "Ajout des transmuters");	
 		allTransmuter = new Array<Transmuter>();
 		allTransmuter.add(new Positiver(null));
 		allTransmuter.add(new Positiver_I(null));
@@ -209,18 +204,14 @@ public class AssetLoader {
 			Values<Integer> allTiles = transmuter.getTilesid().iterator();
 			while (allTiles.hasNext()) {
 				Integer atile = allTiles.next();
-				Gdx.app.debug("AssetLoader",
-						"Ajustement données Tiles N°:" + String.valueOf(atile)
-								+ " Nom:" + transmuter.getName());
-				AssetLoader.tileSet.getTile(atile).getProperties()
-						.put("transmuter", transmuter);
-				AssetLoader.tileSet.getTile(atile).getProperties()
-						.put("name", transmuter.getName());
+				Gdx.app.debug("wirechem-AssetLoader","Ajustement données Tiles N°:" + String.valueOf(atile)	+ " Nom:" + transmuter.getName());
+				AssetLoader.tileSet.getTile(atile).getProperties().put("transmuter", transmuter);
+				AssetLoader.tileSet.getTile(atile).getProperties().put("name", transmuter.getName());
 			}
 		}
-		Gdx.app.debug("AssetLoader", "Ajout de la gestion des tooltips");
+		Gdx.app.debug("wirechem-AssetLoader", "Ajout de la gestion des tooltips");
 		Tooltipmanager = new TooltipManager();
-		Gdx.app.debug("AssetLoader", "Mise en place de la base de donnée");
+		Gdx.app.debug("wirechem-AssetLoader", "Mise en place de la base de donnée");
 		Datahandler = new DatabaseManager();
 		Datahandler.RegisterBackend(LocalBase.class);
 		Datahandler.RegisterBackend(SqlBase.class);
@@ -231,19 +222,19 @@ public class AssetLoader {
 		Datahandler.CloseAll();
 		if (Datahandler.Attach(datatype.userdata,
 				Preference.prefs.getString("userdata")))
-			Gdx.app.debug("AssetLoader", "Base user ok");
+			Gdx.app.debug("wirechem-AssetLoader", "Base user ok");
 		else
-			Gdx.app.debug("AssetLoader", "Base user erreur");
+			Gdx.app.debug("wirechem-AssetLoader", "Base user erreur");
 		if (Datahandler.Attach(datatype.statdata,
 				Preference.prefs.getString("statdata")))
-			Gdx.app.debug("AssetLoader", "Base stat ok");
+			Gdx.app.debug("wirechem-AssetLoader", "Base stat ok");
 		else
-			Gdx.app.debug("AssetLoader", "Base stat erreur");
+			Gdx.app.debug("wirechem-AssetLoader", "Base stat erreur");
 		if (Datahandler.Attach(datatype.gamedata,
 				Preference.prefs.getString("gamedata")))
-			Gdx.app.debug("AssetLoader", "Base jeu ok");
+			Gdx.app.debug("wirechem-AssetLoader", "Base jeu ok");
 		else
-			Gdx.app.debug("AssetLoader", "Base jeu erreur");
+			Gdx.app.debug("wirechem-AssetLoader", "Base jeu erreur");
 	}
 
 	public static Transmuter getTransmuter(String Name) {
@@ -255,12 +246,12 @@ public class AssetLoader {
 	}
 
 	public static void init() {
-		Gdx.app.debug("AssetLoader",
+		Gdx.app.debug("wirechem-AssetLoader",
 				"Initialisation de la résolution virtuelle...");
 		int realWidth = Gdx.graphics.getWidth();
 		int realHeight = Gdx.graphics.getHeight();
 		float realRatio = realWidth / (float) realHeight;
-		Gdx.app.debug("AssetLoader", "Résolution de " + realWidth + "x"
+		Gdx.app.debug("wirechem-AssetLoader", "Résolution de " + realWidth + "x"
 				+ realHeight + " ratio de " + String.format("%.2f", realRatio)
 				+ ".");
 		ratio = 1;
@@ -268,29 +259,29 @@ public class AssetLoader {
 		height = 1080;
 		if (Math.abs(16f / 9f - realRatio) > Math.abs(4f / 3f - realRatio)) {
 			ratio = 1.44f;
-			Gdx.app.debug("AssetLoader",
+			Gdx.app.debug("wirechem-AssetLoader",
 					"Ratio 4/3, résolution virtuelle : 1920x1440.");
 			height = 1440;
 		} else
-			Gdx.app.debug("AssetLoader",
+			Gdx.app.debug("wirechem-AssetLoader",
 					"Ratio 16/9, résolution virtuelle : 1920x1080.");
 		Camera = new OrthographicCamera(width, height);
 		Camera.position.set(width / 2, height / 2, 0);
 		Camera.update();
 		if (Preference.prefs.getInteger("Adaptation") == 1) {
 			viewport = new StretchViewport(width, height);
-			Gdx.app.debug("AssetLoader",
+			Gdx.app.debug("wirechem-AssetLoader",
 					"Adaptation d'écran maximale, 'Aspect-Ratio' non conservé.");
 		} else {
 			viewport = new FitViewport(width, height);
-			Gdx.app.debug("AssetLoader",
+			Gdx.app.debug("wirechem-AssetLoader",
 					"Adaptation d'écran totale, 'Aspect-Ratio' conservé.");
 		}
 		viewport.apply();
 	}
 
 	public static void load() {
-		Gdx.app.debug("AssetLoader", "Ajout de la gestion des locales");
+		Gdx.app.debug("wirechem-AssetLoader", "Ajout de la gestion des locales");
 		FileHandle baseFileHandle = Gdx.files.internal("i18n/messages/messages");
 		usa = I18NBundle.createBundle(baseFileHandle, new Locale("en"));
 		french = I18NBundle.createBundle(baseFileHandle, new Locale("fr"));
@@ -300,9 +291,9 @@ public class AssetLoader {
 			language = usa;
 		I18NBundle.setExceptionOnMissingKey(true);
 		
-		Gdx.app.debug("AssetLoader", "Réglage de la qualité des textures");
+		Gdx.app.debug("wirechem-AssetLoader", "Réglage de la qualité des textures");
 		quality = GameScreen.quality.values()[Preference.prefs.getInteger("Quality")].getQuality();
-		Gdx.app.debug("AssetLoader", "Chargements des éléments minimalistes");
+		Gdx.app.debug("wirechem-AssetLoader", "Chargements des éléments minimalistes");
 		Texture_logo = new Texture(Gdx.files.internal("pictures/logo.png"),
 				quality == TextureFilter.MipMap);
 		Texture_logo.setFilter(quality, quality);

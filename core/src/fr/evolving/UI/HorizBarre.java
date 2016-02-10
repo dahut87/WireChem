@@ -51,7 +51,7 @@ public class HorizBarre extends Actor {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		Gdx.app.debug(getClass().getSimpleName(), "Mise en place du timer de rotation.");		
+		Gdx.app.debug("wirechem-HorizBarre", "Mise en place du timer de rotation.");		
 		oneselection = AssetLoader.Atlas_level.findRegion("circle");
 		rotation=0;
 		RotateTimer = new Timer();
@@ -66,8 +66,7 @@ public class HorizBarre extends Actor {
 		this.setBounds(0, 0, 1920, 80);
 		Barre = new ImageButton[tocreate.length];
 		int i = 0;
-		Gdx.app.debug(getClass().getSimpleName(), "Barre bas:" + Barre.length
-				+ " elements");
+		Gdx.app.debug("wirechem-HorizBarre", "Barre bas:" + Barre.length + " elements");
 		for (String item : tocreate) {
 			final String itemtocreate=item.replace("#", "");
 			Barre[i] = new ImageButton(AssetLoader.Skin_level, itemtocreate);
@@ -90,8 +89,7 @@ public class HorizBarre extends Actor {
 					@Override
 					public void clicked(InputEvent event, float x, float y) {
 						String caller = event.getListenerActor().getName();
-						Gdx.app.debug("Barre", "Selection dans la Barre bas:"
-								+ caller);
+						Gdx.app.debug("wirechem-HorizBarre", "Selection dans la Barre bas:"	+ caller);
 						try {
 							method.invoke(((Game) Gdx.app.getApplicationListener()).getScreen(), caller, this.getTapCount());
 						} catch (IllegalAccessException e) {

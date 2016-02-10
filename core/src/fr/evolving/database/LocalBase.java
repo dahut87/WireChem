@@ -44,29 +44,29 @@ public class LocalBase extends Base {
 			try {
 				FileHandle newbase = Gdx.files.absolute("/data/data/fr.evolving.game.android/databases/"+ databasename);
 				if (!newbase.exists()) {
-					Gdx.app.log("Base", "Copie de la base de donnee android");
+					Gdx.app.log("wirechem-LocalBase", "***** Copie de la base de donnee android");
 					Gdx.files.internal("bases/" + databasename).copyTo(newbase);
 				}
 			} catch (Exception e1) {
-				Gdx.app.error("Base", "Erreur de copie");
+				Gdx.app.error("wirechem-LocalBase", "Erreur de copie");
 			}
 			break;
 		case Desktop:
-			Gdx.app.log("Base", "Copie de la base de donnee desktop");
+			Gdx.app.log("wirechem-LocalBase", "***** Copie de la base de donnee desktop");
 			FileHandle newbase = Gdx.files.local(databasename);
 			try {
 				if (!newbase.exists())
 					Gdx.files.internal("bases/" + databasename).copyTo(newbase);
 			} catch (Exception e1) {
-				Gdx.app.error("Base", "Erreur de copie");
+				Gdx.app.error("wirechem-LocalBase", "Erreur de copie");
 			}
 			break;
 		}
 		if (dbHandler != null)
-			Gdx.app.log("Local", "Reprise de la base '" + databasename
+			Gdx.app.log("wirechem-LocalBase", "Reprise de la base '" + databasename
 					+ "', table:" + model.toString());
 		else {
-			Gdx.app.log("Local", "Utilisation de la base '" + databasename
+			Gdx.app.log("wirechem-LocalBase", "Utilisation de la base '" + databasename
 					+ "', table:" + model.toString());
 			dbHandler = DatabaseFactory.getNewDatabase(databasename, 1, null,
 					null);
@@ -76,7 +76,7 @@ public class LocalBase extends Base {
 				dbHandler.openOrCreateDatabase();
 			} catch (SQLiteGdxException e) {
 				e.printStackTrace();
-				Gdx.app.log("Local", "Erreur à l'ouverture de la base");
+				Gdx.app.log("wirechem-LocalBase", "Erreur à l'ouverture de la base");
 			}
 		}
 		try {

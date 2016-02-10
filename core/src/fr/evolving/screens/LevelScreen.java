@@ -46,8 +46,7 @@ public class LevelScreen implements Screen {
 	private Stage stage;
 	private Table table;
 	private WarnDialog dialog;
-	private ImageButton Previous, Next, Exit;
-	public ImageButton logosmall;
+	private ImageButton Previous, Next, Exit, logosmall, databaseSave;
 	public Image MenuSolo, MenuMulti, MenuScenario;
 	private ImageTextButton cout, tech, cycle, temp, rayon, nrj;
 	private TextButton buttonConnect, buttonPlay, buttonStat, buttonSave,
@@ -65,7 +64,7 @@ public class LevelScreen implements Screen {
 		if (worlds.getState()!=State.notloaded && worlds.getState()!=State.databasefailed) {
 			if (worlds.getWorld() < 0)
 				worlds.setMaxWorldLevel();
-			Gdx.app.debug(getClass().getSimpleName(),"Afficher derniere réalisation, monde :"+worlds.getWorld()+" niveau:"+worlds.getLevel());
+			Gdx.app.debug("wirechem-LevelScreen","Afficher derniere réalisation, monde :"+worlds.getWorld()+" niveau:"+worlds.getLevel());
 			worlds.Forcereload();
 		}
 	}
@@ -73,6 +72,7 @@ public class LevelScreen implements Screen {
 	public void menu() {
 		selected = null;
 		cout.setVisible(false);
+		databaseSave.setVisible(false);
 		tech.setVisible(false);
 		cycle.setVisible(false);
 		temp.setVisible(false);
@@ -147,6 +147,8 @@ public class LevelScreen implements Screen {
 	}
 
 	public void level() {
+		if (worlds.isDebug())
+			databaseSave.setVisible(true);
 		Exit.setPosition(1110, AssetLoader.height - Exit.getHeight() - 5);
 		MenuSolo.setVisible(false);
 		MenuMulti.setVisible(false);
@@ -211,14 +213,14 @@ public class LevelScreen implements Screen {
 					level.Description=AssetLoader.language.get("[level"+(level.aWorld+1)+"/"+(level.aLevel+1)+"-desc]");		
 				buttonLevels[i] = new ButtonLevel(level, AssetLoader.ratio, true);
 				if (worlds.isDebug()) buttonLevels[i].setDisabled(false);
-				Gdx.app.debug(getClass().getSimpleName(), "Ajout du niveau :"+ level.Name + " N°" + String.valueOf(level.aLevel));
+				Gdx.app.debug("wirechem-LevelScreen", "Ajout du niveau :"+ level.Name + " N°" + String.valueOf(level.aLevel));
 				buttonLevels[i++].addListener(new ClickListener() {
 					@Override
 					public void enter(InputEvent event, float x, float y,
 							int pointer, Actor fromActor) {
 						ButtonLevel abutton = (ButtonLevel) event
 								.getListenerActor();
-						Gdx.app.debug(event.getListenerActor().toString(),"Enter button ");
+						Gdx.app.debug("wirechem-LevelScreen","Enter button ");
 						if (!abutton.isChecked() && (!abutton.level.Locked || worlds.isDebug()))
 							showlevel(abutton);
 					}
@@ -227,7 +229,7 @@ public class LevelScreen implements Screen {
 							int pointer, Actor fromActor) {
 						ButtonLevel abutton = (ButtonLevel) event
 								.getListenerActor();
-						Gdx.app.debug(event.getListenerActor().toString(),"Enter button ");
+						Gdx.app.debug("wirechem-LevelScreen","Enter button ");
 						if (!abutton.isChecked() && (!abutton.level.Locked || worlds.isDebug()))
 							showlevel(abutton);
 					}
@@ -290,12 +292,12 @@ public class LevelScreen implements Screen {
 				}
 			}
 		});
-		Gdx.app.debug(getClass().getSimpleName(),"Création des elements primordiaux du screen (stage, renderer, table)");
+		Gdx.app.debug("wirechem-LevelScreen","Création des elements primordiaux du screen (stage, renderer, table)");
 		stage = new Stage(AssetLoader.viewport);
 		table = new Table();
 		Renderer = new LevelRenderer(this);
 		dialog = new WarnDialog(AssetLoader.Skin_ui);
-		Gdx.app.debug(getClass().getSimpleName(), "Mise en place du timer.");
+		Gdx.app.debug("wirechem-LevelScreen", "Mise en place du timer.");
 		ScrollTimer = new Timer();
 		ScrollTask = new TimerTask() {
 			@Override
@@ -304,7 +306,7 @@ public class LevelScreen implements Screen {
 			}
 		};
 		ScrollTimer.scheduleAtFixedRate(ScrollTask, 0, 30);
-		Gdx.app.debug(getClass().getSimpleName(), "Création du menu.");
+		Gdx.app.debug("wirechem-LevelScreen", "Création du menu.");
 		MenuSolo = new Image(AssetLoader.Skin_level, "menu1");
 		MenuSolo.setOrigin(MenuSolo.getWidth() / 2, MenuSolo.getHeight() / 2);
 		MenuSolo.addListener(new ClickListener() {
@@ -355,7 +357,7 @@ public class LevelScreen implements Screen {
 								})));
 			}
 		});
-		Gdx.app.debug(getClass().getSimpleName(), "Création des boutons.");
+		Gdx.app.debug("wirechem-LevelScreen", "Création des boutons.");
 		logosmall = new ImageButton(AssetLoader.Skin_level, "logosmall");
 		logosmall.setPosition(20,AssetLoader.height - 175 + logosmall.getHeight() / 2);
 		logosmall.setChecked(worlds.isDebug());
@@ -369,6 +371,7 @@ public class LevelScreen implements Screen {
 						}
 					worlds.ActivateDebug();
 					Next.setVisible(!worlds.isRealLastWorld());
+					databaseSave.setVisible(true);
 				}
 				else {
 					if (buttonLevels != null)
@@ -379,6 +382,7 @@ public class LevelScreen implements Screen {
 					worlds.DesactivateDebug();
 					worlds.updateUnlockLevels();
 					worlds.setMaxWorldLevel();
+					databaseSave.setVisible(false);
 				}
 			}
 		});
@@ -489,7 +493,7 @@ public class LevelScreen implements Screen {
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
 				worlds.NextWorld();
-				Gdx.app.debug(event.getListenerActor().toString(),
+				Gdx.app.debug("wirechem-LevelScreen",
 						"World:" + String.valueOf(worlds.getWorld()) + " Maxworld:"
 								+ String.valueOf(worlds.getMaxWorlds()));
 			}
@@ -500,9 +504,18 @@ public class LevelScreen implements Screen {
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
 				worlds.PreviousWorld();
-				Gdx.app.debug(event.getListenerActor().toString(),
+				Gdx.app.debug("wirechem-LevelScreen",
 						"World:" + String.valueOf(worlds.getWorld()) + " Maxworld:"
 								+ String.valueOf(worlds.getMaxWorlds()));
+			}
+		});
+		databaseSave = new ImageButton(AssetLoader.Skin_level, "database-save");
+		databaseSave.setPosition(1820, 40);	
+		databaseSave.setVisible(false);
+		databaseSave.addListener(new ClickListener() {
+			@Override
+			public void clicked(InputEvent event, float x, float y) {
+				worlds.save(worlds.getName());
 			}
 		});
 		cout = new ImageTextButton("5", AssetLoader.Skin_level, "cout");
@@ -517,7 +530,7 @@ public class LevelScreen implements Screen {
 		nrj.setPosition(1365, 490);
 		rayon = new ImageTextButton("10", AssetLoader.Skin_level, "rayon");
 		rayon.setPosition(1250, 490);
-		Gdx.app.debug(getClass().getSimpleName(), "Conditions de victoire.");
+		Gdx.app.debug("wirechem-LevelScreen", "Conditions de victoire.");
 		Victory = new Objectives();
 		Victory.setVictory(new int[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 });
 		Victory.setPosition(1216, 185);
@@ -549,7 +562,7 @@ public class LevelScreen implements Screen {
 		Statdata.Refresh();
 		Userdata.Refresh();
 		Gamedata.Refresh();
-		Gdx.app.debug(getClass().getSimpleName(), "Affichage du menu.");
+		Gdx.app.debug("wirechem-LevelScreen", "Affichage du menu.");
 		if (worlds.getWorld() != -1)
 			level();
 		else
@@ -571,7 +584,7 @@ public class LevelScreen implements Screen {
 
 	@Override
 	public void show() {
-		Gdx.app.log("*****", "Affichage du choix des mondes & niveaux.");
+		Gdx.app.log("wirechem-LevelScreen", "***** Affichage du choix des mondes & niveaux.");
 		table.setFillParent(true);
 		stage.addActor(worlds);
 		stage.addActor(MenuSolo);
@@ -603,8 +616,9 @@ public class LevelScreen implements Screen {
 		stage.addActor(Gamedatalabel);
 		stage.addActor(Worlddata);
 		stage.addActor(Worlddatalabel);
+		stage.addActor(databaseSave);
 		Gdx.input.setInputProcessor(stage);
-		Gdx.app.debug("AssetLoader", "Début dans la bande son \'intro\'");
+		Gdx.app.debug("wirechem-LevelScreen", "Début dans la bande son \'intro\'");
 		AssetLoader.intro.setLooping(true);
 		AssetLoader.intro.play();
 	}
@@ -629,7 +643,7 @@ public class LevelScreen implements Screen {
 	public void showlevel(ButtonLevel button) {
 		if (button==null)
 			return;
-		Gdx.app.debug(getClass().getSimpleName(), "Reading button "	+ button.level.Name);
+		Gdx.app.debug("wirechem-LevelScreen", "Reading button "	+ button.level.Name);
 		TextDescriptive.setText(button.level.Description);
 		if (button.level.Maxcycle < 99999 && button.level.Maxcycle > 0) {
 			cycle.setText(String.valueOf(button.level.Maxcycle));

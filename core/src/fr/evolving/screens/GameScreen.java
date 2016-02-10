@@ -65,6 +65,7 @@ import fr.evolving.UI.WarnDialog;
 import fr.evolving.UI.IconValue.Icon;
 import fr.evolving.assets.AssetLoader;
 import fr.evolving.assets.Preference;
+import fr.evolving.automata.Grid;
 import fr.evolving.automata.Level;
 import fr.evolving.automata.Neutraliser_II;
 import fr.evolving.automata.Transmuter;
@@ -201,24 +202,24 @@ public class GameScreen implements Screen {
 
 	// This is the constructor, not the class declaration
 	public GameScreen(Worlds aworlds) {
-		Gdx.app.debug(getClass().getSimpleName(),"Préparation du screen");
+		Gdx.app.debug("wirechem-GameScreen","Préparation du screen");
 		this.worlds = aworlds;
 		this.worlds.prepareLevel(false);
 		this.level=worlds.getInformations();
 		if (worlds.isDebug())
-			tocreate = new String[] { "run", "stop", "speed", "separator", "move#", "zoomp#","zoomm#", "infos#", "separator", "raz", "save", "levels", "tree",	"exits", "separator", "screen", "sound", "tuto", "grid", "settings", "separator", "stat","separator","unlocked" };
+			tocreate = new String[] { "run", "stop", "speed", "separator", "move#", "zoomp#","zoomm#", "infos#", "separator", "raz", "save", "levels", "tree",	"exits", "separator", "screen", "sound", "tuto", "grid", "settings", "separator", "stat","separator","unlocked","delrow","delcol","addrow","addcol","database" };
 		else if (level.Tech<1)
 			tocreate = new String[] { "run", "stop", "speed", "separator", "move#", "zoomp#","zoomm#", "separator", "levels", "exits", "separator", "screen", "sound", "settings" };
 		else if (level.aWorld<1)
 			tocreate = new String[] { "run", "stop", "speed", "separator", "move#", "zoomp#","zoomm#", "infos#", "separator", "raz", "save", "levels", "exits", "separator", "screen", "sound", "grid", "settings" };
 		else
 			tocreate = new String[] { "run", "stop", "speed", "separator", "move#", "zoomp#","zoomm#", "infos#", "separator", "raz", "save", "levels", "tree",	"exits", "separator", "screen", "sound", "tuto", "grid", "settings", "separator", "stat" };
-		Gdx.app.debug(getClass().getSimpleName(),"Création des Barres verticales & horizontales.");
+		Gdx.app.debug("wirechem-GameScreen","Création des Barres verticales & horizontales.");
 		horizbar=new HorizBarre(tocreate,"preparebarre");
 		horizbar.addListener(new ChangeListener() {
 			@Override
 			public void changed(ChangeEvent event, Actor actor) {
-				Gdx.app.debug("Barre", "Element changé");
+				Gdx.app.debug("wirechem-GameScreen", "Barre | Element changé");
 				hideInfo();
 				map.tempclear();
 				menu.unSelect();
@@ -226,7 +227,7 @@ public class GameScreen implements Screen {
 			}
 		});
 		vertibar=new VertiBarre(worlds);
-		Gdx.app.debug(getClass().getSimpleName(),"Création des elements primordiaux du screen (stage, renderer, table, level, world)");
+		Gdx.app.debug("wirechem-GameScreen","Création des elements primordiaux du screen (stage, renderer, table, level, world)");
 		fpsLabel = new Label("0 FPS", AssetLoader.Skin_level, "FPS");
 		fpsLabel.setPosition(AssetLoader.width - 75, AssetLoader.height - 220);
 		multiplexer = new InputMultiplexer();
@@ -238,10 +239,10 @@ public class GameScreen implements Screen {
 		oldy = 0;
 		unroll = false;
 		Renderer = new GameRenderer(this);
-		Gdx.app.debug(getClass().getSimpleName(), "Création des barres");
+		Gdx.app.debug("wirechem-GameScreen", "Création des barres");
 		tooltip = new TextArea("tooltip:x\r\n tooltip:y",AssetLoader.Skin_level, "info_tooltip");
 		tooltip.setBounds(541, 27, 100, 50);
-		Gdx.app.debug(getClass().getSimpleName(),"Création de la barre de gestion du haut");
+		Gdx.app.debug("wirechem-GameScreen","Création de la barre de gestion du haut");
 		cycle = new IconValue(Icon.cycle,worlds, AssetLoader.Skin_level);
 		cycle.setPosition(10, AssetLoader.height - 74);
 		temp = new IconValue(Icon.temp,worlds, AssetLoader.Skin_level);
@@ -266,13 +267,12 @@ public class GameScreen implements Screen {
 		buttonlevel.addListener(new ClickListener() {
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
-				Gdx.app.debug(getClass().getSimpleName(),"Remise à zéro du monde");
+				Gdx.app.debug("wirechem-GameScreen","Remise à zéro du monde");
 				worlds.prepareLevel(true);
 				prepare();
 			}
 		});
-		Gdx.app.debug(getClass().getSimpleName(),
-				"Création de la barre d'information");
+		Gdx.app.debug("wirechem-GameScreen","Création de la barre d'information");
 		info_tech = new ImageTextButton("0", AssetLoader.Skin_level,"info_tech");
 		info_tech.setSize(48, 48);
 		info_tech.setPosition(1200, AssetLoader.height - 775);
@@ -324,16 +324,15 @@ public class GameScreen implements Screen {
 			}
 		});
 		dialog = new WarnDialog(AssetLoader.Skin_ui);
-		Gdx.app.debug(getClass().getSimpleName(), "Création d'une tilemap");
+		Gdx.app.debug("wirechem-GameScreen", "Création d'une tilemap");
 		map = new TouchMaptiles(level, 128, 128);
 		if (Preference.prefs.getBoolean("Grid"))
 			map.setClearsprite(60);
 		else
 			map.setClearsprite(53);
-		map.setBounds(0, 0, AssetLoader.width, AssetLoader.height);
 		map.redraw();
 		
-		Gdx.app.debug(getClass().getSimpleName(), "Création du menu");
+		Gdx.app.debug("wirechem-GameScreen", "Création du menu");
 		nextpage=new ImageButton(AssetLoader.Skin_level,"extend");
 		nextpage.setPosition(1850, AssetLoader.height - 370);
 		nextpage.addListener(new ClickListener() {
@@ -341,7 +340,7 @@ public class GameScreen implements Screen {
 			public void clicked(InputEvent event, float x, float y) {
 				if (!nextpage.isDisabled()) {
 				menu.NextPage();
-				Gdx.app.debug("menu", "Page suivante:"+menu.getPage());
+				Gdx.app.debug("wirechem-GameScreen", "Menu | Page suivante:"+menu.getPage());
 				map.tempclear();
 				hideInfo();
 				nextpage.setDisabled(menu.isNextEmpty());
@@ -356,7 +355,7 @@ public class GameScreen implements Screen {
 			public void clicked(InputEvent event, float x, float y) {
 				if (!previouspage.isDisabled()) {
 				menu.PreviousPage();
-				Gdx.app.debug("menu", "Page précédente:"+menu.getPage());
+				Gdx.app.debug("wirechem-GameScreen", "Menu | Page précédente:"+menu.getPage());
 				map.tempclear();
 				hideInfo();
 				nextpage.setDisabled(menu.isNextEmpty());
@@ -369,7 +368,7 @@ public class GameScreen implements Screen {
 		menu.addListener(new ChangeListener() {
 			@Override
 			public void changed(ChangeEvent event, Actor actor) {
-				Gdx.app.debug("Menu", "Element changé");
+				Gdx.app.debug("wirechem-GameScreen", "Menu | Element changé");
 				hideInfo();
 				map.tempclear();
 				if (menu.getTransmuter() != null) 
@@ -460,18 +459,18 @@ public class GameScreen implements Screen {
 	public void map_infos(float realx, float realy, int x, int y, boolean alone,
 			int button, calling call) {
 		if (level.Grid.GetXY(x, y) != null) {
-			Gdx.app.debug("map", "Etat extension:" + unroll);
+			Gdx.app.debug("wirechem-GameScreen", "Etat extension:" + unroll);
 			if (level.Grid.GetXY(x, y).Copper)
-				Gdx.app.debug("map", "*** Présence de cuivre");
+				Gdx.app.debug("wirechem-GameScreen", "*** Présence de cuivre");
 			if (level.Grid.GetXY(x, y).Fiber > 0)
-				Gdx.app.debug("map", "*** Présence de fibre");
+				Gdx.app.debug("wirechem-GameScreen", "*** Présence de fibre");
 			if (level.Grid.GetXY(x, y).Transmuter_calc > 0) {
-				Gdx.app.debug("map", "transmuter deplacement vers origine:"
+				Gdx.app.debug("wirechem-GameScreen", "transmuter deplacement vers origine:"
 						+ level.Grid.GetXY(x, y).Transmuter_movex + ","
 						+ level.Grid.GetXY(x, y).Transmuter_movey + " coords:"
 						+ (x + level.Grid.GetXY(x, y).Transmuter_movex) + "x"
 						+ (y + level.Grid.GetXY(x, y).Transmuter_movey));
-				Gdx.app.debug("map",level.Grid.getTransmuter(
+				Gdx.app.debug("wirechem-GameScreen",level.Grid.getTransmuter(
 								x + level.Grid.GetXY(x, y).Transmuter_movex,
 								y + level.Grid.GetXY(x, y).Transmuter_movey)
 								.getInformations());
@@ -503,7 +502,7 @@ public class GameScreen implements Screen {
 			int button, calling call) {
 		if (oldx != 0 && oldy != 0) {
 			map.setDec(realx - oldx, realy - oldy);
-			Gdx.app.debug("map", "Decalage absolue en pixel:" + (realx - oldx)+ "x" + (realy - oldy));
+			Gdx.app.debug("wirechem-GameScreen", "Decalage absolue en pixel:" + (realx - oldx)+ "x" + (realy - oldy));
 		}
 		oldx = realx;
 		oldy = realy;
@@ -542,7 +541,7 @@ public class GameScreen implements Screen {
 		if (level.Grid.GetXY(x, y).Transmuter_calc != 0) {
 			level.Grid.GetXY(x + level.Grid.GetXY(x, y).Transmuter_movex, y
 					+ level.Grid.GetXY(x, y).Transmuter_movey).Transmuter = null;
-			Gdx.app.debug("map", "transmuter deplacement vers origine:"
+			Gdx.app.debug("wirechem-GameScreen", "transmuter deplacement vers origine:"
 					+ level.Grid.GetXY(x, y).Transmuter_movex + ","
 					+ level.Grid.GetXY(x, y).Transmuter_movey + " coords:"
 					+ (x + level.Grid.GetXY(x, y).Transmuter_movex) + "x"
@@ -661,13 +660,12 @@ public class GameScreen implements Screen {
 
 	@Override
 	public void show() {
-		Gdx.app.debug(getClass().getSimpleName(),
-				"Création de la fenêtre d'option");
+		Gdx.app.debug("wirechem-GameScreen","Création de la fenêtre d'option");
 		Table Optiontable = Createoption();
 		stage.addActor(winOptions);
 		Table Savetable = Createsaving();
 		stage.addActor(winSave);
-		Gdx.app.log("*****", "Affichage du niveau.");
+		Gdx.app.log("wirechem-GameScreen", "***** Affichage du niveau.");
 		stage_info.addActor(info_tech);
 		stage_info.addActor(info_research);
 		stage_info.addActor(info_activation);
@@ -685,13 +683,13 @@ public class GameScreen implements Screen {
 		stage_info.addActor(info_desc);
 		stage_tooltip.addActor(tooltip);
 		stage.addActor(horizbar);
-		if (worlds.getInformations().Cout>0 || worlds.getInformations().Tech>=1 ) {
+		if (worlds.getInformations().Cout>0 || worlds.getInformations().Tech>=1 || worlds.isDebug()) {
 			stage.addActor(vertibar);
 			stage.addActor(buttonlevel);
 			stage.addActor(menu);
+			stage.addActor(nextpage);
+			stage.addActor(previouspage);	
 		}
-		stage.addActor(nextpage);
-		stage.addActor(previouspage);		
 		stage.addActor(objectives);
 		stage.addActor(rayon);
 		stage.addActor(nrj);
@@ -738,11 +736,11 @@ public class GameScreen implements Screen {
 			if (winSave.isVisible())
 				readsaved();
 		} else if (caller == "save") {
-			Gdx.app.debug("Barre", "Sauvegarde de la grille.");	
+			Gdx.app.debug("wirechem-GameScreen", "Barre | Sauvegarde de la grille.");	
 			worlds.SaveGrid();
 			readsaved();
 		} else if (caller == "levels") {
-			Gdx.app.debug("Barre", "Affichage des niveaux.");
+			Gdx.app.debug("wirechem-GameScreen", "Barre | Affichage des niveaux.");
 			exit();
 			((Game) Gdx.app.getApplicationListener()).setScreen(new LevelScreen(worlds));
 		} else if (caller == "tree") {
@@ -752,28 +750,28 @@ public class GameScreen implements Screen {
 		} else if (caller == "screen") {
 			DisplayMode currentMode = Gdx.graphics.getDesktopDisplayMode();
 			if (Gdx.graphics.isFullscreen()) {
-				Gdx.app.debug("Barre", "vers fenetre.");
+				Gdx.app.debug("wirechem-GameScreen", "Barre | vers fenetre.");
 				Gdx.graphics.setDisplayMode(currentMode.width,
 						currentMode.height, false);
 			} else {
-				Gdx.app.debug("Barre", "vers plein ecran.");
+				Gdx.app.debug("wirechem-GameScreen", "Barre | vers plein ecran.");
 				Gdx.graphics.setDisplayMode(currentMode.width,
 						currentMode.height, true);
 			}
 		} else if (caller == "sound") {
 			if (AssetLoader.intro.getVolume() > 0) {
-				Gdx.app.debug("Barre", "arret son.");
+				Gdx.app.debug("wirechem-GameScreen", "Barre | arret son.");
 				AssetLoader.intro.setVolume(0f);
 			} else {
-				Gdx.app.debug("Barre", "marche son.");
+				Gdx.app.debug("wirechem-GameScreen", "Barre | marche son.");
 				AssetLoader.intro.setVolume(1f);
 			}
 		} else if (caller == "tuto") {
 			if (AssetLoader.Tooltipmanager.enabled) {
-				Gdx.app.debug("Barre", "arret tuto.");
+				Gdx.app.debug("wirechem-GameScreen", "Barre | arret tuto.");
 				AssetLoader.Tooltipmanager.enabled = false;
 			} else {
-				Gdx.app.debug("Barre", "marche tuto.");
+				Gdx.app.debug("wirechem-GameScreen", "Barre | marche tuto.");
 				AssetLoader.Tooltipmanager.enabled = true;
 			}
 		} else if (caller=="grid") {
@@ -795,10 +793,10 @@ public class GameScreen implements Screen {
 		} else if (caller == "flag") {
 			if (AssetLoader.language.getLocale().getDisplayName()
 					.contains("français")) {
-				Gdx.app.debug("Barre", "Langue USA");
+				Gdx.app.debug("wirechem-GameScreen", "Barre | Langue USA");
 				AssetLoader.language = AssetLoader.usa;
 			} else {
-				Gdx.app.debug("Barre", "Langue FR");
+				Gdx.app.debug("wirechem-GameScreen", "Barre | Langue FR");
 				AssetLoader.language = AssetLoader.french;
 			}
 		} else if (caller == "stat") {
@@ -806,6 +804,20 @@ public class GameScreen implements Screen {
 			level.Locked=false;
 			buttonlevel.setDisabled(false);
 			worlds.unLockLevel();
+		} else if (caller == "database") {
+			worlds.origLevel();
+		} else if (caller == "delrow") {
+			level.Grid=(Grid) level.Grid.clone(level.Grid.sizeX-1, level.Grid.sizeY);
+			map.resize();
+		} else if (caller == "delcol") {
+			level.Grid=(Grid) level.Grid.clone(level.Grid.sizeX, level.Grid.sizeY-1);
+			map.resize();
+		} else if (caller == "addrow") {
+			level.Grid=(Grid) level.Grid.clone(level.Grid.sizeX+1, level.Grid.sizeY);
+			map.resize();
+		} else if (caller == "addcol") {
+			level.Grid=(Grid) level.Grid.clone(level.Grid.sizeX, level.Grid.sizeY+1);
+			map.resize();
 		}
 	}
 

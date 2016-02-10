@@ -12,8 +12,7 @@ public class main extends Game {
 	@Override
 	public void create() {
 		Preference.init();
-		Gdx.app.debug(getClass().getSimpleName(),
-				"Récupération de la résolution des préférences.");
+		Gdx.app.debug("wirechem-main","Récupération de la résolution des préférences.");
 		if (Preference.prefs.getInteger("ResolutionX") > 0
 				&& Preference.prefs.getInteger("ResolutionY") > 0) {
 			try {
@@ -25,18 +24,15 @@ public class main extends Game {
 						Fullscreen);
 				Gdx.graphics.setVSync(VSync);
 			} catch (ClassCastException e) {
-				Gdx.app.error("****",
-						"Impossible d'appliquer les préférences graphiques");
-				Gdx.app.debug(getClass().getSimpleName(), e.getMessage());
+				Gdx.app.error("wirechem-main","***** Impossible d'appliquer les préférences graphiques");
+				Gdx.app.debug("wirechem-main", e.getMessage());
 			} finally {
-				Gdx.app.log("****",
-						"Changement de résolution selon préférences graphiques");
+				Gdx.app.log("wirechem-main","***** Changement de résolution selon préférences graphiques");
 			}
 		} else
-			Gdx.app.debug(getClass().getSimpleName(), "...Aucune préférence !");
+			Gdx.app.debug("wirechem-main", "...Aucune préférence !");
 		AssetLoader.init();
-		Gdx.app.debug(getClass().getSimpleName(),
-				"Creation de l'objet SplashScreen.");
+		Gdx.app.debug("wirechem-main", "Creation de l'objet SplashScreen.");
 		setScreen(new SplashScreen(this));
 	}
 

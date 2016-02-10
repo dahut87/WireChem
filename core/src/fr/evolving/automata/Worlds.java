@@ -34,7 +34,7 @@ public class Worlds extends Actor {
 		research=-2;
 		usedlevel=null;
 		if (!AssetLoader.Datahandler.verifyall()) {
-			Gdx.app.debug(getClass().getSimpleName(),"Pilotes de bases de donnée défaillant.");
+			Gdx.app.debug("wirechem-Worlds","Pilotes de bases de donnée défaillant.");
 			state=State.databasefailed;
 		}
 		else
@@ -155,25 +155,29 @@ public class Worlds extends Actor {
 	}
 	
 	public void prepareLevel(boolean force) {
-		Gdx.app.debug(getClass().getSimpleName(),"Récupération des conditions initiales.");
+		Gdx.app.debug("wirechem-Worlds","Récupération des conditions initiales.");
 		usedlevel.Cout=usedlevel.Cout_orig;
 		usedlevel.Cycle=usedlevel.Cycle_orig;
 		usedlevel.Temp=usedlevel.Temp_orig;
 		usedlevel.Rayon=usedlevel.Rayon_orig;
 		usedlevel.Nrj=usedlevel.Nrj_orig;
 		usedlevel.Victory=usedlevel.Victory_orig.clone();	
-		Gdx.app.debug(getClass().getSimpleName(),"Récupération des derniers niveaux.");
+		Gdx.app.debug("wirechem-Worlds","Récupération des derniers niveaux.");
 		ReadLastGrid();
 		if (usedlevel.Grid == null || force) {
-			Gdx.app.debug(getClass().getSimpleName(), "Copie monde original.");
+			Gdx.app.debug("wirechem-Worlds", "Copie monde original.");
 			usedlevel.Grid = (Grid)usedlevel.Grid_orig.clone();
 
 		} else {
-			Gdx.app.debug(getClass().getSimpleName(),"Récupération de la dernière grille.");
+			Gdx.app.debug("wirechem-Worlds","Récupération de la dernière grille.");
 			ReadLastGrid();
 		}
 		usedlevel.Grid.tiling_copper();
 		usedlevel.Grid.tiling_transmuter();
+	}
+	
+	public void origLevel() {
+		usedlevel.Grid_orig = (Grid)usedlevel.Grid.clone();
 	}
 	
 	public void setLevel(int alevel) {
@@ -262,14 +266,14 @@ public class Worlds extends Actor {
 	}
 	
 	public void set(String campaign) {
-		Gdx.app.log("*****", "Définition de la compagne "+campaign);
+		Gdx.app.log("wirechem-Worlds", "***** Définition de la compagne "+campaign);
 		Preference.prefs.putString("world", campaign);
 		Preference.prefs.flush();
 		load(campaign);
 	}
 	
 	public void load(String campaign) {
-		Gdx.app.log("*****", "Chargement de la compagne "+campaign);
+		Gdx.app.log("wirechem-Worlds", "***** Chargement de la compagne "+campaign);
 		levels=AssetLoader.Datahandler.game().getCampaign(campaign);
 		updateUnlockLevels();
 		name=campaign;
@@ -280,7 +284,7 @@ public class Worlds extends Actor {
 	}
 	
 	public void create(String campaign) {
-		Gdx.app.log("*****", "initialisation de la compagne "+campaign);
+		Gdx.app.log("wirechem-Worlds", "***** initialisation de la compagne "+campaign);
 		try {
 			levels=InitWorlds.go();
 			Preference.prefs.putString("world",campaign);
@@ -299,7 +303,7 @@ public class Worlds extends Actor {
 	}
 	
 	public void save(String campaign) {
-		Gdx.app.log("*****", "enregistrement de la compagne "+campaign);
+		Gdx.app.log("wirechem-Worlds", "***** enregistrement de la compagne "+campaign);
 		AssetLoader.Datahandler.game().setCampaign(levels,campaign);
 	}
 	
