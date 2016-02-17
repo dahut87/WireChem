@@ -46,9 +46,9 @@ public class LevelScreen implements Screen {
 	private Stage stage;
 	private Table table;
 	private WarnDialog dialog;
-	private ImageButton Previous, Next, Exit, logosmall, databaseSave;
+	private ImageButton Previous, Next, Exit, logosmall, databaseSave, adder, signer;
 	public Image MenuSolo, MenuMulti, MenuScenario;
-	private ImageTextButton cout, tech, cycle, temp, rayon, nrj;
+	private ImageTextButton cout, tech, cycle, temp, rayon, nrj, up_cycle, up_temp, up_rayon, up_nrj, research, up;
 	private TextButton buttonConnect, buttonPlay, buttonStat, buttonSave,
 	buttonApply, buttonPlaythis;
 	private ServerList Statdata, Userdata, Gamedata;
@@ -58,6 +58,7 @@ public class LevelScreen implements Screen {
 	public Worlds worlds;
 	private Objectives Victory;
 	public ButtonLevel selected;
+	public int addervalue;
 
 
 	public void play() {
@@ -71,8 +72,12 @@ public class LevelScreen implements Screen {
 
 	public void menu() {
 		selected = null;
+		logosmall.setChecked(false);
+		worlds.DesactivateDebug();
 		cout.setVisible(false);
 		databaseSave.setVisible(false);
+		signer.setVisible(false);
+		adder.setVisible(false);
 		tech.setVisible(false);
 		cycle.setVisible(false);
 		temp.setVisible(false);
@@ -147,8 +152,11 @@ public class LevelScreen implements Screen {
 	}
 
 	public void level() {
-		if (worlds.isDebug())
+		if (worlds.isDebug()) {
 			databaseSave.setVisible(true);
+			adder.setVisible(true);
+			signer.setVisible(true);
+		}
 		Exit.setPosition(1110, AssetLoader.height - Exit.getHeight() - 5);
 		MenuSolo.setVisible(false);
 		MenuMulti.setVisible(false);
@@ -253,6 +261,7 @@ public class LevelScreen implements Screen {
 
 	public LevelScreen(Worlds aworlds) {
 		this.worlds = aworlds;
+		addervalue=1;
 		worlds.addListener(new ChangeListener() {
 			@Override
 			public void changed(ChangeEvent event, Actor actor) {
@@ -363,6 +372,7 @@ public class LevelScreen implements Screen {
 		logosmall.setChecked(worlds.isDebug());
 		logosmall.addListener(new ClickListener() {
 			public void clicked(InputEvent event, float x, float y) {
+				if (!MenuSolo.isVisible())
 				if (logosmall.isChecked()) {
 					if (buttonLevels != null)
 						for (int j = 0; j < 10; j++) {
@@ -372,6 +382,9 @@ public class LevelScreen implements Screen {
 					worlds.ActivateDebug();
 					Next.setVisible(!worlds.isRealLastWorld());
 					databaseSave.setVisible(true);
+					adder.setVisible(true);
+					signer.setVisible(true);
+					showlevel(selected);
 				}
 				else {
 					if (buttonLevels != null)
@@ -383,7 +396,11 @@ public class LevelScreen implements Screen {
 					worlds.updateUnlockLevels();
 					worlds.setMaxWorldLevel();
 					databaseSave.setVisible(false);
+					adder.setVisible(false);
+					signer.setVisible(false);
 				}
+				else
+					logosmall.setChecked(false);
 			}
 		});
 		TextDescriptive = new TextArea("Descriptif", AssetLoader.Skin_level,
@@ -509,6 +526,47 @@ public class LevelScreen implements Screen {
 								+ String.valueOf(worlds.getMaxWorlds()));
 			}
 		});
+		signer = new ImageButton(AssetLoader.Skin_level, "add");
+		signer.setPosition(1660, 40);	
+		signer.setVisible(false);
+		signer.addListener(new ClickListener() {
+			@Override
+			public void clicked(InputEvent event, float x, float y) {
+				String whereis=signer.getStyle().up.toString();
+				ImageButton.ImageButtonStyle imagebuttonstyle;
+				if (whereis.equals("add")) {
+					imagebuttonstyle=AssetLoader.Skin_level.get("sub", ImageButton.ImageButtonStyle.class);
+					addervalue=-Math.abs(addervalue);
+				}
+				else
+				{
+					imagebuttonstyle=AssetLoader.Skin_level.get("add", ImageButton.ImageButtonStyle.class);
+					addervalue=Math.abs(addervalue);
+				}
+				signer.setStyle(imagebuttonstyle);
+			}
+		});
+		adder = new ImageButton(AssetLoader.Skin_level, "add1");
+		adder.setPosition(1720, 40);	
+		adder.setVisible(false);
+		adder.addListener(new ClickListener() {
+			@Override
+			public void clicked(InputEvent event, float x, float y) {
+				String whereis=adder.getStyle().up.toString();
+				if (whereis.equals("add1"))	
+					addervalue=(int)(10*Math.signum(addervalue));
+				else if (whereis.equals("add10"))
+					addervalue=(int)(100*Math.signum(addervalue));
+				else if (whereis.equals("add100"))	
+					addervalue=(int)(1000*Math.signum(addervalue));
+				else if (whereis.equals("add1000"))	
+					addervalue=(int)(10000*Math.signum(addervalue));
+				else
+					addervalue=1;
+				ImageButton.ImageButtonStyle imagebuttonstyle=AssetLoader.Skin_level.get("add"+String.valueOf(Math.abs(addervalue)), ImageButton.ImageButtonStyle.class);
+				adder.setStyle(imagebuttonstyle);
+			}
+		});
 		databaseSave = new ImageButton(AssetLoader.Skin_level, "database-save");
 		databaseSave.setPosition(1820, 40);	
 		databaseSave.setVisible(false);
@@ -520,20 +578,200 @@ public class LevelScreen implements Screen {
 		});
 		cout = new ImageTextButton("5", AssetLoader.Skin_level, "cout");
 		cout.setPosition(1250, 48);
+		cout.addListener(new ClickListener() {
+			@Override
+			public void clicked(InputEvent event, float x, float y) {
+				if (worlds.isDebug()) {
+				selected.level.Cout_orig+=addervalue;
+				selected.level.Cout_orig=Math.max(0, Math.min(100000,selected.level.Cout_orig));
+				cout.setText(String.valueOf(selected.level.Cout_orig));
+				}
+			}
+		});
 		tech = new ImageTextButton("10", AssetLoader.Skin_level, "tech");
 		tech.setPosition(1365, 48);
+		tech.addListener(new ClickListener() {
+			@Override
+			public void clicked(InputEvent event, float x, float y) {
+				if (worlds.isDebug()) {
+				selected.level.Tech+=addervalue;
+				selected.level.Tech=Math.max(-1, Math.min(12,selected.level.Tech));
+				tech.setText(String.valueOf(selected.level.Tech));
+				}
+			}
+		});
 		temp = new ImageTextButton("10", AssetLoader.Skin_level, "temp");
 		temp.setPosition(1365, 360);
+		temp.addListener(new ClickListener() {
+			@Override
+			public void clicked(InputEvent event, float x, float y) {
+				if (worlds.isDebug()) {
+				selected.level.Maxtemp+=addervalue;
+				selected.level.Maxtemp=Math.max(0, Math.min(100000,selected.level.Maxtemp));
+				temp.setText(String.valueOf(selected.level.Maxtemp));
+				}
+			}
+		});
 		cycle = new ImageTextButton("10", AssetLoader.Skin_level, "cycle");
 		cycle.setPosition(1250, 360);
+		cycle.addListener(new ClickListener() {
+			@Override
+			public void clicked(InputEvent event, float x, float y) {
+				if (worlds.isDebug()) {
+				selected.level.Maxcycle+=addervalue;
+				selected.level.Maxcycle=Math.max(0, Math.min(100000,selected.level.Maxcycle));
+				cycle.setText(String.valueOf(selected.level.Maxcycle));
+				}
+			}
+		});
 		nrj = new ImageTextButton("10", AssetLoader.Skin_level, "nrj");
 		nrj.setPosition(1365, 490);
+		nrj.addListener(new ClickListener() {
+			@Override
+			public void clicked(InputEvent event, float x, float y) {
+				if (worlds.isDebug()) {
+				selected.level.Maxnrj+=addervalue;
+				selected.level.Maxnrj=Math.max(0, Math.min(100000,selected.level.Maxnrj));
+				nrj.setText(String.valueOf(selected.level.Maxnrj));
+				}
+			}
+		});
 		rayon = new ImageTextButton("10", AssetLoader.Skin_level, "rayon");
 		rayon.setPosition(1250, 490);
+		rayon.addListener(new ClickListener() {
+			@Override
+			public void clicked(InputEvent event, float x, float y) {
+				if (worlds.isDebug()) {
+				selected.level.Maxrayon+=addervalue;
+				selected.level.Maxrayon=Math.max(0, Math.min(100000,selected.level.Maxrayon));
+				rayon.setText(String.valueOf(selected.level.Maxrayon));
+				}
+			}
+		});
+		up_cycle = new ImageTextButton("10", AssetLoader.Skin_level, "up_cycle");
+		up_cycle.setPosition(1250, AssetLoader.height-250);
+		up_cycle.addListener(new ClickListener() {
+			@Override
+			public void clicked(InputEvent event, float x, float y) {
+				if (worlds.isDebug()) {
+				
+				}
+			}
+		});
+		up_nrj = new ImageTextButton("10", AssetLoader.Skin_level, "up_nrj");
+		up_nrj.setPosition(1365, AssetLoader.height-120);
+		up_nrj.addListener(new ClickListener() {
+			@Override
+			public void clicked(InputEvent event, float x, float y) {
+				if (worlds.isDebug()) {
+				
+				}
+			}
+		});
+		up_rayon = new ImageTextButton("10", AssetLoader.Skin_level, "up_rayon");
+		up_rayon.setPosition(1250, AssetLoader.height-120);
+		up_rayon.addListener(new ClickListener() {
+			@Override
+			public void clicked(InputEvent event, float x, float y) {
+				if (worlds.isDebug()) {
+				
+				}
+			}
+		});
+		up_temp = new ImageTextButton("10", AssetLoader.Skin_level, "up_temp");
+		up_temp.setPosition(1365, AssetLoader.height-250);
+		up_temp.addListener(new ClickListener() {
+			@Override
+			public void clicked(InputEvent event, float x, float y) {
+				if (worlds.isDebug()) {
+				
+				}
+			}
+		});
+		up = new ImageTextButton("10", AssetLoader.Skin_level, "up");
+		up.setPosition(1250, AssetLoader.height-380);
+		up.addListener(new ClickListener() {
+			@Override
+			public void clicked(InputEvent event, float x, float y) {
+				if (worlds.isDebug()) {
+				
+				}
+			}
+		});
+		research = new ImageTextButton("10", AssetLoader.Skin_level, "research");
+		research.setPosition(1365, AssetLoader.height-380);
+		research.addListener(new ClickListener() {
+			@Override
+			public void clicked(InputEvent event, float x, float y) {
+				if (worlds.isDebug()) {
+				
+				}
+			}
+		});
+		
 		Gdx.app.debug("wirechem-LevelScreen", "Conditions de victoire.");
-		Victory = new Objectives();
+		Victory = new Objectives(worlds);
 		Victory.setVictory(new int[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 });
 		Victory.setPosition(1216, 185);
+		Victory.addListener(new ClickListener() {
+			@Override
+			public void clicked(InputEvent event, float x, float y) {
+				if (worlds.isDebug()) {
+					int clicked=(int) (x/Victory.size+1);
+					int initialclicked=clicked;
+					Gdx.app.debug("wirechem-objectives","Element cliqué:"+clicked);
+					boolean flag=false;
+					for(int i=0;i<Victory.Victory.length;i++) {
+						if (Victory.Victory[i]>0 || Victory.Victory[i]<0) {
+							clicked--;
+							if (clicked<=0) {
+								if (Victory.Victory[i]<0)
+									Victory.Victory[i]++;
+								clicked=i;
+								flag=true;
+								break;
+							}
+						}
+					}
+					if (flag==true) {
+						Victory.Victory[clicked]+=addervalue;
+						if (clicked<=6)
+							Victory.Victory[clicked]=Math.max(0, Math.min(10,Victory.Victory[clicked]));
+						else if (clicked==7)
+							Victory.Victory[clicked]=Math.max(0, Math.min(2,Victory.Victory[clicked]));
+						else if (clicked==8)
+							Victory.Victory[clicked]=Math.max(0, Math.min(8,Victory.Victory[clicked]));
+						else if (clicked==9)
+							Victory.Victory[clicked]=Math.max(0, Math.min(8,Victory.Victory[clicked]));
+						else
+							Victory.Victory[clicked]=Math.max(0, Math.min(25,Victory.Victory[clicked]));
+					}
+					else
+					{
+						for(int i=0;i<Victory.Victory.length;i++)
+						{
+							if (Victory.Victory[i]<0)
+							{
+								flag=true;
+								Victory.Victory[i]=0;
+								continue;
+							}
+							if (flag && Victory.Victory[i]==0)
+							{
+								Victory.Victory[i]=-1;
+								return;
+							}
+						}
+						if (!flag && initialclicked<=5)
+							for(int i=0;i<Victory.Victory.length;i++)
+								if (Victory.Victory[i]==0) {
+									Victory.Victory[i]=-1;
+									break;
+								}
+					}
+				}
+			}
+		});
 		String url = "http://evolving.fr/servers/list.xml";
 		Statdata = new ServerList(url, Base.datatype.statdata,
 				AssetLoader.Skin_ui);
@@ -617,6 +855,14 @@ public class LevelScreen implements Screen {
 		stage.addActor(Worlddata);
 		stage.addActor(Worlddatalabel);
 		stage.addActor(databaseSave);
+		stage.addActor(adder);
+		stage.addActor(signer);
+		stage.addActor(up);
+		stage.addActor(up_nrj);
+		stage.addActor(up_cycle);
+		stage.addActor(up_temp);
+		stage.addActor(up_rayon);
+		stage.addActor(research);
 		Gdx.input.setInputProcessor(stage);
 		Gdx.app.debug("wirechem-LevelScreen", "Début dans la bande son \'intro\'");
 		AssetLoader.intro.setLooping(true);
@@ -645,37 +891,37 @@ public class LevelScreen implements Screen {
 			return;
 		Gdx.app.debug("wirechem-LevelScreen", "Reading button "	+ button.level.Name);
 		TextDescriptive.setText(button.level.Description);
-		if (button.level.Maxcycle < 99999 && button.level.Maxcycle > 0) {
+		if (button.level.Maxcycle < 99999 && button.level.Maxcycle > 0 || worlds.isDebug()) {
 			cycle.setText(String.valueOf(button.level.Maxcycle));
 			cycle.setVisible(true);
 		} else
 			cycle.setVisible(false);
-		if (button.level.Maxtemp < 99999 && button.level.Maxtemp > 0) {
+		if (button.level.Maxtemp < 99999 && button.level.Maxtemp > 0 || worlds.isDebug()) {
 			temp.setText(String.valueOf(button.level.Maxtemp));
 			temp.setVisible(true);
 		} else
 			temp.setVisible(false);
-		if (button.level.Maxnrj < 99999 && button.level.Maxnrj > 0) {
+		if (button.level.Maxnrj < 99999 && button.level.Maxnrj > 0 || worlds.isDebug()) {
 			nrj.setText(String.valueOf(button.level.Maxnrj));
 			nrj.setVisible(true);
 		} else
 			nrj.setVisible(false);
-		if (button.level.Maxrayon < 99999 && button.level.Maxrayon > 0) {
+		if (button.level.Maxrayon < 99999 && button.level.Maxrayon > 0 || worlds.isDebug()) {
 			rayon.setText(String.valueOf(button.level.Maxrayon));
 			rayon.setVisible(true);
 		} else
 			rayon.setVisible(false);
-		if (button.level.Cout_orig > 0) {
+		if (button.level.Cout_orig > 0 || worlds.isDebug()) {
 			cout.setText(String.valueOf(button.level.Cout_orig));
 			cout.setVisible(true);
 		} else
 			cout.setVisible(false);
-		if (button.level.Tech >= 1) {
+		if (button.level.Tech >= 1 || worlds.isDebug()) {
 			tech.setText(String.valueOf(button.level.Tech));
 			tech.setVisible(true);
 		} else
 			tech.setVisible(false);
-		Victory.setVisible(button.level.Cout_orig > 0);
+		Victory.setVisible(button.level.Cout_orig > 0 || worlds.isDebug());
 		Victory.setVictory(button.level.Victory_orig);
 		if (selected != null)
 			selected.setChecked(false);

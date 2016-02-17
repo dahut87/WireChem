@@ -258,7 +258,7 @@ public class GameScreen implements Screen {
 		cout.setPosition(1445, AssetLoader.height - 74);
 		research = new IconValue(Icon.research,worlds, AssetLoader.Skin_level);
 		research.setPosition(1545, AssetLoader.height - 74);
-		objectives = new Objectives();
+		objectives = new Objectives(worlds);
 		objectives.setVictory(level.Victory);
 		objectives.setPosition(890, AssetLoader.height - 95);
 		objectives.setVisible(level.Cout>0);

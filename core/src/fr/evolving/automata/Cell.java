@@ -29,6 +29,8 @@ public class Cell implements Serializable,Cloneable {
 	
 	public Object clone() {
 		Cell result = new Cell();
+		result.Locked=this.Locked;
+		result.Free=this.Free;
 		result.Copper=this.Copper;
 		result.Fiber=this.Fiber;
 		if (this.Transmuter!=null)
