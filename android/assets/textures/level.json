@@ -89,7 +89,13 @@
         stat_down: { name: stat, color: veryred },
         tree_down: { name: tree, color: veryred },
         unlocked_down: { name: unlocked, color: veryred },
-
+        database_down: { name: database, color: veryred },
+        database-save_down: { name: database-save, color: veryred },
+        addcol_down: { name: addcol, color: veryred },
+        addrow_down: { name: addrow, color: veryred },
+        delcol_down: { name: delcol, color: veryred },
+        delrow_down: { name: delrow, color: veryred },
+        
         infos_down: { name: infos, color: veryred },
         extend_disabled: { name: extend, color: grey },
         extend_down: { name: extend, color: veryred } 
@@ -151,6 +157,12 @@
         separator: { up: separator }       
         tree: { up: tree,down:tree_down }    
         unlocked:{ up:unlocked, down:unlocked_down }
+        database:{ up:database, down:database_down }
+        database-save:{ up:database-save, down:database-save_down }
+        addcol:{ up:addcol, down:addcol_down }
+        addrow:{ up:addrow, down:addrow_down }     
+        delcol:{ up:delcol, down:delcol_down }     
+        delrow:{ up:delrow, down:delrow_down }        
         infos: { up: infos,down:infos_down }
         info_nrj: { up: nrj }
         info_cycle: { up: cycle } 
