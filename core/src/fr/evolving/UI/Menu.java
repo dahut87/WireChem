@@ -121,7 +121,7 @@ public class Menu extends Actor {
 					Gdx.app.debug("wirechem-Menu","Coordonnées:" + x + "x" + y + " Menu:" + coords.x
 							+ "," + coords.y + " Ecran :" + coords2.x
 							+ "x" + coords2.y + " type:"
-							+ tile.get("type"));
+							+ tile.get("type")+" selection:"+getSelection());
 					selected.setBounds(coords2.x, coords2.y, 60, 60);
 					onchanged();
 				}
@@ -230,6 +230,11 @@ public class Menu extends Actor {
 
 	public void update() {
 		clearall();
+		if (worlds.isDebug()) 
+		{
+			this.setMenuTile(0, 4, 87, "gold_pen",0);
+			this.setMenuTile(1, 4, 88, "lock_pen",0);
+		}
 		if (worlds.getInformations().Cout>=0 || worlds.isDebug())
 		{
 			this.setMenuTile(0, 7, 71, "copper_pen",0);

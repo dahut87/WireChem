@@ -325,7 +325,7 @@ public class GameScreen implements Screen {
 		});
 		dialog = new WarnDialog(AssetLoader.Skin_ui);
 		Gdx.app.debug("wirechem-GameScreen", "Création d'une tilemap");
-		map = new TouchMaptiles(level, 128, 128);
+		map = new TouchMaptiles(worlds,level, 128, 128);
 		if (Preference.prefs.getBoolean("Grid"))
 			map.setClearsprite(60);
 		else
@@ -518,10 +518,13 @@ public class GameScreen implements Screen {
 			int button, calling call) {
 		for (x = 0; x < level.Grid.sizeX; x++)
 			for (y = 0; y < level.Grid.sizeY; y++)
-				map_transmuter_eraser(0, 0, x, y, false, button, call);
+				if (!level.Grid.GetXY(x, y).Locked)
+					map_transmuter_eraser(0, 0, x, y, false, button, call);
 		level.Cout_transmuter=level.Grid.tiling_transmuter();
 		for (x = 0; x < level.Grid.sizeX; x++)
-			for (y = 0; y < level.Grid.sizeY; y++) {
+			for (y = 0; y < level.Grid.sizeY; y++)
+				if (!level.Grid.GetXY(x, y).Locked)
+			{
 				map_fiber_eraser(0, 0, x, y, false, button, call);
 				map_copper_eraser(0, 0, x, y, false, button, call);
 			}
@@ -538,7 +541,7 @@ public class GameScreen implements Screen {
 
 	public void map_transmuter_eraser(float realx, float realy, int x, int y,
 			boolean alone, int button, calling call) {
-		if (level.Grid.GetXY(x, y).Transmuter_calc != 0) {
+		if (level.Grid.GetXY(x, y).Transmuter_calc != 0 && !level.Grid.GetXY(x, y).Locked) {
 			level.Grid.GetXY(x + level.Grid.GetXY(x, y).Transmuter_movex, y
 					+ level.Grid.GetXY(x, y).Transmuter_movey).Transmuter = null;
 			Gdx.app.debug("wirechem-GameScreen", "transmuter deplacement vers origine:"
@@ -555,7 +558,7 @@ public class GameScreen implements Screen {
 
 	public void map_fiber_eraser(float realx, float realy, int x, int y,
 			boolean alone, int button, calling call) {
-		if (level.Grid.GetXY(x, y).Transmuter_calc == 0) {
+		if (level.Grid.GetXY(x, y).Transmuter_calc == 0 && !level.Grid.GetXY(x, y).Locked) {
 			level.Grid.GetXY(x, y).Fiber = 0;
 			if (alone) {
 				level.Cout_copperfiber=level.Grid.tiling_copper();
@@ -568,7 +571,7 @@ public class GameScreen implements Screen {
 			int button, calling call) {
 		if (!worlds.isDebug() && level.Cout<5)
 			return;
-		if (level.Grid.GetXY(x, y).Transmuter_calc == 0)
+		if (level.Grid.GetXY(x, y).Transmuter_calc == 0 && !level.Grid.GetXY(x, y).Locked)
 			level.Grid.GetXY(x, y).Fiber = -1 * level.Grid.GetXY(x, y).Fiber
 					+ 1;
 		if (alone) {
@@ -581,7 +584,7 @@ public class GameScreen implements Screen {
 			int button, calling call) {
 		if (!worlds.isDebug() && level.Cout<5)
 			return;
-		if (level.Grid.GetXY(x, y).Transmuter_calc == 0)
+		if (level.Grid.GetXY(x, y).Transmuter_calc == 0 && !level.Grid.GetXY(x, y).Locked)
 			level.Grid.GetXY(x, y).Fiber = 1;
 		if (alone) {
 			level.Cout_copperfiber=level.Grid.tiling_copper();
@@ -591,7 +594,7 @@ public class GameScreen implements Screen {
 
 	public void map_copper_eraser(float realx, float realy, int x, int y,
 			boolean alone, int button, calling call) {
-		if (level.Grid.GetXY(x, y).Transmuter_calc == 0) {
+		if (level.Grid.GetXY(x, y).Transmuter_calc == 0 && !level.Grid.GetXY(x, y).Locked) {
 			level.Grid.GetXY(x, y).Copper = false;
 			if (alone) {
 				level.Cout_copperfiber=level.Grid.tiling_copper();
@@ -604,7 +607,7 @@ public class GameScreen implements Screen {
 			int button, calling call) {
 		if (!worlds.isDebug() && level.Cout<1)
 			return;
-		if (level.Grid.GetXY(x, y).Transmuter_calc == 0)
+		if (level.Grid.GetXY(x, y).Transmuter_calc == 0 && !level.Grid.GetXY(x, y).Locked)
 			level.Grid.GetXY(x, y).Copper = !level.Grid.GetXY(x, y).Copper;
 		if (alone) {
 			level.Cout_copperfiber=level.Grid.tiling_copper();
@@ -612,10 +615,24 @@ public class GameScreen implements Screen {
 		}
 	}
 
+	public void map_gold_pen(float realx, float realy, int x, int y, boolean alone,
+			int button, calling call) {
+		level.Grid.GetXY(x, y).Free=!level.Grid.GetXY(x, y).Free;
+		level.Cout_copperfiber=level.Grid.tiling_copper();
+		level.Cout_transmuter=level.Grid.tiling_transmuter();
+		map.redraw();
+	}
+	
+	public void map_lock_pen(float realx, float realy, int x, int y, boolean alone,
+			int button, calling call) {
+		level.Grid.GetXY(x, y).Locked=!level.Grid.GetXY(x, y).Locked;
+		map.redraw();
+	}
+	
 	public void map_copper_brush(float realx, float realy, int x, int y,boolean alone, int button, calling call) {
 		if (!worlds.isDebug() && level.Cout<1)
 			return;
-		if (level.Grid.GetXY(x, y).Transmuter_calc == 0)
+		if (level.Grid.GetXY(x, y).Transmuter_calc == 0 && !level.Grid.GetXY(x, y).Locked)
 			level.Grid.GetXY(x, y).Copper = true;
 		if (alone) {
 			level.Cout_copperfiber=level.Grid.tiling_copper();

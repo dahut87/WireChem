@@ -28,7 +28,7 @@ public class Grid implements Serializable,Cloneable {
 			for (int y = 0; y < this.sizeY; y++)
 			{
 				GetXY(x, y).Transmuter_calc = 0;
-				if (GetXY(x, y).Transmuter!=null)
+				if (GetXY(x, y).Transmuter!=null && !GetXY(x, y).Free)
 					result+=GetXY(x, y).Transmuter.getPrice();
 			}
 		for (int x = 0; x < this.sizeX; x++)
@@ -59,12 +59,15 @@ public class Grid implements Serializable,Cloneable {
 		int result=0;
 		for (int x = 0; x < this.sizeX; x++)
 			for (int y = 0; y < this.sizeY; y++) {
-				if (getFiber(x,y))
+				if (getFiber(x,y) && !GetXY(x, y).Free)
 					result+=5;
 				if (getCopper(x, y)) {
-					result++;
-					if (getFiber(x,y))
-					result+=45;
+					if (!GetXY(x, y).Free)
+					{
+						result++;
+						if (getFiber(x,y))
+							result+=45;
+					}
 					int value = 0;
 					if (getCopper(x, y + 1))
 						value++;

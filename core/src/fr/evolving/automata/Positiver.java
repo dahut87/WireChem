@@ -45,7 +45,7 @@ public class Positiver extends Transmuter {
 		this.Name = AssetLoader.language.get("[positiver-name]");
 		this.Desc = AssetLoader.language.get("[positiver-desc]");
 		this.theClass = Class.Scenario;
-		this.Price = 0;
+		this.Price = 20;
 		this.Technology = 0;
 		this.Research = 0;
 		this.Upgrade = null;

@@ -26,6 +26,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.ActorGestureListener;
 
 import fr.evolving.assets.AssetLoader;
 import fr.evolving.automata.Level;
+import fr.evolving.automata.Worlds;
 import fr.evolving.screens.GameScreen.calling;
 
 public class TouchMaptiles extends Actor implements GestureListener,InputProcessor {
@@ -40,8 +41,10 @@ public class TouchMaptiles extends Actor implements GestureListener,InputProcess
 	private String selected;
 	private boolean mapexit;
 	private int clearsprite;
+	private Worlds worlds;
 
-	public TouchMaptiles(Level level, int sizex, int sizey) {
+	public TouchMaptiles(Worlds worlds,Level level, int sizex, int sizey) {
+		this.worlds=worlds;
 		this.level = level;
 		this.sizex = sizex;
 		this.sizey = sizey;
@@ -60,7 +63,7 @@ public class TouchMaptiles extends Actor implements GestureListener,InputProcess
 		for(int i=0;i<max;i++)
 			if (layers.get(0)!=null)
 				layers.remove(0);
-		for (int i = 0; i < 5; i++) {
+		for (int i = 0; i < 7; i++) {
 			TiledMapTileLayer layer = new TiledMapTileLayer(level.Grid.sizeX, level.Grid.sizeY, sizex, sizey);
 			for (int x = 0; x < layer.getWidth(); x++) {
 				for (int y = 0; y < layer.getHeight(); y++) {
@@ -162,50 +165,37 @@ public class TouchMaptiles extends Actor implements GestureListener,InputProcess
 	public void redraw() {
 		for (int x = 0; x < level.Grid.sizeX; x++)
 			for (int y = 0; y < level.Grid.sizeY; y++) {
-				((TiledMapTileLayer) map.getLayers().get(2)).getCell((int) x,(int) y).setTile(null);
-				((TiledMapTileLayer) map.getLayers().get(1)).getCell((int) x,(int) y).setTile(null);
-				((TiledMapTileLayer) map.getLayers().get(0)).getCell((int) x,(int) y).setTile(AssetLoader.tileSet.getTile(this.clearsprite));
-			}
-		for (int x = 0; x < level.Grid.sizeX; x++)
-			for (int y = 0; y < level.Grid.sizeY; y++) {
-				if (level.Grid.getCopper(x, y))
-					((TiledMapTileLayer) map.getLayers().get(1)).getCell(
-							(int) x, (int) y).setTile(
-							AssetLoader.tileSet.getTile(level.Grid
-									.getCoppercalc(x, y)));
-				if (level.Grid.getFiber(x, y))
-					((TiledMapTileLayer) map.getLayers().get(0)).getCell(
-							(int) x, (int) y).setTile(
-							AssetLoader.tileSet.getTile(61));
-				if (level.Grid.getTransmutercalc(x, y) != 0) {
-					((TiledMapTileLayer) map.getLayers().get(2)).getCell(
-							(int) x, (int) y).setTile(
-							AssetLoader.tileSet.getTile(level.Grid
-									.getTransmutercalc(x, y)));
-					((TiledMapTileLayer) map.getLayers().get(2)).getCell(
-							(int) x, (int) y).setRotation(
-							level.Grid.getTransmuterrot(x, y));
-					((TiledMapTileLayer) map.getLayers().get(2))
-							.getCell((int) x, (int) y)
-							.getTile()
-							.getProperties()
-							.put("movex",
-									level.Grid.GetXY(x, y).Transmuter_movex);
-					((TiledMapTileLayer) map.getLayers().get(2))
-							.getCell((int) x, (int) y)
-							.getTile()
-							.getProperties()
-							.put("movey",
-									level.Grid.GetXY(x, y).Transmuter_movex);
+				if (worlds.isDebug()) {
+				if (level.Grid.GetXY(x,y).Locked)
+					((TiledMapTileLayer) map.getLayers().get(5)).getCell((int) x,(int) y).setTile(AssetLoader.tileSet.getTile(90));
+				else
+					((TiledMapTileLayer) map.getLayers().get(5)).getCell((int) x,(int) y).setTile(null);
+				if (level.Grid.GetXY(x,y).Free)
+					((TiledMapTileLayer) map.getLayers().get(6)).getCell((int) x,(int) y).setTile(AssetLoader.tileSet.getTile(89));
+				else
+					((TiledMapTileLayer) map.getLayers().get(6)).getCell((int) x,(int) y).setTile(null);
 				}
+				if (level.Grid.getCopper(x, y))
+					((TiledMapTileLayer) map.getLayers().get(1)).getCell((int) x, (int) y).setTile(AssetLoader.tileSet.getTile(level.Grid.getCoppercalc(x, y)));
+				else
+					((TiledMapTileLayer) map.getLayers().get(1)).getCell((int) x,(int) y).setTile(null);
+				if (level.Grid.getFiber(x, y))
+					((TiledMapTileLayer) map.getLayers().get(0)).getCell((int) x, (int) y).setTile(AssetLoader.tileSet.getTile(61));
+				else
+					((TiledMapTileLayer) map.getLayers().get(0)).getCell((int) x,(int) y).setTile(AssetLoader.tileSet.getTile(this.clearsprite));
+				if (level.Grid.getTransmutercalc(x, y) != 0) {
+					((TiledMapTileLayer) map.getLayers().get(2)).getCell((int) x, (int) y).setTile(AssetLoader.tileSet.getTile(level.Grid.getTransmutercalc(x, y)));
+					((TiledMapTileLayer) map.getLayers().get(2)).getCell((int) x, (int) y).setRotation(level.Grid.getTransmuterrot(x, y));
+					((TiledMapTileLayer) map.getLayers().get(2)).getCell((int) x, (int) y).getTile().getProperties().put("movex",level.Grid.GetXY(x, y).Transmuter_movex);
+					((TiledMapTileLayer) map.getLayers().get(2)).getCell((int) x, (int) y).getTile().getProperties().put("movey",level.Grid.GetXY(x, y).Transmuter_movex);
+				}
+				else
+					((TiledMapTileLayer) map.getLayers().get(2)).getCell((int) x,(int) y).setTile(null);
 				;
 			}
-		((TiledMapTileLayer) map.getLayers().get(0)).getCell((int) 0, (int) 0)
-				.setTile(AssetLoader.tileSet.getTile(1010));
-		((TiledMapTileLayer) map.getLayers().get(0)).getCell((int) 1, (int) 0)
-				.setTile(AssetLoader.tileSet.getTile(1010));
-		((TiledMapTileLayer) map.getLayers().get(0)).getCell((int) 2, (int) 0)
-				.setTile(AssetLoader.tileSet.getTile(1010));
+		((TiledMapTileLayer) map.getLayers().get(0)).getCell((int) 0, (int) 0).setTile(AssetLoader.tileSet.getTile(1010));
+		((TiledMapTileLayer) map.getLayers().get(0)).getCell((int) 1, (int) 0).setTile(AssetLoader.tileSet.getTile(1010));
+		((TiledMapTileLayer) map.getLayers().get(0)).getCell((int) 2, (int) 0).setTile(AssetLoader.tileSet.getTile(1010));
 	}
 
 	public void initzoom() {
@@ -274,7 +264,7 @@ public class TouchMaptiles extends Actor implements GestureListener,InputProcess
 	@Override
 	public boolean touchDown(float x, float y, int pointer, int button) {
 		String[] exec = { "cleaner", "infos", "zoomp", "zoomm",
-				"copper_pen", "fiber_pen", "copper_eraser",
+				"copper_pen", "fiber_pen", "gold_pen","lock_pen","copper_eraser",
 				"fiber_eraser", "transmuter_eraser", "all_eraser",
 				"blank", "transmuter", "copper_brush", "fiber_brush" };
 		return event_coordination(x, y, button, calling.mouseclick,
