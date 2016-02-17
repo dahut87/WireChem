@@ -74,7 +74,25 @@
 		exit2_down: { name: exit2, color: veryred },
 		exit2_over: { name: exit2, color: red },
 		exit2_disabled: { name: exit2, color: lowgrey },
-		
+		up_rayon_down: { name: up_rayon, color: veryred },
+		up_rayon_over: { name: up_rayon, color: red },
+		up_rayon_disabled: { name: up_rayon, color: lowgrey },
+		up_nrj_down: { name: up_nrj, color: veryred },
+		up_nrj_over: { name: up_nrj, color: red },
+		up_nrj_disabled: { name: up_nrj, color: lowgrey },
+		up_temp_down: { name: up_temp, color: veryred },
+		up_temp_over: { name: up_temp, color: red },
+		up_temp_disabled: { name: up_temp, color: lowgrey },
+		up_cycle_down: { name: up_cycle, color: veryred },
+		up_cycle_over: { name: up_cycle, color: red },
+		up_cycle_disabled: { name: up_cycle, color: lowgrey },
+		up_down: { name: up, color: veryred },
+		up_over: { name: up, color: red },
+		up_disabled: { name: up, color: lowgrey },		
+		points_down: { name: points, color: veryred },
+		points_over: { name: points, color: red },
+		points_disabled: { name: points, color: lowgrey },		
+				
   		run_down: { name: run, color: veryred },
         stop_down: { name: stop, color: veryred },
         speed_down: { name: speed, color: veryred }, 
@@ -130,6 +148,12 @@
         info_cout: { disabledFontColor:white, fontColor:white, overFontColor:red ,up: cout , down: cout, over:cout, disabled:cout, font: OpenDyslexicAlta-20, pressedOffsetY: -35, unpressedOffsetY: -37, checkedOffsetY: -37 }
         info_tech: { disabledFontColor:white, fontColor:white, overFontColor:red ,up: tech , down: tech, over:tech, disabled:tech, font: OpenDyslexicAlta-20, pressedOffsetY: -35, unpressedOffsetY: -37, checkedOffsetY: -37 } 
         default: { checkedFontColor:red,disabledFontColor:white, fontColor:white, overFontColor:red , font: OpenDyslexicAlta-25, pressedOffsetY: 0, unpressedOffsetY: -2 } 
+       	up_rayon: { disabledFontColor:white, fontColor:white, overFontColor:red ,up: up_rayon , down: up_rayon_down, over:up_rayon_over, disabled:up_rayon_disabled, font: OpenDyslexicAlta-25, pressedOffsetY: -45, unpressedOffsetY: -47, checkedOffsetY: -47 }
+        up_nrj: { disabledFontColor:white, fontColor:white, overFontColor:red ,up: up_nrj , down: up_nrj_down, over:up_nrj_over, disabled:up_nrj_disabled, font: OpenDyslexicAlta-25, pressedOffsetY: -45, unpressedOffsetY: -47, checkedOffsetY: -47 } 
+        up_cycle: { disabledFontColor:white, fontColor:white, overFontColor:red ,up: up_cycle , down: up_cycle_down, over:up_cycle_over, disabled:up_cycle_disabled, font: OpenDyslexicAlta-25, pressedOffsetY: -45, unpressedOffsetY: -47, checkedOffsetY: -47 }
+        up_temp: { disabledFontColor:white, fontColor:white, overFontColor:red ,up: up_temp , down: up_temp_down, over:up_temp_over, disabled:up_temp_disabled, font: OpenDyslexicAlta-25, pressedOffsetY: -45, unpressedOffsetY: -47, checkedOffsetY: -47 } 
+        up: { disabledFontColor:white, fontColor:white, overFontColor:red ,up: up , down: up_down, over:up_over, disabled:up_disabled, font: OpenDyslexicAlta-25, pressedOffsetY: -45, unpressedOffsetY: -47, checkedOffsetY: -47 } 
+        research: { disabledFontColor:white, fontColor:white, overFontColor:red ,up: points , down: points_down, over:points_over, disabled:points_disabled, font: OpenDyslexicAlta-25, pressedOffsetY: -45, unpressedOffsetY: -47, checkedOffsetY: -47 } 
  
     }
   com.badlogic.gdx.scenes.scene2d.ui.ImageButton$ImageButtonStyle: { 
@@ -176,6 +200,13 @@
        	extend: { up: extend, disabled:extend_disabled, down:extend_down }   
        	extend2: { up: extend2, disabled:extend2_disabled, down:extend2_down }   
        	evolution: { up: evolution, disabled:evolution_disabled, down:evolution_down }
+       	add: { up:add }
+       	sub: { up:sub }
+       	add1: { up:add1 }
+       	add10: { up:add10 }
+       	add100: { up:add100 }
+       	add1000: { up:add1000 }
+       	add10000: { up:add10000 }
     } 
     
   com.badlogic.gdx.scenes.scene2d.ui.Label$LabelStyle: { 
