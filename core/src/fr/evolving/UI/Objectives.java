@@ -44,12 +44,22 @@ public class Objectives extends Actor {
 		int element = 0;
 		int type = 0;
 		boolean flag =false;
-		for (int vict : Victory) {
-			if (vict != 0) {
+		int[] thevictory,currentvictory;
+		if (Victory!=null) {
+			thevictory=Victory;
+			currentvictory=Victory;
+		}
+		else
+		{
+			thevictory=worlds.getInformations().Victory_orig;
+			currentvictory=worlds.getInformations().Victory;
+		}
+		for (int i=0;i<thevictory.length;i++) {
+			if (thevictory[i] != 0) {
 				batch.end();
 				shaperenderer.begin(ShapeType.Filled);
 				shaperenderer.setColor(AssetLoader.Typecolors[type]);
-				shaperenderer.rect(this.getX() + element * size, this.getY(), size, 68);
+				shaperenderer.rect(this.getX() + element * size, this.getY(), size, 68*currentvictory[i]/thevictory[i]);
 				shaperenderer.end();
 				shaperenderer.begin(ShapeType.Line);
 				shaperenderer.setColor(1, 1, 1, 1);
@@ -57,8 +67,8 @@ public class Objectives extends Actor {
 				shaperenderer.end();
 				batch.begin();
 				font.draw(batch, AssetLoader.Typenames[type], this.getX()+ element * size + 2, this.getY() + 69);
-				if (vict>0)
-					font2.draw(batch, String.valueOf(vict), this.getX() + element * size + 11, this.getY() + 35);
+				if (thevictory[i] >0)
+					font2.draw(batch, String.valueOf(thevictory[i]), this.getX() + element * size + 11, this.getY() + 35);
 				else
 				{
 					font2.draw(batch, "??", this.getX() + element * size + 11, this.getY() + 35);
@@ -70,7 +80,7 @@ public class Objectives extends Actor {
 		}
 		if (flag)
 			batch.draw(Next, this.getX() + element * size+11, this.getY()+15);
-		else if (worlds.isDebug() && element<5)
+		else if (worlds.isDebug() && element<5 && Victory!=null)
 			batch.draw(Add, this.getX() + element * size+11, this.getY()+15);
 	}
 

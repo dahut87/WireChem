@@ -77,6 +77,12 @@ public class LevelScreen implements Screen {
 		cout.setVisible(false);
 		databaseSave.setVisible(false);
 		signer.setVisible(false);
+		up_rayon.setVisible(false);
+		up_nrj.setVisible(false);
+		up_temp.setVisible(false);
+		up_cycle.setVisible(false);
+		up.setVisible(false);
+		research.setVisible(false);
 		adder.setVisible(false);
 		tech.setVisible(false);
 		cycle.setVisible(false);
@@ -654,7 +660,9 @@ public class LevelScreen implements Screen {
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
 				if (worlds.isDebug()) {
-				
+					selected.level.rewards[1]+=addervalue;
+					selected.level.rewards[1]=Math.max(0, Math.min(3,selected.level.rewards[1]));
+					up_cycle.setText(String.valueOf(selected.level.rewards[1]));
 				}
 			}
 		});
@@ -664,7 +672,9 @@ public class LevelScreen implements Screen {
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
 				if (worlds.isDebug()) {
-				
+					selected.level.rewards[4]+=addervalue;
+					selected.level.rewards[4]=Math.max(0, Math.min(3,selected.level.rewards[4]));
+					up_nrj.setText(String.valueOf(selected.level.rewards[4]));
 				}
 			}
 		});
@@ -674,7 +684,9 @@ public class LevelScreen implements Screen {
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
 				if (worlds.isDebug()) {
-				
+					selected.level.rewards[3]+=addervalue;
+					selected.level.rewards[3]=Math.max(0, Math.min(3,selected.level.rewards[3]));
+					up_rayon.setText(String.valueOf(selected.level.rewards[3]));
 				}
 			}
 		});
@@ -684,7 +696,9 @@ public class LevelScreen implements Screen {
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
 				if (worlds.isDebug()) {
-				
+					selected.level.rewards[2]+=addervalue;
+					selected.level.rewards[2]=Math.max(0, Math.min(3,selected.level.rewards[2]));
+					up_temp.setText(String.valueOf(selected.level.rewards[2]));
 				}
 			}
 		});
@@ -694,7 +708,9 @@ public class LevelScreen implements Screen {
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
 				if (worlds.isDebug()) {
-				
+					selected.level.rewards[5]+=addervalue;
+					selected.level.rewards[5]=Math.max(0, Math.min(3,selected.level.rewards[5]));
+					up.setText(String.valueOf(selected.level.rewards[5]));
 				}
 			}
 		});
@@ -704,7 +720,9 @@ public class LevelScreen implements Screen {
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
 				if (worlds.isDebug()) {
-				
+					selected.level.rewards[0]+=addervalue;
+					selected.level.rewards[0]=Math.max(0, Math.min(10000,selected.level.rewards[0]));
+					research.setText(String.valueOf(selected.level.rewards[0]));
 				}
 			}
 		});
@@ -921,6 +939,36 @@ public class LevelScreen implements Screen {
 			tech.setVisible(true);
 		} else
 			tech.setVisible(false);
+		if (button.level.rewards[0] >= 1 || worlds.isDebug()) {
+			research.setText(String.valueOf(button.level.rewards[0]));
+			research.setVisible(true);
+		} else
+			research.setVisible(false);
+		if (button.level.rewards[2] >= 1 || worlds.isDebug()) {
+			up_temp.setText(String.valueOf(button.level.rewards[2]));
+			up_temp.setVisible(true);
+		} else
+			up_temp.setVisible(false);
+		if (button.level.rewards[4] >= 1 || worlds.isDebug()) {
+			up_nrj.setText(String.valueOf(button.level.rewards[4]));
+			up_nrj.setVisible(true);
+		} else
+			up_nrj.setVisible(false);
+		if (button.level.rewards[3] >= 1 || worlds.isDebug()) {
+			up_rayon.setText(String.valueOf(button.level.rewards[3]));
+			up_rayon.setVisible(true);
+		} else
+			up_rayon.setVisible(false);
+		if (button.level.rewards[1] >= 1 || worlds.isDebug()) {
+			up_cycle.setText(String.valueOf(button.level.rewards[1]));
+			up_cycle.setVisible(true);
+		} else
+			up_cycle.setVisible(false);
+		if (button.level.rewards[5] >= 1 || worlds.isDebug()) {
+			up.setText(String.valueOf(button.level.rewards[5]));
+			up.setVisible(true);
+		} else
+			up.setVisible(false);
 		Victory.setVisible(button.level.Cout_orig > 0 || worlds.isDebug());
 		Victory.setVictory(button.level.Victory_orig);
 		if (selected != null)
@@ -928,5 +976,4 @@ public class LevelScreen implements Screen {
 		selected = button;
 		button.setChecked(true);
 	}
-
 }

@@ -259,7 +259,6 @@ public class GameScreen implements Screen {
 		research = new IconValue(Icon.research,worlds, AssetLoader.Skin_level);
 		research.setPosition(1545, AssetLoader.height - 74);
 		objectives = new Objectives(worlds);
-		objectives.setVictory(level.Victory);
 		objectives.setPosition(890, AssetLoader.height - 95);
 		objectives.setVisible(level.Cout>0);
 		buttonlevel = new ButtonLevel(level, 1.0f, false);
@@ -698,7 +697,7 @@ public class GameScreen implements Screen {
 		stage_info.addActor(info_cout);
 		stage_info.addActor(info_up);
 		stage_info.addActor(info_desc);
-		stage_tooltip.addActor(tooltip);
+		//stage_tooltip.addActor(tooltip);
 		stage.addActor(horizbar);
 		if (worlds.getInformations().Cout>0 || worlds.getInformations().Tech>=1 || worlds.isDebug()) {
 			stage.addActor(vertibar);

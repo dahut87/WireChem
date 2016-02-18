@@ -20,6 +20,7 @@ public class Level implements Serializable {
 	public boolean Special;
 	public String Tuto;
 	public int[][] Link;
+	public int[] rewards;
 	
 	public int[] Victory_orig;
 	public int Cout_orig;
@@ -52,7 +53,7 @@ public class Level implements Serializable {
 		this.Name = Name;
 		this.Description = Description;
 		this.Element = Element;
-		this.Victory = Current;
+		this.rewards = Current;
 		this.Victory_orig = Victory;
 		this.X = X;
 		this.Y = Y;
