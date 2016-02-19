@@ -7,6 +7,7 @@ import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.Application;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -26,12 +27,14 @@ import com.badlogic.gdx.utils.Array;
 import fr.evolving.UI.ButtonLevel;
 import fr.evolving.UI.Objectives;
 import fr.evolving.UI.ServerList;
+import fr.evolving.UI.Transhower;
 import fr.evolving.UI.WarnDialog;
 import fr.evolving.UI.Worldlist;
 import fr.evolving.assets.AssetLoader;
 import fr.evolving.assets.InitWorlds;
 import fr.evolving.assets.Preference;
 import fr.evolving.automata.Level;
+import fr.evolving.automata.Transmuter;
 import fr.evolving.automata.Worlds;
 import fr.evolving.automata.Worlds.State;
 import fr.evolving.database.Base;
@@ -59,6 +62,8 @@ public class LevelScreen implements Screen {
 	private Objectives Victory;
 	public ButtonLevel selected;
 	public int addervalue;
+	
+	public Transhower test;
 
 
 	public void play() {
@@ -266,6 +271,10 @@ public class LevelScreen implements Screen {
 	}
 
 	public LevelScreen(Worlds aworlds) {
+		test=new Transhower(AssetLoader.getTransmuter("<>"),Transmuter.Angular.A90,true, new Color(0,1f,0f,1f));
+		test.setPosition(1920/2, 70);
+		test.setWidth(512);
+		test.setHeight(512);
 		this.worlds = aworlds;
 		addervalue=1;
 		worlds.addListener(new ChangeListener() {
@@ -619,7 +628,7 @@ public class LevelScreen implements Screen {
 			}
 		});
 		cycle = new ImageTextButton("10", AssetLoader.Skin_level, "cycle");
-		cycle.setPosition(1250, 360);
+		cycle.setPosition(1240, 360);
 		cycle.addListener(new ClickListener() {
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
@@ -643,7 +652,7 @@ public class LevelScreen implements Screen {
 			}
 		});
 		rayon = new ImageTextButton("10", AssetLoader.Skin_level, "rayon");
-		rayon.setPosition(1250, 490);
+		rayon.setPosition(1240, 490);
 		rayon.addListener(new ClickListener() {
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
@@ -655,7 +664,7 @@ public class LevelScreen implements Screen {
 			}
 		});
 		up_cycle = new ImageTextButton("10", AssetLoader.Skin_level, "up_cycle");
-		up_cycle.setPosition(1250, AssetLoader.height-250);
+		up_cycle.setPosition(1240, AssetLoader.height-250);
 		up_cycle.addListener(new ClickListener() {
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
@@ -679,7 +688,7 @@ public class LevelScreen implements Screen {
 			}
 		});
 		up_rayon = new ImageTextButton("10", AssetLoader.Skin_level, "up_rayon");
-		up_rayon.setPosition(1250, AssetLoader.height-120);
+		up_rayon.setPosition(1240, AssetLoader.height-120);
 		up_rayon.addListener(new ClickListener() {
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
@@ -703,7 +712,7 @@ public class LevelScreen implements Screen {
 			}
 		});
 		up = new ImageTextButton("10", AssetLoader.Skin_level, "up");
-		up.setPosition(1250, AssetLoader.height-380);
+		up.setPosition(1240, AssetLoader.height-380);
 		up.addListener(new ClickListener() {
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
@@ -881,6 +890,10 @@ public class LevelScreen implements Screen {
 		stage.addActor(up_temp);
 		stage.addActor(up_rayon);
 		stage.addActor(research);
+		
+		stage.addActor(test);
+		
+		
 		Gdx.input.setInputProcessor(stage);
 		Gdx.app.debug("wirechem-LevelScreen", "Début dans la bande son \'intro\'");
 		AssetLoader.intro.setLooping(true);

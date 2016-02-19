@@ -139,13 +139,10 @@ public class TouchMaptiles extends Actor implements GestureListener,InputProcess
 	}
 
 	public void tempdraw(float x, float y, int tile, int rotation, int surtile) {
-		Cell cell = ((TiledMapTileLayer) map.getLayers().get(3)).getCell(
-				(int) x, (int) y);
+		Cell cell = ((TiledMapTileLayer) map.getLayers().get(3)).getCell((int) x, (int) y);
 		if (cell != null) {
-			((TiledMapTileLayer) map.getLayers().get(4)).getCell((int) x,
-					(int) y).setTile(AssetLoader.tileSet.getTile(tile));
-			((TiledMapTileLayer) map.getLayers().get(4)).getCell((int) x,
-					(int) y).setRotation(rotation);
+			((TiledMapTileLayer) map.getLayers().get(4)).getCell((int) x,(int) y).setTile(AssetLoader.tileSet.getTile(tile));
+			((TiledMapTileLayer) map.getLayers().get(4)).getCell((int) x,(int) y).setRotation(rotation);
 			if (surtile != 0)
 				((TiledMapTileLayer) map.getLayers().get(3)).getCell((int) x,
 						(int) y).setTile(AssetLoader.tileSet.getTile(surtile));
