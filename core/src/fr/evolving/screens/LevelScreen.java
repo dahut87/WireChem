@@ -271,7 +271,7 @@ public class LevelScreen implements Screen {
 	}
 
 	public LevelScreen(Worlds aworlds) {
-		test=new Transhower(AssetLoader.getTransmuter("<>"),Transmuter.Angular.A90,true, new Color(0,1f,0f,1f));
+		test=new Transhower(AssetLoader.getTransmuter("--"),Transmuter.Angular.A270,true, new Color(0,1f,0f,1f));
 		test.setPosition(1920/2, 70);
 		test.setWidth(512);
 		test.setHeight(512);

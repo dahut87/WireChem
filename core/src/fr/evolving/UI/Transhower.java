@@ -84,12 +84,12 @@ public class Transhower extends Actor {
 		float change=0;
 		boolean dir=false;
 		if (keepaspectratio) {
-			change=Math.abs(deltax-deltay);
-			if (change<0) {
+			change=deltax-deltay;
+			if (change>0) {
 				deltay=deltax;
 				dir=true;
 			}
-			else if (change>0) {
+			else if (change<0) {
 				deltax=deltay;
 				dir=false;
 			}
@@ -105,12 +105,12 @@ public class Transhower extends Actor {
 		float sizey=AssetLoader.height/(this.getHeight()/deltay);
 		float decx = -this.getX()/AssetLoader.width*sizex;
 		float decy = -this.getY()/AssetLoader.height*sizey;
-		if (change!=0)
+		if (keepaspectratio && change!=0)
 		if (dir)
-			decy=decy-change/2;
+			decy=decy-Math.abs(change/2);
 		else
-			decx=decx-change/2;
-		Gdx.app.debug("wirechem-Transhower", "Camera dec:"+decx+","+decy+" view:"+sizex+","+sizey+" change:"+change+","+dir);
+			decx=decx-Math.abs(change/2);
+		Gdx.app.debug("wirechem-Transhower", "Camera delta:"+deltax+","+deltay+" dec:"+decx+","+decy+" view:"+sizex+","+sizey+" change:"+change+","+dir);
 		camera.setToOrtho(false, sizex, sizey);
 		camera.translate(decx,decy);
 	}
