@@ -28,6 +28,7 @@ import fr.evolving.UI.ButtonLevel;
 import fr.evolving.UI.Objectives;
 import fr.evolving.UI.ServerList;
 import fr.evolving.UI.Transhower;
+import fr.evolving.UI.Translist;
 import fr.evolving.UI.WarnDialog;
 import fr.evolving.UI.Worldlist;
 import fr.evolving.assets.AssetLoader;
@@ -63,7 +64,7 @@ public class LevelScreen implements Screen {
 	public ButtonLevel selected;
 	public int addervalue;
 	
-	public Transhower test;
+	public Translist test;
 
 
 	public void play() {
@@ -271,10 +272,17 @@ public class LevelScreen implements Screen {
 	}
 
 	public LevelScreen(Worlds aworlds) {
-		test=new Transhower(AssetLoader.getTransmuter("--"),Transmuter.Angular.A270,true, new Color(0,1f,0f,1f));
-		test.setPosition(1920/2, 70);
-		test.setWidth(512);
-		test.setHeight(512);
+		Array<Transmuter> test2=new Array<Transmuter>();
+		test2.add(AssetLoader.getTransmuter("<>"));
+		test2.add(AssetLoader.getTransmuter(">"));
+		test2.add(AssetLoader.getTransmuter("++"));
+		test2.add(AssetLoader.getTransmuter("+"));
+		test2.add(AssetLoader.getTransmuter("+-+-"));
+		test2.add(AssetLoader.getTransmuter("00"));
+		test=new Translist(test2,new Color(1f,1f,1f,0.25f));
+		test.setPosition(512, 512);
+		test.setWidth(256);
+		test.setHeight(256);
 		this.worlds = aworlds;
 		addervalue=1;
 		worlds.addListener(new ChangeListener() {

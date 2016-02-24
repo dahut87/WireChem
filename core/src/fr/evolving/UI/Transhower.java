@@ -50,7 +50,7 @@ public class Transhower extends Actor {
 		setTransmuter(transmuter);
 	}
 
-	public void clear() {
+	public void clearer() {
 		this.transmuter=null;
 		for (int x = 0; x < layer.getWidth(); x++) {
 			for (int y = 0; y < layer.getHeight(); y++) {
@@ -136,7 +136,7 @@ public class Transhower extends Actor {
 	}
 
 	public void setTransmuter(Transmuter transmuter) {
-		this.clear();
+		this.clearer();
 		this.transmuter=transmuter;
 		this.redraw();
 	}
