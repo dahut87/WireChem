@@ -60,8 +60,8 @@ import fr.evolving.UI.IconValue;
 import fr.evolving.UI.Menu;
 import fr.evolving.UI.Objectives;
 import fr.evolving.UI.TouchMaptiles;
+import fr.evolving.UI.Translist;
 import fr.evolving.UI.VertiBarre;
-import fr.evolving.UI.WarnDialog;
 import fr.evolving.UI.IconValue.Icon;
 import fr.evolving.assets.AssetLoader;
 import fr.evolving.assets.Preference;
@@ -72,26 +72,22 @@ import fr.evolving.automata.Transmuter;
 import fr.evolving.automata.Transmuter.Angular;
 import fr.evolving.automata.Transmuter.CaseType;
 import fr.evolving.automata.Worlds;
+import fr.evolving.dialogs.PrefWindow;
+import fr.evolving.dialogs.SavingWindow;
+import fr.evolving.dialogs.WarningDialog;
 import fr.evolving.renderers.GameRenderer;
 
 public class GameScreen implements Screen {
 	private InputMultiplexer multiplexer;
 	private Array<InputProcessor> processors;
-	private WarnDialog dialog;
+
 	private Stage stage, stage_info, stage_tooltip;
 	private GameRenderer Renderer;
 	private float runTime;
 	public Level level;
-	private Window winOptions, winSave;
-	private CheckBox SetSound, SetVsynch, SetFullscreen, SetAnimation, Settuto,
-			Setdebog, Setgrid, Setrefresh;
-	private Slider SetEffectvolume, SetMusicvolume;
-	private TextButton Setcancel, Setsave;
-	private SelectBox<resolutions> selResolution;
-	private SelectBox<quality> selTexturequal;
-	private SelectBox<adaptation> selAdaptscreen;
-	private List selSaved;
-	private ImageButton Setflag, info_up_nrj, info_up_temp, info_up, info_up_rayon,
+	private PrefWindow winOptions;
+	private SavingWindow winSave;
+	private ImageButton info_up_nrj, info_up_temp, info_up, info_up_rayon,
 			info_up_cycle, info_up_nrjval, info_up_tempval, info_up_rayonval,
 			info_up_cycleval, nextpage, previouspage;
 	private ImageTextButton info_cout, info_tech, info_research, info_activation;
@@ -108,6 +104,7 @@ public class GameScreen implements Screen {
 	private TextArea info_desc, tooltip;
 	public boolean unroll;
 	public Worlds worlds;
+	public Translist translist;
 
 	public enum calling {
 		mouseover, mouseclick, mousedrag, longpress, tap, taptap, zoom, fling, pan, pinch
@@ -322,7 +319,6 @@ public class GameScreen implements Screen {
 					hideInfo();
 			}
 		});
-		dialog = new WarnDialog(AssetLoader.Skin_ui);
 		Gdx.app.debug("wirechem-GameScreen", "Création d'une tilemap");
 		map = new TouchMaptiles(worlds,level, 128, 128);
 		if (Preference.prefs.getBoolean("Grid"))
@@ -677,9 +673,15 @@ public class GameScreen implements Screen {
 	@Override
 	public void show() {
 		Gdx.app.debug("wirechem-GameScreen","Création de la fenêtre d'option");
-		Table Optiontable = Createoption();
+		winOptions = new PrefWindow();
 		stage.addActor(winOptions);
-		Table Savetable = Createsaving();
+		winSave = new SavingWindow(worlds);
+		winSave.addListener(new ChangeListener() {
+			@Override
+			public void changed(ChangeEvent event, Actor actor) {
+				prepare();
+			}
+		});
 		stage.addActor(winSave);
 		Gdx.app.log("wirechem-GameScreen", "***** Affichage du niveau.");
 		stage_info.addActor(info_tech);
@@ -750,11 +752,11 @@ public class GameScreen implements Screen {
 			winOptions.setVisible(false);
 			winSave.setVisible(!winSave.isVisible());
 			if (winSave.isVisible())
-				readsaved();
+				winSave.refresh();
 		} else if (caller == "save") {
 			Gdx.app.debug("wirechem-GameScreen", "Barre | Sauvegarde de la grille.");	
 			worlds.SaveGrid();
-			readsaved();
+			winSave.refresh();
 		} else if (caller == "levels") {
 			Gdx.app.debug("wirechem-GameScreen", "Barre | Affichage des niveaux.");
 			exit();
@@ -805,7 +807,7 @@ public class GameScreen implements Screen {
 			winOptions.setVisible(!winOptions.isVisible());
 			winSave.setVisible(false);
 			if (winOptions.isVisible())
-				readpref();
+				winOptions.refresh();
 		} else if (caller == "flag") {
 			if (AssetLoader.language.getLocale().getDisplayName()
 					.contains("français")) {
@@ -909,225 +911,5 @@ public class GameScreen implements Screen {
 		stage.dispose();
 	}
 
-	public Table Createsaving() {
-		winSave = new Window(AssetLoader.language.get("[winSave-gamescreen]"), AssetLoader.Skin_ui);
-		winSave.add(savingPanel()).row();
-		winSave.setColor(1, 1, 1, 0.8f);
-		winSave.setVisible(false);
-		winSave.pack();
-		winSave.setBounds(50, 100, 250, 450);
-		return winSave;
-	}
-
-	private Table savingPanel() {
-		Table table = new Table();
-		table.pad(10, 10, 0, 10);
-		selSaved = new List(AssetLoader.Skin_ui);
-		selSaved.addListener(new ClickListener() {
-			public void clicked(InputEvent event, float x, float y) {
-				if (this.getTapCount() > 1) {
-					worlds.ReadGrid(selSaved.getSelectedIndex());
-					prepare();
-				}
-			}
-		});
-		ScrollPane scroll = new ScrollPane(selSaved);
-		table.add(scroll).width(250).height(440).row();
-		return table;
-	}
-
-	public void readsaved() {
-		Array<String> items = worlds.ViewGrids();
-		if (items != null)
-			selSaved.setItems(items);
-	}
-
-	public Table Createoption() {
-		winOptions = new Window(AssetLoader.language.get("[winOptions-gamescreen]"), AssetLoader.Skin_ui);
-		winOptions.add(SettingsVideo()).row();
-		winOptions.add(SettingsAudio()).row();
-		winOptions.add(SettingsOther()).row();
-		winOptions.add(SettingsButtons()).pad(10, 0, 10, 0);
-		winOptions.setColor(1, 1, 1, 0.8f);
-		winOptions.setVisible(false);
-		winOptions.pack();
-		winOptions.setPosition(100, 250);
-		return winOptions;
-	}
-
-	public void readpref() {
-		SetFullscreen.setChecked(Preference.prefs.getBoolean("Fullscreen"));
-		SetSound.setChecked(Preference.prefs.getBoolean("Sound"));
-		Settuto.setChecked(Preference.prefs.getBoolean("Tutorial"));
-		SetVsynch.setChecked(Preference.prefs.getBoolean("VSync"));
-		Setrefresh.setChecked(Preference.prefs.getBoolean("Refresh"));
-		SetAnimation.setChecked(Preference.prefs.getBoolean("Animation"));
-		Setflag.setChecked(Preference.prefs.getBoolean("Language"));
-		SetEffectvolume.setValue(Preference.prefs.getFloat("Effect"));
-		Setgrid.setChecked(Preference.prefs.getBoolean("Grid"));		
-		SetMusicvolume.setValue(Preference.prefs.getFloat("Music"));
-		selResolution.setSelectedIndex(Preference.prefs.getInteger("Resolution"));
-		selAdaptscreen.setSelectedIndex(Preference.prefs.getInteger("Adaptation"));
-		selTexturequal.setSelectedIndex(Preference.prefs.getInteger("Quality"));
-		Setdebog.setChecked(Preference.prefs.getInteger("log") == Gdx.app.LOG_DEBUG);
-	}
-
-	public void writepref() {
-		Preference.prefs.putInteger("ResolutionX", selResolution.getSelected().getResolutionX());
-		Preference.prefs.putInteger("ResolutionY", selResolution.getSelected().getResolutionY());
-		Preference.prefs.putInteger("Resolution",  selResolution.getSelectedIndex());
-		Preference.prefs.putBoolean("Fullscreen", SetFullscreen.isChecked());
-		Preference.prefs.putBoolean("Sound", SetSound.isChecked());
-		Preference.prefs.putBoolean("Grid", Setgrid.isChecked());
-		Preference.prefs.putBoolean("Tutorial", Settuto.isChecked());
-		Preference.prefs.putBoolean("VSync", SetVsynch.isChecked());
-		Preference.prefs.putBoolean("Refresh", Setrefresh.isChecked());
-		Preference.prefs.putBoolean("Animation", SetAnimation.isChecked());
-		Preference.prefs.putBoolean("Language", Setflag.isChecked());
-		Preference.prefs.putFloat("Effect", SetEffectvolume.getValue());
-		Preference.prefs.putFloat("Music", SetMusicvolume.getValue());
-		Preference.prefs.putInteger("Adaptation",selAdaptscreen.getSelectedIndex());
-		Preference.prefs.putInteger("Quality",selTexturequal.getSelectedIndex());
-		if (Setdebog.isChecked())
-			Preference.prefs.putInteger("log", Gdx.app.LOG_DEBUG);
-		else
-			Preference.prefs.putInteger("log", Gdx.app.LOG_INFO);
-		Preference.prefs.flush();
-	}
-
-	private Table SettingsOther() {
-		Table table = new Table();
-		table.pad(10, 10, 0, 10);
-		table.add(new Label(AssetLoader.language.get("[WinOptions-gamescreen-Game]"), AssetLoader.Skin_level, "Fluoxetine-25",Color.ORANGE)).colspan(3);
-		table.row();
-		table.columnDefaults(0).padRight(10);
-		table.columnDefaults(1).padRight(10);
-		Settuto = new CheckBox(AssetLoader.language.get("[WinOptions-gamescreen-tuto]"), AssetLoader.Skin_ui);
-		table.add(Settuto).left();
-		table.row();
-		Setdebog = new CheckBox(AssetLoader.language.get("[WinOptions-gamescreen-debug]"), AssetLoader.Skin_ui);
-		table.add(Setdebog).left();
-		table.row();
-		Setgrid = new CheckBox(AssetLoader.language.get("[WinOptions-gamescreen-grid]"),AssetLoader.Skin_ui);
-		table.add(Setgrid).left();
-		table.row();
-		Setrefresh = new CheckBox(AssetLoader.language.get("[WinOptions-gamescreen-refresh]"),AssetLoader.Skin_ui);
-		table.add(Setrefresh).left();
-		table.row();
-		table.add(new Label(AssetLoader.language.get("[WinOptions-gamescreen-language]"), AssetLoader.Skin_ui,"default-font", Color.WHITE)).left();
-		Setflag = new ImageButton(AssetLoader.Skin_level, "Setflag");
-		table.add(Setflag);
-		table.row();
-		return table;
-	}
-
-	private Table SettingsVideo() {
-		Table table = new Table();
-		table.pad(10, 10, 0, 10);
-		table.add(new Label(AssetLoader.language.get("[WinOptions-gamescreen-Video]"),AssetLoader.Skin_level, "Fluoxetine-25",Color.ORANGE)).colspan(3);
-		table.row();
-		table.columnDefaults(0).padRight(10);
-		table.columnDefaults(1).padRight(10);
-
-		SetVsynch = new CheckBox(AssetLoader.language.get("[WinOptions-gamescreen-sync]"),AssetLoader.Skin_ui);
-		table.add(SetVsynch).left();
-		Table tablev1 = new Table();
-		tablev1.add(new Label(AssetLoader.language.get("[WinOptions-gamescreen-resolution]"), AssetLoader.Skin_ui, "default-font",Color.WHITE)).left().row();
-		selResolution = new SelectBox<resolutions>(AssetLoader.Skin_ui);
-		selResolution.setItems(resolutions.values());
-		tablev1.add(selResolution).left().row();
-		table.add(tablev1).left();
-		table.row();
-
-		SetFullscreen = new CheckBox(AssetLoader.language.get("[WinOptions-gamescreen-full]"), AssetLoader.Skin_ui);
-		table.add(SetFullscreen).left();
-		Table tablev2 = new Table();
-		tablev2.add(new Label(AssetLoader.language.get("[WinOptions-gamescreen-fill]"), AssetLoader.Skin_ui,"default-font", Color.WHITE)).left().row();
-		selAdaptscreen = new SelectBox<adaptation>(AssetLoader.Skin_ui);
-		selAdaptscreen.setItems(adaptation.values());
-		tablev2.add(selAdaptscreen).left().row();
-		table.add(tablev2).left();
-		table.row();
-
-		Table tablev3 = new Table();
-		tablev3.add(new Label(AssetLoader.language.get("[WinOptions-gamescreen-quality]"), AssetLoader.Skin_ui,	"default-font", Color.WHITE)).left().row();
-		SetAnimation = new CheckBox(AssetLoader.language.get("[WinOptions-gamescreen-animation]"),AssetLoader.Skin_ui);
-		table.add(SetAnimation).left();
-		selTexturequal = new SelectBox<quality>(AssetLoader.Skin_ui);
-		selTexturequal.setItems(quality.values());
-		tablev3.add(selTexturequal).left().row();
-		table.add(tablev3).left();
-		table.row();
-		if (Gdx.app.getType() == ApplicationType.Desktop) {
-			Graphics.DisplayMode[] modes = Gdx.graphics.getDisplayModes();
-			for (resolutions res : resolutions.values()) {
-				res.SetFull(false);
-				for (DisplayMode mode : modes) {
-					if (res.resx == mode.width && res.resy == mode.height)
-						res.SetFull(true);
-				}
-			}
-			Vector2 maxres = Preference.getmaxresolution();
-			resolutions.rmax.SetFull(true);
-			resolutions.rmax.setResolutionX((int) maxres.x);
-			resolutions.rmax.setResolutionY((int) maxres.y);
-		} else
-			selResolution.setDisabled(true);
-		return table;
-	}
-
-	private Table SettingsAudio() {
-		Table table = new Table();
-		table.pad(10, 10, 0, 10);
-		table.add(new Label(AssetLoader.language.get("[WinOptions-gamescreen-Audio]"), AssetLoader.Skin_level, "Fluoxetine-25",	Color.ORANGE)).colspan(3);
-		table.row();
-		table.columnDefaults(0).padRight(10);
-		table.columnDefaults(1).padRight(10);
-		SetSound = new CheckBox(AssetLoader.language.get("[WinOptions-gamescreen-sound]"), AssetLoader.Skin_ui);
-		table.add(SetSound).left();
-		table.row();
-		table.add(new Label(AssetLoader.language.get("[WinOptions-gamescreen-effect]"), AssetLoader.Skin_ui));
-		SetEffectvolume = new Slider(0.0f, 1.0f, 0.1f, false,AssetLoader.Skin_ui);
-		table.add(SetEffectvolume).left();
-		table.row();
-		table.add(new Label(AssetLoader.language.get("[WinOptions-gamescreen-music]"), AssetLoader.Skin_ui));
-		SetMusicvolume = new Slider(0.0f, 1.0f, 0.1f, false,AssetLoader.Skin_ui);
-		table.add(SetMusicvolume).left();
-		table.row();
-		return table;
-	}
-
-	private void onSaveClicked() {
-		winOptions.setVisible(false);
-		writepref();
-		dialog.Show(
-				AssetLoader.language.get("[dialog-gamescreen-preference]"),
-				stage);
-	}
-
-	private void onCancelClicked() {
-		winOptions.setVisible(false);
-	}
-
-	private Table SettingsButtons() {
-		Table table = new Table();
-		table.pad(10, 10, 0, 10);
-		Setsave = new TextButton(AssetLoader.language.get("[WinOptions-gamescreen-save]"), AssetLoader.Skin_ui);
-		table.add(Setsave).padRight(30);
-		Setsave.addListener(new ChangeListener() {
-			@Override
-			public void changed(ChangeEvent event, Actor actor) {
-				onSaveClicked();
-			}
-		});
-		Setcancel = new TextButton(AssetLoader.language.get("[WinOptions-gamescreen-cancel]"), AssetLoader.Skin_ui);
-		table.add(Setcancel);
-		Setcancel.addListener(new ChangeListener() {
-			@Override
-			public void changed(ChangeEvent event, Actor actor) {
-				onCancelClicked();
-			}
-		});
-		return table;
-	}
+	
 }

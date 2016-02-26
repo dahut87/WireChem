@@ -29,7 +29,6 @@ import fr.evolving.UI.Objectives;
 import fr.evolving.UI.ServerList;
 import fr.evolving.UI.Transhower;
 import fr.evolving.UI.Translist;
-import fr.evolving.UI.WarnDialog;
 import fr.evolving.UI.Worldlist;
 import fr.evolving.assets.AssetLoader;
 import fr.evolving.assets.InitWorlds;
@@ -39,6 +38,7 @@ import fr.evolving.automata.Transmuter;
 import fr.evolving.automata.Worlds;
 import fr.evolving.automata.Worlds.State;
 import fr.evolving.database.Base;
+import fr.evolving.dialogs.WarningDialog;
 import fr.evolving.renderers.LevelRenderer;
 
 public class LevelScreen implements Screen {
@@ -49,7 +49,7 @@ public class LevelScreen implements Screen {
 	private TimerTask ScrollTask;
 	private Stage stage;
 	private Table table;
-	private WarnDialog dialog;
+	private WarningDialog dialog;
 	private ImageButton Previous, Next, Exit, logosmall, databaseSave, adder, signer;
 	public Image MenuSolo, MenuMulti, MenuScenario;
 	private ImageTextButton cout, tech, cycle, temp, rayon, nrj, up_cycle, up_temp, up_rayon, up_nrj, research, up;
@@ -63,9 +63,6 @@ public class LevelScreen implements Screen {
 	private Objectives Victory;
 	public ButtonLevel selected;
 	public int addervalue;
-	
-	public Translist test;
-
 
 	public void play() {
 		if (worlds.getState()!=State.notloaded && worlds.getState()!=State.databasefailed) {
@@ -272,17 +269,6 @@ public class LevelScreen implements Screen {
 	}
 
 	public LevelScreen(Worlds aworlds) {
-		Array<Transmuter> test2=new Array<Transmuter>();
-		test2.add(AssetLoader.getTransmuter("<>"));
-		test2.add(AssetLoader.getTransmuter(">"));
-		test2.add(AssetLoader.getTransmuter("++"));
-		test2.add(AssetLoader.getTransmuter("+"));
-		test2.add(AssetLoader.getTransmuter("+-+-"));
-		test2.add(AssetLoader.getTransmuter("00"));
-		test=new Translist(test2,new Color(1f,1f,1f,0.25f));
-		test.setPosition(512, 512);
-		test.setWidth(256);
-		test.setHeight(256);
 		this.worlds = aworlds;
 		addervalue=1;
 		worlds.addListener(new ChangeListener() {
@@ -328,7 +314,7 @@ public class LevelScreen implements Screen {
 		stage = new Stage(AssetLoader.viewport);
 		table = new Table();
 		Renderer = new LevelRenderer(this);
-		dialog = new WarnDialog(AssetLoader.Skin_ui);
+		dialog = new WarningDialog(AssetLoader.Skin_ui);
 		Gdx.app.debug("wirechem-LevelScreen", "Mise en place du timer.");
 		ScrollTimer = new Timer();
 		ScrollTask = new TimerTask() {
@@ -898,10 +884,6 @@ public class LevelScreen implements Screen {
 		stage.addActor(up_temp);
 		stage.addActor(up_rayon);
 		stage.addActor(research);
-		
-		stage.addActor(test);
-		
-		
 		Gdx.input.setInputProcessor(stage);
 		Gdx.app.debug("wirechem-LevelScreen", "Début dans la bande son \'intro\'");
 		AssetLoader.intro.setLooping(true);

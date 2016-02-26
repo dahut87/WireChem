@@ -1,4 +1,4 @@
-package fr.evolving.UI;
+package fr.evolving.dialogs;
 
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -9,10 +9,10 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 
 import fr.evolving.assets.AssetLoader;
 
-public class WarnDialog extends Dialog {
+public class WarningDialog extends Dialog {
 	Label thelabel;
 
-	public WarnDialog(Skin skin) {
+	public WarningDialog(Skin skin) {
 		super(AssetLoader.language.get("[dialog-window]"), skin);
 		// TODO Auto-generated constructor stub
 		this.getContentTable()
