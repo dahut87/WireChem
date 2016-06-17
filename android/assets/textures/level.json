@@ -121,6 +121,8 @@
         extend2_down: { name: extend2, color: veryred } ,
         evolution_disabled: { name: evolution, color: black }
         evolution_down: { name: evolution, color: grey }
+        evolution2_disabled: { name: evolution2, color: black }
+        evolution2_down: { name: evolution2, color: grey }
         
 	}
 	
@@ -200,6 +202,7 @@
        	extend: { up: extend, disabled:extend_disabled, down:extend_down }   
        	extend2: { up: extend2, disabled:extend2_disabled, down:extend2_down }   
        	evolution: { up: evolution, disabled:evolution_disabled, down:evolution_down }
+       	evolution2: { up: evolution2, disabled:evolution2_disabled, down:evolution2_down }
        	add: { up:add }
        	sub: { up:sub }
        	add1: { up:add1 }

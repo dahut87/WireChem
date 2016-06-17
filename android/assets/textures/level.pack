@@ -527,56 +527,56 @@ evolution
   orig: 64, 64
   offset: 0, 0
   index: -1
-exits
+evolution2
   rotate: false
   xy: 463, 1
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: -1
-extend
+exits
   rotate: false
   xy: 529, 1
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: -1
-extend2
+extend
   rotate: false
   xy: 595, 1
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: -1
-french
+extend2
   rotate: false
   xy: 661, 1
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: -1
-fullscreen
+french
   rotate: false
   xy: 727, 1
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: -1
-grid
+fullscreen
   rotate: false
   xy: 793, 1
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: -1
-grid-64
+grid
   rotate: false
   xy: 859, 1
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: -1
-infos
+grid-64
   rotate: false
   xy: 925, 12
   size: 64, 64
@@ -967,177 +967,184 @@ size: 1024,1024
 format: RGBA8888
 filter: Linear,Linear
 repeat: none
-jauge0
+infos
   rotate: false
   xy: 1, 3
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: -1
-jauge1
+jauge0
   rotate: false
   xy: 911, 913
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: -1
-jauge2
+jauge1
   rotate: false
   xy: 261, 133
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: -1
-jauge3
+jauge2
   rotate: false
   xy: 391, 263
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: -1
-levels
+jauge3
   rotate: false
   xy: 521, 393
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: -1
-middle
+levels
   rotate: false
   xy: 651, 523
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: -1
-move
+middle
   rotate: false
   xy: 781, 653
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: -1
-nogrid
+move
   rotate: false
   xy: 67, 3
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: -1
-nosound
+nogrid
   rotate: false
   xy: 911, 847
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: -1
-nothing
+nosound
   rotate: false
   xy: 133, 3
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: -1
-nrj
+nothing
   rotate: false
   xy: 911, 781
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: -1
-overlay
+nrj
   rotate: false
   xy: 261, 67
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: -1
-overlay-end
+overlay
   rotate: false
   xy: 327, 133
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: -1
-overlay-middle
+overlay-end
   rotate: false
   xy: 327, 67
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: -1
-overlay-start
+overlay-middle
   rotate: false
   xy: 457, 263
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: -1
-pause
+overlay-start
   rotate: false
   xy: 587, 393
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: -1
-points
+pause
   rotate: false
   xy: 717, 523
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: -1
-rayon
+points
   rotate: false
   xy: 847, 653
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: -1
-raz
+rayon
   rotate: false
   xy: 199, 1
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: -1
-run
+raz
   rotate: false
   xy: 265, 1
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: -1
-save
+run
   rotate: false
   xy: 331, 1
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: -1
-screen
+save
   rotate: false
   xy: 523, 327
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: -1
-settings
+screen
   rotate: false
   xy: 523, 261
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: -1
-sound
+settings
   rotate: false
   xy: 589, 327
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: -1
-speed
+sound
   rotate: false
   xy: 589, 261
+  size: 64, 64
+  orig: 64, 64
+  offset: 0, 0
+  index: -1
+speed
+  rotate: false
+  xy: 783, 587
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
@@ -1382,119 +1389,119 @@ sprite-transmuter
   index: 135
 start
   rotate: false
-  xy: 783, 587
+  xy: 783, 521
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: -1
 stat
   rotate: false
-  xy: 783, 521
+  xy: 849, 587
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: -1
 stop
   rotate: false
-  xy: 849, 587
+  xy: 849, 521
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: -1
 sub
   rotate: false
-  xy: 849, 521
+  xy: 393, 197
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: -1
 tech
   rotate: false
-  xy: 393, 197
+  xy: 393, 131
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: -1
 temp
   rotate: false
-  xy: 393, 131
+  xy: 653, 457
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: -1
 tree
   rotate: false
-  xy: 653, 457
+  xy: 913, 715
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: -1
 tuto
   rotate: false
-  xy: 913, 715
+  xy: 459, 195
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: -1
 up
   rotate: false
-  xy: 459, 195
+  xy: 525, 195
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: -1
 up_cycle
   rotate: false
-  xy: 525, 195
+  xy: 459, 129
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: -1
 up_nrj
   rotate: false
-  xy: 459, 129
+  xy: 525, 129
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: -1
 up_rayon
   rotate: false
-  xy: 525, 129
+  xy: 591, 195
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: -1
 up_temp
   rotate: false
-  xy: 591, 195
+  xy: 591, 129
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: -1
 usa
   rotate: false
-  xy: 591, 129
+  xy: 915, 649
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: -1
 windows
   rotate: false
-  xy: 915, 649
+  xy: 915, 583
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: -1
 zoomm
   rotate: false
-  xy: 915, 583
+  xy: 915, 517
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: -1
 zoomp
   rotate: false
-  xy: 915, 517
+  xy: 655, 391
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
