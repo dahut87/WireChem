@@ -76,6 +76,8 @@ public class TouchMaptiles extends Actor implements GestureListener,InputProcess
 			layers.add(layer);
 		}
 		layers.get(3).setOpacity(0.9f);
+		level.Cout_copperfiber=level.Grid.tiling_copper();
+		level.Cout_transmuter=level.Grid.tiling_transmuter();
 		this.redraw();
 		this.initzoom();
 	}

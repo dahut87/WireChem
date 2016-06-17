@@ -35,15 +35,31 @@ public class Grid implements Serializable,Cloneable {
 			for (int y = 0; y < this.sizeY; y++) {
 				Transmuter transmuter = getTransmuter(x, y);
 				if (transmuter != null) {
-					Iterator<Entry<Vector2, Integer>> tiles = transmuter
-							.getTilesidrotated().iterator();
+					Iterator<Entry<Vector2, Integer>> tiles = transmuter.getTilesidrotated().iterator();
 					while (tiles.hasNext()) {
 						Entry<Vector2, Integer> all = tiles.next();
-						GetXY(x + all.key.x, y + all.key.y).Transmuter_calc = (1 << 16)
-								* transmuter.getRotation().ordinal()
-								+ all.value;
-						GetXY(x + all.key.x, y + all.key.y).Transmuter_movex = (int) -all.key.x;
-						GetXY(x + all.key.x, y + all.key.y).Transmuter_movey = (int) -all.key.y;
+						Cell cell=GetXY(x + all.key.x, y + all.key.y);
+						if (cell!=null) {
+							cell.Transmuter_calc = (1 << 16)	* transmuter.getRotation().ordinal()+ all.value;
+							cell.Transmuter_movex = (int) -all.key.x;
+							cell.Transmuter_movey = (int) -all.key.y;
+						}
+						else
+						{
+								result-=GetXY(x, y).Transmuter.getPrice();
+								Iterator<Entry<Vector2, Integer>> tileseraser = transmuter.getTilesidrotated().iterator();
+								while (tileseraser.hasNext()) {
+									Entry<Vector2, Integer> allereaser = tileseraser.next();
+									Cell celleraser=GetXY(x + allereaser.key.x, y + allereaser.key.y);
+									if (celleraser!=null) {
+									celleraser.Transmuter=null;
+									celleraser.Transmuter_calc=0;
+									celleraser.Transmuter_movex=0;
+									celleraser.Transmuter_movey=0;
+									}
+								}
+								break;
+						}
 					}
 				}
 			}

@@ -244,19 +244,67 @@ public class GameScreen implements Screen {
 		Gdx.app.debug("wirechem-GameScreen","Création de la barre de gestion du haut");
 		cycle = new IconValue(Icon.cycle,worlds, AssetLoader.Skin_level);
 		cycle.setPosition(10, AssetLoader.height - 74);
+		cycle.addListener(new ClickListener() {
+			@Override
+			public void clicked(InputEvent event, float x, float y) {
+				if (worlds.isDebug())
+					worlds.getInformations().Cycle=5000;
+			}
+		});
 		temp = new IconValue(Icon.temp,worlds, AssetLoader.Skin_level);
 		temp.setPosition(210, AssetLoader.height - 74);
+		temp.addListener(new ClickListener() {
+			@Override
+			public void clicked(InputEvent event, float x, float y) {
+				if (worlds.isDebug())
+					worlds.getInformations().Temp=5000;
+			}
+		});
 		rayon = new IconValue(Icon.rayon,worlds, AssetLoader.Skin_level);
 		rayon.setPosition(410, AssetLoader.height - 74);
+		rayon.addListener(new ClickListener() {
+			@Override
+			public void clicked(InputEvent event, float x, float y) {
+				if (worlds.isDebug())
+					worlds.getInformations().Rayon=5000;
+			}
+		});
 		nrj = new IconValue(Icon.nrj,worlds, AssetLoader.Skin_level);
 		nrj.setPosition(610, AssetLoader.height - 74);
+		nrj.addListener(new ClickListener() {
+			@Override
+			public void clicked(InputEvent event, float x, float y) {
+				if (worlds.isDebug())
+					worlds.getInformations().Nrj=5000;
+			}
+		});
 		tech = new IconValue(Icon.tech,worlds, AssetLoader.Skin_level);
 		tech.setPosition(1345, AssetLoader.height - 74);
-		tech.addListener(new Tooltip(tooltip,AssetLoader.Tooltipmanager));
+		tech.addListener(new ClickListener() {
+			@Override
+			public void clicked(InputEvent event, float x, float y) {
+				if (worlds.isDebug())
+					worlds.getInformations().Tech=12;
+			}
+		});
 		cout = new IconValue(Icon.cout,worlds, AssetLoader.Skin_level);
 		cout.setPosition(1445, AssetLoader.height - 74);
+		cout.addListener(new ClickListener() {
+			@Override
+			public void clicked(InputEvent event, float x, float y) {
+				if (worlds.isDebug())
+					worlds.getInformations().Cout_orig=5000;
+			}
+		});
 		research = new IconValue(Icon.research,worlds, AssetLoader.Skin_level);
 		research.setPosition(1545, AssetLoader.height - 74);
+		research.addListener(new ClickListener() {
+			@Override
+			public void clicked(InputEvent event, float x, float y) {
+				if (worlds.isDebug())
+					worlds.ModResearch(5000);
+			}
+		});
 		objectives = new Objectives(worlds);
 		objectives.setPosition(890, AssetLoader.height - 95);
 		objectives.setVisible(level.Cout>0);
@@ -888,16 +936,16 @@ public class GameScreen implements Screen {
 			worlds.unLockLevel();
 		} else if (caller == "database") {
 			worlds.origLevel();
-		} else if (caller == "delrow") {
+		} else if (caller == "delcol") {
 			level.Grid=(Grid) level.Grid.clone(level.Grid.sizeX-1, level.Grid.sizeY);
 			map.resize();
-		} else if (caller == "delcol") {
+		} else if (caller == "delrow") {
 			level.Grid=(Grid) level.Grid.clone(level.Grid.sizeX, level.Grid.sizeY-1);
 			map.resize();
-		} else if (caller == "addrow") {
+		} else if (caller == "addcol") {
 			level.Grid=(Grid) level.Grid.clone(level.Grid.sizeX+1, level.Grid.sizeY);
 			map.resize();
-		} else if (caller == "addcol") {
+		} else if (caller == "addrow") {
 			level.Grid=(Grid) level.Grid.clone(level.Grid.sizeX, level.Grid.sizeY+1);
 			map.resize();
 		}

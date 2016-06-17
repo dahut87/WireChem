@@ -117,7 +117,7 @@ public class LevelRenderer {
 			if (LevelScreen.selected.level.Tech > 0 || LevelScreen.worlds.isDebug())
 				shapeRenderer.rect(1210, 620, 250, AssetLoader.height - 630);
 		}
-		if (!LevelScreen.MenuSolo.isVisible())
+		if (!LevelScreen.group_init.isVisible())
 			shapeRenderer.rect(1470, 10, 440, AssetLoader.height - 20);
 		shapeRenderer.end();
 		if (LevelScreen.buttonLevels != null)

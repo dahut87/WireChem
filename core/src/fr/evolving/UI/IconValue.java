@@ -44,7 +44,7 @@ public class IconValue extends ImageTextButton{
 			break;
 		case research:
 			this.setText(String.valueOf(worlds.ReadResearch()));
-			this.setVisible(worlds.ReadResearch()>0 || worlds.isDebug());
+			this.setVisible((worlds.getInformations().Tech>=1 && worlds.ReadResearch()>0) || worlds.isDebug());
 			break;
 		case cycle:
 			this.setVisible(worlds.getWorld()>=1 || worlds.isDebug());

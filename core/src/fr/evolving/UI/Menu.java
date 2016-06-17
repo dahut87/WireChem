@@ -231,7 +231,7 @@ public class Menu extends Actor {
 			this.setMenuTile(0, 4, 87, "gold_pen",0);
 			this.setMenuTile(1, 4, 88, "lock_pen",0);
 		}
-		if (worlds.getInformations().Cout>=0 || worlds.isDebug())
+		if (worlds.getInformations().Cout_orig>=0 || worlds.isDebug())
 		{
 			this.setMenuTile(0, 7, 71, "copper_pen",0);
 			this.setMenuTile(1, 7, 72, "copper_brush",0);

@@ -9,9 +9,11 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.Application;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
+import com.badlogic.gdx.scenes.scene2d.ui.ButtonGroup;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageTextButton;
@@ -62,7 +64,9 @@ public class LevelScreen implements Screen {
 	private Objectives Victory;
 	public ButtonLevel selected;
 	public int addervalue;
-
+	public ButtonGroup chooser;
+	public Group group_init, group_stat, group_level, group_base, group_debug, group_choose, group_other;
+	
 	public void play() {
 		if (worlds.getState()!=State.notloaded && worlds.getState()!=State.databasefailed) {
 			if (worlds.getWorld() < 0)
@@ -74,45 +78,15 @@ public class LevelScreen implements Screen {
 
 	public void menu() {
 		selected = null;
+		group_init.setVisible(true);
+		group_stat.setVisible(false);
+		group_level.setVisible(false);
+		group_base.setVisible(false);
+		group_debug.setVisible(false);
+		group_choose.setVisible(false);
 		logosmall.setChecked(false);
 		worlds.DesactivateDebug();
-		cout.setVisible(false);
-		databaseSave.setVisible(false);
-		signer.setVisible(false);
-		up_rayon.setVisible(false);
-		up_nrj.setVisible(false);
-		up_temp.setVisible(false);
-		up_cycle.setVisible(false);
-		up.setVisible(false);
-		research.setVisible(false);
-		adder.setVisible(false);
-		tech.setVisible(false);
-		cycle.setVisible(false);
-		temp.setVisible(false);
-		rayon.setVisible(false);
-		nrj.setVisible(false);
-		Previous.setVisible(false);
-		Next.setVisible(false);
-		Victory.setVisible(false);
 		Exit.setPosition(1820, AssetLoader.height - 100);
-		buttonPlay.setVisible(false);
-		TextDescriptive.setVisible(false);
-		MenuSolo.setVisible(true);
-		MenuMulti.setVisible(true);
-		MenuScenario.setVisible(true);
-		buttonConnect.setVisible(false);
-		buttonStat.setVisible(false);
-		Statdata.setVisible(false);
-		Userdata.setVisible(false);
-		Gamedata.setVisible(false);
-		Statdatalabel.setVisible(false);
-		Userdatalabel.setVisible(false);
-		Gamedatalabel.setVisible(false);
-		Worlddatalabel.setVisible(false);
-		buttonPlaythis.setVisible(false);
-		Worlddata.setVisible(false);
-		buttonSave.setVisible(false);
-		buttonApply.setVisible(false);
 		initlevel();
 		MenuSolo.setRotation(0);
 		MenuSolo.setScale(1f);
@@ -140,17 +114,6 @@ public class LevelScreen implements Screen {
 
 	public void initlevel() {
 		selected = null;
-		buttonPlay.setVisible(false);
-		TextDescriptive.setVisible(false);
-		cout.setVisible(false);
-		tech.setVisible(false);
-		cycle.setVisible(false);
-		temp.setVisible(false);
-		rayon.setVisible(false);
-		nrj.setVisible(false);
-		Previous.setVisible(false);
-		Next.setVisible(false);
-		Victory.setVisible(false);
 		if (buttonLevels != null)
 			for (int j = 0; j < 10; j++)
 				if (buttonLevels[j] != null) {
@@ -160,52 +123,29 @@ public class LevelScreen implements Screen {
 	}
 
 	public void level() {
-		if (worlds.isDebug()) {
-			databaseSave.setVisible(true);
-			adder.setVisible(true);
-			signer.setVisible(true);
-		}
 		Exit.setPosition(1110, AssetLoader.height - Exit.getHeight() - 5);
-		MenuSolo.setVisible(false);
-		MenuMulti.setVisible(false);
-		MenuScenario.setVisible(false);
-		buttonConnect.setVisible(true);
-		buttonStat.setVisible(true);
+		group_init.setVisible(false);
+		group_choose.setVisible(true);
+		group_level.setVisible(true);
 		SetButtonStat();
+		if (worlds.isDebug()) {
+			group_debug.setVisible(true);
+			group_choose.setVisible(false);
+			group_base.setVisible(false);
+			group_stat.setVisible(false);
+		}
 		play();
 	}
 
 	public void SetButtonConnect() {
-		buttonStat.setColor(1f, 1f, 1f, 1f);
-		buttonConnect.setColor(1f, 0, 0, 1f);
-		Statdata.setVisible(true);
-		Userdata.setVisible(true);
-		Gamedata.setVisible(true);
-		Statdatalabel.setVisible(true);
-		Userdatalabel.setVisible(true);
-		Gamedatalabel.setVisible(true);
-		buttonSave.setVisible(true);
-		buttonApply.setVisible(true);
-		Worlddatalabel.setVisible(true);
-		Worlddata.setVisible(true);
-		buttonPlaythis.setVisible(true);
+		group_stat.setVisible(false);
+		group_base.setVisible(true);
+		
 	}
 
 	public void SetButtonStat() {
-		buttonConnect.setColor(1f, 1f, 1f, 1f);
-		buttonStat.setColor(1f, 0, 0, 1f);
-		buttonStat.setColor(1f, 0, 0, 1f);
-		Statdata.setVisible(false);
-		Userdata.setVisible(false);
-		Gamedata.setVisible(false);
-		Statdatalabel.setVisible(false);
-		Userdatalabel.setVisible(false);
-		Gamedatalabel.setVisible(false);
-		buttonSave.setVisible(false);
-		buttonApply.setVisible(false);
-		Worlddatalabel.setVisible(false);
-		Worlddata.setVisible(false);
-		buttonPlaythis.setVisible(false);
+		group_stat.setVisible(true);
+		group_base.setVisible(false);
 	}
 
 	public void loadWorld() {
@@ -323,7 +263,11 @@ public class LevelScreen implements Screen {
 			}
 		};
 		ScrollTimer.scheduleAtFixedRate(ScrollTask, 0, 30);
-		Gdx.app.debug("wirechem-LevelScreen", "Création du menu.");
+		
+		//**********************************************************
+		//Group Init
+		//**********************************************************
+		Gdx.app.debug("wirechem-LevelScreen", "Création du groupe Init.");
 		MenuSolo = new Image(AssetLoader.Skin_level, "menu1");
 		MenuSolo.setOrigin(MenuSolo.getWidth() / 2, MenuSolo.getHeight() / 2);
 		MenuSolo.addListener(new ClickListener() {
@@ -374,144 +318,45 @@ public class LevelScreen implements Screen {
 								})));
 			}
 		});
-		Gdx.app.debug("wirechem-LevelScreen", "Création des boutons.");
-		logosmall = new ImageButton(AssetLoader.Skin_level, "logosmall");
-		logosmall.setPosition(20,AssetLoader.height - 175 + logosmall.getHeight() / 2);
-		logosmall.setChecked(worlds.isDebug());
-		logosmall.addListener(new ClickListener() {
-			public void clicked(InputEvent event, float x, float y) {
-				if (!MenuSolo.isVisible())
-				if (logosmall.isChecked()) {
-					if (buttonLevels != null)
-						for (int j = 0; j < 10; j++) {
-							if (buttonLevels[j] != null)
-								buttonLevels[j].setDisabled(false);
-						}
-					worlds.ActivateDebug();
-					Next.setVisible(!worlds.isRealLastWorld());
-					databaseSave.setVisible(true);
-					adder.setVisible(true);
-					signer.setVisible(true);
-					showlevel(selected);
-				}
-				else {
-					if (buttonLevels != null)
-						for (int j = 0; j < 10; j++) {
-							if (buttonLevels[j] != null) 
-								buttonLevels[j].setDisabled(buttonLevels[j].level.Locked);
-							}
-					worlds.DesactivateDebug();
-					worlds.updateUnlockLevels();
-					worlds.setMaxWorldLevel();
-					databaseSave.setVisible(false);
-					adder.setVisible(false);
-					signer.setVisible(false);
-				}
-				else
-					logosmall.setChecked(false);
-			}
-		});
-		TextDescriptive = new TextArea("Descriptif", AssetLoader.Skin_level,
-				"Descriptif");
-		TextDescriptive.setBounds(15, 15, 1185, 110);
-		buttonApply = new TextButton(AssetLoader.language.get("[buttonApply-levelscreen]"), AssetLoader.Skin_ui);
-		buttonApply.setBounds(1680, 350, 190, 40);
-		buttonApply.addListener(new ClickListener() {
-			public void clicked(InputEvent event, float x, float y) {
-				AssetLoader.Datahandler.CloseAll();
-				AssetLoader.Datahandler.Attach(Userdata.getModel(),
-						Userdata.getUrl());
-				AssetLoader.Datahandler.Attach(Statdata.getModel(),
-						Statdata.getUrl());
-				AssetLoader.Datahandler.Attach(Gamedata.getModel(),
-						Gamedata.getUrl());
-				if (!AssetLoader.Datahandler.verifyall()) {
-					dialog.show(AssetLoader.language.get("[dialog-levelscreen-errorloading]"),stage);
-					initlevel();
-				} else
-					menu();
-				if (AssetLoader.Datahandler.stat() == null)
-					Statdata.setColor(1f, 0, 0, 1f);
-				else
-					Statdata.setColor(1f, 1f, 1f, 1f);
-				if (AssetLoader.Datahandler.game() == null)
-					Gamedata.setColor(1f, 0, 0, 1f);
-				else
-					Gamedata.setColor(1f, 1f, 1f, 1f);
-				if (AssetLoader.Datahandler.user() == null)
-					Userdata.setColor(1f, 0, 0, 1f);
-				else
-					Userdata.setColor(1f, 1f, 1f, 1f);
-				Worlddata.Refresh();
-				worlds.initialize();
-			}
-		});
-		buttonSave = new TextButton(AssetLoader.language.get("[buttonSave-levelscreen]"), AssetLoader.Skin_ui);
-		buttonSave.setBounds(1480, 350, 190, 40);
-		buttonSave.addListener(new ClickListener() {
-			public void clicked(InputEvent event, float x, float y) {
-				menu();
-				Preference.prefs.putString("userdata", Userdata.getUrl());
-				Preference.prefs.putString("gamedata", Gamedata.getUrl());
-				Preference.prefs.putString("statdata", Statdata.getUrl());
-				Preference.prefs.flush();
-				dialog.show(
-						AssetLoader.language.get("[dialog-levelscreen-savedatabase]"),stage);
-			}
-		});
+		
+		group_init=new Group();
+		group_init.addActor(MenuScenario);
+		group_init.addActor(MenuMulti);
+		group_init.addActor(MenuSolo);
+		
+		//**********************************************************
+		//Group Choose
+		//**********************************************************
+		Gdx.app.debug("wirechem-LevelScreen", "Création du groupe Choose.");
 		buttonConnect = new TextButton(AssetLoader.language.get("[buttonConnect-levelscreen]"), AssetLoader.Skin_ui);
 		buttonConnect.setBounds(1480, AssetLoader.height - 60, 190, 40);
 		buttonConnect.addListener(new ClickListener() {
 			public void clicked(InputEvent event, float x, float y) {
-				if (!Statdata.isVisible())
 					SetButtonConnect();
-			}
-		});
-		buttonPlay = new TextButton(AssetLoader.language.get("[buttonPlay-levelscreen]"), AssetLoader.Skin_ui);
-		buttonPlay.setBounds(1040, 20, 150, 40);
-		buttonPlay.addListener(new ClickListener() {
-			@Override
-			public void clicked(InputEvent event, float x, float y) {
-				worlds.setLevel(selected.level.aLevel);
-				((Game) Gdx.app.getApplicationListener()).setScreen(new GameScreen(worlds));
 			}
 		});
 		buttonStat = new TextButton(AssetLoader.language.get("[buttonStat-levelscreen]"), AssetLoader.Skin_ui);
 		buttonStat.setBounds(1710, AssetLoader.height - 60, 190, 40);
 		buttonStat.addListener(new ClickListener() {
 			public void clicked(InputEvent event, float x, float y) {
-				if (Statdata.isVisible())
 					SetButtonStat();
 			}
 		});
-		buttonPlaythis = new TextButton(AssetLoader.language.get("[buttonPlaythis-levelscreen]"), AssetLoader.Skin_ui);
-		buttonPlaythis.setBounds(1480, 50, 230, 40);
-		buttonPlaythis.addListener(new ClickListener() {
-			public void clicked(InputEvent event, float x, float y) {
-				if (!AssetLoader.Datahandler.verifyall())
-					dialog.show(AssetLoader.language.get("[dialog-levelscreen-errorlevels]"),stage);
-				else {
-					if (Worlddata.getSelected() == null)
-						dialog.show(AssetLoader.language.get("[dialog-levelscreen-errornoworld]"), stage);
-					else {
-						worlds.set((String) Worlddata.getSelected());
-						Preference.prefs.flush();
-						play();
-					}
-				}
-			}
-		});
-		Exit = new ImageButton(AssetLoader.Skin_level, "Exit");
-		Exit.setPosition(1110, AssetLoader.height - Exit.getHeight() - 5);
-		Exit.addListener(new ClickListener() {
-			@Override
-			public void clicked(InputEvent event, float x, float y) {
-				if (Exit.getX() < 1210)
-					menu();
-				else
-					Gdx.app.exit();
-			}
-		});
+		chooser=new ButtonGroup();
+		chooser.add(buttonStat);
+		chooser.add(buttonConnect);
+		chooser.setMaxCheckCount(1);
+		chooser.setMinCheckCount(1);	
+		group_choose=new Group();
+		group_choose.addActor(buttonStat);
+		group_choose.addActor(buttonConnect);
+		
+		//**********************************************************
+		//Group Level
+		//**********************************************************
+		Gdx.app.debug("wirechem-LevelScreen", "Création du groupe Level.");
+		TextDescriptive = new TextArea("Descriptif", AssetLoader.Skin_level,"Descriptif");
+		TextDescriptive.setBounds(15, 15, 1185, 110);
 		Next = new ImageButton(AssetLoader.Skin_level, "Next");
 		Next.setPosition(1030, 185);
 		Next.addListener(new ClickListener() {
@@ -532,56 +377,6 @@ public class LevelScreen implements Screen {
 				Gdx.app.debug("wirechem-LevelScreen",
 						"World:" + String.valueOf(worlds.getWorld()) + " Maxworld:"
 								+ String.valueOf(worlds.getMaxWorlds()));
-			}
-		});
-		signer = new ImageButton(AssetLoader.Skin_level, "add");
-		signer.setPosition(1660, 40);	
-		signer.setVisible(false);
-		signer.addListener(new ClickListener() {
-			@Override
-			public void clicked(InputEvent event, float x, float y) {
-				String whereis=signer.getStyle().up.toString();
-				ImageButton.ImageButtonStyle imagebuttonstyle;
-				if (whereis.equals("add")) {
-					imagebuttonstyle=AssetLoader.Skin_level.get("sub", ImageButton.ImageButtonStyle.class);
-					addervalue=-Math.abs(addervalue);
-				}
-				else
-				{
-					imagebuttonstyle=AssetLoader.Skin_level.get("add", ImageButton.ImageButtonStyle.class);
-					addervalue=Math.abs(addervalue);
-				}
-				signer.setStyle(imagebuttonstyle);
-			}
-		});
-		adder = new ImageButton(AssetLoader.Skin_level, "add1");
-		adder.setPosition(1720, 40);	
-		adder.setVisible(false);
-		adder.addListener(new ClickListener() {
-			@Override
-			public void clicked(InputEvent event, float x, float y) {
-				String whereis=adder.getStyle().up.toString();
-				if (whereis.equals("add1"))	
-					addervalue=(int)(10*Math.signum(addervalue));
-				else if (whereis.equals("add10"))
-					addervalue=(int)(100*Math.signum(addervalue));
-				else if (whereis.equals("add100"))	
-					addervalue=(int)(1000*Math.signum(addervalue));
-				else if (whereis.equals("add1000"))	
-					addervalue=(int)(10000*Math.signum(addervalue));
-				else
-					addervalue=1;
-				ImageButton.ImageButtonStyle imagebuttonstyle=AssetLoader.Skin_level.get("add"+String.valueOf(Math.abs(addervalue)), ImageButton.ImageButtonStyle.class);
-				adder.setStyle(imagebuttonstyle);
-			}
-		});
-		databaseSave = new ImageButton(AssetLoader.Skin_level, "database-save");
-		databaseSave.setPosition(1820, 40);	
-		databaseSave.setVisible(false);
-		databaseSave.addListener(new ClickListener() {
-			@Override
-			public void clicked(InputEvent event, float x, float y) {
-				worlds.save(worlds.getName());
 			}
 		});
 		cout = new ImageTextButton("5", AssetLoader.Skin_level, "cout");
@@ -792,6 +587,101 @@ public class LevelScreen implements Screen {
 				}
 			}
 		});
+		buttonPlay = new TextButton(AssetLoader.language.get("[buttonPlay-levelscreen]"), AssetLoader.Skin_ui);
+		buttonPlay.setBounds(1040, 20, 150, 40);
+		buttonPlay.addListener(new ClickListener() {
+			@Override
+			public void clicked(InputEvent event, float x, float y) {
+				worlds.setLevel(selected.level.aLevel);
+				((Game) Gdx.app.getApplicationListener()).setScreen(new GameScreen(worlds));
+			}
+		});
+		group_level=new Group();
+		group_level.addActor(TextDescriptive);
+		group_level.addActor(buttonPlay);
+		group_level.addActor(Next);
+		group_level.addActor(Previous);
+		group_level.addActor(cout);
+		group_level.addActor(tech);
+		group_level.addActor(temp);
+		group_level.addActor(cycle);
+		group_level.addActor(nrj);
+		group_level.addActor(rayon);
+		group_level.addActor(up_cycle);
+		group_level.addActor(up_nrj);
+		group_level.addActor(up_rayon);
+		group_level.addActor(up_temp);
+		group_level.addActor(up);
+		group_level.addActor(research);
+		group_level.addActor(Victory);
+		
+		//**********************************************************
+		//Group Base
+		//**********************************************************
+		Gdx.app.debug("wirechem-LevelScreen", "Création du groupe Base.");
+		buttonApply = new TextButton(AssetLoader.language.get("[buttonApply-levelscreen]"), AssetLoader.Skin_ui);
+		buttonApply.setBounds(1680, 350, 190, 40);
+		buttonApply.addListener(new ClickListener() {
+			public void clicked(InputEvent event, float x, float y) {
+				AssetLoader.Datahandler.CloseAll();
+				AssetLoader.Datahandler.Attach(Userdata.getModel(),
+						Userdata.getUrl());
+				AssetLoader.Datahandler.Attach(Statdata.getModel(),
+						Statdata.getUrl());
+				AssetLoader.Datahandler.Attach(Gamedata.getModel(),
+						Gamedata.getUrl());
+				if (!AssetLoader.Datahandler.verifyall()) {
+					dialog.show(AssetLoader.language.get("[dialog-levelscreen-errorloading]"),stage);
+					initlevel();
+				} else
+					menu();
+				if (AssetLoader.Datahandler.stat() == null)
+					Statdata.setColor(1f, 0, 0, 1f);
+				else
+					Statdata.setColor(1f, 1f, 1f, 1f);
+				if (AssetLoader.Datahandler.game() == null)
+					Gamedata.setColor(1f, 0, 0, 1f);
+				else
+					Gamedata.setColor(1f, 1f, 1f, 1f);
+				if (AssetLoader.Datahandler.user() == null)
+					Userdata.setColor(1f, 0, 0, 1f);
+				else
+					Userdata.setColor(1f, 1f, 1f, 1f);
+				Worlddata.Refresh();
+				worlds.initialize();
+			}
+		});
+		buttonSave = new TextButton(AssetLoader.language.get("[buttonSave-levelscreen]"), AssetLoader.Skin_ui);
+		buttonSave.setBounds(1480, 350, 190, 40);
+		buttonSave.addListener(new ClickListener() {
+			public void clicked(InputEvent event, float x, float y) {
+				menu();
+				Preference.prefs.putString("userdata", Userdata.getUrl());
+				Preference.prefs.putString("gamedata", Gamedata.getUrl());
+				Preference.prefs.putString("statdata", Statdata.getUrl());
+				Preference.prefs.flush();
+				dialog.show(
+						AssetLoader.language.get("[dialog-levelscreen-savedatabase]"),stage);
+			}
+		});
+		buttonPlaythis = new TextButton(AssetLoader.language.get("[buttonPlaythis-levelscreen]"), AssetLoader.Skin_ui);
+		buttonPlaythis.setBounds(1480, 50, 230, 40);
+		buttonPlaythis.addListener(new ClickListener() {
+			public void clicked(InputEvent event, float x, float y) {
+				if (!AssetLoader.Datahandler.verifyall())
+					dialog.show(AssetLoader.language.get("[dialog-levelscreen-errorlevels]"),stage);
+				else {
+					if (Worlddata.getSelected() == null)
+						dialog.show(AssetLoader.language.get("[dialog-levelscreen-errornoworld]"), stage);
+					else {
+						worlds.set((String) Worlddata.getSelected());
+						Preference.prefs.flush();
+						play();
+					}
+				}
+			}
+		});
+		
 		String url = "http://evolving.fr/servers/list.xml";
 		Statdata = new ServerList(url, Base.datatype.statdata,
 				AssetLoader.Skin_ui);
@@ -820,6 +710,136 @@ public class LevelScreen implements Screen {
 		Statdata.Refresh();
 		Userdata.Refresh();
 		Gamedata.Refresh();
+		group_base=new Group();
+		group_base.addActor(buttonPlaythis);
+		group_base.addActor(buttonSave);
+		group_base.addActor(buttonApply);
+		group_base.addActor(Statdata);
+		group_base.addActor(Userdata);
+		group_base.addActor(Gamedata);
+		group_base.addActor(Worlddata);
+		group_base.addActor(Statdatalabel);
+		group_base.addActor(Userdatalabel);
+		group_base.addActor(Gamedatalabel);
+		group_base.addActor(Worlddatalabel);
+		
+		//**********************************************************
+		//Group Other
+		//**********************************************************
+		group_stat=new Group();
+		
+		//**********************************************************
+		//Group Other
+		//**********************************************************
+		Gdx.app.debug("wirechem-LevelScreen", "Création du groupe Other.");
+		Exit = new ImageButton(AssetLoader.Skin_level, "Exit");
+		Exit.setPosition(1110, AssetLoader.height - Exit.getHeight() - 5);
+		Exit.addListener(new ClickListener() {
+			@Override
+			public void clicked(InputEvent event, float x, float y) {
+				if (Exit.getX() < 1210)
+					menu();
+				else
+					Gdx.app.exit();
+			}
+		});
+		logosmall = new ImageButton(AssetLoader.Skin_level, "logosmall");
+		logosmall.setPosition(20,AssetLoader.height - 175 + logosmall.getHeight() / 2);
+		logosmall.setChecked(worlds.isDebug());
+		logosmall.addListener(new ClickListener() {
+			public void clicked(InputEvent event, float x, float y) {
+				if (!group_init.isVisible())
+				if (logosmall.isChecked()) {
+					if (buttonLevels != null)
+						for (int j = 0; j < 10; j++) 
+							if (buttonLevels[j] != null)
+								buttonLevels[j].setDisabled(false);
+					worlds.ActivateDebug();
+					Next.setVisible(!worlds.isRealLastWorld());
+					group_debug.setVisible(true);
+					group_choose.setVisible(false);
+					group_stat.setVisible(false);
+					group_base.setVisible(false);
+					showlevel(selected);
+				}
+				else {
+					if (buttonLevels != null)
+						for (int j = 0; j < 10; j++)
+							if (buttonLevels[j] != null) 
+								buttonLevels[j].setDisabled(buttonLevels[j].level.Locked);
+					worlds.DesactivateDebug();
+					worlds.updateUnlockLevels();
+					worlds.setMaxWorldLevel();
+					group_debug.setVisible(false);
+					group_choose.setVisible(true);
+					SetButtonStat();
+				}
+				else
+					logosmall.setChecked(false);
+			}
+		});
+		
+		group_other=new Group();
+		group_other.addActor(Exit);
+		group_other.addActor(logosmall);
+		
+		//**********************************************************
+		//Group Debug
+		//**********************************************************
+		Gdx.app.debug("wirechem-LevelScreen", "Création du groupe Debug.");
+		signer = new ImageButton(AssetLoader.Skin_level, "add");
+		signer.setPosition(1660, 40);	
+		signer.addListener(new ClickListener() {
+			@Override
+			public void clicked(InputEvent event, float x, float y) {
+				String whereis=signer.getStyle().up.toString();
+				ImageButton.ImageButtonStyle imagebuttonstyle;
+				if (whereis.equals("add")) {
+					imagebuttonstyle=AssetLoader.Skin_level.get("sub", ImageButton.ImageButtonStyle.class);
+					addervalue=-Math.abs(addervalue);
+				}
+				else
+				{
+					imagebuttonstyle=AssetLoader.Skin_level.get("add", ImageButton.ImageButtonStyle.class);
+					addervalue=Math.abs(addervalue);
+				}
+				signer.setStyle(imagebuttonstyle);
+			}
+		});
+		adder = new ImageButton(AssetLoader.Skin_level, "add1");
+		adder.setPosition(1720, 40);	
+		adder.addListener(new ClickListener() {
+			@Override
+			public void clicked(InputEvent event, float x, float y) {
+				String whereis=adder.getStyle().up.toString();
+				if (whereis.equals("add1"))	
+					addervalue=(int)(10*Math.signum(addervalue));
+				else if (whereis.equals("add10"))
+					addervalue=(int)(100*Math.signum(addervalue));
+				else if (whereis.equals("add100"))	
+					addervalue=(int)(1000*Math.signum(addervalue));
+				else if (whereis.equals("add1000"))	
+					addervalue=(int)(10000*Math.signum(addervalue));
+				else
+					addervalue=1;
+				ImageButton.ImageButtonStyle imagebuttonstyle=AssetLoader.Skin_level.get("add"+String.valueOf(Math.abs(addervalue)), ImageButton.ImageButtonStyle.class);
+				adder.setStyle(imagebuttonstyle);
+			}
+		});
+		databaseSave = new ImageButton(AssetLoader.Skin_level, "database-save");
+		databaseSave.setPosition(1820, 40);	
+		databaseSave.addListener(new ClickListener() {
+			@Override
+			public void clicked(InputEvent event, float x, float y) {
+				worlds.save(worlds.getName());
+			}
+		});
+		
+		group_debug=new Group();
+		group_debug.addActor(databaseSave);
+		group_debug.addActor(adder);
+		group_debug.addActor(signer);
+		
 		Gdx.app.debug("wirechem-LevelScreen", "Affichage du menu.");
 		if (worlds.getWorld() != -1)
 			level();
@@ -845,44 +865,13 @@ public class LevelScreen implements Screen {
 		Gdx.app.log("wirechem-LevelScreen", "***** Affichage du choix des mondes & niveaux.");
 		table.setFillParent(true);
 		stage.addActor(worlds);
-		stage.addActor(MenuSolo);
-		stage.addActor(MenuMulti);
-		stage.addActor(MenuScenario);
-		stage.addActor(TextDescriptive);
-		stage.addActor(buttonPlaythis);
-		stage.addActor(Exit);
-		stage.addActor(Next);
-		stage.addActor(buttonApply);
-		stage.addActor(buttonSave);
-		stage.addActor(buttonPlay);
-		stage.addActor(buttonConnect);
-		stage.addActor(buttonStat);
-		stage.addActor(Previous);
-		stage.addActor(cout);
-		stage.addActor(tech);
-		stage.addActor(cycle);
-		stage.addActor(nrj);
-		stage.addActor(temp);
-		stage.addActor(rayon);
-		stage.addActor(Victory);
-		stage.addActor(logosmall);
-		stage.addActor(Statdata);
-		stage.addActor(Statdatalabel);
-		stage.addActor(Userdata);
-		stage.addActor(Userdatalabel);
-		stage.addActor(Gamedata);
-		stage.addActor(Gamedatalabel);
-		stage.addActor(Worlddata);
-		stage.addActor(Worlddatalabel);
-		stage.addActor(databaseSave);
-		stage.addActor(adder);
-		stage.addActor(signer);
-		stage.addActor(up);
-		stage.addActor(up_nrj);
-		stage.addActor(up_cycle);
-		stage.addActor(up_temp);
-		stage.addActor(up_rayon);
-		stage.addActor(research);
+		stage.addActor(group_init);
+		stage.addActor(group_stat);
+		stage.addActor(group_level);
+		stage.addActor(group_base);
+		stage.addActor(group_debug);
+		stage.addActor(group_choose);
+		stage.addActor(group_other);
 		Gdx.input.setInputProcessor(stage);
 		Gdx.app.debug("wirechem-LevelScreen", "Début dans la bande son \'intro\'");
 		AssetLoader.intro.setLooping(true);
