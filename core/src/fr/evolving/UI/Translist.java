@@ -69,8 +69,13 @@ public class Translist extends Actor{
 	
 	public void setTransmuters(Array<Transmuter> transmuters) {
 		this.transmuters=transmuters;
-		whereis=0;		
-		assignTransmuter(whereis);
+		whereis=0;
+		if (transmuters!=null && transmuters.size>0)
+			assignTransmuter(whereis);
+	}
+	
+	public Array<Transmuter> getTransmuters() {
+		return this.transmuters;
 	}
 	
 	public void assignTransmuter(int where) {
@@ -116,7 +121,8 @@ public class Translist extends Actor{
 	}
 	
 	public void redraw() {
-		Selected.setBounds(this.getX(), this.getY(), this.getWidth(), this.getHeight());
+		if (Selected!=null)
+			Selected.setBounds(this.getX(), this.getY(), this.getWidth(), this.getHeight());
 		table.setBounds(this.getX(), this.getY(), this.getWidth(), this.getHeight());
 		table.clear();
 		table.add(Previous).left().pad(this.getWidth()/4).padTop(this.getHeight()).size(this.getWidth()/512*64, this.getHeight()/512*64);
@@ -154,7 +160,8 @@ public class Translist extends Actor{
 	
 	@Override
 	public void draw(Batch batch, float parentAlpha) {
-		Selected.draw(batch, parentAlpha);
+		if (Selected!=null)
+			Selected.draw(batch, (float) 1.0);
 		table.draw(batch, parentAlpha);
 		}
 }

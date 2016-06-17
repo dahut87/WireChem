@@ -12,12 +12,10 @@ import fr.evolving.assets.AssetLoader;
 public class WarningDialog extends Dialog {
 	Label thelabel;
 
-	public WarningDialog(Skin skin) {
-		super(AssetLoader.language.get("[dialog-window]"), skin);
+	public WarningDialog() {
+		super(AssetLoader.language.get("[dialog-window]"), AssetLoader.Skin_ui);
 		// TODO Auto-generated constructor stub
-		this.getContentTable()
-				.add(new ImageButton(AssetLoader.Skin_level, "Warnerbros"))
-				.left();
+		this.getContentTable().add(new ImageButton(AssetLoader.Skin_level, "Warnerbros")).left();
 		thelabel = new Label("", AssetLoader.Skin_level);
 		this.getContentTable().add(thelabel).right();
 		this.setModal(true);
@@ -25,7 +23,7 @@ public class WarningDialog extends Dialog {
 		this.key(Input.Keys.ENTER, true);
 	}
 
-	public void Show(String info, Stage stage) {
+	public void show(String info, Stage stage) {
 		this.thelabel.setText(info);
 		this.show(stage);
 	}

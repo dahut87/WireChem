@@ -53,8 +53,7 @@ public class LevelScreen implements Screen {
 	private ImageButton Previous, Next, Exit, logosmall, databaseSave, adder, signer;
 	public Image MenuSolo, MenuMulti, MenuScenario;
 	private ImageTextButton cout, tech, cycle, temp, rayon, nrj, up_cycle, up_temp, up_rayon, up_nrj, research, up;
-	private TextButton buttonConnect, buttonPlay, buttonStat, buttonSave,
-	buttonApply, buttonPlaythis;
+	private TextButton buttonConnect, buttonPlay, buttonStat, buttonSave, buttonApply, buttonPlaythis;
 	private ServerList Statdata, Userdata, Gamedata;
 	private Worldlist Worlddata;
 	private Label Statdatalabel, Userdatalabel, Gamedatalabel, Worlddatalabel;
@@ -314,7 +313,7 @@ public class LevelScreen implements Screen {
 		stage = new Stage(AssetLoader.viewport);
 		table = new Table();
 		Renderer = new LevelRenderer(this);
-		dialog = new WarningDialog(AssetLoader.Skin_ui);
+		dialog = new WarningDialog();
 		Gdx.app.debug("wirechem-LevelScreen", "Mise en place du timer.");
 		ScrollTimer = new Timer();
 		ScrollTask = new TimerTask() {
@@ -427,7 +426,7 @@ public class LevelScreen implements Screen {
 				AssetLoader.Datahandler.Attach(Gamedata.getModel(),
 						Gamedata.getUrl());
 				if (!AssetLoader.Datahandler.verifyall()) {
-					dialog.Show(AssetLoader.language.get("[dialog-levelscreen-errorloading]"),stage);
+					dialog.show(AssetLoader.language.get("[dialog-levelscreen-errorloading]"),stage);
 					initlevel();
 				} else
 					menu();
@@ -456,7 +455,7 @@ public class LevelScreen implements Screen {
 				Preference.prefs.putString("gamedata", Gamedata.getUrl());
 				Preference.prefs.putString("statdata", Statdata.getUrl());
 				Preference.prefs.flush();
-				dialog.Show(
+				dialog.show(
 						AssetLoader.language.get("[dialog-levelscreen-savedatabase]"),stage);
 			}
 		});
@@ -490,10 +489,10 @@ public class LevelScreen implements Screen {
 		buttonPlaythis.addListener(new ClickListener() {
 			public void clicked(InputEvent event, float x, float y) {
 				if (!AssetLoader.Datahandler.verifyall())
-					dialog.Show(AssetLoader.language.get("[dialog-levelscreen-errorlevels]"),stage);
+					dialog.show(AssetLoader.language.get("[dialog-levelscreen-errorlevels]"),stage);
 				else {
 					if (Worlddata.getSelected() == null)
-						dialog.Show(AssetLoader.language.get("[dialog-levelscreen-errornoworld]"), stage);
+						dialog.show(AssetLoader.language.get("[dialog-levelscreen-errornoworld]"), stage);
 					else {
 						worlds.set((String) Worlddata.getSelected());
 						Preference.prefs.flush();

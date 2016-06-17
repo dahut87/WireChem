@@ -54,7 +54,12 @@ public class PrefWindow extends Window {
 		this.setVisible(false);
 		this.pack();
 		this.setPosition(100, 250);
-		dialog = new WarningDialog(AssetLoader.Skin_ui);
+		dialog = new WarningDialog();
+	}
+	
+	public void show() {
+		if (dialog.getStage()==null)
+			this.getParent().getStage().addActor(dialog);
 	}
 
 	public void refresh() {
@@ -202,7 +207,7 @@ public class PrefWindow extends Window {
 	private void onSaveClicked() {
 		this.setVisible(false);
 		writepref();
-		dialog.Show(AssetLoader.language.get("[dialog-gamescreen-preference]"),	this.getStage());
+		dialog.show(AssetLoader.language.get("[dialog-gamescreen-preference]"),this.getStage());
 	}
 
 	private void onCancelClicked() {

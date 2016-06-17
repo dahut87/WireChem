@@ -74,6 +74,7 @@ import fr.evolving.automata.Transmuter.CaseType;
 import fr.evolving.automata.Worlds;
 import fr.evolving.dialogs.PrefWindow;
 import fr.evolving.dialogs.SavingWindow;
+import fr.evolving.dialogs.UpDialog;
 import fr.evolving.dialogs.WarningDialog;
 import fr.evolving.renderers.GameRenderer;
 
@@ -87,7 +88,8 @@ public class GameScreen implements Screen {
 	public Level level;
 	private PrefWindow winOptions;
 	private SavingWindow winSave;
-	private ImageButton info_up_nrj, info_up_temp, info_up, info_up_rayon,
+	private UpDialog updialog;
+	private ImageButton info_up_nrj, info_up_temp, info_up, info_up2, info_up_rayon,
 			info_up_cycle, info_up_nrjval, info_up_tempval, info_up_rayonval,
 			info_up_cycleval, nextpage, previouspage;
 	private ImageTextButton info_cout, info_tech, info_research, info_activation;
@@ -317,6 +319,19 @@ public class GameScreen implements Screen {
 					menu.update();
 					info_up.setVisible(false);
 					hideInfo();
+			}
+		});
+		info_up2=new ImageButton(AssetLoader.Skin_level,"evolution2");
+		info_up2.setPosition(1450, AssetLoader.height - 720);
+		info_up2.addListener(new ClickListener() {
+			@Override
+			public void clicked(InputEvent event, float x, float y) {
+				//updialog.setTransmuters(menu.getTransmuter().getUnlock());
+				updialog.show(stage);
+				if (menu.getTransmuter()!=null && menu.getTransmuter().isUnlockable(worlds.ReadResearch())) {
+					
+					hideInfo();
+				}
 			}
 		});
 		Gdx.app.debug("wirechem-GameScreen", "Création d'une tilemap");
@@ -672,7 +687,8 @@ public class GameScreen implements Screen {
 
 	@Override
 	public void show() {
-		Gdx.app.debug("wirechem-GameScreen","Création de la fenêtre d'option");
+		Gdx.app.debug("wirechem-GameScreen","Création des fenêtres");
+		updialog=new UpDialog();
 		winOptions = new PrefWindow();
 		stage.addActor(winOptions);
 		winSave = new SavingWindow(worlds);
@@ -698,6 +714,7 @@ public class GameScreen implements Screen {
 		stage_info.addActor(info_nom);
 		stage_info.addActor(info_cout);
 		stage_info.addActor(info_up);
+		stage_info.addActor(info_up2);
 		stage_info.addActor(info_desc);
 		//stage_tooltip.addActor(tooltip);
 		stage.addActor(horizbar);
@@ -887,6 +904,7 @@ public class GameScreen implements Screen {
 						+ transmuter.getUpgradeRayon()));
 		info_up_rayonval.setColor(AssetLoader.Levelcolors[2]);
 		info_up.setVisible(transmuter.isUpgradable(worlds.ReadResearch()));
+		info_up2.setVisible(true);
 		
 	}
 
