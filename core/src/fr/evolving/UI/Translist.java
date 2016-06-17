@@ -13,6 +13,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.VerticalGroup;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener.ChangeEvent;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Array;
 
@@ -27,6 +28,7 @@ public class Translist extends Actor{
 	Table table;
 	int whereis;
 	Color color;
+	ChangeEvent event;
 	
 	public Translist(Array<Transmuter> transmuters,Color color) {
 		this.color=color;
@@ -37,6 +39,7 @@ public class Translist extends Actor{
 			public void clicked(InputEvent event, float x, float y) {
 				Gdx.app.debug("wirechem-Translist", "Previous transmuter");
 				previousTransmuter();
+				onchanged();
 			}
 		});
 		Next=new ImageButton(AssetLoader.Skin_level, "extend");
@@ -45,6 +48,7 @@ public class Translist extends Actor{
 			public void clicked(InputEvent event, float x, float y) {
 				Gdx.app.debug("wirechem-Translist", "Next transmuter");
 				nextTransmuter();
+				onchanged();
 			}
 		});
 		this.addListener(new ClickListener() {
@@ -58,6 +62,15 @@ public class Translist extends Actor{
 		setTransmuters(transmuters);
 	}
 	
+	public void onchanged() {
+		ChangeEvent event=new ChangeEvent();
+		event.setTarget(this);
+		event.setListenerActor(this);	
+		event.setStage(this.getStage());
+		if (event.getStage()!=null) 
+			this.fire(event);
+	}
+	
 	public void setColor(Color color) {
 		this.color=color;
 		assignTransmuter(whereis);
@@ -69,6 +82,7 @@ public class Translist extends Actor{
 	
 	public void setTransmuters(Array<Transmuter> transmuters) {
 		this.transmuters=transmuters;
+		onchanged();
 		whereis=0;
 		if (transmuters!=null && transmuters.size>0)
 			assignTransmuter(whereis);

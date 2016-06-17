@@ -54,7 +54,7 @@ public class Worlds extends Actor {
 	public int ReadResearch() {
 		if (research==-2)
 			research=AssetLoader.Datahandler.user().getResearchpoint(0);
-		return research;
+		return research+5800;
 	}
 	
 	public void SaveResearch() {

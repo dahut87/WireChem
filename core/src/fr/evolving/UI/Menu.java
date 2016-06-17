@@ -224,10 +224,6 @@ public class Menu extends Actor {
 		return this.seltype;
 	}
 
-	public void upate() {
-
-	}
-
 	public void update() {
 		clearall();
 		if (worlds.isDebug()) 
@@ -275,6 +271,8 @@ public class Menu extends Actor {
 	}
 
 	private void clearall() {
+		unSelect();
+		setPage(0);
 		for (int k=0;k<Transmuter.Class.values().length;k++)
 			for (int j=0;j<nbpages;j++){
 				map[j][k].getTileSets().addTileSet(AssetLoader.tileSet);

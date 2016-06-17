@@ -26,6 +26,7 @@ import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.badlogic.gdx.scenes.scene2d.ui.CheckBox;
 import com.badlogic.gdx.scenes.scene2d.ui.HorizontalGroup;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
@@ -74,7 +75,6 @@ import fr.evolving.automata.Transmuter.CaseType;
 import fr.evolving.automata.Worlds;
 import fr.evolving.dialogs.PrefWindow;
 import fr.evolving.dialogs.SavingWindow;
-import fr.evolving.dialogs.UpDialog;
 import fr.evolving.dialogs.WarningDialog;
 import fr.evolving.renderers.GameRenderer;
 
@@ -88,11 +88,11 @@ public class GameScreen implements Screen {
 	public Level level;
 	private PrefWindow winOptions;
 	private SavingWindow winSave;
-	private UpDialog updialog;
 	private ImageButton info_up_nrj, info_up_temp, info_up, info_up2, info_up_rayon,
 			info_up_cycle, info_up_nrjval, info_up_tempval, info_up_rayonval,
 			info_up_cycleval, nextpage, previouspage;
 	private ImageTextButton info_cout, info_tech, info_research, info_activation;
+	private TextButton info_choose;
 	private IconValue cycle, temp, nrj, rayon, cout, tech, research;
 	String[] tocreate;
 	private ButtonLevel buttonlevel;
@@ -106,7 +106,7 @@ public class GameScreen implements Screen {
 	private TextArea info_desc, tooltip;
 	public boolean unroll;
 	public Worlds worlds;
-	public Translist translist;
+	public Translist info_upgrade;
 
 	public enum calling {
 		mouseover, mouseclick, mousedrag, longpress, tap, taptap, zoom, fling, pan, pinch
@@ -318,7 +318,46 @@ public class GameScreen implements Screen {
 					menu.getTransmuter().Upgrade();
 					menu.update();
 					info_up.setVisible(false);
+					nextpage.setDisabled(menu.isNextEmpty());
+					previouspage.setDisabled(menu.isPreviousEmpty());
 					hideInfo();
+			}
+		});
+		info_choose = new TextButton(AssetLoader.language.get("[info_choose-gamescreen]"), AssetLoader.Skin_ui);
+		info_choose.setBounds(1575, AssetLoader.height-710, 290, 45);
+		info_choose.setVisible(false);
+		info_choose.addListener(new ClickListener() {
+			public void clicked(InputEvent event, float x, float y) {
+				worlds.ModResearch(-info_upgrade.getTransmuter().getResearch());
+				info_upgrade.getTransmuter().Unlock();
+				menu.update();
+				info_up2.setVisible(false);
+				nextpage.setDisabled(menu.isNextEmpty());
+				previouspage.setDisabled(menu.isPreviousEmpty());
+				hideInfo();
+			}
+		});
+		info_upgrade=new Translist(null, AssetLoader.Skin_level.getColor("grey"));
+		info_upgrade.setBounds(1590,AssetLoader.height-620,256,256);
+		info_upgrade.setVisible(false);
+		info_upgrade.addListener(new ChangeListener() {
+			@Override
+			public void changed(ChangeEvent event, Actor actor) {
+				Gdx.app.debug("wirechem-GameScreen", "info_upgrade | Element changé");
+				Translist tranlist=(Translist)actor;
+				showInfo(tranlist.getTransmuter());
+				if (tranlist.getTransmuter().getResearch()>worlds.ReadResearch()) 
+				{
+					info_choose.setDisabled(true);
+					info_choose.setTouchable(Touchable.disabled);
+					tranlist.setColor(AssetLoader.Skin_level.getColor("red")); 
+				}
+				else 
+				{
+					info_choose.setDisabled(false);
+					info_choose.setTouchable(Touchable.enabled);
+					tranlist.setColor(AssetLoader.Skin_level.getColor("grey")); 
+				}
 			}
 		});
 		info_up2=new ImageButton(AssetLoader.Skin_level,"evolution2");
@@ -326,12 +365,19 @@ public class GameScreen implements Screen {
 		info_up2.addListener(new ClickListener() {
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
-				//updialog.setTransmuters(menu.getTransmuter().getUnlock());
-				updialog.show(stage);
 				if (menu.getTransmuter()!=null && menu.getTransmuter().isUnlockable(worlds.ReadResearch())) {
-					
-					hideInfo();
+					//info_upgrade.setTransmuters(AssetLoader.allTransmuter);
+					info_upgrade.setTransmuters(menu.getTransmuter().getUnlock());
+					info_up2.setVisible(false);	
+					info_upgrade.setVisible(true);
+					info_choose.setVisible(true);
+					menu.setVisible(false);
+					vertibar.setVisible(false);
+					nextpage.setVisible(false);
+					previouspage.setVisible(false);
 				}
+				else
+					info_upgrade.setVisible(false);
 			}
 		});
 		Gdx.app.debug("wirechem-GameScreen", "Création d'une tilemap");
@@ -404,7 +450,7 @@ public class GameScreen implements Screen {
 
 
 	public void map_transmuter(float realx, float realy, int x, int y, boolean alone,int button, calling call) {
-		if (!worlds.isDebug() && level.Cout<menu.getTransmuter().getPrice())
+		if (menu.getTransmuter()==null || (!worlds.isDebug() && level.Cout<menu.getTransmuter().getPrice()))
 			return;
 		if (call == calling.taptap && button == 0
 				|| (call == calling.mouseclick && button == 1)) {
@@ -688,7 +734,6 @@ public class GameScreen implements Screen {
 	@Override
 	public void show() {
 		Gdx.app.debug("wirechem-GameScreen","Création des fenêtres");
-		updialog=new UpDialog();
 		winOptions = new PrefWindow();
 		stage.addActor(winOptions);
 		winSave = new SavingWindow(worlds);
@@ -716,6 +761,8 @@ public class GameScreen implements Screen {
 		stage_info.addActor(info_up);
 		stage_info.addActor(info_up2);
 		stage_info.addActor(info_desc);
+		stage_info.addActor(info_upgrade);
+		stage_info.addActor(info_choose);
 		//stage_tooltip.addActor(tooltip);
 		stage.addActor(horizbar);
 		if (worlds.getInformations().Cout>0 || worlds.getInformations().Tech>=1 || worlds.isDebug()) {
@@ -868,7 +915,7 @@ public class GameScreen implements Screen {
 	public void showInfo(Transmuter transmuter) {
 		if (transmuter == null)
 			return;
-		unroll = true;
+		unroll = true;			
 		info_nom.setText(transmuter.getName());
 		info_desc.setText(transmuter.getDesc());
 		info_tech.setVisible(transmuter.getTechnology() > 0);
@@ -903,12 +950,18 @@ public class GameScreen implements Screen {
 				AssetLoader.Atlas_level.findRegion("jauge"
 						+ transmuter.getUpgradeRayon()));
 		info_up_rayonval.setColor(AssetLoader.Levelcolors[2]);
-		info_up.setVisible(transmuter.isUpgradable(worlds.ReadResearch()));
-		info_up2.setVisible(true);
+		info_up.setVisible(!info_upgrade.isVisible() && transmuter.isUpgradable(worlds.ReadResearch()));
+		info_up2.setVisible(!info_upgrade.isVisible() && transmuter.isUnlockable(worlds.ReadResearch()));
 		
 	}
 
 	public void hideInfo() {
+		info_upgrade.setVisible(false);
+		info_choose.setVisible(false);
+		menu.setVisible(true);
+		vertibar.setVisible(true);
+		nextpage.setVisible(true);
+		previouspage.setVisible(true);
 		unroll = false;
 	}
 
