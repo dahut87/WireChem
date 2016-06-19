@@ -12,7 +12,6 @@ public class InitWorlds {
 		thelevels[0] = new Level(
 				0,
 				0,
-				(int) (Math.random() * Integer.MAX_VALUE),
 				"",
 				"",
 				"e0", new int[] { 0, 0, 0, 0, 0, 0 },
@@ -23,7 +22,6 @@ public class InitWorlds {
 		thelevels[1] = new Level(
 				0,
 				1,
-				(int) (Math.random() * Integer.MAX_VALUE),
 				"",
 				"",
 				"e0", new int[] { 0, 0, 0, 0, 0, 0 },
@@ -34,7 +32,6 @@ public class InitWorlds {
 		thelevels[2] = new Level(
 				0,
 				2,
-				(int) (Math.random() * Integer.MAX_VALUE),
 				"",
 				"",
 				"e0", new int[] { 0, 0, 0, 0, 0, 0 },
@@ -45,7 +42,6 @@ public class InitWorlds {
 		thelevels[3] = new Level(
 				0,
 				3,
-				(int) (Math.random() * Integer.MAX_VALUE),
 				"",
 				"",
 				"e+", new int[] { 0, 0, 0, 0, 0, 0 },
@@ -56,7 +52,6 @@ public class InitWorlds {
 		thelevels[4] = new Level(
 				0,
 				4,
-				(int) (Math.random() * Integer.MAX_VALUE),
 				"",
 				"",
 				"E-", new int[] { 0, 0, 0, 0, 0, 0 },
@@ -67,7 +62,6 @@ public class InitWorlds {
 		thelevels[5] = new Level(
 				0,
 				5,
-				(int) (Math.random() * Integer.MAX_VALUE),
 				"",
 				"",
 				"e0", new int[] { 0, 0, 0, 0, 0, 0 },
@@ -78,7 +72,6 @@ public class InitWorlds {
 		thelevels[6] = new Level(
 				0,
 				6,
-				(int) (Math.random() * Integer.MAX_VALUE),
 				"",
 				"",
 				"eX", new int[] { 0, 0, 0, 0, 0, 0 },
@@ -89,7 +82,6 @@ public class InitWorlds {
 		thelevels[7] = new Level(
 				0,
 				7,
-				(int) (Math.random() * Integer.MAX_VALUE),
 				"",
 				"",
 				"p", new int[] { 0, 0, 0, 0, 0, 0 },
@@ -100,7 +92,6 @@ public class InitWorlds {
 		thelevels[8] = new Level(
 				0,
 				8,
-				(int) (Math.random() * Integer.MAX_VALUE),
 				"",
 				"",
 				"H", new int[] { 0, 0, 0, 0, 0, 0 },
@@ -111,7 +102,6 @@ public class InitWorlds {
 		thelevels[9] = new Level(
 				1,
 				0,
-				(int) (Math.random() * Integer.MAX_VALUE),
 				"",
 				"",
 				"D", new int[] { 0, 0, 0, 0, 0, 0 },
@@ -122,7 +112,6 @@ public class InitWorlds {
 		thelevels[10] = new Level(
 				1,
 				1,
-				(int) (Math.random() * Integer.MAX_VALUE),
 				"",
 				"",
 				"T", new int[] { 0, 0, 0, 0, 0, 0 },
@@ -133,7 +122,6 @@ public class InitWorlds {
 		thelevels[11] = new Level(
 				1,
 				2,
-				(int) (Math.random() * Integer.MAX_VALUE),
 				"",
 				"",
 				"He", new int[] { 0, 0, 0, 0, 0, 0 },
@@ -144,7 +132,6 @@ public class InitWorlds {
 		thelevels[12] = new Level(
 				1,
 				3,
-				(int) (Math.random() * Integer.MAX_VALUE),
 				"",
 				"",
 				"He", new int[] { 0, 0, 0, 0, 0, 0 },
@@ -155,7 +142,6 @@ public class InitWorlds {
 		thelevels[13] = new Level(
 				1,
 				4,
-				(int) (Math.random() * Integer.MAX_VALUE),
 				"",
 				"",
 				"He", new int[] { 0, 0, 0, 0, 0, 0 },
@@ -166,7 +152,6 @@ public class InitWorlds {
 		thelevels[14] = new Level(
 				1,
 				5,
-				(int) (Math.random() * Integer.MAX_VALUE),
 				"",
 				"",
 				"Li", new int[] { 0, 0, 0, 0, 0, 0 },
@@ -177,7 +162,6 @@ public class InitWorlds {
 		thelevels[15] = new Level(
 				1,
 				6,
-				(int) (Math.random() * Integer.MAX_VALUE),
 				"",
 				"",
 				"Be", new int[] { 0, 0, 0, 0, 0, 0 },
@@ -188,7 +172,6 @@ public class InitWorlds {
 		thelevels[16] = new Level(
 				1,
 				7,
-				(int) (Math.random() * Integer.MAX_VALUE),
 				"",
 				"",
 				"B", new int[] { 0, 0, 0, 0, 0, 0 },
@@ -199,7 +182,6 @@ public class InitWorlds {
 		thelevels[17] = new Level(
 				1,
 				8,
-				(int) (Math.random() * Integer.MAX_VALUE),
 				"",
 				"",
 				"C", new int[] { 0, 0, 0, 0, 0, 0 },
@@ -212,7 +194,6 @@ public class InitWorlds {
 		thelevels[18] = new Level(
 				2,
 				0,
-				(int) (Math.random() * Integer.MAX_VALUE),
 				"",
 				"",
 				"N", new int[] { 0, 0, 0, 0, 0, 0 },
@@ -223,7 +204,6 @@ public class InitWorlds {
 		thelevels[19] = new Level(
 				2,
 				1,
-				(int) (Math.random() * Integer.MAX_VALUE),
 				"",
 				"",
 				"N", new int[] { 0, 0, 0, 0, 0, 0 },
@@ -234,7 +214,6 @@ public class InitWorlds {
 		thelevels[20] = new Level(
 				2,
 				2,
-				(int) (Math.random() * Integer.MAX_VALUE),
 				"",
 				"",
 				"O", new int[] { 0, 0, 0, 0, 0, 0 },
@@ -245,7 +224,6 @@ public class InitWorlds {
 		thelevels[21] = new Level(
 				2,
 				3,
-				(int) (Math.random() * Integer.MAX_VALUE),
 				"",
 				"",
 				"O", new int[] { 0, 0, 0, 0, 0, 0 },
@@ -256,7 +234,6 @@ public class InitWorlds {
 		thelevels[22] = new Level(
 				2,
 				4,
-				(int) (Math.random() * Integer.MAX_VALUE),
 				"",
 				"",
 				"F", new int[] { 0, 0, 0, 0, 0, 0 },
@@ -267,7 +244,6 @@ public class InitWorlds {
 		thelevels[23] = new Level(
 				2,
 				5,
-				(int) (Math.random() * Integer.MAX_VALUE),
 				"",
 				"",
 				"Ne", new int[] { 0, 0, 0, 0, 0, 0 },
@@ -278,7 +254,6 @@ public class InitWorlds {
 		thelevels[24] = new Level(
 				2,
 				6,
-				(int) (Math.random() * Integer.MAX_VALUE),
 				"",
 				"",
 				"Ne", new int[] { 0, 0, 0, 0, 0, 0 },
@@ -289,7 +264,6 @@ public class InitWorlds {
 		thelevels[25] = new Level(
 				2,
 				7,
-				(int) (Math.random() * Integer.MAX_VALUE),
 				"",
 				"",
 				"Ne", new int[] { 0, 0, 0, 0, 0, 0 },
@@ -300,7 +274,6 @@ public class InitWorlds {
 		thelevels[26] = new Level(
 				2,
 				8,
-				(int) (Math.random() * Integer.MAX_VALUE),
 				"",
 				"",
 				"Na", new int[] { 0, 0, 0, 0, 0, 0 },
@@ -313,7 +286,6 @@ public class InitWorlds {
 		thelevels[27] = new Level(
 				3,
 				0,
-				(int) (Math.random() * Integer.MAX_VALUE),
 				"",
 				"",
 				"Mg", new int[] { 0, 0, 0, 0, 0, 0 },
@@ -323,7 +295,6 @@ public class InitWorlds {
 		thelevels[28] = new Level(
 				3,
 				1,
-				(int) (Math.random() * Integer.MAX_VALUE),
 				"",
 				"",
 				"Mg", new int[] { 0, 0, 0, 0, 0, 0 },
@@ -333,7 +304,6 @@ public class InitWorlds {
 		thelevels[29] = new Level(
 				3,
 				2,
-				(int) (Math.random() * Integer.MAX_VALUE),
 				"",
 				"",
 				"Mg", new int[] { 0, 0, 0, 0, 0, 0 },
@@ -343,7 +313,6 @@ public class InitWorlds {
 		thelevels[30] = new Level(
 				3,
 				3,
-				(int) (Math.random() * Integer.MAX_VALUE),
 				"",
 				"",
 				"Al", new int[] { 0, 0, 0, 0, 0, 0 },
@@ -353,7 +322,6 @@ public class InitWorlds {
 		thelevels[31] = new Level(
 				3,
 				4,
-				(int) (Math.random() * Integer.MAX_VALUE),
 				"",
 				"",
 				"Si", new int[] { 0, 0, 0, 0, 0, 0 },
@@ -363,7 +331,6 @@ public class InitWorlds {
 		thelevels[32] = new Level(
 				3,
 				5,
-				(int) (Math.random() * Integer.MAX_VALUE),
 				"",
 				"",
 				"Si", new int[] { 0, 0, 0, 0, 0, 0 },
@@ -373,7 +340,6 @@ public class InitWorlds {
 		thelevels[33] = new Level(
 				3,
 				6,
-				(int) (Math.random() * Integer.MAX_VALUE),
 				"",
 				"",
 				"Si", new int[] { 0, 0, 0, 0, 0, 0 },
@@ -383,7 +349,6 @@ public class InitWorlds {
 		thelevels[34] = new Level(
 				3,
 				7,
-				(int) (Math.random() * Integer.MAX_VALUE),
 				"",
 				"",
 				"Si", new int[] { 0, 0, 0, 0, 0, 0 },
@@ -393,7 +358,6 @@ public class InitWorlds {
 		thelevels[35] = new Level(
 				3,
 				8,
-				(int) (Math.random() * Integer.MAX_VALUE),
 				"",
 				"",
 				"O", new int[] { 0, 0, 0, 0, 0, 0 },
@@ -405,7 +369,6 @@ public class InitWorlds {
 		thelevels[36] = new Level(
 				4,
 				0,
-				(int) (Math.random() * Integer.MAX_VALUE),
 				"",
 				"",
 				"P", new int[] { 0, 0, 0, 0, 0, 0 },
@@ -415,7 +378,6 @@ public class InitWorlds {
 		thelevels[37] = new Level(
 				4,
 				1,
-				(int) (Math.random() * Integer.MAX_VALUE),
 				"",
 				"",
 				"S", new int[] { 0, 0, 0, 0, 0, 0 },
@@ -425,7 +387,6 @@ public class InitWorlds {
 		thelevels[38] = new Level(
 				4,
 				2,
-				(int) (Math.random() * Integer.MAX_VALUE),
 				"",
 				"",
 				"S", new int[] { 0, 0, 0, 0, 0, 0 },
@@ -435,7 +396,6 @@ public class InitWorlds {
 		thelevels[39] = new Level(
 				4,
 				3,
-				(int) (Math.random() * Integer.MAX_VALUE),
 				"",
 				"",
 				"S", new int[] { 0, 0, 0, 0, 0, 0 },
@@ -445,7 +405,6 @@ public class InitWorlds {
 		thelevels[40] = new Level(
 				4,
 				4,
-				(int) (Math.random() * Integer.MAX_VALUE),
 				"",
 				"",
 				"S", new int[] { 0, 0, 0, 0, 0, 0 },
@@ -455,7 +414,6 @@ public class InitWorlds {
 		thelevels[41] = new Level(
 				4,
 				5,
-				(int) (Math.random() * Integer.MAX_VALUE),
 				"",
 				"",
 				"Cl", new int[] { 0, 0, 0, 0, 0, 0 },
@@ -465,7 +423,6 @@ public class InitWorlds {
 		thelevels[42] = new Level(
 				4,
 				6,
-				(int) (Math.random() * Integer.MAX_VALUE),
 				"",
 				"",
 				"Cl", new int[] { 0, 0, 0, 0, 0, 0 },
@@ -475,7 +432,6 @@ public class InitWorlds {
 		thelevels[43] = new Level(
 				4,
 				7,
-				(int) (Math.random() * Integer.MAX_VALUE),
 				"",
 				"",
 				"Ar", new int[] { 0, 0, 0, 0, 0, 0 },
@@ -485,7 +441,6 @@ public class InitWorlds {
 		thelevels[44] = new Level(
 				4,
 				8,
-				(int) (Math.random() * Integer.MAX_VALUE),
 				"",
 				"",
 				"Ar", new int[] { 0, 0, 0, 0, 0, 0 },

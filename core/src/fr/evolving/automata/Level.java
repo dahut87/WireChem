@@ -2,7 +2,7 @@ package fr.evolving.automata;
 
 import java.io.Serializable;
 
-public class Level implements Serializable {
+public class Level implements Serializable,Cloneable {
 	public String Name;
 	public String Description;
 	public String Element;
@@ -42,14 +42,14 @@ public class Level implements Serializable {
 	
 	public transient boolean Locked;
 
-	public Level(int aWorld, int aLevel, int id, String Name,
+	public Level(int aWorld, int aLevel, String Name,
 			String Description, String Element, int[] Current, int[] Victory,
 			float X, float Y, int Tech, int Cout, Grid World, int Cycle,
 			int Temp, int Rayon, int Nrj, int Maxcycle, int Maxtemp,
 			int Maxrayon, int Maxnrj, String Tuto, boolean Special, int[][] Link) {
 		this.aWorld = aWorld;
 		this.aLevel = aLevel;
-		this.id = id;
+		this.id = (int) (Math.random() * Integer.MAX_VALUE);
 		this.Name = Name;
 		this.Description = Description;
 		this.Element = Element;
@@ -73,4 +73,10 @@ public class Level implements Serializable {
 		this.Tuto = Tuto;
 		this.Link = Link;
 	}
+	
+	public Object clone() {
+		Level result = new Level(this.aWorld, this.aLevel, this.Name+" BIS", this.Description, this.Element, this.rewards.clone(), this.Victory_orig.clone(), this.X+100f, this.Y+100f, this.Tech, this.Cout_orig, (Grid)this.Grid_orig.clone(), this.Cycle_orig, this.Temp_orig, this.Rayon_orig, this.Nrj_orig, this.Maxcycle, this.Maxtemp, this.Maxrayon, this.Maxnrj, this.Tuto, this.Special, this.Link);
+		return result;
+	}
+
 }

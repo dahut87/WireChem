@@ -21,9 +21,11 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextArea;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.scenes.scene2d.ui.VerticalGroup;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener.ChangeEvent;
+import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Array;
 
 import fr.evolving.UI.ButtonLevel;
@@ -31,6 +33,7 @@ import fr.evolving.UI.Objectives;
 import fr.evolving.UI.ServerList;
 import fr.evolving.UI.Transhower;
 import fr.evolving.UI.Translist;
+import fr.evolving.UI.VertiBarre;
 import fr.evolving.UI.Worldlist;
 import fr.evolving.assets.AssetLoader;
 import fr.evolving.assets.InitWorlds;
@@ -53,7 +56,7 @@ public class LevelScreen implements Screen {
 	private Stage stage;
 	private Table table;
 	private WarningDialog dialog;
-	private ImageButton Previous, Next, Exit, logosmall, databaseSave, adder, signer, finisher, deletelinker, deletebutton, addbutton;
+	private ImageButton Previous, Next, Exit, logosmall, databaseSave, adder, signer, finisher, deletelinker, deletebutton, addbutton, unlocked, duplicate;
 	public Image MenuSolo, MenuMulti, MenuScenario;
 	private ImageTextButton cout, tech, cycle, temp, rayon, nrj, up_cycle, up_temp, up_rayon, up_nrj, research, up;
 	private TextButton buttonConnect, buttonPlay, buttonStat, buttonSave, buttonApply, buttonPlaythis;
@@ -63,6 +66,7 @@ public class LevelScreen implements Screen {
 	private TextArea TextDescriptive;
 	public Worlds worlds;
 	private Objectives Victory;
+	private VerticalGroup vertibar;
 	public ButtonLevel selected;
 	public int addervalue;
 	public ButtonGroup chooser;
@@ -151,26 +155,21 @@ public class LevelScreen implements Screen {
 	public ClickListener buttonLevelslistener() {
 		return new ClickListener() {
 		@Override
-		public void enter(InputEvent event, float x, float y,
-				int pointer, Actor fromActor) {
-			ButtonLevel abutton = (ButtonLevel) event
-					.getListenerActor();
+		public void enter(InputEvent event, float x, float y, int pointer, Actor fromActor) {
+			ButtonLevel abutton = (ButtonLevel) event.getListenerActor();
 			Gdx.app.debug("wirechem-LevelScreen","Enter button ");
 			if (!abutton.isChecked() && (!abutton.level.Locked || worlds.isDebug()))
 				showlevel(abutton);
 		}
 
-		public void exit(InputEvent event, float x, float y,
-				int pointer, Actor fromActor) {
-			ButtonLevel abutton = (ButtonLevel) event
-					.getListenerActor();
+		public void exit(InputEvent event, float x, float y,int pointer, Actor fromActor) {
+			ButtonLevel abutton = (ButtonLevel) event.getListenerActor();
 			Gdx.app.debug("wirechem-LevelScreen","Enter button ");
 			if (!abutton.isChecked() && (!abutton.level.Locked || worlds.isDebug()))
 				showlevel(abutton);
 		}
 
-		public void touchDragged(InputEvent event, float x,
-				float y, int pointer) {
+		public void touchDragged(InputEvent event, float x,	float y, int pointer) {
 			ButtonLevel abutton = (ButtonLevel) event.getListenerActor();
 			if (worlds.isDebug()) {
 				abutton.setPosition(event.getStageX() - 56,	event.getStageY() - 20);
@@ -222,6 +221,7 @@ public class LevelScreen implements Screen {
 					buttonLevels.add(button);
 					stage.addActor(button);
 					button.addListener(buttonLevelslistener());	
+					showlevel(button);
 					return;
 					}
 					LevelScreen.this.loadWorld();
@@ -791,7 +791,23 @@ public class LevelScreen implements Screen {
 		//Group Debug
 		//**********************************************************
 		Gdx.app.debug("wirechem-LevelScreen", "Création du groupe Debug.");
-		deletebutton = new ImageButton(AssetLoader.Skin_level, "boss");
+		unlocked = new ImageButton(AssetLoader.Skin_level, "unlocked");
+		unlocked.setPosition(1460, 140);	
+		unlocked.addListener(new ClickListener() {
+			@Override
+			public void clicked(InputEvent event, float x, float y) {
+				worlds.unLockLevel(selected.level.aLevel);
+			}
+		});
+		duplicate = new ImageButton(AssetLoader.Skin_level, "duplicate");
+		duplicate.setPosition(1460, 140);	
+		duplicate.addListener(new ClickListener() {
+			@Override
+			public void clicked(InputEvent event, float x, float y) {
+				worlds.dupLevel(selected.level.aLevel);
+			}
+		});
+		deletebutton = new ImageButton(AssetLoader.Skin_level, "eraser");
 		deletebutton.setPosition(1460, 140);	
 		deletebutton.addListener(new ClickListener() {
 			@Override
@@ -817,13 +833,12 @@ public class LevelScreen implements Screen {
 								button.level.Link=links.toArray();
 						}
 						Gdx.app.debug("wirechem-LevelScreen", "Destruction du bouton :"+selected.level.aLevel);
-						//buttonLevels.removeValue(selected, true);
 						worlds.delLevel(selected.level.aLevel);
-						//selected.remove();
+						selectone();
 					}
 				}
 			});
-		deletelinker = new ImageButton(AssetLoader.Skin_level, "boss");
+		deletelinker = new ImageButton(AssetLoader.Skin_level, "cut");
 		deletelinker.setPosition(1560, 140);	
 		deletelinker.addListener(new ClickListener() {
 			@Override
@@ -842,7 +857,7 @@ public class LevelScreen implements Screen {
 					}
 				}
 			});
-		addbutton = new ImageButton(AssetLoader.Skin_level, "boss");
+		addbutton = new ImageButton(AssetLoader.Skin_level, "level");
 		addbutton.setPosition(1760, 540);	
 		addbutton.addListener(new ClickListener() {
 			@Override
@@ -850,7 +865,6 @@ public class LevelScreen implements Screen {
 				Level level=new Level(
 						worlds.getWorld(),
 						worlds.getFreeLevel(),
-						(int) (Math.random() * Integer.MAX_VALUE),
 						"Unknown",
 						"Unknown",
 						"Uk", new int[] { 0, 0, 0, 0, 0, 0 },
@@ -858,13 +872,9 @@ public class LevelScreen implements Screen {
 						(float)Math.random() * 750f, 0, 0, new Grid(3, 3), 0, 0, 0, 0, 99999, 99999,
 						99999, 99999, "", false, new int[][] {{}});
 				worlds.addLevel(level);	
-				//ButtonLevel button=new ButtonLevel(level, AssetLoader.ratio, true);
-				//buttonLevels.add(button);
-				//stage.addActor(button);
-				//button.addListener(buttonLevelslistener());
 				}
 			});
-		finisher = new ImageButton(AssetLoader.Skin_level, "boss");
+		finisher = new ImageButton(AssetLoader.Skin_level, "finish");
 		finisher.setSize(64, 64);
 		finisher.setPosition(1560, 40);	
 		finisher.addListener(new ClickListener() {
@@ -880,7 +890,7 @@ public class LevelScreen implements Screen {
 			}
 		});
 		signer = new ImageButton(AssetLoader.Skin_level, "add");
-		signer.setPosition(1660, 40);	
+		signer.setPosition(1280, AssetLoader.height-650);	
 		signer.addListener(new ClickListener() {
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
@@ -899,7 +909,7 @@ public class LevelScreen implements Screen {
 			}
 		});
 		adder = new ImageButton(AssetLoader.Skin_level, "add1");
-		adder.setPosition(1720, 40);	
+		adder.setPosition(1340, AssetLoader.height-650);	
 		adder.addListener(new ClickListener() {
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
@@ -926,15 +936,22 @@ public class LevelScreen implements Screen {
 				worlds.save(worlds.getName());
 			}
 		});
-		
+		vertibar=new VerticalGroup();
+		vertibar.setPosition(1600, AssetLoader.height-500);
+		vertibar.center();
+		vertibar.addActor(databaseSave);
+		vertibar.space(20f);
+		vertibar.addActor(deletebutton);
+		vertibar.addActor(addbutton);	
+		vertibar.addActor(duplicate);			
+		vertibar.addActor(deletelinker);
+		vertibar.addActor(unlocked);
+		vertibar.addActor(finisher);
+		vertibar.addActor(databaseSave);
 		group_debug=new Group();
-		group_debug.addActor(databaseSave);
 		group_debug.addActor(adder);
 		group_debug.addActor(signer);
-		group_debug.addActor(finisher);
-		group_debug.addActor(deletelinker);
-		group_debug.addActor(deletebutton);
-		group_debug.addActor(addbutton);	
+		group_debug.addActor(vertibar);	
 		
 		//**********************************************************
 		Gdx.app.debug("wirechem-LevelScreen", "Affichage du menu.");
@@ -990,6 +1007,16 @@ public class LevelScreen implements Screen {
 	@Override
 	public void dispose() {
 		stage.dispose();
+	}
+	
+	public void selectone() {
+		for(ButtonLevel button: buttonLevels) 
+			if (button!=null) {
+				selected=button;
+				selected.setChecked(true);
+				return;
+			}
+		return;
 	}
 
 	public void showlevel(ButtonLevel button) {

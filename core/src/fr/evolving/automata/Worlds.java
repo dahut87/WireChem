@@ -233,7 +233,18 @@ public class Worlds extends Actor {
 			if (this.usedlevel!=null && this.usedlevel.aLevel==levelid)
 				this.usedlevel=null;
 			onchanged(level);
-			this.showlevels();
+		}	
+	}
+	
+	public void dupLevel() {
+		dupLevel(usedlevel.aLevel);
+	}
+	
+	public void dupLevel(int levelid) {
+		Level level=(Level) findLevel(levelid).clone();
+		if (level!=null) {
+			level.aLevel=getFreeLevel();
+			addLevel(level);
 		}	
 	}
 	
@@ -243,7 +254,6 @@ public class Worlds extends Actor {
 	
 	public void addLevel(Level level) {
 		levels.add(level);
-		this.showlevels();
 		onchanged(level);
 	}
 	
@@ -308,10 +318,13 @@ public class Worlds extends Actor {
 	
 	public void unLockLevel() {
 		AssetLoader.Datahandler.user().setLevelunlock(0, usedlevel.id);
+		usedlevel.Locked=false;
 	}
 	
 	public void unLockLevel(int levelid) {
-		AssetLoader.Datahandler.user().setLevelunlock(0, levelid);
+		Level level=findLevel(levelid);
+		AssetLoader.Datahandler.user().setLevelunlock(0, level.id);
+		findLevel(levelid).Locked=false;
 	}
 	
 	public void set(String campaign) {

@@ -64,10 +64,8 @@ public class SplashScreen implements Screen {
 		if (AssetLoader.manager != null) {
 			batcher.begin();
 			batcher.setProjectionMatrix(AssetLoader.Camera.combined);
-			AssetLoader.empty.draw(batcher, (AssetLoader.width / 2) - 400f,
-					150f, 800f, 50f);
-			AssetLoader.full.draw(batcher, (AssetLoader.width / 2) - 400f,
-					150f, AssetLoader.manager.getProgress() * 800f, 50f);
+			AssetLoader.empty.draw(batcher, (AssetLoader.width / 2) - 400f, 150f, 800f, 50f);
+			AssetLoader.full.draw(batcher, (AssetLoader.width / 2) - 400f, 150f, AssetLoader.manager.getProgress() * 800f, 50f);
 			AssetLoader.manager.update();
 			batcher.end();
 		}
