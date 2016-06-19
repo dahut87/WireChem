@@ -190,6 +190,7 @@
         delcol:{ up:delcol, down:delcol_down }     
         delrow:{ up:delrow, down:delrow_down }        
         infos: { up: infos,down:infos_down }
+        boss: { up: boss }
         info_nrj: { up: nrj }
         info_cycle: { up: cycle } 
         info_temp: { up: temp } 
