@@ -190,7 +190,12 @@
         delcol:{ up:delcol, down:delcol_down }     
         delrow:{ up:delrow, down:delrow_down }        
         infos: { up: infos,down:infos_down }
-        boss: { up: boss }
+        finish: { up: finish }
+        level: { up: level }
+        duplicate: { up: duplicate }
+        cut: { up: cut }
+        pencil: { up: pencil }
+        eraser: { up: eraser }
         info_nrj: { up: nrj }
         info_cycle: { up: cycle } 
         info_temp: { up: temp } 
