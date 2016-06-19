@@ -51,8 +51,8 @@ public class Objectives extends Actor {
 		}
 		else
 		{
-			thevictory=worlds.getInformations().Victory_orig;
-			currentvictory=worlds.getInformations().Victory;
+			thevictory=worlds.getLevelData().Victory_orig;
+			currentvictory=worlds.getLevelData().Victory;
 		}
 		for (int i=0;i<thevictory.length;i++) {
 			if (thevictory[i] != 0) {

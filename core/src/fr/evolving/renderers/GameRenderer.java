@@ -33,7 +33,7 @@ public class GameRenderer {
 		} else if (layer == 1) {
 			batcher.begin();
 			batcher.setColor(0.25f, 0.25f, 0.25f, 1f);
-			if (GameScreen.worlds.getInformations().Cout>0 || GameScreen.worlds.getInformations().Tech>=1 || GameScreen.worlds.isDebug()) {
+			if (GameScreen.worlds.getLevelData().Cout>0 || GameScreen.worlds.getLevelData().Tech>=1 || GameScreen.worlds.isDebug()) {
 				batcher.draw(AssetLoader.Atlas_level.findRegion("barrehaut"), 0.0f,	AssetLoader.height - 198.0f, 1920.0f, 200.0f);
 				batcher.draw(AssetLoader.Atlas_level.findRegion("barrecentre"),	1480f, AssetLoader.height - 785.0f, 590f, 530.0f);
 			}

@@ -28,51 +28,51 @@ public class IconValue extends ImageTextButton{
 	{
 		switch(this.icon) {
 		case tech:
-			this.setText(String.valueOf(worlds.getInformations().Tech));
-			this.setVisible(worlds.getInformations().Tech>=1 || worlds.isDebug());
+			this.setText(String.valueOf(worlds.getLevelData().Tech));
+			this.setVisible(worlds.getLevelData().Tech>=1 || worlds.isDebug());
 			break;
 		case cout:
-			worlds.getInformations().Cout=worlds.getInformations().Cout_orig-worlds.getInformations().Cout_copperfiber-worlds.getInformations().Cout_transmuter;
-			this.setText(String.valueOf(worlds.getInformations().Cout));
-			if (worlds.getInformations().Cout>0.25*worlds.getInformations().Cout_orig)
+			worlds.getLevelData().Cout=worlds.getLevelData().Cout_orig-worlds.getLevelData().Cout_copperfiber-worlds.getLevelData().Cout_transmuter;
+			this.setText(String.valueOf(worlds.getLevelData().Cout));
+			if (worlds.getLevelData().Cout>0.25*worlds.getLevelData().Cout_orig)
 				this.setColor(1f, 1f, 1f, 1f);
-			else if  (worlds.getInformations().Cout>0) 
+			else if  (worlds.getLevelData().Cout>0) 
 				this.setColor(1f, 0.5f, 0.5f, 1f);
 			else 
 				this.setColor(1f, 0, 0, 1f);
-			this.setVisible(worlds.getInformations().Cout_orig>0 || worlds.isDebug());
+			this.setVisible(worlds.getLevelData().Cout_orig>0 || worlds.isDebug());
 			break;
 		case research:
 			this.setText(String.valueOf(worlds.ReadResearch()));
-			this.setVisible((worlds.getInformations().Tech>=1 && worlds.ReadResearch()>0) || worlds.isDebug());
+			this.setVisible((worlds.getLevelData().Tech>=1 && worlds.ReadResearch()>0) || worlds.isDebug());
 			break;
 		case cycle:
 			this.setVisible(worlds.getWorld()>=1 || worlds.isDebug());
 			if (showmaximum)
-				this.setText(String.valueOf(worlds.getInformations().Cycle)+"/"+String.valueOf(worlds.getInformations().Maxcycle));	
+				this.setText(String.valueOf(worlds.getLevelData().Cycle)+"/"+String.valueOf(worlds.getLevelData().Maxcycle));	
 			else
-				this.setText(String.valueOf(worlds.getInformations().Cycle));
+				this.setText(String.valueOf(worlds.getLevelData().Cycle));
 			break;
 		case temp:
 			this.setVisible(worlds.getWorld()>=2 || worlds.isDebug());
 			if (showmaximum)
-				this.setText(String.valueOf(worlds.getInformations().Temp)+"/"+String.valueOf(worlds.getInformations().Maxtemp));	
+				this.setText(String.valueOf(worlds.getLevelData().Temp)+"/"+String.valueOf(worlds.getLevelData().Maxtemp));	
 			else
-				this.setText(String.valueOf(worlds.getInformations().Temp));
+				this.setText(String.valueOf(worlds.getLevelData().Temp));
 			break;
 		case rayon:
 			this.setVisible(worlds.getWorld()>=3 || worlds.isDebug());
 			if (showmaximum)
-				this.setText(String.valueOf(worlds.getInformations().Rayon)+"/"+String.valueOf(worlds.getInformations().Maxrayon));	
+				this.setText(String.valueOf(worlds.getLevelData().Rayon)+"/"+String.valueOf(worlds.getLevelData().Maxrayon));	
 			else
-				this.setText(String.valueOf(worlds.getInformations().Rayon));
+				this.setText(String.valueOf(worlds.getLevelData().Rayon));
 			break;
 		case nrj:
 			this.setVisible(worlds.getWorld()>=4 || worlds.isDebug());
 			if (showmaximum)
-				this.setText(String.valueOf(worlds.getInformations().Nrj)+"/"+String.valueOf(worlds.getInformations().Maxnrj));	
+				this.setText(String.valueOf(worlds.getLevelData().Nrj)+"/"+String.valueOf(worlds.getLevelData().Maxnrj));	
 			else
-				this.setText(String.valueOf(worlds.getInformations().Nrj));
+				this.setText(String.valueOf(worlds.getLevelData().Nrj));
 		break;
 		}
 		

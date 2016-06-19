@@ -204,7 +204,7 @@ public class GameScreen implements Screen {
 		Gdx.app.debug("wirechem-GameScreen","Préparation du screen");
 		this.worlds = aworlds;
 		this.worlds.prepareLevel(false);
-		this.level=worlds.getInformations();
+		this.level=worlds.getLevelData();
 		if (worlds.isDebug())
 			tocreate = new String[] { "run", "stop", "speed", "separator", "move#", "zoomp#","zoomm#", "infos#", "separator", "raz", "save", "levels", "tree",	"exits", "separator", "screen", "sound", "tuto", "grid", "settings", "separator", "stat","separator","unlocked","delrow","delcol","addrow","addcol","database" };
 		else if (level.Tech<1)
@@ -248,7 +248,7 @@ public class GameScreen implements Screen {
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
 				if (worlds.isDebug())
-					worlds.getInformations().Cycle=5000;
+					worlds.getLevelData().Cycle=5000;
 			}
 		});
 		temp = new IconValue(Icon.temp,worlds, AssetLoader.Skin_level);
@@ -257,7 +257,7 @@ public class GameScreen implements Screen {
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
 				if (worlds.isDebug())
-					worlds.getInformations().Temp=5000;
+					worlds.getLevelData().Temp=5000;
 			}
 		});
 		rayon = new IconValue(Icon.rayon,worlds, AssetLoader.Skin_level);
@@ -266,7 +266,7 @@ public class GameScreen implements Screen {
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
 				if (worlds.isDebug())
-					worlds.getInformations().Rayon=5000;
+					worlds.getLevelData().Rayon=5000;
 			}
 		});
 		nrj = new IconValue(Icon.nrj,worlds, AssetLoader.Skin_level);
@@ -275,7 +275,7 @@ public class GameScreen implements Screen {
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
 				if (worlds.isDebug())
-					worlds.getInformations().Nrj=5000;
+					worlds.getLevelData().Nrj=5000;
 			}
 		});
 		tech = new IconValue(Icon.tech,worlds, AssetLoader.Skin_level);
@@ -284,7 +284,7 @@ public class GameScreen implements Screen {
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
 				if (worlds.isDebug())
-					worlds.getInformations().Tech=12;
+					worlds.getLevelData().Tech=12;
 			}
 		});
 		cout = new IconValue(Icon.cout,worlds, AssetLoader.Skin_level);
@@ -293,7 +293,7 @@ public class GameScreen implements Screen {
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
 				if (worlds.isDebug())
-					worlds.getInformations().Cout_orig=5000;
+					worlds.getLevelData().Cout_orig=5000;
 			}
 		});
 		research = new IconValue(Icon.research,worlds, AssetLoader.Skin_level);
@@ -813,7 +813,7 @@ public class GameScreen implements Screen {
 		stage_info.addActor(info_choose);
 		//stage_tooltip.addActor(tooltip);
 		stage.addActor(horizbar);
-		if (worlds.getInformations().Cout>0 || worlds.getInformations().Tech>=1 || worlds.isDebug()) {
+		if (worlds.getLevelData().Cout>0 || worlds.getLevelData().Tech>=1 || worlds.isDebug()) {
 			stage.addActor(vertibar);
 			stage.addActor(buttonlevel);
 			stage.addActor(menu);

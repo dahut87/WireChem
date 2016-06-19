@@ -35,7 +35,7 @@ public class VertiBarre extends Actor {
 		Gdx.app.debug("wirechem-VertiBarre", "Menu:" + Barre.length+ " elements");
 		for (int i = 0; i < Barre.length; i++)
 		{
-			if ((Transmuter.Class.values()[i]!=Transmuter.Class.Scenario && (worlds.getInformations().Tech>=0 || Transmuter.Class.values()[i]==Transmuter.Class.Structure)) || worlds.isDebug())
+			if ((Transmuter.Class.values()[i]!=Transmuter.Class.Scenario && (worlds.getLevelData().Tech>=0 || Transmuter.Class.values()[i]==Transmuter.Class.Structure)) || worlds.isDebug())
 			{
 				Barre[i] = new ImageTextButton(Transmuter.Class.values()[i].toString(), AssetLoader.Skin_level);
 				table.addActor(Barre[i]);

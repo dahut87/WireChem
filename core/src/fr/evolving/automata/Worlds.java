@@ -19,6 +19,7 @@ public class Worlds extends Actor {
 	private State state;
 	private boolean Debug;
 	private int research;
+	private Level lastchange;
 	
 	public enum State {pause,simulating,notloaded,databasefailed};
 	
@@ -43,7 +44,7 @@ public class Worlds extends Actor {
 		this.ReadTransmuters();
 		if (state==State.notloaded)
 			create(name);
-		onchanged();
+		onchanged(null);
 	}
 	
 	public void ModResearch(int addsub) {
@@ -79,11 +80,14 @@ public class Worlds extends Actor {
 	
 	public void ReadTransmuters() {
 		Transmuters=AssetLoader.Datahandler.user().getTransmuters(0);
-		//String test=Transmuters.get(1).getInformations();
 		if (Transmuters==null)
 			state=State.notloaded;
 		else
 			state=State.pause;
+	}
+	
+	public Array<Transmuter> getTransmuters() {
+		return Transmuters;
 	}
 	
 	public Array<String> ViewGrids() {
@@ -114,24 +118,25 @@ public class Worlds extends Actor {
 	}
 	
 	public void Forcereload() {
-		onchanged();
+		onchanged(null);
 	}
 	
-	public void onchanged() {
+	public void onchanged(Level change) {
 		ChangeEvent event=new ChangeEvent();
 		event.setTarget(this);
 		event.setListenerActor(this);	
 		event.setStage(this.getStage());
+		lastchange=change;
 		if (event.getStage()!=null) 
 			this.fire(event);
 	}
 	
-	public Array<Level> getLevels() {
+	public Array<Level> getLevels(int world) {
 		Array<Level> tempworld=new Array<Level>();
 		if (state!=State.notloaded && this.levels!=null)
 		{
 			for(Level level:levels)
-				if (level!=null && level.aWorld==usedworld)
+				if (level!=null && level.aWorld==world)
 				{
 					if (level.aLevel==0)
 						level.Locked=false;
@@ -141,6 +146,14 @@ public class Worlds extends Actor {
 		}
 		else
 			return null;
+	}
+	
+	public Array<Level> getLevels() {
+			return getLevels(this.usedworld);
+	}
+	
+	public Array<Level> getAllLevels() {
+		return levels;
 	}
 	
 	public void updateUnlockLevels() {
@@ -180,20 +193,25 @@ public class Worlds extends Actor {
 		usedlevel.Grid_orig = (Grid)usedlevel.Grid.clone();
 	}
 	
-	public void setLevel(int alevel) {
-		if (state!=State.notloaded)
-		if (usedworld>=0) {
-			Array<Level> tempworld=getLevels();
-			for(Level level:tempworld)
-				if (level.aLevel==alevel)
-				{
-					usedlevel=level;
-					return;
-				}
-		}
+	public Level findLevel(int levelid) {
+		if (state!=State.notloaded) 
+			if (usedworld>=0) {
+				Array<Level> tempworld=getLevels();
+				for(Level level:tempworld)
+					if (level.aLevel==levelid)
+						return level;
+			}
+		return null;
 	}
 	
-	public Level getInformations() {
+	public void setLevel(int levelid) {
+		Level level=findLevel(levelid);
+		if (level!=null)
+			usedlevel=level;
+		return;
+	}
+	
+	public Level getLevelData() {
 		return usedlevel;
 	}
 	
@@ -205,22 +223,49 @@ public class Worlds extends Actor {
 	}
 	
 	public void delLevel() {
-		usedlevel=null;
+		delLevel(this.usedlevel.aLevel);
+	}
+	
+	public void delLevel(int levelid) {
+		Level level=findLevel(levelid);
+		if (level!=null) {
+			levels.removeValue(level, false);
+			if (this.usedlevel!=null && this.usedlevel.aLevel==levelid)
+				this.usedlevel=null;
+			onchanged(level);
+			this.showlevels();
+		}	
+	}
+	
+	public Level getChange() {
+		return lastchange;
+	}
+	
+	public void addLevel(Level level) {
+		levels.add(level);
+		this.showlevels();
+		onchanged(level);
+	}
+	
+	public void showlevels() {
+		Gdx.app.debug("wirechem-worlds","Affichage des niveaux:");
+		for(Level level: levels)
+			Gdx.app.debug("wirechem-GameScreen","Monde:"+level.aWorld+" Niveau:"+level.aLevel+" Nom:"+level.Name+" Debloque:"+level.Locked+" Special:"+level.Special+" id:"+level.id);
 	}
 	
 	public void setWorld(int world) {
 		if (state!=State.notloaded)
 		if (world<getMaxWorlds()) {
-			delLevel();
+			usedlevel=null;
 			usedworld=world;
-			onchanged();
+			onchanged(null);
 		}
 	}
 	
 	public void setMaxWorldLevel() {
 		usedworld=getMaxUnlockWorlds();
 		usedlevel=getMaxUnlockLevel();
-		onchanged();
+		onchanged(null);
 	}
 	
 	public boolean isFirstWorld() {
@@ -239,18 +284,18 @@ public class Worlds extends Actor {
 	public void NextWorld() {
 		if (state!=State.notloaded)
 		if (usedworld<getMaxWorlds()) {
-			delLevel();
+			usedlevel=null;
 			usedworld++;
-			onchanged();
+			onchanged(null);
 		}
 	}
 	
 	public void PreviousWorld() {
 		if (state!=State.notloaded)
 		if (usedworld>0) {
-			delLevel();
+			usedlevel=null;
 			usedworld--;
-			onchanged();
+			onchanged(null);
 		}
 	}
 	
@@ -263,6 +308,10 @@ public class Worlds extends Actor {
 	
 	public void unLockLevel() {
 		AssetLoader.Datahandler.user().setLevelunlock(0, usedlevel.id);
+	}
+	
+	public void unLockLevel(int levelid) {
+		AssetLoader.Datahandler.user().setLevelunlock(0, levelid);
 	}
 	
 	public void set(String campaign) {
@@ -312,6 +361,33 @@ public class Worlds extends Actor {
 		for (Level level : levels)
 			if (level != null && level.aWorld > max)
 				max = level.aWorld;
+		return max;
+	}
+	
+	public int getFreeLevel() {
+		return getFreeLevel(usedworld);
+	}
+	
+	public int getFreeLevel(int world) {
+		int max = getMaxLevel(world);
+		if (max==0)
+			return 0;
+		int free = 0;
+		for (;free<=max;free++)
+			if (findLevel(free)==null)
+				return free;
+		return free;
+	}
+	
+	public int getMaxLevel() {
+		return getMaxLevel(usedworld);
+	}
+		
+	public int getMaxLevel(int world) {
+		int max = 0;
+		for (Level level : levels)
+			if (level != null && level.aWorld == world && level.aLevel>max)
+				max = level.aLevel;
 		return max;
 	}
 	

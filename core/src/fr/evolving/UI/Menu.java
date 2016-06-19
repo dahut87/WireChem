@@ -231,18 +231,18 @@ public class Menu extends Actor {
 			this.setMenuTile(0, 4, 87, "gold_pen",0);
 			this.setMenuTile(1, 4, 88, "lock_pen",0);
 		}
-		if (worlds.getInformations().Cout_orig>=0 || worlds.isDebug())
+		if (worlds.getLevelData().Cout_orig>=0 || worlds.isDebug())
 		{
 			this.setMenuTile(0, 7, 71, "copper_pen",0);
 			this.setMenuTile(1, 7, 72, "copper_brush",0);
 			this.setMenuTile(2, 7, 73, "copper_eraser",0);
 			this.setMenuTile(3, 3, 79, "cleaner",0);
 		}
-		if (worlds.getInformations().Tech>=0 || worlds.isDebug())
+		if (worlds.getLevelData().Tech>=0 || worlds.isDebug())
 		{
 			this.setMenuTile(0, 5, 77, "transmuter_eraser",0);
 		}
-		if (worlds.getInformations().Tech>=2 || worlds.isDebug())
+		if (worlds.getLevelData().Tech>=2 || worlds.isDebug())
 		{
 			this.setMenuTile(1, 5, 70, "blank",0);
 			this.setMenuTile(0, 6, 74, "fiber_pen",0);
@@ -356,7 +356,7 @@ public class Menu extends Actor {
 		if (transmuter != null) {
 			int type=transmuter.getaClass().ordinal();
 			Gdx.app.debug("wirechem-Menu", "Transmuter find:"+ transmuter.getName() + " Angle:" + Angle + " coords"	+ x + "," + y+" page:"+page+" type:"+type);
-			if (transmuter.getTechnology()<=worlds.getInformations().Tech || worlds.isDebug()) {
+			if (transmuter.getTechnology()<=worlds.getLevelData().Tech || worlds.isDebug()) {
 				Gdx.app.debug("wirechem-Menu", "Autorisé par le niveau");
 				if (!transmuter.isShowed() && transmuter.isUpgraded() && !worlds.isDebug())
 					layer = ((TiledMapTileLayer) map[page][type].getLayers().get(2));

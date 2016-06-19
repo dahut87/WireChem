@@ -8,7 +8,9 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
+import com.badlogic.gdx.utils.Array;
 
+import fr.evolving.UI.ButtonLevel;
 import fr.evolving.assets.AssetLoader;
 import fr.evolving.effects.Laser;
 import fr.evolving.screens.LevelScreen;
@@ -121,56 +123,18 @@ public class LevelRenderer {
 			shapeRenderer.rect(1470, 10, 440, AssetLoader.height - 20);
 		shapeRenderer.end();
 		if (LevelScreen.buttonLevels != null)
-			for (int i = 0; i < LevelScreen.buttonLevels.length; i++) {
-				if (LevelScreen.buttonLevels[i] != null) {
-					for (int[] item : LevelScreen.buttonLevels[i].level.Link) {
-						int found = -1;
-						for (int j = 0; j < LevelScreen.buttonLevels.length; j++) {
-							if ((item.length == 2)
-									&& (LevelScreen.buttonLevels[j] != null)
-									&& (LevelScreen.buttonLevels[j].level.aWorld == item[0])
-									&& (LevelScreen.buttonLevels[j].level.aLevel == item[1])) {
-								found = j;
-								break;
-							}
-						}
-						if (found != -1) {
+			for (int i=0;i<LevelScreen.buttonLevels.size;i++)
+			{
+				ButtonLevel button1=LevelScreen.buttonLevels.get(i);
+				for (int[] item : button1.level.Link)
+					for (ButtonLevel button2 : LevelScreen.buttonLevels)
+						if ((item.length == 2) && (button2.level.aWorld == item[0]) && (button2.level.aLevel == item[1])) 
 							if (!LevelScreen.worlds.isDebug())
-								Laser.draw(
-										batcher,
-										LevelScreen.buttonLevels[i].level.X,
-										LevelScreen.buttonLevels[i].level.Y
-												* AssetLoader.ratio,
-										LevelScreen.buttonLevels[found].level.X,
-										LevelScreen.buttonLevels[found].level.Y
-												* AssetLoader.ratio,
-										10,
-										0.5f,
-										!LevelScreen.buttonLevels[found].level.Locked,
-										LevelScreen.buttonLevels[i]
-												.getLevelcolor(),
-										LevelScreen.buttonLevels[found]
-												.getLevelcolor());
+								Laser.draw(batcher,button1.level.X,button1.level.Y* AssetLoader.ratio,button2.level.X,button2.level.Y* AssetLoader.ratio,10,0.5f,!button2.level.Locked,	button1.getLevelcolor(),button2.getLevelcolor());
 							else
-								Laser.drawnotsoold(
-										shapeRenderer,
-										LevelScreen.buttonLevels[i].level.X,
-										LevelScreen.buttonLevels[i].level.Y
-												* AssetLoader.ratio,
-										LevelScreen.buttonLevels[found].level.X,
-										LevelScreen.buttonLevels[found].level.Y
-												* AssetLoader.ratio,
-										10,
-										0.5f,
-										!LevelScreen.buttonLevels[found].level.Locked,
-										LevelScreen.buttonLevels[i]
-												.getLevelcolor(),
-										LevelScreen.buttonLevels[found]
-												.getLevelcolor());
-						}
-					}
-				}
-			}
-	}
+								Laser.drawnotsoold(shapeRenderer,button1.level.X,button1.level.Y* AssetLoader.ratio,button2.level.X,button2.level.Y* AssetLoader.ratio,10,0.5f,!button2.level.Locked,	button1.getLevelcolor(),button2.getLevelcolor());
+							
+			}		
 
+		}
 }

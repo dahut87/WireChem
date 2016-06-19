@@ -35,6 +35,7 @@ import fr.evolving.UI.Worldlist;
 import fr.evolving.assets.AssetLoader;
 import fr.evolving.assets.InitWorlds;
 import fr.evolving.assets.Preference;
+import fr.evolving.automata.Grid;
 import fr.evolving.automata.Level;
 import fr.evolving.automata.Transmuter;
 import fr.evolving.automata.Worlds;
@@ -44,7 +45,7 @@ import fr.evolving.dialogs.WarningDialog;
 import fr.evolving.renderers.LevelRenderer;
 
 public class LevelScreen implements Screen {
-	public ButtonLevel[] buttonLevels;
+	public Array<ButtonLevel> buttonLevels;
 	private LevelRenderer Renderer;
 	private float runTime;
 	private Timer ScrollTimer;
@@ -52,7 +53,7 @@ public class LevelScreen implements Screen {
 	private Stage stage;
 	private Table table;
 	private WarningDialog dialog;
-	private ImageButton Previous, Next, Exit, logosmall, databaseSave, adder, signer;
+	private ImageButton Previous, Next, Exit, logosmall, databaseSave, adder, signer, finisher, deletelinker, deletebutton, addbutton;
 	public Image MenuSolo, MenuMulti, MenuScenario;
 	private ImageTextButton cout, tech, cycle, temp, rayon, nrj, up_cycle, up_temp, up_rayon, up_nrj, research, up;
 	private TextButton buttonConnect, buttonPlay, buttonStat, buttonSave, buttonApply, buttonPlaythis;
@@ -66,7 +67,7 @@ public class LevelScreen implements Screen {
 	public int addervalue;
 	public ButtonGroup chooser;
 	public Group group_init, group_stat, group_level, group_base, group_debug, group_choose, group_other;
-	
+	public ClickListener buttonLevelslistener;
 	public void play() {
 		if (worlds.getState()!=State.notloaded && worlds.getState()!=State.databasefailed) {
 			if (worlds.getWorld() < 0)
@@ -114,12 +115,11 @@ public class LevelScreen implements Screen {
 
 	public void initlevel() {
 		selected = null;
-		if (buttonLevels != null)
-			for (int j = 0; j < 10; j++)
-				if (buttonLevels[j] != null) {
-					buttonLevels[j].remove();
-					buttonLevels[j] = null;
-				}
+		if (buttonLevels==null)
+			buttonLevels=new Array<ButtonLevel>();
+		for(ButtonLevel button: buttonLevels)
+			button.remove();
+		buttonLevels.clear();
 	}
 
 	public void level() {
@@ -147,18 +147,40 @@ public class LevelScreen implements Screen {
 		group_stat.setVisible(true);
 		group_base.setVisible(false);
 	}
+	
+	public ClickListener buttonLevelslistener() {
+		return new ClickListener() {
+		@Override
+		public void enter(InputEvent event, float x, float y,
+				int pointer, Actor fromActor) {
+			ButtonLevel abutton = (ButtonLevel) event
+					.getListenerActor();
+			Gdx.app.debug("wirechem-LevelScreen","Enter button ");
+			if (!abutton.isChecked() && (!abutton.level.Locked || worlds.isDebug()))
+				showlevel(abutton);
+		}
+
+		public void exit(InputEvent event, float x, float y,
+				int pointer, Actor fromActor) {
+			ButtonLevel abutton = (ButtonLevel) event
+					.getListenerActor();
+			Gdx.app.debug("wirechem-LevelScreen","Enter button ");
+			if (!abutton.isChecked() && (!abutton.level.Locked || worlds.isDebug()))
+				showlevel(abutton);
+		}
+
+		public void touchDragged(InputEvent event, float x,
+				float y, int pointer) {
+			ButtonLevel abutton = (ButtonLevel) event.getListenerActor();
+			if (worlds.isDebug()) {
+				abutton.setPosition(event.getStageX() - 56,	event.getStageY() - 20);
+			}
+		}
+	};
+	}
 
 	public void loadWorld() {
-		int i = 0;
-		if (buttonLevels != null)
-			for (int j = 0; j < 10; j++) {
-				if (buttonLevels[j] != null) {
-					buttonLevels[j].remove();
-					buttonLevels[j] = null;
-				}
-			}
-		buttonLevels = null;
-		buttonLevels = new ButtonLevel[10];
+		initlevel();
 		Array<Level> levels=worlds.getLevels();
 		if (levels!=null)
 		for (Level level : levels) {
@@ -167,44 +189,16 @@ public class LevelScreen implements Screen {
 					level.Name=AssetLoader.language.get("[level"+(level.aWorld+1)+"/"+(level.aLevel+1)+"-name]");
 				if (level.Description.isEmpty())
 					level.Description=AssetLoader.language.get("[level"+(level.aWorld+1)+"/"+(level.aLevel+1)+"-desc]");		
-				buttonLevels[i] = new ButtonLevel(level, AssetLoader.ratio, true);
-				if (worlds.isDebug()) buttonLevels[i].setDisabled(false);
+				ButtonLevel buttonlevel= new ButtonLevel(level, AssetLoader.ratio, true);
+				buttonLevels.add(buttonlevel);
+				if (worlds.isDebug()) buttonlevel.setDisabled(false);
 				Gdx.app.debug("wirechem-LevelScreen", "Ajout du niveau :"+ level.Name + " N°" + String.valueOf(level.aLevel));
-				buttonLevels[i++].addListener(new ClickListener() {
-					@Override
-					public void enter(InputEvent event, float x, float y,
-							int pointer, Actor fromActor) {
-						ButtonLevel abutton = (ButtonLevel) event
-								.getListenerActor();
-						Gdx.app.debug("wirechem-LevelScreen","Enter button ");
-						if (!abutton.isChecked() && (!abutton.level.Locked || worlds.isDebug()))
-							showlevel(abutton);
-					}
-
-					public void exit(InputEvent event, float x, float y,
-							int pointer, Actor fromActor) {
-						ButtonLevel abutton = (ButtonLevel) event
-								.getListenerActor();
-						Gdx.app.debug("wirechem-LevelScreen","Enter button ");
-						if (!abutton.isChecked() && (!abutton.level.Locked || worlds.isDebug()))
-							showlevel(abutton);
-					}
-
-					public void touchDragged(InputEvent event, float x,
-							float y, int pointer) {
-						ButtonLevel abutton = (ButtonLevel) event.getListenerActor();
-						if (worlds.isDebug()) {
-							abutton.setPosition(event.getStageX() - 56,	event.getStageY() - 20);
-						}
-					}
-				});
+				
+				buttonlevel.addListener(buttonLevelslistener());
 			}
 		}
-		for (int j = 0; j < 10; j++) {
-			if (buttonLevels[j] != null) {
-				stage.addActor(buttonLevels[j]);
-			}
-		}
+		for (ButtonLevel button : buttonLevels)
+				stage.addActor(button);
 	}
 
 	public LevelScreen(Worlds aworlds) {
@@ -215,20 +209,32 @@ public class LevelScreen implements Screen {
 			public void changed(ChangeEvent event, Actor actor) {
 				if (worlds.getState()!=Worlds.State.notloaded && worlds.getWorld()>=0)
 				{
-					LevelScreen.this.loadWorld();
-					if (buttonLevels!=null)
-						for (int j = 0; j < 10; j++)
-						{
-							if (buttonLevels[j]!=null) {
-								buttonLevels[j].setChecked(false);
-								if (worlds.getInformations()!=null && buttonLevels[j].level.id == worlds.getInformations().id) {
-									selected=buttonLevels[j];
-									break;
-								}
+					Level changed=worlds.getChange();
+					if (changed!=null) {
+						for (int i=0;i<buttonLevels.size;i++)
+							if (buttonLevels.get(i).level.aLevel==changed.aLevel)
+							{
+								buttonLevels.get(i).remove();
+								buttonLevels.removeIndex(i);
+								return;
 							}
-						}
-					if (worlds.getInformations()==null)
-						selected=buttonLevels[0];
+					ButtonLevel button=new ButtonLevel(changed, AssetLoader.ratio, true);
+					buttonLevels.add(button);
+					stage.addActor(button);
+					button.addListener(buttonLevelslistener());	
+					return;
+					}
+					LevelScreen.this.loadWorld();
+					for (ButtonLevel button : buttonLevels)
+					{
+						button.setChecked(false);
+							if (worlds.getLevelData()!=null && button.level.id == worlds.getLevelData().id) {
+								selected=button;
+								break;
+							}
+					}
+					if (worlds.getLevelData()==null)
+						selected=buttonLevels.first();
 					if (selected!=null) {
 						selected.setChecked(true);
 						buttonPlay.setVisible(true);
@@ -751,9 +757,8 @@ public class LevelScreen implements Screen {
 				if (!group_init.isVisible())
 				if (logosmall.isChecked()) {
 					if (buttonLevels != null)
-						for (int j = 0; j < 10; j++) 
-							if (buttonLevels[j] != null)
-								buttonLevels[j].setDisabled(false);
+						for (ButtonLevel button : buttonLevels) 
+							button.setDisabled(false);
 					worlds.ActivateDebug();
 					Next.setVisible(!worlds.isRealLastWorld());
 					group_debug.setVisible(true);
@@ -764,9 +769,8 @@ public class LevelScreen implements Screen {
 				}
 				else {
 					if (buttonLevels != null)
-						for (int j = 0; j < 10; j++)
-							if (buttonLevels[j] != null) 
-								buttonLevels[j].setDisabled(buttonLevels[j].level.Locked);
+						for (ButtonLevel button : buttonLevels) 
+							button.setDisabled(button.level.Locked);
 					worlds.DesactivateDebug();
 					worlds.updateUnlockLevels();
 					worlds.setMaxWorldLevel();
@@ -787,6 +791,94 @@ public class LevelScreen implements Screen {
 		//Group Debug
 		//**********************************************************
 		Gdx.app.debug("wirechem-LevelScreen", "Création du groupe Debug.");
+		deletebutton = new ImageButton(AssetLoader.Skin_level, "boss");
+		deletebutton.setPosition(1460, 140);	
+		deletebutton.addListener(new ClickListener() {
+			@Override
+			public void clicked(InputEvent event, float x, float y) {
+				if (selected!=null) {
+						for (int i=0;i<buttonLevels.size;i++) {
+							ButtonLevel button=buttonLevels.get(i);
+								Array<int[]> links=new Array<int[]>(button.level.Link);
+								for(int[] link: links)
+									if (link.length==2 && link[0]==selected.level.aWorld && link[1]==selected.level.aLevel) 
+									{
+										if (i==buttonLevels.size-1)
+											links.removeValue(link, true);
+										else {
+											for (int j=i+1;j<buttonLevels.size;j++) {
+												if (buttonLevels.get(j)!=null) {
+													link[1]=j;
+													break;
+												}
+											}
+										}
+									}
+								button.level.Link=links.toArray();
+						}
+						Gdx.app.debug("wirechem-LevelScreen", "Destruction du bouton :"+selected.level.aLevel);
+						//buttonLevels.removeValue(selected, true);
+						worlds.delLevel(selected.level.aLevel);
+						//selected.remove();
+					}
+				}
+			});
+		deletelinker = new ImageButton(AssetLoader.Skin_level, "boss");
+		deletelinker.setPosition(1560, 140);	
+		deletelinker.addListener(new ClickListener() {
+			@Override
+			public void clicked(InputEvent event, float x, float y) {
+				if (selected!=null) {
+						for (ButtonLevel button : buttonLevels) {
+								Array<int[]> links=new Array<int[]>(button.level.Link);
+								for(int[] link: links)
+									if (link.length==2 && link[0]==selected.level.aWorld && link[1]==selected.level.aLevel) 
+									{
+										Gdx.app.debug("wirechem-LevelScreen", "Destruction du lien :"+selected.level.aLevel);
+										links.removeValue(link, true);
+									}
+								button.level.Link=links.toArray();
+						}
+					}
+				}
+			});
+		addbutton = new ImageButton(AssetLoader.Skin_level, "boss");
+		addbutton.setPosition(1760, 540);	
+		addbutton.addListener(new ClickListener() {
+			@Override
+			public void clicked(InputEvent event, float x, float y) {
+				Level level=new Level(
+						worlds.getWorld(),
+						worlds.getFreeLevel(),
+						(int) (Math.random() * Integer.MAX_VALUE),
+						"Unknown",
+						"Unknown",
+						"Uk", new int[] { 0, 0, 0, 0, 0, 0 },
+						new int[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, (float)Math.random() * 1000f,
+						(float)Math.random() * 750f, 0, 0, new Grid(3, 3), 0, 0, 0, 0, 99999, 99999,
+						99999, 99999, "", false, new int[][] {{}});
+				worlds.addLevel(level);	
+				//ButtonLevel button=new ButtonLevel(level, AssetLoader.ratio, true);
+				//buttonLevels.add(button);
+				//stage.addActor(button);
+				//button.addListener(buttonLevelslistener());
+				}
+			});
+		finisher = new ImageButton(AssetLoader.Skin_level, "boss");
+		finisher.setSize(64, 64);
+		finisher.setPosition(1560, 40);	
+		finisher.addListener(new ClickListener() {
+			@Override
+			public void clicked(InputEvent event, float x, float y) {
+				if (selected!=null) {
+					selected.level.Special=!selected.level.Special;
+					if (selected.level.Special)
+						finisher.setColor(AssetLoader.Skin_level.getColor("red"));
+					else
+						finisher.setColor(AssetLoader.Skin_level.getColor("black"));
+				}
+			}
+		});
 		signer = new ImageButton(AssetLoader.Skin_level, "add");
 		signer.setPosition(1660, 40);	
 		signer.addListener(new ClickListener() {
@@ -839,7 +931,12 @@ public class LevelScreen implements Screen {
 		group_debug.addActor(databaseSave);
 		group_debug.addActor(adder);
 		group_debug.addActor(signer);
+		group_debug.addActor(finisher);
+		group_debug.addActor(deletelinker);
+		group_debug.addActor(deletebutton);
+		group_debug.addActor(addbutton);	
 		
+		//**********************************************************
 		Gdx.app.debug("wirechem-LevelScreen", "Affichage du menu.");
 		if (worlds.getWorld() != -1)
 			level();
@@ -962,6 +1059,12 @@ public class LevelScreen implements Screen {
 			up.setVisible(false);
 		Victory.setVisible(button.level.Cout_orig > 0 || worlds.isDebug());
 		Victory.setVictory(button.level.Victory_orig);
+		if (worlds.isDebug()) {
+			if (button.level.Special)
+				finisher.setColor(AssetLoader.Skin_level.getColor("red"));
+			else
+				finisher.setColor(AssetLoader.Skin_level.getColor("black"));				
+		}
 		if (selected != null)
 			selected.setChecked(false);
 		selected = button;
