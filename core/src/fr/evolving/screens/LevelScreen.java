@@ -42,6 +42,7 @@ import fr.evolving.automata.Grid;
 import fr.evolving.automata.Level;
 import fr.evolving.automata.Transmuter;
 import fr.evolving.automata.Worlds;
+import fr.evolving.automata.Worlds.LinkDelMethod;
 import fr.evolving.automata.Worlds.State;
 import fr.evolving.database.Base;
 import fr.evolving.dialogs.WarningDialog;
@@ -187,7 +188,11 @@ public class LevelScreen implements Screen {
 				if (level.Name.isEmpty())
 					level.Name=AssetLoader.language.get("[level"+(level.aWorld+1)+"/"+(level.aLevel+1)+"-name]");
 				if (level.Description.isEmpty())
-					level.Description=AssetLoader.language.get("[level"+(level.aWorld+1)+"/"+(level.aLevel+1)+"-desc]");		
+					try {
+						level.Description=AssetLoader.language.get("[level"+(level.aWorld+1)+"/"+(level.aLevel+1)+"-desc]");
+					}
+					catch (Exception E) {}
+					finally {level.Description="";}
 				ButtonLevel buttonlevel= new ButtonLevel(level, AssetLoader.ratio, true);
 				buttonLevels.add(buttonlevel);
 				if (worlds.isDebug()) buttonlevel.setDisabled(false);
@@ -813,25 +818,6 @@ public class LevelScreen implements Screen {
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
 				if (selected!=null) {
-						for (int i=0;i<buttonLevels.size;i++) {
-							ButtonLevel button=buttonLevels.get(i);
-								Array<int[]> links=new Array<int[]>(button.level.Link);
-								for(int[] link: links)
-									if (link.length==2 && link[0]==selected.level.aWorld && link[1]==selected.level.aLevel) 
-									{
-										if (i==buttonLevels.size-1)
-											links.removeValue(link, true);
-										else {
-											for (int j=i+1;j<buttonLevels.size;j++) {
-												if (buttonLevels.get(j)!=null) {
-													link[1]=j;
-													break;
-												}
-											}
-										}
-									}
-								button.level.Link=links.toArray();
-						}
 						Gdx.app.debug("wirechem-LevelScreen", "Destruction du bouton :"+selected.level.aLevel);
 						worlds.delLevel(selected.level.aLevel);
 						selectone();
@@ -844,16 +830,8 @@ public class LevelScreen implements Screen {
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
 				if (selected!=null) {
-						for (ButtonLevel button : buttonLevels) {
-								Array<int[]> links=new Array<int[]>(button.level.Link);
-								for(int[] link: links)
-									if (link.length==2 && link[0]==selected.level.aWorld && link[1]==selected.level.aLevel) 
-									{
-										Gdx.app.debug("wirechem-LevelScreen", "Destruction du lien :"+selected.level.aLevel);
-										links.removeValue(link, true);
-									}
-								button.level.Link=links.toArray();
-						}
+						Gdx.app.debug("wirechem-LevelScreen", "Destruction des liens :"+selected.level.aLevel);
+						worlds.delLink(selected.level.aLevel, LinkDelMethod.rebase);
 					}
 				}
 			});
@@ -937,7 +915,7 @@ public class LevelScreen implements Screen {
 			}
 		});
 		vertibar=new VerticalGroup();
-		vertibar.setPosition(1600, AssetLoader.height-500);
+		vertibar.setPosition(1600, AssetLoader.height-100);
 		vertibar.center();
 		vertibar.addActor(databaseSave);
 		vertibar.space(20f);

@@ -22,6 +22,7 @@ public class Worlds extends Actor {
 	private Level lastchange;
 	
 	public enum State {pause,simulating,notloaded,databasefailed};
+	public enum LinkDelMethod {all,in,out,rebase};
 	
 	public Worlds(String campaign) {
 		name=campaign;
@@ -193,15 +194,20 @@ public class Worlds extends Actor {
 		usedlevel.Grid_orig = (Grid)usedlevel.Grid.clone();
 	}
 	
-	public Level findLevel(int levelid) {
+	public Level findLevel(int worldid, int levelid) {
 		if (state!=State.notloaded) 
-			if (usedworld>=0) {
-				Array<Level> tempworld=getLevels();
-				for(Level level:tempworld)
-					if (level.aLevel==levelid)
-						return level;
+			if (worldid>=0) {
+				Array<Level> tempworld=getLevels(worldid);
+				if (tempworld!=null)
+						for(Level level:tempworld)
+							if (level.aLevel==levelid)
+								return level;
 			}
 		return null;
+	}
+	
+	public Level findLevel(int levelid) {
+		return findLevel(usedworld, levelid);
 	}
 	
 	public void setLevel(int levelid) {
@@ -251,6 +257,63 @@ public class Worlds extends Actor {
 	public Level getChange() {
 		return lastchange;
 	}
+	
+	public void delLink(int levelid, LinkDelMethod atype) {
+		Level level = findLevel(levelid);
+		if (level!=null) {
+			if (atype==LinkDelMethod.all || atype==LinkDelMethod.out)
+				level.Link=new int[][] {};
+			if (atype==LinkDelMethod.all || atype==LinkDelMethod.in)
+				if (levels!=null)
+					for(Level alevel:levels)
+						if (alevel!=null) {
+							Array<int[]> links=new Array<int[]>(alevel.Link);
+							for(int[] link: links)
+								if (link.length==2 && link[0]==level.aWorld && link[1]==level.aLevel) 
+									links.removeValue(link, true);
+							alevel.Link=links.toArray();
+						}
+			if  (atype==LinkDelMethod.rebase) {
+ 				Array<int[]> links=new Array<int[]>();
+ 				Array<int[]> templinks=new Array<int[]>(level.Link);
+				for(int[] link: templinks) {
+					if (link.length==2) {
+						Level alevel = findLevel(link[0],link[1]);
+						if (alevel!=null)
+							links.add(new int[]{link[0],link[1],(int) alevel.X,(int) alevel.Y});
+					}
+				}
+				level.Link=new int[][]{};
+				for(Level blevel:levels)
+					if (blevel!=null) {
+						Array<int[]> alinks=new Array<int[]>(blevel.Link);
+						for(int[] alink: alinks)
+						if (alink.length==2 && alink[0]==level.aWorld && alink[1]==level.aLevel) {
+							int distance=1000000000;
+							int choosedlevel[]=null;
+							for(int[] link: links) {
+								int distancetemp=(int)Math.sqrt((blevel.X-link[2])*(blevel.X-link[2])+(blevel.Y-link[3])*(blevel.Y-link[3]));
+								if (distancetemp<distance)
+									choosedlevel=link;
+									distance=distancetemp;
+							}
+							if (choosedlevel!=null) {
+								alink[0]=choosedlevel[0];
+								alink[1]=choosedlevel[1];			
+							}
+							else
+								links.removeValue(alink, true);
+							blevel.Link=alinks.toArray();
+						}
+					}
+			}
+		}		
+	}
+	
+	public void delLink(LinkDelMethod atype) {
+		delLink(usedlevel.aLevel, atype);
+	}
+	
 	
 	public void addLevel(Level level) {
 		levels.add(level);

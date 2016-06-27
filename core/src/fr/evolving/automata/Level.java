@@ -55,6 +55,7 @@ public class Level implements Serializable,Cloneable {
 		this.Element = Element;
 		this.rewards = Current;
 		this.Victory_orig = Victory;
+		this.Victory = Victory;
 		this.X = X;
 		this.Y = Y;
 		this.Tech = Tech;
@@ -72,6 +73,7 @@ public class Level implements Serializable,Cloneable {
 		this.Special = Special;
 		this.Tuto = Tuto;
 		this.Link = Link;
+		this.Locked=true;
 	}
 	
 	public Object clone() {

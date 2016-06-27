@@ -76,7 +76,7 @@ public class LocalBase extends Base {
 				dbHandler.openOrCreateDatabase();
 			} catch (SQLiteGdxException e) {
 				e.printStackTrace();
-				Gdx.app.log("wirechem-LocalBase", "Erreur à l'ouverture de la base");
+				Gdx.app.error("wirechem-LocalBase", "Erreur à l'ouverture de la base");
 			}
 		}
 		try {
@@ -140,7 +140,7 @@ public class LocalBase extends Base {
 
 	public boolean deleteCampaign(String description) {
 		try {
-			dbHandler.rawQuery("delete from worlds where desc='" + description
+			dbHandler.execSQL("delete from worlds where desc='" + description
 					+ "';");
 		} catch (SQLiteGdxException e) {
 			return false;
@@ -159,7 +159,7 @@ public class LocalBase extends Base {
 			bos.close();
 			byte[] bytes = bos.toByteArray();
 			encoded = Base64Coder.encodeLines(bytes);
-			dbHandler.rawQuery("replace into worlds (desc,object) values ('"
+			dbHandler.execSQL("replace into worlds (desc,object) values ('"
 					+ description + "','" + encoded + "');");
 		} catch (Exception e) {
 			return false;
@@ -185,7 +185,7 @@ public class LocalBase extends Base {
 
 	public boolean setLevelunlock(int user, int level) {
 		try {
-			dbHandler.rawQuery("insert into locks (user,level) values (" + user
+			dbHandler.execSQL("insert into locks (user,level) values (" + user
 					+ "," + level + ");");
 		} catch (SQLiteGdxException e) {
 			return false;
@@ -237,7 +237,7 @@ public class LocalBase extends Base {
 			byte[] bytes = bos.toByteArray();
 			encoded = Base64Coder.encodeLines(bytes);
 			dbHandler
-					.rawQuery("replace into transmuters (user,object) values ("
+					.execSQL("replace into transmuters (user,object) values ("
 							+ user + ",'" + encoded + "');");
 		} catch (Exception e) {
 			return false;
@@ -262,7 +262,7 @@ public class LocalBase extends Base {
 
 	public boolean setResearchpoint(int user, int point) {
 		try {
-			dbHandler.rawQuery("replace into research (user,value) values ("
+			dbHandler.execSQL("replace into research (user,value) values ("
 					+ user + "," + point + ");");
 		} catch (Exception e) {
 			return false;
@@ -332,7 +332,7 @@ public class LocalBase extends Base {
 			bos.close();
 			byte[] bytes = bos.toByteArray();
 			encoded = Base64Coder.encodeLines(bytes);			
-			dbHandler.rawQuery("insert into grids (user,level,object) values ("
+			dbHandler.execSQL("insert into grids (user,level,object) values ("
 					+ user + "," + level + ",'" + encoded + "');");
 		} catch (Exception e) {
 			return false;
@@ -352,12 +352,12 @@ public class LocalBase extends Base {
 			byte[] bytes = bos.toByteArray();
 			encoded = Base64Coder.encodeLines(bytes);
 			try {
-				dbHandler.rawQuery("delete from grids where user=" + user
+				dbHandler.execSQL("delete from grids where user=" + user
 						+ " and level=" + level + " and tag='" + tag + "';");
 			} catch (Exception e) {
 			}
 			dbHandler
-					.rawQuery("insert into grids (user,level,tag,object) values ("
+					.execSQL("insert into grids (user,level,tag,object) values ("
 							+ user
 							+ ","
 							+ level
