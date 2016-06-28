@@ -258,6 +258,45 @@ public class Worlds extends Actor {
 		return lastchange;
 	}
 	
+	public boolean verifLink(int worldsrcid, int levelsrcid, int worlddstid, int leveldstid) {
+		if (worldsrcid==worlddstid && levelsrcid==leveldstid)
+			return false;
+		Level level = findLevel(worldsrcid, levelsrcid);
+		Array<int[]> links=new Array<int[]>(level.Link);
+		for(int[] link:links)
+			if (link.length==2 && link[0]==worlddstid && link[1]==leveldstid)
+				return false;
+		level = findLevel(worlddstid, leveldstid);
+		links=new Array<int[]>(level.Link);
+		for(int[] link:links)
+			if (link.length==2 && link[0]==worldsrcid && link[1]==levelsrcid)
+				return false;		
+		return true;
+	}
+	
+	public boolean verifLink(int levelsrcid, int worlddstid, int leveldstid) {
+		return verifLink(usedworld, levelsrcid, worlddstid, leveldstid);
+		}
+	
+	public boolean verifLink(int worlddstid, int leveldstid) {
+		return verifLink(usedworld, usedlevel.aLevel, worlddstid, leveldstid);
+		}
+	
+	public void addLink(int worldsrcid, int levelsrcid, int worlddstid, int leveldstid) {
+		Level level = findLevel(worldsrcid, levelsrcid);
+		Array<int[]> links=new Array<int[]>(level.Link);
+		links.add(new int[]{worlddstid,leveldstid});
+		level.Link=links.toArray();
+	}
+	
+	public void addLink(int levelsrcid, int worlddstid, int leveldstid) {
+		addLink(usedworld, levelsrcid, worlddstid, leveldstid);
+		}
+	
+	public void addLink(int worlddstid, int leveldstid) {
+		addLink(usedworld, usedlevel.aLevel, worlddstid, leveldstid);
+		}
+	
 	public void delLink(int levelid, LinkDelMethod atype) {
 		Level level = findLevel(levelid);
 		if (level!=null) {

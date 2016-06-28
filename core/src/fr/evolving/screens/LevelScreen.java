@@ -25,6 +25,10 @@ import com.badlogic.gdx.scenes.scene2d.ui.VerticalGroup;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener.ChangeEvent;
+import com.badlogic.gdx.scenes.scene2d.utils.DragAndDrop;
+import com.badlogic.gdx.scenes.scene2d.utils.DragAndDrop.Payload;
+import com.badlogic.gdx.scenes.scene2d.utils.DragAndDrop.Source;
+import com.badlogic.gdx.scenes.scene2d.utils.DragAndDrop.Target;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Array;
 
@@ -57,7 +61,7 @@ public class LevelScreen implements Screen {
 	private Stage stage;
 	private Table table;
 	private WarningDialog dialog;
-	private ImageButton Previous, Next, Exit, logosmall, databaseSave, adder, signer, finisher, deletelinker, deletebutton, addbutton, unlocked, duplicate;
+	private ImageButton Previous, Next, Exit, logosmall, databaseSave, adder, signer, finisher, deletelinker, deletebutton, addbutton, unlocked, duplicate, moveit;
 	public Image MenuSolo, MenuMulti, MenuScenario;
 	private ImageTextButton cout, tech, cycle, temp, rayon, nrj, up_cycle, up_temp, up_rayon, up_nrj, research, up;
 	private TextButton buttonConnect, buttonPlay, buttonStat, buttonSave, buttonApply, buttonPlaythis;
@@ -73,6 +77,8 @@ public class LevelScreen implements Screen {
 	public ButtonGroup chooser;
 	public Group group_init, group_stat, group_level, group_base, group_debug, group_choose, group_other;
 	public ClickListener buttonLevelslistener;
+	public DragAndDrop dragAndDrop;
+	
 	public void play() {
 		if (worlds.getState()!=State.notloaded && worlds.getState()!=State.databasefailed) {
 			if (worlds.getWorld() < 0)
@@ -153,6 +159,64 @@ public class LevelScreen implements Screen {
 		group_base.setVisible(false);
 	}
 	
+	public void ResetDragDrog() {
+		dragAndDrop.clear();
+	}
+	
+	public void initDragDrop() {
+		if (buttonLevels!=null)
+			for(ButtonLevel buttonlevel:buttonLevels)
+				AddDragDrop((Actor)buttonlevel);
+	}
+	
+	public void AddDragDrop(final Actor actor) {
+		if (actor==null) return;
+		dragAndDrop.addSource(new Source(actor) {
+			public Payload dragStart (InputEvent event, float x, float y, int pointer) {
+				Payload payload = new Payload();
+				payload.setObject(((ButtonLevel)event.getListenerActor()).level);
+
+				payload.setDragActor(new Label("Choose destination", AssetLoader.Skin_ui));
+
+				Label validLabel = new Label("OK", AssetLoader.Skin_ui);
+				validLabel.setColor(0, 1, 0, 1);
+				payload.setValidDragActor(validLabel);
+
+				Label invalidLabel = new Label("NO", AssetLoader.Skin_ui);
+				invalidLabel.setColor(1, 0, 0, 1);
+				payload.setInvalidDragActor(invalidLabel);
+
+				return payload;
+			}
+		});
+		dragAndDrop.addTarget(new Target(actor) {
+			public boolean drag (Source source, Payload payload, float x, float y, int pointer) {
+				Level levelsrc=(Level)payload.getObject();
+				Level leveldst=((ButtonLevel)actor).level;
+				Gdx.app.debug("wirechem-LevelScreen", "Verification d'un lien du niveau "+levelsrc.aWorld+","+levelsrc.aLevel+" vers "+leveldst.aWorld+","+leveldst.aLevel);
+				if (worlds.verifLink(levelsrc.aWorld, levelsrc.aLevel, leveldst.aWorld, leveldst.aLevel)) {
+					getActor().setColor(Color.GREEN);
+					return true;
+				}
+				else {
+					getActor().setColor(Color.RED);
+					return false;
+				}
+			}
+
+			public void reset (Source source, Payload payload) {
+				getActor().setColor(Color.WHITE);
+			}
+
+			public void drop (Source source, Payload payload, float x, float y, int pointer) {
+				Level levelsrc=(Level)payload.getObject();
+				Level leveldst=((ButtonLevel)actor).level;
+				Gdx.app.debug("wirechem-LevelScreen", "Création d'un lien du niveau "+levelsrc.aWorld+","+levelsrc.aLevel+" vers "+leveldst.aWorld+","+leveldst.aLevel);
+				worlds.addLink(levelsrc.aWorld, levelsrc.aLevel, leveldst.aWorld, leveldst.aLevel);
+			}
+		});
+	}
+	
 	public ClickListener buttonLevelslistener() {
 		return new ClickListener() {
 		@Override
@@ -172,7 +236,7 @@ public class LevelScreen implements Screen {
 
 		public void touchDragged(InputEvent event, float x,	float y, int pointer) {
 			ButtonLevel abutton = (ButtonLevel) event.getListenerActor();
-			if (worlds.isDebug()) {
+			if (worlds.isDebug() && moveit.isChecked()) {
 				abutton.setPosition(event.getStageX() - 56,	event.getStageY() - 20);
 			}
 		}
@@ -208,6 +272,7 @@ public class LevelScreen implements Screen {
 	public LevelScreen(Worlds aworlds) {
 		this.worlds = aworlds;
 		addervalue=1;
+		dragAndDrop = new DragAndDrop();
 		worlds.addListener(new ChangeListener() {
 			@Override
 			public void changed(ChangeEvent event, Actor actor) {
@@ -339,14 +404,14 @@ public class LevelScreen implements Screen {
 		//Group Choose
 		//**********************************************************
 		Gdx.app.debug("wirechem-LevelScreen", "Création du groupe Choose.");
-		buttonConnect = new TextButton(AssetLoader.language.get("[buttonConnect-levelscreen]"), AssetLoader.Skin_ui);
+		buttonConnect = new TextButton(AssetLoader.language.get("[buttonConnect-levelscreen]"), AssetLoader.Skin_ui, "checkable");
 		buttonConnect.setBounds(1480, AssetLoader.height - 60, 190, 40);
 		buttonConnect.addListener(new ClickListener() {
 			public void clicked(InputEvent event, float x, float y) {
 					SetButtonConnect();
 			}
 		});
-		buttonStat = new TextButton(AssetLoader.language.get("[buttonStat-levelscreen]"), AssetLoader.Skin_ui);
+		buttonStat = new TextButton(AssetLoader.language.get("[buttonStat-levelscreen]"), AssetLoader.Skin_ui, "checkable");
 		buttonStat.setBounds(1710, AssetLoader.height - 60, 190, 40);
 		buttonStat.addListener(new ClickListener() {
 			public void clicked(InputEvent event, float x, float y) {
@@ -735,7 +800,7 @@ public class LevelScreen implements Screen {
 		group_base.addActor(Worlddatalabel);
 		
 		//**********************************************************
-		//Group Other
+		//Group Stat
 		//**********************************************************
 		group_stat=new Group();
 		
@@ -796,6 +861,17 @@ public class LevelScreen implements Screen {
 		//Group Debug
 		//**********************************************************
 		Gdx.app.debug("wirechem-LevelScreen", "Création du groupe Debug.");
+		moveit = new ImageButton(AssetLoader.Skin_level, "moveit");
+		moveit.setPosition(1460, 140);	
+		moveit.addListener(new ClickListener() {
+			@Override
+			public void clicked(InputEvent event, float x, float y) {
+				if (moveit.isChecked())
+					dragAndDrop.clear();
+				else
+					initDragDrop();
+			}
+		});
 		unlocked = new ImageButton(AssetLoader.Skin_level, "unlocked");
 		unlocked.setPosition(1460, 140);	
 		unlocked.addListener(new ClickListener() {
@@ -819,6 +895,7 @@ public class LevelScreen implements Screen {
 			public void clicked(InputEvent event, float x, float y) {
 				if (selected!=null) {
 						Gdx.app.debug("wirechem-LevelScreen", "Destruction du bouton :"+selected.level.aLevel);
+						worlds.delLink(selected.level.aLevel, LinkDelMethod.rebase);
 						worlds.delLevel(selected.level.aLevel);
 						selectone();
 					}
@@ -831,7 +908,7 @@ public class LevelScreen implements Screen {
 			public void clicked(InputEvent event, float x, float y) {
 				if (selected!=null) {
 						Gdx.app.debug("wirechem-LevelScreen", "Destruction des liens :"+selected.level.aLevel);
-						worlds.delLink(selected.level.aLevel, LinkDelMethod.rebase);
+						worlds.delLink(selected.level.aLevel, LinkDelMethod.all);
 					}
 				}
 			});
@@ -843,9 +920,9 @@ public class LevelScreen implements Screen {
 				Level level=new Level(
 						worlds.getWorld(),
 						worlds.getFreeLevel(),
-						"Unknown",
-						"Unknown",
-						"Uk", new int[] { 0, 0, 0, 0, 0, 0 },
+						"Xenoxanax",
+						"Xenoxanax",
+						"Xx", new int[] { 0, 0, 0, 0, 0, 0 },
 						new int[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, (float)Math.random() * 1000f,
 						(float)Math.random() * 750f, 0, 0, new Grid(3, 3), 0, 0, 0, 0, 99999, 99999,
 						99999, 99999, "", false, new int[][] {{}});
@@ -914,11 +991,13 @@ public class LevelScreen implements Screen {
 				worlds.save(worlds.getName());
 			}
 		});
+		
+
 		vertibar=new VerticalGroup();
 		vertibar.setPosition(1600, AssetLoader.height-100);
 		vertibar.center();
-		vertibar.addActor(databaseSave);
 		vertibar.space(20f);
+		vertibar.addActor(moveit);
 		vertibar.addActor(deletebutton);
 		vertibar.addActor(addbutton);	
 		vertibar.addActor(duplicate);			
