@@ -183,10 +183,11 @@ public class LocalBase extends Base {
 			return true;
 	}
 
-	public boolean setLevelunlock(int user, int level) {
+	public boolean setLevelunlock(int user, int level, boolean state) {
+		String request="insert into locks (user,level) values (" + user	+ "," + level + ");";
+		if (state) request="delete from locks where user="+user+" and level="+level+";";
 		try {
-			dbHandler.execSQL("insert into locks (user,level) values (" + user
-					+ "," + level + ");");
+			dbHandler.execSQL(request);
 		} catch (SQLiteGdxException e) {
 			return false;
 		}

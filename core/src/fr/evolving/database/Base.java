@@ -44,7 +44,7 @@ public abstract class Base {
 		return false;
 	}
 
-	public boolean setLevelunlock(int user, int level) {
+	public boolean setLevelunlock(int user, int level, boolean state) {
 		return false;
 	}
 

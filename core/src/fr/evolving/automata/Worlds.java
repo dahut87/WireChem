@@ -418,15 +418,46 @@ public class Worlds extends Actor {
 			return -1;
 	}
 	
+	public boolean getLockLevel() {
+		return getLockLevel(usedlevel.aLevel);
+	}
+	
+	public boolean getLockLevel(int levelid) {
+		Level level=findLevel(levelid);
+		if (level!=null)
+			return AssetLoader.Datahandler.user().getLevellock(0, level.id);
+		else
+			return false;
+	}
+	
+	public void LockLevel() {
+		if (usedlevel!=null) {
+			AssetLoader.Datahandler.user().setLevelunlock(0, usedlevel.id, true);
+			usedlevel.Locked=true;
+		}
+	}
+	
+	public void LockLevel(int levelid) {
+		Level level=findLevel(levelid);
+		if (level!=null) {
+			AssetLoader.Datahandler.user().setLevelunlock(0, level.id, true);
+			findLevel(levelid).Locked=true;
+		}
+	}
+	
 	public void unLockLevel() {
-		AssetLoader.Datahandler.user().setLevelunlock(0, usedlevel.id);
-		usedlevel.Locked=false;
+		if (usedlevel!=null) {
+			AssetLoader.Datahandler.user().setLevelunlock(0, usedlevel.id, false);
+			usedlevel.Locked=false;
+		}
 	}
 	
 	public void unLockLevel(int levelid) {
 		Level level=findLevel(levelid);
-		AssetLoader.Datahandler.user().setLevelunlock(0, level.id);
-		findLevel(levelid).Locked=false;
+		if (level!=null) {
+			AssetLoader.Datahandler.user().setLevelunlock(0, level.id, false);
+			findLevel(levelid).Locked=false;
+		}
 	}
 	
 	public void set(String campaign) {
