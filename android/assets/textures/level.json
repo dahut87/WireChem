@@ -114,6 +114,15 @@
         delcol_down: { name: delcol, color: veryred },
         delrow_down: { name: delrow, color: veryred },
         
+        finish_down: { name: finish, color: veryred },
+        level_down: { name: level, color: veryred },
+        modify_down: { name: modify, color: veryred },
+        link_down: { name: link, color: veryred },
+        duplicate_down: { name: duplicate, color: veryred },
+        cut_down: { name: cut, color: veryred },
+        pencil_down: { name: pencil, color: veryred },
+        eraser_down: { name: eraser, color: veryred },
+
         infos_down: { name: infos, color: veryred },
         extend_disabled: { name: extend, color: grey },
         extend_down: { name: extend, color: veryred } 
@@ -127,11 +136,11 @@
 	}
 	
     com.badlogic.gdx.scenes.scene2d.ui.ImageTextButton$ImageTextButtonStyle: { 
-        world0: { checkedFontColor:red, disabledFontColor:white, fontColor:white, overFontColor:red ,up: leveler0 , down: leveler0_down, over:leveler0_over, disabled:leveler0_disabled, checked:leveler0_over, font: Fluoxetine-25, pressedOffsetY: -70, unpressedOffsetY: -72, checkedOffsetY: -72 }
-        world1: { checkedFontColor:red, disabledFontColor:white, fontColor:white, overFontColor:red ,up: leveler1 , down: leveler1_down, over:leveler1_over, disabled:leveler1_disabled, checked:leveler1_over, font: Fluoxetine-25, pressedOffsetY: -70, unpressedOffsetY: -72, checkedOffsetY: -72 }
-        world2: { checkedFontColor:red, disabledFontColor:white, fontColor:white, overFontColor:red ,up: leveler2 , down: leveler2_down, over:leveler2_over, disabled:leveler2_disabled, checked:leveler2_over, font: Fluoxetine-25, pressedOffsetY: -70, unpressedOffsetY: -72, checkedOffsetY: -72 }
-        world3: { checkedFontColor:red, disabledFontColor:white, fontColor:white, overFontColor:red ,up: leveler3 , down: leveler3_down, over:leveler3_over, disabled:leveler3_disabled, checked:leveler3_over, font: Fluoxetine-25, pressedOffsetY: -70, unpressedOffsetY: -72, checkedOffsetY: -72 }
-        world4: { checkedFontColor:red, disabledFontColor:white, fontColor:white, overFontColor:red ,up: leveler4 , down: leveler4_down, over:leveler4_over, disabled:leveler4_disabled, checked:leveler4_over, font: Fluoxetine-25, pressedOffsetY: -70, unpressedOffsetY: -72, checkedOffsetY: -72 }
+        world0: { checkedFontColor:red, disabledFontColor:white, fontColor:white, overFontColor:red ,up: leveler0 , down: leveler0_down, disabled:leveler0_disabled, checked:leveler0_over, font: Fluoxetine-25, pressedOffsetY: -70, unpressedOffsetY: -72, checkedOffsetY: -72 }
+        world1: { checkedFontColor:red, disabledFontColor:white, fontColor:white, overFontColor:red ,up: leveler1 , down: leveler1_down, disabled:leveler1_disabled, checked:leveler1_over, font: Fluoxetine-25, pressedOffsetY: -70, unpressedOffsetY: -72, checkedOffsetY: -72 }
+        world2: { checkedFontColor:red, disabledFontColor:white, fontColor:white, overFontColor:red ,up: leveler2 , down: leveler2_down, disabled:leveler2_disabled, checked:leveler2_over, font: Fluoxetine-25, pressedOffsetY: -70, unpressedOffsetY: -72, checkedOffsetY: -72 }
+        world3: { checkedFontColor:red, disabledFontColor:white, fontColor:white, overFontColor:red ,up: leveler3 , down: leveler3_down, disabled:leveler3_disabled, checked:leveler3_over, font: Fluoxetine-25, pressedOffsetY: -70, unpressedOffsetY: -72, checkedOffsetY: -72 }
+        world4: { checkedFontColor:red, disabledFontColor:white, fontColor:white, overFontColor:red ,up: leveler4 , down: leveler4_down, disabled:leveler4_disabled, checked:leveler4_over, font: Fluoxetine-25, pressedOffsetY: -70, unpressedOffsetY: -72, checkedOffsetY: -72 }
         cout: { disabledFontColor:white, fontColor:white, overFontColor:red ,up: cout , down: cout_down, over:cout_over, disabled:cout_disabled, font: OpenDyslexicAlta-25, pressedOffsetY: -45, unpressedOffsetY: -47, checkedOffsetY: -47 }
         tech: { disabledFontColor:white, fontColor:white, overFontColor:red ,up: tech , down: tech_down, over:tech_over, disabled:tech_disabled, font: OpenDyslexicAlta-25, pressedOffsetY: -45, unpressedOffsetY: -47, checkedOffsetY: -47 } 
         cycle: { disabledFontColor:white, fontColor:white, overFontColor:red ,up: cycle , down: cycle_down, over:cycle_over, disabled:cycle_disabled, font: OpenDyslexicAlta-25, pressedOffsetY: -45, unpressedOffsetY: -47, checkedOffsetY: -47 }
@@ -182,7 +191,7 @@
         stat: { up: stat,down:stat_down }
         separator: { up: separator }       
         tree: { up: tree,down:tree_down }    
-        unlocked:{ up:unlocked, down:unlocked_down }
+        unlocked:{ up:unlocked, checked:locked2, down:unlocked_down }
         database:{ up:database, down:database_down }
         database-save:{ up:database-save, down:database-save_down }
         addcol:{ up:addcol, down:addcol_down }
@@ -190,12 +199,15 @@
         delcol:{ up:delcol, down:delcol_down }     
         delrow:{ up:delrow, down:delrow_down }        
         infos: { up: infos,down:infos_down }
-        finish: { up: finish }
-        level: { up: level }
-        duplicate: { up: duplicate }
-        cut: { up: cut }
-        pencil: { up: pencil }
-        eraser: { up: eraser }
+        finish: { up: finish, checked:finish_down }
+        level: { up: level, checked:level_down }
+        moveit: { up: move, checked: move_down}
+        modify: {up: modify, checked: modify_down}
+        link: {up: link, checked: link_down}
+        duplicate: { up: duplicate, down:duplicate_down }
+        cut: { up: cut, down:cut_down }
+        pencil: { up: pencil, down:pencil_down }
+        eraser: { up: eraser, down:eraser_down }
         info_nrj: { up: nrj }
         info_cycle: { up: cycle } 
         info_temp: { up: temp } 

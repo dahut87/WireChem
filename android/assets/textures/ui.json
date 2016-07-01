@@ -10,13 +10,15 @@ com.badlogic.gdx.graphics.Color: {
 },
 com.badlogic.gdx.scenes.scene2d.ui.Skin$TintedDrawable: {
     dialogDim: { name: white, color: { r: 0, g: 0, b: 0, a: 0.45 } }
+    default-round-red: { name: white, color: { r: 0.55, g: 0.1, b: 0.1, a: 1 } }
 },
 com.badlogic.gdx.scenes.scene2d.ui.Button$ButtonStyle: {
     default: { down: default-round-down, up: default-round },
     toggle: { down: default-round-down, checked: default-round-down, up: default-round }
 },
 com.badlogic.gdx.scenes.scene2d.ui.TextButton$TextButtonStyle: {
-    default: { down: default-round-down, up: default-round, font: default-font, fontColor: white, disabledFontColor:lowgrey, checkedFontColor:red },
+    default: { down: default-round-down, up: default-round, font: default-font, fontColor: white, disabledFontColor:lowgrey },
+    checkable: { down: default-round-down, up: default-round, checked: default-round-red, font: default-font, fontColor: white, disabledFontColor:lowgrey },
     toggle: { down: default-round-down, up: default-round, checked: default-round-down, font: default-font, fontColor: white, 
     downFontColor: red }
 },
