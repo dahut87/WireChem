@@ -6,7 +6,6 @@ import java.util.TimerTask;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.Application;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Group;
@@ -26,7 +25,6 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.VerticalGroup;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
-import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener.ChangeEvent;
 import com.badlogic.gdx.scenes.scene2d.utils.DragAndDrop;
 import com.badlogic.gdx.scenes.scene2d.utils.DragAndDrop.Payload;
 import com.badlogic.gdx.scenes.scene2d.utils.DragAndDrop.Source;
@@ -166,6 +164,7 @@ public class LevelScreen implements Screen {
 	}
 	
 	public void initDragDrop() {
+		dragAndDrop.clear();
 		if (buttonLevels!=null)
 			for(ButtonLevel buttonlevel:buttonLevels)
 				AddDragDrop((Actor)buttonlevel);
@@ -239,7 +238,8 @@ public class LevelScreen implements Screen {
 		public void touchDragged(InputEvent event, float x,	float y, int pointer) {
 			ButtonLevel abutton = (ButtonLevel) event.getListenerActor();
 			if (worlds.isDebug() && moveit.isChecked()) {
-				abutton.setPosition(event.getStageX() - 56,	event.getStageY() - 20);
+				if (event.getStageX()<1180 && event.getStageX()>0 && event.getStageY()>180 && event.getStageY()<AssetLoader.height-260)
+					abutton.setPosition(event.getStageX() - 56,	event.getStageY() - 20);
 			}
 		}
 		public void clicked(InputEvent event, float x, float y) {
@@ -289,38 +289,37 @@ public class LevelScreen implements Screen {
 						for (int i=0;i<buttonLevels.size;i++)
 							if (buttonLevels.get(i).level.aLevel==changed.aLevel)
 							{
+								Gdx.app.debug("wirechem-LevelScreen", "Changement - destruction du niveau "+changed.aLevel);
 								buttonLevels.get(i).remove();
 								buttonLevels.removeIndex(i);
 								return;
 							}
-					ButtonLevel button=new ButtonLevel(changed, AssetLoader.ratio, true);
-					if (worlds.isDebug()) {
-						button.setDisabled(false);
-						button.setTouchable(Touchable.enabled);
+						Gdx.app.debug("wirechem-LevelScreen", "Changement - ajout d'un nouveau niveau "+changed.aLevel);
+						ButtonLevel button=new ButtonLevel(changed, AssetLoader.ratio, true);
+						if (worlds.isDebug()) {
+							button.setDisabled(false);
+							button.setTouchable(Touchable.enabled);
+						}
+						else
+							showlevel(button);
+						buttonLevels.add(button);
+						stage.addActor(button);
+						button.addListener(buttonLevelslistener());	
+						return;
 					}
-					buttonLevels.add(button);
-					stage.addActor(button);
-					button.addListener(buttonLevelslistener());	
-					//showlevel(button);
-					return;
-					}
-					LevelScreen.this.loadWorld();
+					Gdx.app.debug("wirechem-LevelScreen", "Changement - rechargement des mondes");
+					loadWorld();
 					for (ButtonLevel button : buttonLevels)
 					{
 						button.setChecked(false);
 							if (worlds.getLevelData()!=null && button.level.id == worlds.getLevelData().id) {
-								selected=button;
+								Gdx.app.debug("wirechem-LevelScreen", "Changement - selection du monde en cours "+button.level.aLevel);
+								showlevel(button);
 								break;
 							}
 					}
 					if (worlds.getLevelData()==null)
 						selected=buttonLevels.first();
-					if (selected!=null) {
-						selected.setChecked(true);
-						buttonPlay.setVisible(true);
-						TextDescriptive.setVisible(true);
-						showlevel(selected);
-					}
 					Previous.setVisible(!worlds.isFirstWorld());
 					if (worlds.isDebug())
 						Next.setVisible(!worlds.isRealLastWorld());
@@ -328,6 +327,7 @@ public class LevelScreen implements Screen {
 						Next.setVisible(!worlds.isLastWorld());
 				}
 				else {
+					Gdx.app.debug("wirechem-LevelScreen", "Changement - Niveau non chargé, composants non visibles");
 					Previous.setVisible(false);
 					Next.setVisible(false);
 					buttonPlay.setVisible(false);
@@ -428,7 +428,7 @@ public class LevelScreen implements Screen {
 					SetButtonStat();
 			}
 		});
-		chooser=new ButtonGroup();
+		chooser=new ButtonGroup<Button>();
 		chooser.add(buttonStat);
 		chooser.add(buttonConnect);
 		chooser.setMaxCheckCount(1);
@@ -452,6 +452,8 @@ public class LevelScreen implements Screen {
 				Gdx.app.debug("wirechem-LevelScreen",
 						"World:" + String.valueOf(worlds.getWorld()) + " Maxworld:"
 								+ String.valueOf(worlds.getMaxWorlds()));
+				if (worlds.isDebug() && link.isChecked())
+					initDragDrop();
 			}
 		});
 		Previous = new ImageButton(AssetLoader.Skin_level, "Previous");
@@ -463,6 +465,8 @@ public class LevelScreen implements Screen {
 				Gdx.app.debug("wirechem-LevelScreen",
 						"World:" + String.valueOf(worlds.getWorld()) + " Maxworld:"
 								+ String.valueOf(worlds.getMaxWorlds()));
+				if (worlds.isDebug() && link.isChecked())
+					initDragDrop();
 			}
 		});
 		cout = new ImageTextButton("5", AssetLoader.Skin_level, "cout");
@@ -853,13 +857,13 @@ public class LevelScreen implements Screen {
 					if (buttonLevels != null)
 						for (ButtonLevel button : buttonLevels) 
 							button.setDisabled(button.level.Locked);
+					ResetDragDrog();
 					worlds.DesactivateDebug();
 					worlds.updateUnlockLevels();
 					worlds.setMaxWorldLevel();
 					group_debug.setVisible(false);
 					group_choose.setVisible(true);
-					selectoneunlock();
-					showlevel(selected);
+					worlds.setMaxWorldLevel();
 					SetButtonStat();
 				}
 				else
@@ -881,7 +885,7 @@ public class LevelScreen implements Screen {
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
 				vertibarmod.setVisible(false);
-				dragAndDrop.clear();
+				ResetDragDrog();
 				selectnoone();
 			}
 		});
@@ -891,7 +895,7 @@ public class LevelScreen implements Screen {
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
 				vertibarmod.setVisible(true);
-				dragAndDrop.clear();
+				ResetDragDrog();
 				selectone();
 			}
 		});
@@ -973,15 +977,12 @@ public class LevelScreen implements Screen {
 			public void clicked(InputEvent event, float x, float y) {
 				if (selected!=null) {
 					selected.level.Special=!selected.level.Special;
-					if (selected.level.Special)
-						finisher.setColor(AssetLoader.Skin_level.getColor("red"));
-					else
-						finisher.setColor(AssetLoader.Skin_level.getColor("black"));
+					finisher.setChecked(selected.level.Special);
 				}
 			}
 		});
 		signer = new ImageButton(AssetLoader.Skin_level, "add");
-		signer.setPosition(1280, AssetLoader.height-650);	
+		signer.setPosition(1680, 40);	
 		signer.addListener(new ClickListener() {
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
@@ -1000,7 +1001,7 @@ public class LevelScreen implements Screen {
 			}
 		});
 		adder = new ImageButton(AssetLoader.Skin_level, "add1");
-		adder.setPosition(1340, AssetLoader.height-650);	
+		adder.setPosition(1720, 40);	
 		adder.addListener(new ClickListener() {
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
@@ -1119,22 +1120,18 @@ public class LevelScreen implements Screen {
 	}
 	
 	public void selectone() {
-		if (selected==null)
 		for(ButtonLevel button: buttonLevels) 
 			if (button!=null) {
-				selected=button;
-				selected.setChecked(true);
+				showlevel(button);
 				return;
 			}
 		return;
 	}
 	
 	public void selectoneunlock() {
-		if (selected==null)
 		for(ButtonLevel button: buttonLevels) 
 			if (button!=null && button.level.Locked==false) {
-				selected=button;
-				selected.setChecked(true);
+				showlevel(button);
 				return;
 			}
 		return;
@@ -1147,83 +1144,87 @@ public class LevelScreen implements Screen {
 				selected.setChecked(false);
 			}
 		selected=null;
+		showlevel(null);
 		return;
 	}
 
 	public void showlevel(ButtonLevel button) {
-		if (button==null)
-			return;
-		Gdx.app.debug("wirechem-LevelScreen", "Reading button "	+ button.level.Name);
-		TextDescriptive.setText(button.level.Description);
-		if (button.level.Maxcycle < 99999 && button.level.Maxcycle > 0 || worlds.isDebug()) {
+		if 	(button!=null) {
+			Gdx.app.debug("wirechem-LevelScreen", "Reading button "	+ button.level.Name);
+			TextDescriptive.setText(button.level.Description);
+			Victory.setVictory(button.level.Victory_orig);
+			button.setChecked(true);
+			buttonPlay.setVisible(false);
+		}
+		else
+			Gdx.app.debug("wirechem-LevelScreen", "Raz button information");
+		if (button!=null && (worlds.isDebug() || button.level.Maxcycle < 99999 && button.level.Maxcycle > 0)) {
 			cycle.setText(String.valueOf(button.level.Maxcycle));
 			cycle.setVisible(true);
 		} else
 			cycle.setVisible(false);
-		if (button.level.Maxtemp < 99999 && button.level.Maxtemp > 0 || worlds.isDebug()) {
+		if (button!=null && (worlds.isDebug() || button.level.Maxtemp < 99999 && button.level.Maxtemp > 0)) {
 			temp.setText(String.valueOf(button.level.Maxtemp));
 			temp.setVisible(true);
 		} else
 			temp.setVisible(false);
-		if (button.level.Maxnrj < 99999 && button.level.Maxnrj > 0 || worlds.isDebug()) {
+		if (button!=null && (worlds.isDebug() || button.level.Maxnrj < 99999 && button.level.Maxnrj > 0)) {
 			nrj.setText(String.valueOf(button.level.Maxnrj));
 			nrj.setVisible(true);
 		} else
 			nrj.setVisible(false);
-		if (button.level.Maxrayon < 99999 && button.level.Maxrayon > 0 || worlds.isDebug()) {
+		if (button!=null && (worlds.isDebug() || button.level.Maxrayon < 99999 && button.level.Maxrayon > 0)) {
 			rayon.setText(String.valueOf(button.level.Maxrayon));
 			rayon.setVisible(true);
 		} else
 			rayon.setVisible(false);
-		if (button.level.Cout_orig > 0 || worlds.isDebug()) {
+		if (button!=null && (worlds.isDebug() || button.level.Cout_orig > 0)) {
 			cout.setText(String.valueOf(button.level.Cout_orig));
 			cout.setVisible(true);
 		} else
 			cout.setVisible(false);
-		if (button.level.Tech >= 1 || worlds.isDebug()) {
+		if (button!=null && (worlds.isDebug() || button.level.Tech >= 1)) {
 			tech.setText(String.valueOf(button.level.Tech));
 			tech.setVisible(true);
 		} else
 			tech.setVisible(false);
-		if (button.level.rewards[0] >= 1 || worlds.isDebug()) {
+		if (button!=null && (worlds.isDebug() || button.level.rewards[0] >= 1)) {
 			research.setText(String.valueOf(button.level.rewards[0]));
 			research.setVisible(true);
 		} else
 			research.setVisible(false);
-		if (button.level.rewards[2] >= 1 || worlds.isDebug()) {
+		if (button!=null && (worlds.isDebug() || button.level.rewards[2] >= 1)) {
 			up_temp.setText(String.valueOf(button.level.rewards[2]));
 			up_temp.setVisible(true);
 		} else
 			up_temp.setVisible(false);
-		if (button.level.rewards[4] >= 1 || worlds.isDebug()) {
+		if (button!=null && (worlds.isDebug() || button.level.rewards[4] >= 1)) {
 			up_nrj.setText(String.valueOf(button.level.rewards[4]));
 			up_nrj.setVisible(true);
 		} else
 			up_nrj.setVisible(false);
-		if (button.level.rewards[3] >= 1 || worlds.isDebug()) {
+		if (button!=null && (worlds.isDebug() || button.level.rewards[3] >= 1)) {
 			up_rayon.setText(String.valueOf(button.level.rewards[3]));
 			up_rayon.setVisible(true);
 		} else
 			up_rayon.setVisible(false);
-		if (button.level.rewards[1] >= 1 || worlds.isDebug()) {
+		if (button!=null && (worlds.isDebug() || button.level.rewards[1] >= 1)) {
 			up_cycle.setText(String.valueOf(button.level.rewards[1]));
 			up_cycle.setVisible(true);
 		} else
 			up_cycle.setVisible(false);
-		if (button.level.rewards[5] >= 1 || worlds.isDebug()) {
+		if (button!=null && (worlds.isDebug() || button.level.rewards[5] >= 1)) {
 			up.setText(String.valueOf(button.level.rewards[5]));
 			up.setVisible(true);
 		} else
 			up.setVisible(false);
-		Victory.setVisible(button.level.Cout_orig > 0 || worlds.isDebug());
-		Victory.setVictory(button.level.Victory_orig);
-		if (worlds.isDebug()) {
+		Victory.setVisible(button!=null && (worlds.isDebug() || button.level.Cout_orig > 0));
+		if (worlds.isDebug() && button!=null) {
 			unlocked.setChecked(!button.level.Locked);				
 			finisher.setChecked(button.level.Special);	
 		}
 		if (selected != null)
 			selected.setChecked(false);
 		selected = button;
-		button.setChecked(true);
 	}
 }
