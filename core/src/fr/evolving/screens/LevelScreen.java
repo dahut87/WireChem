@@ -61,8 +61,9 @@ public class LevelScreen implements Screen {
 	private Stage stage;
 	private Table table;
 	private WarningDialog dialog;
-	private ImageButton Previous, Next, Exit, logosmall, databaseSave, adder, signer, finisher, deletelinker, deletebutton, addbutton, unlocked, duplicate, moveit,modify, link;
-	public Image MenuSolo, MenuMulti, MenuScenario;
+	private ImageButton Previous, Next, Exit, logosmall, databaseSave, adder, signer, finisher, deletelinker, deletebutton, addbutton, unlocked, duplicate, moveit,link;
+	public ImageButton modify;
+	private Image MenuSolo, MenuMulti, MenuScenario;
 	private ImageTextButton cout, tech, cycle, temp, rayon, nrj, up_cycle, up_temp, up_rayon, up_nrj, research, up;
 	private TextButton buttonConnect, buttonPlay, buttonStat, buttonSave, buttonApply, buttonPlaythis;
 	private ServerList Statdata, Userdata, Gamedata;
@@ -74,17 +75,17 @@ public class LevelScreen implements Screen {
 	private VerticalGroup vertibar,vertibarmod;
 	public ButtonLevel selected;
 	public int addervalue;
-	public ButtonGroup<Button> chooser, modifbar;
+	private ButtonGroup<Button> chooser, modifbar;
 	public Group group_init, group_stat, group_level, group_base, group_debug, group_choose, group_other;
-	public ClickListener buttonLevelslistener;
-	public DragAndDrop dragAndDrop;
+	private ClickListener buttonLevelslistener;
+	private DragAndDrop dragAndDrop;
 	
 	public void play() {
 		if (worlds.getState()!=State.notloaded && worlds.getState()!=State.databasefailed) {
-			if (worlds.getWorld() < 0)
-				worlds.setMaxWorldLevel();
 			Gdx.app.debug("wirechem-LevelScreen","Afficher derniere réalisation, monde :"+worlds.getWorld()+" niveau:"+worlds.getLevel());
 			worlds.Forcereload();
+			if (worlds.getWorld() < 0)
+				worlds.setMaxWorldLevel();
 		}
 	}
 
@@ -244,7 +245,10 @@ public class LevelScreen implements Screen {
 		}
 		public void clicked(InputEvent event, float x, float y) {
 			ButtonLevel abutton = (ButtonLevel) event.getListenerActor();
-			abutton.setChecked(false);
+			if (!worlds.isDebug() || modify.isChecked())
+				abutton.setChecked(true);
+			else
+				abutton.setChecked(false);
 		}
 	};
 	}
@@ -309,6 +313,9 @@ public class LevelScreen implements Screen {
 					}
 					Gdx.app.debug("wirechem-LevelScreen", "Changement - rechargement des mondes");
 					loadWorld();
+					if (worlds.isDebug() && modify.isChecked())
+						selectone();
+					else if (!worlds.isDebug())
 					for (ButtonLevel button : buttonLevels)
 					{
 						button.setChecked(false);
@@ -318,6 +325,8 @@ public class LevelScreen implements Screen {
 								break;
 							}
 					}
+					else
+						selectnoone();
 					if (worlds.getLevelData()==null)
 						selected=buttonLevels.first();
 					Previous.setVisible(!worlds.isFirstWorld());
@@ -982,7 +991,7 @@ public class LevelScreen implements Screen {
 			}
 		});
 		signer = new ImageButton(AssetLoader.Skin_level, "add");
-		signer.setPosition(1680, 40);	
+		signer.setPosition(1660, 40);	
 		signer.addListener(new ClickListener() {
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
@@ -1054,6 +1063,7 @@ public class LevelScreen implements Screen {
 		modifbar.add(link);
 		modifbar.add(modify);
 		modifbar.add(addbutton);
+		moveit.setChecked(true);
 		
 		
 		group_debug=new Group();
@@ -1120,21 +1130,8 @@ public class LevelScreen implements Screen {
 	}
 	
 	public void selectone() {
-		for(ButtonLevel button: buttonLevels) 
-			if (button!=null) {
-				showlevel(button);
-				return;
-			}
-		return;
-	}
-	
-	public void selectoneunlock() {
-		for(ButtonLevel button: buttonLevels) 
-			if (button!=null && button.level.Locked==false) {
-				showlevel(button);
-				return;
-			}
-		return;
+			if (buttonLevels.size>0) 
+				showlevel(buttonLevels.first());
 	}
 	
 	public void selectnoone() {
@@ -1154,10 +1151,14 @@ public class LevelScreen implements Screen {
 			TextDescriptive.setText(button.level.Description);
 			Victory.setVictory(button.level.Victory_orig);
 			button.setChecked(true);
-			buttonPlay.setVisible(false);
+			buttonPlay.setVisible(true);
 		}
 		else
+		{
 			Gdx.app.debug("wirechem-LevelScreen", "Raz button information");
+			buttonPlay.setVisible(false);
+			TextDescriptive.setVisible(false);
+		}
 		if (button!=null && (worlds.isDebug() || button.level.Maxcycle < 99999 && button.level.Maxcycle > 0)) {
 			cycle.setText(String.valueOf(button.level.Maxcycle));
 			cycle.setVisible(true);

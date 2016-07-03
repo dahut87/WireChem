@@ -61,6 +61,7 @@ public class LevelRenderer {
 		if (this.scrolly < 0)
 			this.diry = 1;
 		Laser.i += 0.3f;
+		
 		if (Laser.i > 10.0f) {
 			Laser.i = 0;
 		}
@@ -90,15 +91,15 @@ public class LevelRenderer {
 
 		if (LevelScreen.selected != null) {
 			font.draw(batcher2, LevelScreen.selected.level.Name, 15, 165);
-			if (LevelScreen.selected.level.Tech > 0 || LevelScreen.worlds.isDebug())
+			if (LevelScreen.selected.level.Tech > 0 && !LevelScreen.worlds.isDebug() || LevelScreen.modify.isChecked() && LevelScreen.worlds.isDebug())
 				font.draw(batcher2, this.reward, 1215,
 						AssetLoader.height - 15);
-			if (LevelScreen.selected.level.Cout_orig > 0 || LevelScreen.worlds.isDebug()) {
+			if (LevelScreen.selected.level.Cout_orig > 0 && !LevelScreen.worlds.isDebug() || LevelScreen.modify.isChecked() && LevelScreen.worlds.isDebug()) {
 				font.draw(batcher2, this.ressource, 1215, 145);
 				font.draw(batcher2, this.goal, 1215, 295);
 			}
 
-			if (LevelScreen.selected.level.aWorld > 0 || LevelScreen.worlds.isDebug())
+			if (LevelScreen.selected.level.aWorld > 0 && !LevelScreen.worlds.isDebug() || LevelScreen.modify.isChecked() && LevelScreen.worlds.isDebug())
 				font.draw(batcher2, this.handicap, 1215, 605);
 			//font.draw(batcher2, "", 1215, 145);
 		}
@@ -110,13 +111,13 @@ public class LevelRenderer {
 		shapeRenderer.setColor(0.5f, 0.5f, 0.5f, 0.5f);
 		if (LevelScreen.selected != null) {
 			shapeRenderer.rect(10, 10, 1190, 165);
-			if (LevelScreen.selected.level.Cout_orig > 0 || LevelScreen.worlds.isDebug()) {
+			if (LevelScreen.selected.level.Cout_orig > 0 && !LevelScreen.worlds.isDebug() || LevelScreen.modify.isChecked() && LevelScreen.worlds.isDebug()) {
 				shapeRenderer.rect(1210, 10, 250, 140);
 				shapeRenderer.rect(1210, 160, 250, 140);
 			}
-			if (LevelScreen.selected.level.aWorld > 0 || LevelScreen.worlds.isDebug())
+			if (LevelScreen.selected.level.aWorld > 0 && !LevelScreen.worlds.isDebug() || LevelScreen.modify.isChecked() && LevelScreen.worlds.isDebug())
 				shapeRenderer.rect(1210, 310, 250, 300);
-			if (LevelScreen.selected.level.Tech > 0 || LevelScreen.worlds.isDebug())
+			if (LevelScreen.selected.level.Tech > 0 && !LevelScreen.worlds.isDebug() || LevelScreen.modify.isChecked() && LevelScreen.worlds.isDebug())
 				shapeRenderer.rect(1210, 620, 250, AssetLoader.height - 630);
 		}
 		if (!LevelScreen.group_init.isVisible())

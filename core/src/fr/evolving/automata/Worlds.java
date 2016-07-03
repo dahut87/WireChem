@@ -396,8 +396,8 @@ public class Worlds extends Actor {
 	public void NextWorld() {
 		if (state!=State.notloaded)
 		if (usedworld<getMaxWorlds()) {
-			usedlevel=null;
 			usedworld++;
+			usedlevel=getMaxUnlockLevel();
 			onchanged(null);
 		}
 	}
@@ -405,8 +405,8 @@ public class Worlds extends Actor {
 	public void PreviousWorld() {
 		if (state!=State.notloaded)
 		if (usedworld>0) {
-			usedlevel=null;
 			usedworld--;
+			usedlevel=getMaxUnlockLevel();
 			onchanged(null);
 		}
 	}
