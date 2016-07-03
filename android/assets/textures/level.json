@@ -114,7 +114,7 @@
         delcol_down: { name: delcol, color: veryred },
         delrow_down: { name: delrow, color: veryred },
         
-        finish_down: { name: finish, color: veryred },
+        finish_down: { name: finish, color: black },
         level_down: { name: level, color: veryred },
         modify_down: { name: modify, color: veryred },
         link_down: { name: link, color: veryred },
