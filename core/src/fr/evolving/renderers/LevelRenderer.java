@@ -26,14 +26,8 @@ public class LevelRenderer {
 	LevelScreen LevelScreen;
 	Laser Laser;
 	public TextureRegion Texture_logobig;
-	BitmapFont font;
-	String reward,goal,ressource,handicap;
 	
 	public LevelRenderer(LevelScreen LevelScreen) {
-		this.reward=AssetLoader.language.get("[reward-levelscreen]");
-		this.goal=AssetLoader.language.get("[goal-levelscreen]");
-		this.ressource=AssetLoader.language.get("[ressource-levelscreen]");
-		this.handicap=AssetLoader.language.get("[handicap-levelscreen]");
 		this.LevelScreen = LevelScreen;
 		this.scrollx = 0;
 		this.scrolly = 0;
@@ -44,7 +38,6 @@ public class LevelRenderer {
 		shapeRenderer = new ShapeRenderer();
 		Laser = new Laser();
 		AssetLoader.viewport.apply();
-		font = AssetLoader.Skin_level.getFont("OpenDyslexicAlta-25");
 	}
 
 	public void evolve() {
@@ -70,8 +63,6 @@ public class LevelRenderer {
 	public void render(float delta, float runTime) {
 		Gdx.gl.glClearColor(0, 0, 0, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
-		if (LevelScreen.worlds.getWorld() >= 0)
-			font.setColor(AssetLoader.Levelcolors[LevelScreen.worlds.getWorld()]);
 		batcher.begin();
 		batcher.setProjectionMatrix(AssetLoader.Camera.combined);
 		batcher.setColor(0.25f, 0.25f, 0.25f, 1f);
@@ -86,23 +77,7 @@ public class LevelRenderer {
 		batcher2.setProjectionMatrix(AssetLoader.Camera.combined);
 		batcher2.setColor(Color.WHITE);
 		Texture_logobig = AssetLoader.Skin_level.getRegion("logo3");
-		batcher2.draw(Texture_logobig, 120, AssetLoader.height
-				- Texture_logobig.getRegionHeight());
-
-		if (LevelScreen.selected != null) {
-			font.draw(batcher2, LevelScreen.selected.level.Name, 15, 165);
-			if (LevelScreen.selected.level.Tech > 0 && !LevelScreen.worlds.isDebug() || LevelScreen.modify.isChecked() && LevelScreen.worlds.isDebug())
-				font.draw(batcher2, this.reward, 1215,
-						AssetLoader.height - 15);
-			if (LevelScreen.selected.level.Cout_orig > 0 && !LevelScreen.worlds.isDebug() || LevelScreen.modify.isChecked() && LevelScreen.worlds.isDebug()) {
-				font.draw(batcher2, this.ressource, 1215, 145);
-				font.draw(batcher2, this.goal, 1215, 295);
-			}
-
-			if (LevelScreen.selected.level.aWorld > 0 && !LevelScreen.worlds.isDebug() || LevelScreen.modify.isChecked() && LevelScreen.worlds.isDebug())
-				font.draw(batcher2, this.handicap, 1215, 605);
-			//font.draw(batcher2, "", 1215, 145);
-		}
+		batcher2.draw(Texture_logobig, 120, AssetLoader.height-Texture_logobig.getRegionHeight());
 		batcher2.end();
 
 		Gdx.gl.glEnable(GL20.GL_BLEND);

@@ -5,6 +5,7 @@ import java.util.TimerTask;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.scenes.scene2d.Actor;
@@ -22,6 +23,8 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextArea;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.scenes.scene2d.ui.TextField;
+import com.badlogic.gdx.scenes.scene2d.ui.TextField.TextFieldListener;
 import com.badlogic.gdx.scenes.scene2d.ui.VerticalGroup;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
@@ -61,14 +64,14 @@ public class LevelScreen implements Screen {
 	private Stage stage;
 	private Table table;
 	private WarningDialog dialog;
-	private ImageButton Previous, Next, Exit, logosmall, databaseSave, adder, signer, finisher, deletelinker, deletebutton, addbutton, unlocked, duplicate, moveit,link;
+	private ImageButton Previous, Next, Exit, logosmall, databaseSave, adder, signer, finisher, deletelinker, deletebutton, addbutton, unlocked, duplicate, moveit, link, script;
 	public ImageButton modify;
 	private Image MenuSolo, MenuMulti, MenuScenario;
-	private ImageTextButton cout, tech, cycle, temp, rayon, nrj, up_cycle, up_temp, up_rayon, up_nrj, research, up;
+	private ImageTextButton cout, tech, cycle, temp, rayon, nrj, cycle_orig, temp_orig, rayon_orig, nrj_orig, up_cycle, up_temp, up_rayon, up_nrj, research, up;
 	private TextButton buttonConnect, buttonPlay, buttonStat, buttonSave, buttonApply, buttonPlaythis;
 	private ServerList Statdata, Userdata, Gamedata;
 	private Worldlist Worlddata;
-	private Label Statdatalabel, Userdatalabel, Gamedatalabel, Worlddatalabel;
+	private Label Statdatalabel, Userdatalabel, Gamedatalabel, Worlddatalabel, rewardlabel, goallavel, ressourcelabel, handicaplabel, worldlabel;
 	private TextArea TextDescriptive;
 	public Worlds worlds;
 	private Objectives Victory;
@@ -261,12 +264,12 @@ public class LevelScreen implements Screen {
 			if (level != null) {
 				if (level.Name.isEmpty())
 					level.Name=AssetLoader.language.get("[level"+(level.aWorld+1)+"/"+(level.aLevel+1)+"-name]");
-				if (level.Description.isEmpty())
+s				if (level.Description.isEmpty())
 					try {
 						level.Description=AssetLoader.language.get("[level"+(level.aWorld+1)+"/"+(level.aLevel+1)+"-desc]");
 					}
-					catch (Exception E) {}
-					finally {level.Description="";}
+					catch (Exception E) {level.Description="";}
+					finally {}
 				ButtonLevel buttonlevel= new ButtonLevel(level, AssetLoader.ratio, true);
 				buttonLevels.add(buttonlevel);
 				if (worlds.isDebug()) buttonlevel.setDisabled(false);
@@ -450,6 +453,16 @@ public class LevelScreen implements Screen {
 		//Group Level
 		//**********************************************************
 		Gdx.app.debug("wirechem-LevelScreen", "Création du groupe Level.");
+		rewardlabel = new Label(AssetLoader.language.get("[reward-levelscreen]"), AssetLoader.Skin_ui);
+		rewardlabel.setPosition(1215, AssetLoader.height - 38);
+		goallavel = new Label(AssetLoader.language.get("[goal-levelscreen]"), AssetLoader.Skin_ui);
+		goallavel.setPosition(1215, 272);
+		ressourcelabel = new Label(AssetLoader.language.get("[ressource-levelscreen]"), AssetLoader.Skin_ui);
+		ressourcelabel.setPosition(1215, 122);
+		handicaplabel = new Label(AssetLoader.language.get("[handicap-levelscreen]"), AssetLoader.Skin_ui);
+		handicaplabel.setPosition(1215, 582);
+		worldlabel = new Label("", AssetLoader.Skin_ui);
+		worldlabel.setPosition(15, 148);
 		TextDescriptive = new TextArea("Descriptif", AssetLoader.Skin_level,"Descriptif");
 		TextDescriptive.setBounds(15, 15, 1185, 110);
 		Next = new ImageButton(AssetLoader.Skin_level, "Next");
@@ -713,6 +726,11 @@ public class LevelScreen implements Screen {
 		group_level.addActor(up);
 		group_level.addActor(research);
 		group_level.addActor(Victory);
+		group_level.addActor(rewardlabel);
+		group_level.addActor(goallavel);
+		group_level.addActor(ressourcelabel);
+		group_level.addActor(handicaplabel);
+		group_level.addActor(worldlabel);	
 		
 		//**********************************************************
 		//Group Base
@@ -883,13 +901,62 @@ public class LevelScreen implements Screen {
 		group_other=new Group();
 		group_other.addActor(Exit);
 		group_other.addActor(logosmall);
+	
 		
 		//**********************************************************
 		//Group Debug
 		//**********************************************************
 		Gdx.app.debug("wirechem-LevelScreen", "Création du groupe Debug.");
-		moveit = new ImageButton(AssetLoader.Skin_level, "moveit");
-		moveit.setPosition(1460, 140);	
+		
+		temp_orig = new ImageTextButton("", AssetLoader.Skin_level, "temp");
+		temp_orig.setPosition(1665, 360);
+		temp_orig.addListener(new ClickListener() {
+			@Override
+			public void clicked(InputEvent event, float x, float y) {
+				if (worlds.isDebug()) {
+				selected.level.Temp_orig+=addervalue;
+				selected.level.Temp_orig=Math.max(0, Math.min(100000,selected.level.Temp_orig));
+				temp_orig.setText(String.valueOf(selected.level.Temp_orig));
+				}
+			}
+		});
+		cycle_orig = new ImageTextButton("", AssetLoader.Skin_level, "cycle");
+		cycle_orig.setPosition(1540, 360);
+		cycle_orig.addListener(new ClickListener() {
+			@Override
+			public void clicked(InputEvent event, float x, float y) {
+				if (worlds.isDebug()) {
+				selected.level.Cycle_orig+=addervalue;
+				selected.level.Cycle_orig=Math.max(0, Math.min(100000,selected.level.Cycle_orig));
+				cycle_orig.setText(String.valueOf(selected.level.Cycle_orig));
+				}
+			}
+		});
+		nrj_orig = new ImageTextButton("", AssetLoader.Skin_level, "nrj");
+		nrj_orig.setPosition(1665, 490);
+		nrj_orig.addListener(new ClickListener() {
+			@Override
+			public void clicked(InputEvent event, float x, float y) {
+				if (worlds.isDebug()) {
+				selected.level.Nrj_orig+=addervalue;
+				selected.level.Nrj_orig=Math.max(0, Math.min(100000,selected.level.Nrj_orig));
+				nrj_orig.setText(String.valueOf(selected.level.Nrj_orig));
+				}
+			}
+		});
+		rayon_orig = new ImageTextButton("", AssetLoader.Skin_level, "rayon");
+		rayon_orig.setPosition(1540, 490);
+		rayon_orig.addListener(new ClickListener() {
+			@Override
+			public void clicked(InputEvent event, float x, float y) {
+				if (worlds.isDebug()) {
+				selected.level.Rayon_orig+=addervalue;
+				selected.level.Rayon_orig=Math.max(0, Math.min(100000,selected.level.Rayon_orig));
+				rayon_orig.setText(String.valueOf(selected.level.Rayon_orig));
+				}
+			}
+		});
+		moveit = new ImageButton(AssetLoader.Skin_level, "moveit");	
 		moveit.addListener(new ClickListener() {
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
@@ -899,7 +966,6 @@ public class LevelScreen implements Screen {
 			}
 		});
 		modify = new ImageButton(AssetLoader.Skin_level, "modify");
-		modify.setPosition(1460, 140);	
 		modify.addListener(new ClickListener() {
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
@@ -908,8 +974,7 @@ public class LevelScreen implements Screen {
 				selectone();
 			}
 		});
-		link = new ImageButton(AssetLoader.Skin_level, "link");
-		link.setPosition(1460, 140);	
+		link = new ImageButton(AssetLoader.Skin_level, "link");	
 		link.addListener(new ClickListener() {
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
@@ -919,7 +984,6 @@ public class LevelScreen implements Screen {
 			}
 		});
 		addbutton = new ImageButton(AssetLoader.Skin_level, "level");
-		addbutton.setPosition(1760, 540);	
 		addbutton.addListener(new ClickListener() {
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
@@ -935,8 +999,7 @@ public class LevelScreen implements Screen {
 				worlds.addLevel(level);
 				}
 			});
-		unlocked = new ImageButton(AssetLoader.Skin_level, "unlocked");
-		unlocked.setPosition(1460, 140);	
+		unlocked = new ImageButton(AssetLoader.Skin_level, "unlocked");	
 		unlocked.addListener(new ClickListener() {
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
@@ -946,16 +1009,29 @@ public class LevelScreen implements Screen {
 					worlds.LockLevel(selected.level.aLevel);
 			}
 		});
+		script = new ImageButton(AssetLoader.Skin_level, "script");
+		script.addListener(new ClickListener() {
+			@Override
+			public void clicked(InputEvent event, float x, float y) {
+				stage.setKeyboardFocus(TextDescriptive);
+				TextDescriptive.setTextFieldListener(new TextFieldListener() {
+					@Override
+			        public void keyTyped (TextField textField, char key) {
+						if (key == Input.Keys.ENTER) {
+							stage.setKeyboardFocus(nextField());
+			            }
+			        }
+				});
+			}
+		});
 		duplicate = new ImageButton(AssetLoader.Skin_level, "duplicate");
-		duplicate.setPosition(1460, 140);	
 		duplicate.addListener(new ClickListener() {
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
 				worlds.dupLevel(selected.level.aLevel);
 			}
 		});
-		deletebutton = new ImageButton(AssetLoader.Skin_level, "eraser");
-		deletebutton.setPosition(1460, 140);	
+		deletebutton = new ImageButton(AssetLoader.Skin_level, "eraser");	
 		deletebutton.addListener(new ClickListener() {
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
@@ -968,7 +1044,6 @@ public class LevelScreen implements Screen {
 				}
 			});
 		deletelinker = new ImageButton(AssetLoader.Skin_level, "cut");
-		deletelinker.setPosition(1560, 140);	
 		deletelinker.addListener(new ClickListener() {
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
@@ -980,7 +1055,6 @@ public class LevelScreen implements Screen {
 			});
 		finisher = new ImageButton(AssetLoader.Skin_level, "finish");
 		finisher.setSize(64, 64);
-		finisher.setPosition(1560, 40);	
 		finisher.addListener(new ClickListener() {
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
@@ -1046,6 +1120,7 @@ public class LevelScreen implements Screen {
 		vertibarmod.addActor(deletebutton);	
 		vertibarmod.addActor(duplicate);
 		vertibarmod.addActor(deletelinker);
+		vertibarmod.addActor(script);
 		vertibarmod.setVisible(false);
 		
 		vertibar=new VerticalGroup();
@@ -1065,13 +1140,16 @@ public class LevelScreen implements Screen {
 		modifbar.add(addbutton);
 		moveit.setChecked(true);
 		
-		
 		group_debug=new Group();
 		group_debug.addActor(vertibar);
 		group_debug.addActor(vertibarmod);
 		group_debug.addActor(adder);
 		group_debug.addActor(signer);
 		group_debug.addActor(databaseSave);
+		group_debug.addActor(cycle_orig);
+		group_debug.addActor(temp_orig);
+		group_debug.addActor(rayon_orig);
+		group_debug.addActor(nrj_orig);
 		
 		//**********************************************************
 		Gdx.app.debug("wirechem-LevelScreen", "Affichage du menu.");
@@ -1085,6 +1163,13 @@ public class LevelScreen implements Screen {
 	public void render(float delta) {
 		runTime += delta;
 		Renderer.render(delta, runTime);
+		if (worlds.getWorld()>0) {
+			rewardlabel.setColor(AssetLoader.Levelcolors[worlds.getWorld()]);
+			goallavel.setColor(AssetLoader.Levelcolors[worlds.getWorld()]);
+			ressourcelabel.setColor(AssetLoader.Levelcolors[worlds.getWorld()]);
+			handicaplabel.setColor(AssetLoader.Levelcolors[worlds.getWorld()]);
+			worldlabel.setColor(AssetLoader.Levelcolors[worlds.getWorld()]);
+		}
 		stage.act();
 		stage.draw();
 	}
@@ -1144,21 +1229,52 @@ public class LevelScreen implements Screen {
 		showlevel(null);
 		return;
 	}
+	
+	public Actor nextField() {	
+		Actor nextField = stage.getKeyboardFocus();
+		if (nextField==TextDescriptive)
+			return (Actor)worldlabel;
+		else if (nextField==TextDescriptive)
+			return (Actor)TextDescriptive;
+		return TextDescriptive;
+	}
 
 	public void showlevel(ButtonLevel button) {
 		if 	(button!=null) {
 			Gdx.app.debug("wirechem-LevelScreen", "Reading button "	+ button.level.Name);
+			worldlabel.setText(button.level.Name);
 			TextDescriptive.setText(button.level.Description);
+			TextDescriptive.setVisible(true);
 			Victory.setVictory(button.level.Victory_orig);
 			button.setChecked(true);
 			buttonPlay.setVisible(true);
 		}
 		else
 		{
-			Gdx.app.debug("wirechem-LevelScreen", "Raz button information");
+			Gdx.app.debug("wirechem-LevelScreen", "Efface les informations");
 			buttonPlay.setVisible(false);
 			TextDescriptive.setVisible(false);
 		}
+		if (button!=null && worlds.isDebug()) {
+			cycle_orig.setText(String.valueOf(button.level.Cycle_orig));
+			cycle_orig.setVisible(true);
+		} else
+			cycle_orig.setVisible(false);
+		if (button!=null && worlds.isDebug()) {
+			temp_orig.setText(String.valueOf(button.level.Temp_orig));
+			temp_orig.setVisible(true);
+		} else
+			temp_orig.setVisible(false);
+		if (button!=null && worlds.isDebug()) {
+			nrj_orig.setText(String.valueOf(button.level.Nrj_orig));
+			nrj_orig.setVisible(true);
+		} else
+			nrj_orig.setVisible(false);
+		if (button!=null && worlds.isDebug()) {
+			rayon_orig.setText(String.valueOf(button.level.Rayon_orig));
+			rayon_orig.setVisible(true);
+		} else
+			rayon_orig.setVisible(false);
 		if (button!=null && (worlds.isDebug() || button.level.Maxcycle < 99999 && button.level.Maxcycle > 0)) {
 			cycle.setText(String.valueOf(button.level.Maxcycle));
 			cycle.setVisible(true);
