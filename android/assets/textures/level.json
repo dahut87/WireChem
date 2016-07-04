@@ -239,7 +239,6 @@
         info_nom: { font : Vademecum-18 }
     }
   com.badlogic.gdx.scenes.scene2d.ui.TextField$TextFieldStyle: { 
-        Descriptif: { font : OpenDyslexicAlta-20 , fontColor:white}
         info_desc: { font : OpenDyslexicAlta-20 , fontColor:white}
         info_tooltip: { font : OpenDyslexicAlta-18 , fontColor:white}
     }

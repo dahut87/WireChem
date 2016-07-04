@@ -1,8 +1,12 @@
 {
-com.badlogic.gdx.graphics.g2d.BitmapFont: { default-font: { file: fonts/OpenDyslexicAlta-22.fnt } },
+com.badlogic.gdx.graphics.g2d.BitmapFont: { 
+default-font: { file: fonts/OpenDyslexicAlta-22.fnt }
+OpenDyslexicAlta-20: { file: fonts/OpenDyslexicAlta-20.fnt }
+ },
 com.badlogic.gdx.graphics.Color: {
     green: { a: 1, b: 0, g: 1, r: 0 },
     white: { a: 1, b: 1, g: 1, r: 1 },
+    fixedwhite: { a: 1, b: 1, g: 1, r: 1 },
     red: { a: 1, b: 0, g: 0, r: 1 },
     grey: { a: 1, b: 0.75, g: 0.75, r: 0.75 },
     lowgrey: { a: 1, b: 0.25, g: 0.25, r: 0.25 },
@@ -17,9 +21,9 @@ com.badlogic.gdx.scenes.scene2d.ui.Button$ButtonStyle: {
     toggle: { down: default-round-down, checked: default-round-down, up: default-round }
 },
 com.badlogic.gdx.scenes.scene2d.ui.TextButton$TextButtonStyle: {
-    default: { down: default-round-down, up: default-round, font: default-font, fontColor: white, disabledFontColor:lowgrey },
-    checkable: { down: default-round-down, up: default-round, checked: default-round-red, font: default-font, fontColor: white, disabledFontColor:lowgrey },
-    toggle: { down: default-round-down, up: default-round, checked: default-round-down, font: default-font, fontColor: white, 
+    default: { down: default-round-down, up: default-round, font: default-font, fontColor: fixedwhite, disabledFontColor:lowgrey },
+    checkable: { down: default-round-down, up: default-round, checked: default-round-red, font: default-font, fontColor: fixedwhite, disabledFontColor:lowgrey },
+    toggle: { down: default-round-down, up: default-round, checked: default-round-down, font: default-font, fontColor: fixedwhite, 
     downFontColor: red }
 },
 com.badlogic.gdx.scenes.scene2d.ui.ScrollPane$ScrollPaneStyle: {
@@ -49,7 +53,9 @@ com.badlogic.gdx.scenes.scene2d.ui.Label$LabelStyle: {
     grey: { font: default-font, fontColor: grey }
 },
 com.badlogic.gdx.scenes.scene2d.ui.TextField$TextFieldStyle: {
-    default: { selection: selection, background: textfield, font: default-font, fontColor: white, cursor: cursor }
+    default: { selection: selection, background: textfield, font: default-font, fontColor: white, cursor: cursor },
+    transparent: { selection: selection, font: default-font, fontColor: white, cursor: cursor },
+    descriptif: { selection: selection, font: OpenDyslexicAlta-20, fontColor: fixedwhite, cursor: cursor }
 },
 com.badlogic.gdx.scenes.scene2d.ui.CheckBox$CheckBoxStyle: {
     default: { checkboxOn: check-on, checkboxOff: check-off, font: default-font, fontColor: white }
