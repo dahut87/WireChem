@@ -121,7 +121,7 @@ public class PrefWindow extends Window {
 		Setrefresh = new CheckBox(AssetLoader.language.get("[WinOptions-gamescreen-refresh]"),AssetLoader.Skin_ui);
 		table.add(Setrefresh).left();
 		table.row();
-		table.add(new Label(AssetLoader.language.get("[WinOptions-gamescreen-language]"), AssetLoader.Skin_ui,"default-font", Color.WHITE)).left();
+		table.add(new Label(AssetLoader.language.get("[WinOptions-gamescreen-language]"), AssetLoader.Skin_ui,"medium", Color.WHITE)).left();
 		Setflag = new ImageButton(AssetLoader.Skin_level, "Setflag");
 		table.add(Setflag);
 		table.row();
@@ -139,7 +139,7 @@ public class PrefWindow extends Window {
 		SetVsynch = new CheckBox(AssetLoader.language.get("[WinOptions-gamescreen-sync]"),AssetLoader.Skin_ui);
 		table.add(SetVsynch).left();
 		Table tablev1 = new Table();
-		tablev1.add(new Label(AssetLoader.language.get("[WinOptions-gamescreen-resolution]"), AssetLoader.Skin_ui, "default-font",Color.WHITE)).left().row();
+		tablev1.add(new Label(AssetLoader.language.get("[WinOptions-gamescreen-resolution]"), AssetLoader.Skin_ui, "medium",Color.WHITE)).left().row();
 		selResolution = new SelectBox<resolutions>(AssetLoader.Skin_ui);
 		selResolution.setItems(resolutions.values());
 		tablev1.add(selResolution).left().row();
@@ -149,7 +149,7 @@ public class PrefWindow extends Window {
 		SetFullscreen = new CheckBox(AssetLoader.language.get("[WinOptions-gamescreen-full]"), AssetLoader.Skin_ui);
 		table.add(SetFullscreen).left();
 		Table tablev2 = new Table();
-		tablev2.add(new Label(AssetLoader.language.get("[WinOptions-gamescreen-fill]"), AssetLoader.Skin_ui,"default-font", Color.WHITE)).left().row();
+		tablev2.add(new Label(AssetLoader.language.get("[WinOptions-gamescreen-fill]"), AssetLoader.Skin_ui,"medium", Color.WHITE)).left().row();
 		selAdaptscreen = new SelectBox<adaptation>(AssetLoader.Skin_ui);
 		selAdaptscreen.setItems(adaptation.values());
 		tablev2.add(selAdaptscreen).left().row();
@@ -157,7 +157,7 @@ public class PrefWindow extends Window {
 		table.row();
 
 		Table tablev3 = new Table();
-		tablev3.add(new Label(AssetLoader.language.get("[WinOptions-gamescreen-quality]"), AssetLoader.Skin_ui,	"default-font", Color.WHITE)).left().row();
+		tablev3.add(new Label(AssetLoader.language.get("[WinOptions-gamescreen-quality]"), AssetLoader.Skin_ui,	"medium", Color.WHITE)).left().row();
 		SetAnimation = new CheckBox(AssetLoader.language.get("[WinOptions-gamescreen-animation]"),AssetLoader.Skin_ui);
 		table.add(SetAnimation).left();
 		selTexturequal = new SelectBox<quality>(AssetLoader.Skin_ui);

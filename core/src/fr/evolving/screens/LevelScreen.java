@@ -71,7 +71,7 @@ public class LevelScreen implements Screen {
 	private TextButton buttonConnect, buttonPlay, buttonStat, buttonSave, buttonApply, buttonPlaythis;
 	private ServerList Statdata, Userdata, Gamedata;
 	private Worldlist Worlddata;
-	private Label Statdatalabel, Userdatalabel, Gamedatalabel, Worlddatalabel, rewardlabel, goallavel, ressourcelabel, handicaplabel;
+	private Label Statdatalabel, Userdatalabel, Gamedatalabel, Worlddatalabel, rewardlabel, goallabel, ressourcelabel, handicaplabel;
 	private TextField worldfield;
 	private TextArea TextDescriptive;
 	public Worlds worlds;
@@ -81,7 +81,6 @@ public class LevelScreen implements Screen {
 	public int addervalue;
 	private ButtonGroup<Button> chooser, modifbar;
 	public Group group_init, group_stat, group_level, group_base, group_debug, group_choose, group_other;
-	private ClickListener buttonLevelslistener;
 	private DragAndDrop dragAndDrop;
 	
 	public void play() {
@@ -173,6 +172,8 @@ public class LevelScreen implements Screen {
 		if (buttonLevels!=null)
 			for(ButtonLevel buttonlevel:buttonLevels)
 				AddDragDrop((Actor)buttonlevel);
+		AddDragDrop((Actor)Previous);
+		AddDragDrop((Actor)Next);
 	}
 	
 	public void AddDragDrop(final Actor actor) {
@@ -180,7 +181,7 @@ public class LevelScreen implements Screen {
 		dragAndDrop.addSource(new Source(actor) {
 			public Payload dragStart (InputEvent event, float x, float y, int pointer) {
 				Payload payload = new Payload();
-				payload.setObject(((ButtonLevel)event.getListenerActor()).level);
+				payload.setObject(((ButtonLevel)event.getListenerActor()).level.clone());
 
 				payload.setDragActor(new Label("Choose destination", AssetLoader.Skin_ui));
 
@@ -197,6 +198,10 @@ public class LevelScreen implements Screen {
 		});
 		dragAndDrop.addTarget(new Target(actor) {
 			public boolean drag (Source source, Payload payload, float x, float y, int pointer) {
+				if (actor.getName()=="Previous" || actor.getName()=="Next"){
+					((ClickListener) actor.getListeners().peek()).clicked(null, 1980, 2002);
+					return false;
+				}
 				Level levelsrc=(Level)payload.getObject();
 				Level leveldst=((ButtonLevel)actor).level;
 				Gdx.app.debug("wirechem-LevelScreen", "Verification d'un lien du niveau "+levelsrc.aWorld+","+levelsrc.aLevel+" vers "+leveldst.aWorld+","+leveldst.aLevel);
@@ -454,13 +459,13 @@ public class LevelScreen implements Screen {
 		//Group Level
 		//**********************************************************
 		Gdx.app.debug("wirechem-LevelScreen", "Création du groupe Level.");
-		rewardlabel = new Label(AssetLoader.language.get("[reward-levelscreen]"), AssetLoader.Skin_ui);
+		rewardlabel = new Label(AssetLoader.language.get("[reward-levelscreen]"), AssetLoader.Skin_ui, "variable");
 		rewardlabel.setPosition(1215, AssetLoader.height - 38);
-		goallavel = new Label(AssetLoader.language.get("[goal-levelscreen]"), AssetLoader.Skin_ui);
-		goallavel.setPosition(1215, 272);
-		ressourcelabel = new Label(AssetLoader.language.get("[ressource-levelscreen]"), AssetLoader.Skin_ui);
+		goallabel = new Label(AssetLoader.language.get("[goal-levelscreen]"), AssetLoader.Skin_ui, "variable");
+		goallabel.setPosition(1215, 272);
+		ressourcelabel = new Label(AssetLoader.language.get("[ressource-levelscreen]"), AssetLoader.Skin_ui, "variable");
 		ressourcelabel.setPosition(1215, 122);
-		handicaplabel = new Label(AssetLoader.language.get("[handicap-levelscreen]"), AssetLoader.Skin_ui);
+		handicaplabel = new Label(AssetLoader.language.get("[handicap-levelscreen]"), AssetLoader.Skin_ui, "variable");
 		handicaplabel.setPosition(1215, 582);
 		worldfield = new TextField("", AssetLoader.Skin_ui,"transparent");
 		worldfield.setPosition(15, 148);
@@ -503,6 +508,7 @@ public class LevelScreen implements Screen {
 			}
 		});
 		Next = new ImageButton(AssetLoader.Skin_level, "Next");
+		Next.setName("Next");
 		Next.setPosition(1030, 185);
 		Next.addListener(new ClickListener() {
 			@Override
@@ -516,6 +522,7 @@ public class LevelScreen implements Screen {
 			}
 		});
 		Previous = new ImageButton(AssetLoader.Skin_level, "Previous");
+		Previous.setName("Previous");
 		Previous.setPosition(1110, 185);
 		Previous.addListener(new ClickListener() {
 			@Override
@@ -764,7 +771,7 @@ public class LevelScreen implements Screen {
 		group_level.addActor(research);
 		group_level.addActor(Victory);
 		group_level.addActor(rewardlabel);
-		group_level.addActor(goallavel);
+		group_level.addActor(goallabel);
 		group_level.addActor(ressourcelabel);
 		group_level.addActor(handicaplabel);
 		group_level.addActor(worldfield);	
@@ -1263,15 +1270,29 @@ public class LevelScreen implements Screen {
 			Victory.setVictory(button.level.Victory_orig);
 			button.setChecked(true);
 			buttonPlay.setVisible(true);
+			worldfield.setVisible(true);
 			if (worlds.isDebug()) {
 				unlocked.setChecked(!button.level.Locked);				
 				finisher.setChecked(button.level.Special);
 				worldfield.setDisabled(false);
 				TextDescriptive.setDisabled(false);
+				cycle_orig.setText(String.valueOf(button.level.Cycle_orig));
+				cycle_orig.setVisible(true);
+				temp_orig.setText(String.valueOf(button.level.Temp_orig));
+				temp_orig.setVisible(true);
+				nrj_orig.setText(String.valueOf(button.level.Nrj_orig));
+				nrj_orig.setVisible(true);
+				rayon_orig.setText(String.valueOf(button.level.Rayon_orig));
+				rayon_orig.setVisible(true);
+				
 			}
 			else {
 				worldfield.setDisabled(true);
 				TextDescriptive.setDisabled(true);
+				cycle_orig.setVisible(false);
+				temp_orig.setVisible(false);
+				nrj_orig.setVisible(false);
+				rayon_orig.setVisible(false);
 			}
 		}
 		else
@@ -1279,27 +1300,17 @@ public class LevelScreen implements Screen {
 			Gdx.app.debug("wirechem-LevelScreen", "Efface les informations");
 			buttonPlay.setVisible(false);
 			TextDescriptive.setVisible(false);
-		}
-		if (button!=null && worlds.isDebug()) {
-			cycle_orig.setText(String.valueOf(button.level.Cycle_orig));
-			cycle_orig.setVisible(true);
-		} else
 			cycle_orig.setVisible(false);
-		if (button!=null && worlds.isDebug()) {
-			temp_orig.setText(String.valueOf(button.level.Temp_orig));
-			temp_orig.setVisible(true);
-		} else
 			temp_orig.setVisible(false);
-		if (button!=null && worlds.isDebug()) {
-			nrj_orig.setText(String.valueOf(button.level.Nrj_orig));
-			nrj_orig.setVisible(true);
-		} else
 			nrj_orig.setVisible(false);
-		if (button!=null && worlds.isDebug()) {
-			rayon_orig.setText(String.valueOf(button.level.Rayon_orig));
-			rayon_orig.setVisible(true);
-		} else
 			rayon_orig.setVisible(false);
+			buttonPlay.setVisible(false);
+			worldfield.setVisible(false);
+		}
+		if (button!=null && (worlds.isDebug() || button.level.aWorld>0)) {
+			handicaplabel.setVisible(true);
+		} else
+			handicaplabel.setVisible(false);
 		if (button!=null && (worlds.isDebug() || button.level.Maxcycle < 99999 && button.level.Maxcycle > 0)) {
 			cycle.setText(String.valueOf(button.level.Maxcycle));
 			cycle.setVisible(true);
@@ -1321,15 +1332,25 @@ public class LevelScreen implements Screen {
 		} else
 			rayon.setVisible(false);
 		if (button!=null && (worlds.isDebug() || button.level.Cout_orig > 0)) {
+			Victory.setVisible(true);
+			goallabel.setVisible(true);
+			ressourcelabel.setVisible(true);
 			cout.setText(String.valueOf(button.level.Cout_orig));
 			cout.setVisible(true);
-		} else
+		} else {
 			cout.setVisible(false);
+			Victory.setVisible(false);
+			goallabel.setVisible(false);
+			ressourcelabel.setVisible(false);
+		}
 		if (button!=null && (worlds.isDebug() || button.level.Tech >= 1)) {
+			rewardlabel.setVisible(true);
 			tech.setText(String.valueOf(button.level.Tech));
 			tech.setVisible(true);
-		} else
+		} else {
 			tech.setVisible(false);
+			rewardlabel.setVisible(false);
+		}
 		if (button!=null && (worlds.isDebug() || button.level.rewards[0] >= 1)) {
 			research.setText(String.valueOf(button.level.rewards[0]));
 			research.setVisible(true);
@@ -1360,7 +1381,6 @@ public class LevelScreen implements Screen {
 			up.setVisible(true);
 		} else
 			up.setVisible(false);
-		Victory.setVisible(button!=null && (worlds.isDebug() || button.level.Cout_orig > 0));
 		if (selected != null)
 			selected.setChecked(false);
 		selected = button;

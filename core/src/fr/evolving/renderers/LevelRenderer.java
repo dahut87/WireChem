@@ -8,6 +8,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
 
 import fr.evolving.UI.ButtonLevel;
@@ -107,10 +108,19 @@ public class LevelRenderer {
 						if ((item.length == 2) && (button2.level.aWorld == item[0]) && (button2.level.aLevel == item[1])) 
 							if (!LevelScreen.worlds.isDebug())
 								Laser.draw(batcher,button1.level.X,button1.level.Y* AssetLoader.ratio,button2.level.X,button2.level.Y* AssetLoader.ratio,10,0.5f,!button2.level.Locked,	button1.getLevelcolor(),button2.getLevelcolor());
-							else
-								Laser.drawnotsoold(shapeRenderer,button1.level.X,button1.level.Y* AssetLoader.ratio,button2.level.X,button2.level.Y* AssetLoader.ratio,10,0.5f,!button2.level.Locked,	button1.getLevelcolor(),button2.getLevelcolor());
-							
-			}		
+							else {
+								Vector2 debut=new Vector2(button1.level.X,button1.level.Y* AssetLoader.ratio);
+								Vector2 fin=new Vector2(button2.level.X,button2.level.Y* AssetLoader.ratio);
+								Vector2 size=fin.cpy().sub(debut);
+								Vector2 newfin=size.cpy().limit(size.len()-40).add(debut);
+								Vector2 corps=fin.cpy().sub(debut).limit(45);
+								Vector2 fleche1=newfin.cpy().sub(corps.cpy().rotate(30));
+								Vector2 fleche2=newfin.cpy().sub(corps.cpy().rotate(-30));
+								Laser.drawnotsoold(shapeRenderer,debut.x,debut.y,fin.x,fin.y,10,0.5f,!button2.level.Locked,	button1.getLevelcolor(),button2.getLevelcolor());
+								Laser.drawnotsoold(shapeRenderer,fleche2.x,fleche2.y,newfin.x,newfin.y,10,0.5f,!button2.level.Locked,	button1.getLevelcolor(),button2.getLevelcolor());
+								Laser.drawnotsoold(shapeRenderer,fleche1.x,fleche1.y,newfin.x,newfin.y,10,0.5f,!button2.level.Locked,	button1.getLevelcolor(),button2.getLevelcolor());
 
+							}
+			}		
 		}
 }

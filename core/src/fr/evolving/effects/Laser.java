@@ -71,27 +71,21 @@ public class Laser {
 		float y2 = yy2 + 20;
 		Laser.begin(ShapeType.Filled);
 		Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
-		if (true) {
-			Vector2 vectorall = new Vector2(x2, y2).sub(new Vector2(x1, y1));
-			float length = vectorall.len();
-			float size = 20;
-			Vector2 vectoradd = vectorall.scl(size / length);
-			float adding = 0;
-			for (float i = 2; i + 2 < length / size; i += 1) {
-				float width = (float) (maxwidth - Math.random() * 2);
-				while (width >= 0) {
-					adding = (width * power / maxwidth);
-					Color Acolor = colorsrc.cpy().lerp(colordst.cpy(),(i / (length / size)));
-					Laser.setColor(Acolor.add(adding, adding, adding, 0.5f));
-					if (Math.random() > 0.4)
-						Laser.rectLine(x1 + i * vectoradd.x, y1 + i	* vectoradd.y, x1 + (i + 1) * vectoradd.x, y1+ (i + 1) * vectoradd.y, width);
-					width = width - 1;
-				}
+		Vector2 vectorall = new Vector2(x2, y2).sub(new Vector2(x1, y1));
+		float length = vectorall.len();
+		float size = 20;
+		Vector2 vectoradd = vectorall.scl(size / length);
+		float adding = 0;
+		for (float i = 0; i < length / size-1; i += 1) {
+			float width = (float) (maxwidth - Math.random() * 2);
+			while (width >= 0) {
+				adding = (width * power / maxwidth);
+				Color Acolor = colorsrc.cpy().lerp(colordst.cpy(),(i / (length / size)));
+				Laser.setColor(Acolor.add(adding, adding, adding, 0.5f));
+				if (Math.random() > 0.4)
+					Laser.rectLine(x1 + i * vectoradd.x, y1 + i	* vectoradd.y, x1 + (i + 1) * vectoradd.x, y1+ (i + 1) * vectoradd.y, width);
+				width = width - 1;
 			}
-		} else {
-			Color Acolor = new Color(0.5f, 0.5f, 0.5f, 1f);
-			Laser.setColor(Acolor);
-			Laser.rectLine(x1, y1, x2, y2, 2);
 		}
 		Laser.end();
 		Gdx.gl.glDisable(GL20.GL_BLEND);

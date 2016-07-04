@@ -69,25 +69,25 @@ public class Insufler33 extends Transmuter {
 		this.Activable = false;
 		this.ActivationLevel = 0;
 		this.Tilestype = new OrderedMap<Vector2, CaseType>();
-		this.Tilestype.put(new Vector2(-1, 1), CaseType.Cuivre_seul);
+		this.Tilestype.put(new Vector2(-1, 1), CaseType.Rien);
 		this.Tilestype.put(new Vector2(0, 1), CaseType.Cuivre_seul);
-		this.Tilestype.put(new Vector2(1, 1), CaseType.Rien);
-		this.Tilestype.put(new Vector2(-1, 0), CaseType.Rien);
+		this.Tilestype.put(new Vector2(1, 1), CaseType.Cuivre_seul);
+		this.Tilestype.put(new Vector2(-1, 0), CaseType.Cuivre_seul);
 		this.Tilestype.put(new Vector2(0, 0), CaseType.Cuivre_seul);
-		this.Tilestype.put(new Vector2(1, 0), CaseType.Cuivre_seul);
-		this.Tilestype.put(new Vector2(-1, -1), CaseType.Cuivre_seul);
+		this.Tilestype.put(new Vector2(1, 0), CaseType.Rien);
+		this.Tilestype.put(new Vector2(-1, -1), CaseType.Rien);
 		this.Tilestype.put(new Vector2(0, -1), CaseType.Cuivre_seul);
-		this.Tilestype.put(new Vector2(1, -1), CaseType.Rien);
+		this.Tilestype.put(new Vector2(1, -1), CaseType.Cuivre_seul);
 		this.Tilesid = new OrderedMap<Vector2, Integer>();
-		this.Tilesid.put(new Vector2(-1, 1), 120);
-		this.Tilesid.put(new Vector2(0,1), 121);
-		this.Tilesid.put(new Vector2(1, 1), 122);
-		this.Tilesid.put(new Vector2(-1, 0), 123);
+		this.Tilesid.put(new Vector2(-1, 1), 125);
+		this.Tilesid.put(new Vector2(0,1), 126);
+		this.Tilesid.put(new Vector2(1, 1), 127);
+		this.Tilesid.put(new Vector2(-1, 0), 128);
 		this.Tilesid.put(new Vector2(0, 0), 129);
-		this.Tilesid.put(new Vector2(1, 0), 125);
-		this.Tilesid.put(new Vector2(-1, -1), 126);
-		this.Tilesid.put(new Vector2(0, -1), 127);
-		this.Tilesid.put(new Vector2(1, -1), 128);
+		this.Tilesid.put(new Vector2(1, 0), 130);
+		this.Tilesid.put(new Vector2(-1, -1), 131);
+		this.Tilesid.put(new Vector2(0, -1), 132);
+		this.Tilesid.put(new Vector2(1, -1), 133);
 	}
 
 	public String getName() {

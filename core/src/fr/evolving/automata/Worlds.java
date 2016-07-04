@@ -10,7 +10,6 @@ import fr.evolving.assets.InitWorlds;
 import fr.evolving.assets.Preference;
 
 public class Worlds extends Actor {
-	private ChangeEvent event;
 	private Array<Level> levels;
 	private String name;
 	private int usedworld;

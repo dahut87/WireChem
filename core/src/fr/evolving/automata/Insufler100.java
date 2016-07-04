@@ -8,6 +8,7 @@ import com.badlogic.gdx.utils.ObjectMap.Values;
 import com.badlogic.gdx.utils.OrderedMap;
 
 import fr.evolving.assets.AssetLoader;
+import fr.evolving.automata.Transmuter.CaseType;
 import fr.evolving.automata.Transmuter.Class;
 
 public class Insufler100 extends Transmuter {
@@ -68,25 +69,25 @@ public class Insufler100 extends Transmuter {
 		this.Activable = false;
 		this.ActivationLevel = 0;
 		this.Tilestype = new OrderedMap<Vector2, CaseType>();
-		this.Tilestype.put(new Vector2(-1, 1), CaseType.Cuivre);
+		this.Tilestype.put(new Vector2(-1, 1), CaseType.Rien);
 		this.Tilestype.put(new Vector2(0, 1), CaseType.Cuivre);
-		this.Tilestype.put(new Vector2(1, 1), CaseType.Rien);
-		this.Tilestype.put(new Vector2(-1, 0), CaseType.Rien);
+		this.Tilestype.put(new Vector2(1, 1), CaseType.Cuivre);
+		this.Tilestype.put(new Vector2(-1, 0), CaseType.Cuivre);
 		this.Tilestype.put(new Vector2(0, 0), CaseType.Cuivre);
-		this.Tilestype.put(new Vector2(1, 0), CaseType.Cuivre);
-		this.Tilestype.put(new Vector2(-1, -1), CaseType.Cuivre);
+		this.Tilestype.put(new Vector2(1, 0), CaseType.Rien);
+		this.Tilestype.put(new Vector2(-1, -1), CaseType.Rien);
 		this.Tilestype.put(new Vector2(0, -1), CaseType.Cuivre);
-		this.Tilestype.put(new Vector2(1, -1), CaseType.Rien);
+		this.Tilestype.put(new Vector2(1, -1), CaseType.Cuivre);
 		this.Tilesid = new OrderedMap<Vector2, Integer>();
-		this.Tilesid.put(new Vector2(-1, 1), 120);
-		this.Tilesid.put(new Vector2(0,1), 121);
-		this.Tilesid.put(new Vector2(1, 1), 122);
-		this.Tilesid.put(new Vector2(-1, 0), 123);
-		this.Tilesid.put(new Vector2(0, 0), 124);
-		this.Tilesid.put(new Vector2(1, 0), 125);
-		this.Tilesid.put(new Vector2(-1, -1), 126);
-		this.Tilesid.put(new Vector2(0, -1), 127);
-		this.Tilesid.put(new Vector2(1, -1), 128);
+		this.Tilesid.put(new Vector2(-1, 1), 125);
+		this.Tilesid.put(new Vector2(0,1), 141);
+		this.Tilesid.put(new Vector2(1, 1), 142);
+		this.Tilesid.put(new Vector2(-1, 0), 128);
+		this.Tilesid.put(new Vector2(0, 0), 143);
+		this.Tilesid.put(new Vector2(1, 0), 130);
+		this.Tilesid.put(new Vector2(-1, -1), 131);
+		this.Tilesid.put(new Vector2(0, -1), 144);
+		this.Tilesid.put(new Vector2(1, -1), 118);
 	}
 
 	public String getName() {
