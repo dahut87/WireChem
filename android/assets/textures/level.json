@@ -122,6 +122,7 @@
         cut_down: { name: cut, color: veryred },
         pencil_down: { name: pencil, color: veryred },
         eraser_down: { name: eraser, color: veryred },
+        script_down: { name: script, color: veryred },
 
         infos_down: { name: infos, color: veryred },
         extend_disabled: { name: extend, color: grey },
@@ -205,6 +206,7 @@
         modify: {up: modify, checked: modify_down}
         link: {up: link, checked: link_down}
         duplicate: { up: duplicate, down:duplicate_down }
+        script: {up:script, down:script_down}
         cut: { up: cut, down:cut_down }
         pencil: { up: pencil, down:pencil_down }
         eraser: { up: eraser, down:eraser_down }

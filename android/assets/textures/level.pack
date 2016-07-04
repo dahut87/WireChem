@@ -1184,23 +1184,30 @@ screen
   orig: 64, 64
   offset: 0, 0
   index: -1
-settings
+script
   rotate: false
   xy: 913, 719
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: -1
-sound
+settings
   rotate: false
   xy: 459, 199
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: -1
-speed
+sound
   rotate: false
   xy: 525, 199
+  size: 64, 64
+  orig: 64, 64
+  offset: 0, 0
+  index: -1
+speed
+  rotate: false
+  xy: 459, 133
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
@@ -1445,126 +1452,126 @@ sprite-transmuter
   index: 135
 start
   rotate: false
-  xy: 459, 133
+  xy: 525, 133
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: -1
 stat
   rotate: false
-  xy: 525, 133
+  xy: 591, 199
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: -1
 stop
   rotate: false
-  xy: 591, 199
+  xy: 591, 133
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: -1
 sub
   rotate: false
-  xy: 591, 133
+  xy: 915, 653
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: -1
 tech
   rotate: false
-  xy: 915, 653
+  xy: 915, 587
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: -1
 temp
   rotate: false
-  xy: 915, 587
+  xy: 915, 521
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: -1
 tree
   rotate: false
-  xy: 915, 521
+  xy: 655, 395
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: -1
 tuto
   rotate: false
-  xy: 655, 395
+  xy: 655, 329
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: -1
 unlocked
   rotate: false
-  xy: 655, 329
+  xy: 657, 263
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: -1
 up
   rotate: false
-  xy: 657, 263
+  xy: 657, 197
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: -1
 up_cycle
   rotate: false
-  xy: 657, 197
+  xy: 657, 131
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: -1
 up_nrj
   rotate: false
-  xy: 657, 131
+  xy: 397, 67
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: -1
 up_rayon
   rotate: false
-  xy: 397, 67
+  xy: 463, 67
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: -1
 up_temp
   rotate: false
-  xy: 463, 67
+  xy: 529, 67
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: -1
 usa
   rotate: false
-  xy: 529, 67
+  xy: 397, 1
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: -1
 windows
   rotate: false
-  xy: 397, 1
+  xy: 463, 1
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: -1
 zoomm
   rotate: false
-  xy: 463, 1
+  xy: 529, 1
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: -1
 zoomp
   rotate: false
-  xy: 529, 1
+  xy: 595, 65
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
