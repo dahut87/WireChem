@@ -71,7 +71,8 @@ public class LevelScreen implements Screen {
 	private TextButton buttonConnect, buttonPlay, buttonStat, buttonSave, buttonApply, buttonPlaythis;
 	private ServerList Statdata, Userdata, Gamedata;
 	private Worldlist Worlddata;
-	private Label Statdatalabel, Userdatalabel, Gamedatalabel, Worlddatalabel, rewardlabel, goallavel, ressourcelabel, handicaplabel, worldlabel;
+	private Label Statdatalabel, Userdatalabel, Gamedatalabel, Worlddatalabel, rewardlabel, goallavel, ressourcelabel, handicaplabel;
+	private TextField worldfield;
 	private TextArea TextDescriptive;
 	public Worlds worlds;
 	private Objectives Victory;
@@ -461,10 +462,46 @@ public class LevelScreen implements Screen {
 		ressourcelabel.setPosition(1215, 122);
 		handicaplabel = new Label(AssetLoader.language.get("[handicap-levelscreen]"), AssetLoader.Skin_ui);
 		handicaplabel.setPosition(1215, 582);
-		worldlabel = new Label("", AssetLoader.Skin_ui);
-		worldlabel.setPosition(15, 148);
-		TextDescriptive = new TextArea("Descriptif", AssetLoader.Skin_level,"Descriptif");
+		worldfield = new TextField("", AssetLoader.Skin_ui,"transparent");
+		worldfield.setPosition(15, 148);
+		worldfield.setMaxLength(100);
+		worldfield.setWidth(800);
+		worldfield.addListener(new ClickListener() {
+			public void enter(InputEvent event, float x, float y, int pointer, Actor fromActor) {
+				if (worlds.isDebug() && modify.isChecked()) {
+					Gdx.app.debug("wirechem-LevelScreen", "Enter world.");
+					stage.setKeyboardFocus(worldfield);
+				}
+			}
+			public void exit(InputEvent event, float x, float y,int pointer, Actor fromActor) {
+				if (worlds.isDebug() && modify.isChecked()) {
+					Gdx.app.debug("wirechem-LevelScreen", "Outer world.");
+					stage.setKeyboardFocus(null);
+					if (selected!=null)
+						selected.level.Name=worldfield.getText();
+						selected.setText(selected.level.Name);
+				}
+			}
+		});
+		TextDescriptive = new TextArea("Descriptif", AssetLoader.Skin_ui,"descriptif");
 		TextDescriptive.setBounds(15, 15, 1185, 110);
+		TextDescriptive.addListener(new ClickListener() {
+			public void enter(InputEvent event, float x, float y, int pointer, Actor fromActor) {
+				if (worlds.isDebug() && modify.isChecked()) {
+					Gdx.app.debug("wirechem-LevelScreen", "Enter desc.");
+					stage.setKeyboardFocus(TextDescriptive);
+				}
+			}
+
+			public void exit(InputEvent event, float x, float y,int pointer, Actor fromActor) {
+				if (worlds.isDebug() && modify.isChecked()) {
+					Gdx.app.debug("wirechem-LevelScreen", "Outer desc.");
+					stage.setKeyboardFocus(null);
+					if (selected!=null)
+						selected.level.Description=TextDescriptive.getText();
+				}
+			}
+		});
 		Next = new ImageButton(AssetLoader.Skin_level, "Next");
 		Next.setPosition(1030, 185);
 		Next.addListener(new ClickListener() {
@@ -730,7 +767,7 @@ public class LevelScreen implements Screen {
 		group_level.addActor(goallavel);
 		group_level.addActor(ressourcelabel);
 		group_level.addActor(handicaplabel);
-		group_level.addActor(worldlabel);	
+		group_level.addActor(worldfield);	
 		
 		//**********************************************************
 		//Group Base
@@ -1013,15 +1050,7 @@ public class LevelScreen implements Screen {
 		script.addListener(new ClickListener() {
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
-				stage.setKeyboardFocus(TextDescriptive);
-				TextDescriptive.setTextFieldListener(new TextFieldListener() {
-					@Override
-			        public void keyTyped (TextField textField, char key) {
-						if (key == Input.Keys.ENTER) {
-							stage.setKeyboardFocus(nextField());
-			            }
-			        }
-				});
+	
 			}
 		});
 		duplicate = new ImageButton(AssetLoader.Skin_level, "duplicate");
@@ -1163,13 +1192,8 @@ public class LevelScreen implements Screen {
 	public void render(float delta) {
 		runTime += delta;
 		Renderer.render(delta, runTime);
-		if (worlds.getWorld()>0) {
-			rewardlabel.setColor(AssetLoader.Levelcolors[worlds.getWorld()]);
-			goallavel.setColor(AssetLoader.Levelcolors[worlds.getWorld()]);
-			ressourcelabel.setColor(AssetLoader.Levelcolors[worlds.getWorld()]);
-			handicaplabel.setColor(AssetLoader.Levelcolors[worlds.getWorld()]);
-			worldlabel.setColor(AssetLoader.Levelcolors[worlds.getWorld()]);
-		}
+		if (worlds.getWorld()>-1)
+			worldfield.getStyle().fontColor.set(AssetLoader.Levelcolors[worlds.getWorld()]);
 		stage.act();
 		stage.draw();
 	}
@@ -1229,25 +1253,26 @@ public class LevelScreen implements Screen {
 		showlevel(null);
 		return;
 	}
-	
-	public Actor nextField() {	
-		Actor nextField = stage.getKeyboardFocus();
-		if (nextField==TextDescriptive)
-			return (Actor)worldlabel;
-		else if (nextField==TextDescriptive)
-			return (Actor)TextDescriptive;
-		return TextDescriptive;
-	}
 
 	public void showlevel(ButtonLevel button) {
 		if 	(button!=null) {
 			Gdx.app.debug("wirechem-LevelScreen", "Reading button "	+ button.level.Name);
-			worldlabel.setText(button.level.Name);
+			worldfield.setText(button.level.Name);
 			TextDescriptive.setText(button.level.Description);
 			TextDescriptive.setVisible(true);
 			Victory.setVictory(button.level.Victory_orig);
 			button.setChecked(true);
 			buttonPlay.setVisible(true);
+			if (worlds.isDebug()) {
+				unlocked.setChecked(!button.level.Locked);				
+				finisher.setChecked(button.level.Special);
+				worldfield.setDisabled(false);
+				TextDescriptive.setDisabled(false);
+			}
+			else {
+				worldfield.setDisabled(true);
+				TextDescriptive.setDisabled(true);
+			}
 		}
 		else
 		{
@@ -1336,10 +1361,6 @@ public class LevelScreen implements Screen {
 		} else
 			up.setVisible(false);
 		Victory.setVisible(button!=null && (worlds.isDebug() || button.level.Cout_orig > 0));
-		if (worlds.isDebug() && button!=null) {
-			unlocked.setChecked(!button.level.Locked);				
-			finisher.setChecked(button.level.Special);	
-		}
 		if (selected != null)
 			selected.setChecked(false);
 		selected = button;
