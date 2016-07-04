@@ -264,7 +264,7 @@ public class LevelScreen implements Screen {
 			if (level != null) {
 				if (level.Name.isEmpty())
 					level.Name=AssetLoader.language.get("[level"+(level.aWorld+1)+"/"+(level.aLevel+1)+"-name]");
-s				if (level.Description.isEmpty())
+				if (level.Description.isEmpty())
 					try {
 						level.Description=AssetLoader.language.get("[level"+(level.aWorld+1)+"/"+(level.aLevel+1)+"-desc]");
 					}
