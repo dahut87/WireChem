@@ -82,6 +82,7 @@ public class LevelScreen implements Screen {
 	private ButtonGroup<Button> chooser, modifbar;
 	public Group group_init, group_stat, group_level, group_base, group_debug, group_choose, group_other;
 	private DragAndDrop dragAndDrop;
+	public Source lastsource;
 	
 	public void play() {
 		if (worlds.getState()!=State.notloaded && worlds.getState()!=State.databasefailed) {
@@ -172,8 +173,6 @@ public class LevelScreen implements Screen {
 		if (buttonLevels!=null)
 			for(ButtonLevel buttonlevel:buttonLevels)
 				AddDragDrop((Actor)buttonlevel);
-		AddDragDrop((Actor)Previous);
-		AddDragDrop((Actor)Next);
 	}
 	
 	public void AddDragDrop(final Actor actor) {
@@ -182,26 +181,19 @@ public class LevelScreen implements Screen {
 			public Payload dragStart (InputEvent event, float x, float y, int pointer) {
 				Payload payload = new Payload();
 				payload.setObject(((ButtonLevel)event.getListenerActor()).level.clone());
-
 				payload.setDragActor(new Label("Choose destination", AssetLoader.Skin_ui));
-
 				Label validLabel = new Label("OK", AssetLoader.Skin_ui);
 				validLabel.setColor(0, 1, 0, 1);
 				payload.setValidDragActor(validLabel);
-
 				Label invalidLabel = new Label("NO", AssetLoader.Skin_ui);
 				invalidLabel.setColor(1, 0, 0, 1);
 				payload.setInvalidDragActor(invalidLabel);
-
 				return payload;
 			}
 		});
 		dragAndDrop.addTarget(new Target(actor) {
 			public boolean drag (Source source, Payload payload, float x, float y, int pointer) {
-				if (actor.getName()=="Previous" || actor.getName()=="Next"){
-					((ClickListener) actor.getListeners().peek()).clicked(null, 1980, 2002);
-					return false;
-				}
+				lastsource=source;
 				Level levelsrc=(Level)payload.getObject();
 				Level leveldst=((ButtonLevel)actor).level;
 				Gdx.app.debug("wirechem-LevelScreen", "Verification d'un lien du niveau "+levelsrc.aWorld+","+levelsrc.aLevel+" vers "+leveldst.aWorld+","+leveldst.aLevel);
@@ -214,11 +206,9 @@ public class LevelScreen implements Screen {
 					return false;
 				}
 			}
-
 			public void reset (Source source, Payload payload) {
 				getActor().setColor(Color.WHITE);
 			}
-
 			public void drop (Source source, Payload payload, float x, float y, int pointer) {
 				Level levelsrc=(Level)payload.getObject();
 				Level leveldst=((ButtonLevel)actor).level;
@@ -280,7 +270,6 @@ public class LevelScreen implements Screen {
 				buttonLevels.add(buttonlevel);
 				if (worlds.isDebug()) buttonlevel.setDisabled(false);
 				Gdx.app.debug("wirechem-LevelScreen", "Ajout du niveau :"+ level.Name + " N°" + String.valueOf(level.aLevel));
-				
 				buttonlevel.addListener(buttonLevelslistener());
 			}
 		}
@@ -514,9 +503,7 @@ public class LevelScreen implements Screen {
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
 				worlds.NextWorld();
-				Gdx.app.debug("wirechem-LevelScreen",
-						"World:" + String.valueOf(worlds.getWorld()) + " Maxworld:"
-								+ String.valueOf(worlds.getMaxWorlds()));
+				Gdx.app.debug("wirechem-LevelScreen","World:" + String.valueOf(worlds.getWorld()) + " Maxworld:"	+ String.valueOf(worlds.getMaxWorlds()));
 				if (worlds.isDebug() && link.isChecked())
 					initDragDrop();
 			}
@@ -528,9 +515,7 @@ public class LevelScreen implements Screen {
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
 				worlds.PreviousWorld();
-				Gdx.app.debug("wirechem-LevelScreen",
-						"World:" + String.valueOf(worlds.getWorld()) + " Maxworld:"
-								+ String.valueOf(worlds.getMaxWorlds()));
+				Gdx.app.debug("wirechem-LevelScreen","World:" + String.valueOf(worlds.getWorld()) + " Maxworld:"+ String.valueOf(worlds.getMaxWorlds()));
 				if (worlds.isDebug() && link.isChecked())
 					initDragDrop();
 			}
@@ -1103,6 +1088,15 @@ public class LevelScreen implements Screen {
 		signer = new ImageButton(AssetLoader.Skin_level, "add");
 		signer.setPosition(1660, 40);	
 		signer.addListener(new ClickListener() {
+			public void enter(InputEvent event, float x, float y, int pointer, Actor fromActor) {
+				worlds.PreviousWorld();
+				//initDragDrop();
+				//InputEvent eventer=new InputEvent();
+				//eventer.setType(InputEvent.Type.touchDragged);
+				//buttonLevels.first().fire(eventer);
+				//dragAndDrop.addSource(lastsource);
+				//lastsource.dragStart(eventer, x, y, pointer);
+			}
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
 				String whereis=signer.getStyle().up.toString();

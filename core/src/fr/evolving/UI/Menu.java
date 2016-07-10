@@ -267,6 +267,10 @@ public class Menu extends Actor {
 		this.setMenuTransmuter(1, 2, ">100", Angular.A00,1);		
 		this.setMenuTransmuter(0, 7, "+/",Angular.A00,0);
 		this.setMenuTransmuter(1, 7, "-/",Angular.A00,0);
+		this.setMenuTransmuter(0, 6, "=+",Angular.A90,0);		
+		this.setMenuTransmuter(1, 6, "=-",Angular.A90,0);			
+		this.setMenuTransmuter(2, 6, "=!",Angular.A90,0);
+		this.setMenuTransmuter(3, 6, "=E",Angular.A90,0);
 		this.unSelect();
 	}
 
