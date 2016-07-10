@@ -169,6 +169,7 @@
  
     }
   com.badlogic.gdx.scenes.scene2d.ui.ImageButton$ImageButtonStyle: { 
+  		Transparent: {up: Transparent}
         Exit: { up: exit2 , down: exit2_down, over:exit2_over}
         Next: { up: arrows , down: arrows_down, over:arrows_over}
         Previous: { up: arrows2 , down: arrows2_down, over:arrows2_over}

@@ -18,9 +18,23 @@ Button-Next-icon
   orig: 32, 32
   offset: 0, 0
   index: -1
-Warningmsg
+Transparent
   rotate: false
   xy: 717, 451
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
+sprite-empty
+  rotate: false
+  xy: 717, 451
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: 52
+Warningmsg
+  rotate: false
+  xy: 717, 321
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
@@ -111,67 +125,60 @@ separator
   index: -1
 sprite-copper
   rotate: false
-  xy: 717, 321
+  xy: 847, 451
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
   index: 0
 sprite-copper
   rotate: false
-  xy: 847, 451
+  xy: 847, 321
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
   index: 1
 sprite-copper
   rotate: false
-  xy: 847, 321
+  xy: 616, 136
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
   index: 2
 sprite-copper
   rotate: false
-  xy: 616, 136
+  xy: 616, 6
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
   index: 3
 sprite-copper
   rotate: false
-  xy: 616, 6
+  xy: 746, 191
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
   index: 4
 sprite-copper
   rotate: false
-  xy: 746, 191
+  xy: 746, 61
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
   index: 5
 sprite-copper
   rotate: false
-  xy: 746, 61
+  xy: 876, 191
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
   index: 6
 sprite-copper
   rotate: false
-  xy: 876, 191
-  size: 128, 128
-  orig: 128, 128
-  offset: 0, 0
-  index: 7
-sprite-copper
-  rotate: false
   xy: 876, 61
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
-  index: 8
+  index: 7
 
 level2.png
 size: 1024,1024
@@ -254,189 +261,189 @@ sprite-copper
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
-  index: 9
+  index: 8
 sprite-copper
   rotate: false
   xy: 1, 8
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
-  index: 10
+  index: 9
 sprite-copper
   rotate: false
   xy: 482, 749
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
-  index: 11
+  index: 10
 sprite-copper
   rotate: false
   xy: 612, 879
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
-  index: 12
+  index: 11
 sprite-copper
   rotate: false
   xy: 131, 8
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
-  index: 13
+  index: 12
 sprite-copper
   rotate: false
   xy: 482, 619
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
-  index: 14
+  index: 13
 sprite-copper
   rotate: false
   xy: 742, 879
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
-  index: 15
+  index: 14
 sprite-copper
   rotate: false
   xy: 612, 749
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
-  index: 23
+  index: 15
 sprite-copper
   rotate: false
   xy: 261, 8
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
-  index: 26
+  index: 23
 sprite-copper
   rotate: false
   xy: 872, 879
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
-  index: 27
+  index: 26
 sprite-copper
   rotate: false
   xy: 742, 749
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
-  index: 29
+  index: 27
 sprite-copper
   rotate: false
   xy: 612, 619
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
-  index: 31
+  index: 29
 sprite-copper
   rotate: false
   xy: 391, 8
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
-  index: 32
+  index: 31
 sprite-copper
   rotate: false
   xy: 872, 749
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
-  index: 33
+  index: 32
 sprite-copper
   rotate: false
   xy: 742, 619
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
-  index: 34
+  index: 33
 sprite-copper
   rotate: false
   xy: 521, 8
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
-  index: 35
+  index: 34
 sprite-copper
   rotate: false
   xy: 872, 619
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
-  index: 36
+  index: 35
 sprite-copper
   rotate: false
   xy: 579, 489
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
-  index: 37
+  index: 36
 sprite-copper
   rotate: false
   xy: 579, 359
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
-  index: 38
+  index: 37
 sprite-copper
   rotate: false
   xy: 709, 489
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
-  index: 39
+  index: 38
 sprite-copper
   rotate: false
   xy: 709, 359
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
-  index: 40
+  index: 39
 sprite-copper
   rotate: false
   xy: 839, 489
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
-  index: 41
+  index: 40
 sprite-copper
   rotate: false
   xy: 839, 359
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
-  index: 42
+  index: 41
 sprite-copper
   rotate: false
   xy: 671, 229
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
-  index: 43
+  index: 42
 sprite-copper
   rotate: false
   xy: 801, 229
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
-  index: 44
+  index: 43
 sprite-copper
   rotate: false
   xy: 671, 99
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
-  index: 45
+  index: 44
 sprite-copper
   rotate: false
   xy: 801, 99
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
-  index: 46
+  index: 45
 
 level3.png
 size: 1024,1024
@@ -617,119 +624,119 @@ sprite-copper
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
-  index: 47
+  index: 46
 sprite-copper
   rotate: false
   xy: 1, 717
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
-  index: 48
+  index: 47
 sprite-copper
   rotate: false
   xy: 131, 847
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
-  index: 49
+  index: 48
 sprite-copper
   rotate: false
   xy: 1, 587
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
-  index: 50
+  index: 49
 sprite-copper
   rotate: false
   xy: 131, 717
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
-  index: 51
+  index: 50
 sprite-copper
   rotate: false
   xy: 261, 847
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
-  index: 55
+  index: 51
 sprite-copper
   rotate: false
   xy: 1, 457
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
-  index: 56
+  index: 55
 sprite-copper
   rotate: false
   xy: 131, 587
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
-  index: 57
+  index: 56
 sprite-copper
   rotate: false
   xy: 261, 717
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
-  index: 58
+  index: 57
 sprite-copper
   rotate: false
   xy: 391, 847
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
-  index: 59
+  index: 58
 sprite-copper
   rotate: false
   xy: 1, 327
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
-  index: 62
-sprite-copper_10#1
+  index: 59
+sprite-copper
   rotate: false
   xy: 131, 457
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
-  index: -1
-sprite-copper_10#2
+  index: 62
+sprite-copper_10#1
   rotate: false
   xy: 261, 587
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
   index: -1
-sprite-copper_10#3
+sprite-copper_10#2
   rotate: false
   xy: 391, 717
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
   index: -1
-sprite-copper_10#4
+sprite-copper_10#3
   rotate: false
   xy: 521, 847
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
   index: -1
-sprite-copper_10#5
+sprite-copper_10#4
   rotate: false
   xy: 1, 197
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
   index: -1
-sprite-empty
+sprite-copper_10#5
   rotate: false
   xy: 131, 327
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
-  index: 52
+  index: -1
 sprite-empty
   rotate: false
   xy: 261, 457
