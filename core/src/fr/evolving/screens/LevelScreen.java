@@ -71,7 +71,7 @@ public class LevelScreen implements Screen {
 	private TextButton buttonConnect, buttonPlay, buttonStat, buttonSave, buttonApply, buttonPlaythis;
 	private ServerList Statdata, Userdata, Gamedata;
 	private Worldlist Worlddata;
-	private Label Statdatalabel, Userdatalabel, Gamedatalabel, Worlddatalabel, rewardlabel, goallabel, ressourcelabel, handicaplabel;
+	private Label Statdatalabel, Userdatalabel, Gamedatalabel, Worlddatalabel, rewardlabel, goallabel, ressourcelabel, handicaplabel, initiallabel;
 	private TextField worldfield;
 	private TextArea TextDescriptive;
 	public Worlds worlds;
@@ -174,18 +174,18 @@ public class LevelScreen implements Screen {
 			for(ButtonLevel buttonlevel:buttonLevels)
 				AddDragDrop((Actor)buttonlevel);
 	}
-	
+
 	public void AddDragDrop(final Actor actor) {
 		if (actor==null) return;
 		dragAndDrop.addSource(new Source(actor) {
 			public Payload dragStart (InputEvent event, float x, float y, int pointer) {
 				Payload payload = new Payload();
 				payload.setObject(((ButtonLevel)event.getListenerActor()).level.clone());
-				payload.setDragActor(new Label("Choose destination", AssetLoader.Skin_ui));
-				Label validLabel = new Label("OK", AssetLoader.Skin_ui);
+				payload.setDragActor(new Label(AssetLoader.language.get("[dragdestination-levelscreen]"), AssetLoader.Skin_ui));
+				Label validLabel = new Label(AssetLoader.language.get("[dragok-levelscreen]"), AssetLoader.Skin_ui);
 				validLabel.setColor(0, 1, 0, 1);
 				payload.setValidDragActor(validLabel);
-				Label invalidLabel = new Label("NO", AssetLoader.Skin_ui);
+				Label invalidLabel = new Label(AssetLoader.language.get("[dragno-levelscreen]"), AssetLoader.Skin_ui);
 				invalidLabel.setColor(1, 0, 0, 1);
 				payload.setInvalidDragActor(invalidLabel);
 				return payload;
@@ -937,6 +937,9 @@ public class LevelScreen implements Screen {
 		//**********************************************************
 		Gdx.app.debug("wirechem-LevelScreen", "Création du groupe Debug.");
 		
+		
+		initiallabel = new Label(AssetLoader.language.get("[initiallabel-levelscreen]"),AssetLoader.Skin_ui, "variable");
+		initiallabel.setPosition(1480, 582);
 		temp_orig = new ImageTextButton("", AssetLoader.Skin_level, "temp");
 		temp_orig.setPosition(1665, 360);
 		temp_orig.addListener(new ClickListener() {
@@ -1180,6 +1183,7 @@ public class LevelScreen implements Screen {
 		group_debug.addActor(temp_orig);
 		group_debug.addActor(rayon_orig);
 		group_debug.addActor(nrj_orig);
+		group_debug.addActor(initiallabel);		
 		
 		//**********************************************************
 		Gdx.app.debug("wirechem-LevelScreen", "Affichage du menu.");
@@ -1278,6 +1282,7 @@ public class LevelScreen implements Screen {
 				nrj_orig.setVisible(true);
 				rayon_orig.setText(String.valueOf(button.level.Rayon_orig));
 				rayon_orig.setVisible(true);
+				initiallabel.setVisible(true);
 				
 			}
 			else {
@@ -1287,6 +1292,7 @@ public class LevelScreen implements Screen {
 				temp_orig.setVisible(false);
 				nrj_orig.setVisible(false);
 				rayon_orig.setVisible(false);
+				initiallabel.setVisible(false);
 			}
 		}
 		else
@@ -1300,6 +1306,7 @@ public class LevelScreen implements Screen {
 			rayon_orig.setVisible(false);
 			buttonPlay.setVisible(false);
 			worldfield.setVisible(false);
+			initiallabel.setVisible(false);
 		}
 		if (button!=null && (worlds.isDebug() || button.level.aWorld>0)) {
 			handicaplabel.setVisible(true);
