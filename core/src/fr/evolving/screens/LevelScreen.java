@@ -16,6 +16,7 @@ import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.ui.ButtonGroup;
+import com.badlogic.gdx.scenes.scene2d.ui.HorizontalGroup;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageTextButton;
@@ -71,12 +72,13 @@ public class LevelScreen implements Screen {
 	private TextButton buttonConnect, buttonPlay, buttonStat, buttonSave, buttonApply, buttonPlaythis;
 	private ServerList Statdata, Userdata, Gamedata;
 	private Worldlist Worlddata;
-	private Label Statdatalabel, Userdatalabel, Gamedatalabel, Worlddatalabel, rewardlabel, goallabel, ressourcelabel, handicaplabel, initiallabel;
+	private Label Statdatalabel, Userdatalabel, Gamedatalabel, Worlddatalabel, rewardlabel, goallabel, ressourcelabel, handicaplabel, initiallabel,outillabel,modelabel,savelabel;
 	private TextField worldfield;
 	private TextArea TextDescriptive;
 	public Worlds worlds;
 	private Objectives Victory;
-	private VerticalGroup vertibar,vertibarmod;
+	private VerticalGroup vertibarmod;
+	private HorizontalGroup vertibar;
 	public ButtonLevel selected;
 	public int addervalue;
 	private ButtonGroup<Button> chooser, modifbar;
@@ -936,8 +938,12 @@ public class LevelScreen implements Screen {
 		//Group Debug
 		//**********************************************************
 		Gdx.app.debug("wirechem-LevelScreen", "Création du groupe Debug.");
-		
-		
+		outillabel = new Label(AssetLoader.language.get("[outil-levelscreen]"), AssetLoader.Skin_ui, "variable");
+		outillabel.setPosition(1480, AssetLoader.height - 38);
+		modelabel = new Label(AssetLoader.language.get("[mode-levelscreen]"), AssetLoader.Skin_ui, "variable");
+		modelabel.setPosition(1480, 272);
+		savelabel = new Label(AssetLoader.language.get("[save-levelscreen]"), AssetLoader.Skin_ui, "variable");
+		savelabel.setPosition(1480, 122);
 		initiallabel = new Label(AssetLoader.language.get("[initiallabel-levelscreen]"),AssetLoader.Skin_ui, "variable");
 		initiallabel.setPosition(1480, 582);
 		temp_orig = new ImageTextButton("", AssetLoader.Skin_level, "temp");
@@ -1145,7 +1151,7 @@ public class LevelScreen implements Screen {
 			}
 		});
 		vertibarmod=new VerticalGroup();
-		vertibarmod.setPosition(1780, AssetLoader.height-100);
+		vertibarmod.setPosition(1550, AssetLoader.height-100);
 		vertibarmod.center();
 		vertibarmod.space(20f);
 		vertibarmod.addActor(unlocked);
@@ -1156,8 +1162,8 @@ public class LevelScreen implements Screen {
 		vertibarmod.addActor(script);
 		vertibarmod.setVisible(false);
 		
-		vertibar=new VerticalGroup();
-		vertibar.setPosition(1600, AssetLoader.height-100);
+		vertibar=new HorizontalGroup();
+		vertibar.setPosition(1565, 215);
 		vertibar.center();
 		vertibar.space(20f);
 		vertibar.addActor(moveit);
@@ -1183,7 +1189,10 @@ public class LevelScreen implements Screen {
 		group_debug.addActor(temp_orig);
 		group_debug.addActor(rayon_orig);
 		group_debug.addActor(nrj_orig);
-		group_debug.addActor(initiallabel);		
+		group_debug.addActor(initiallabel);
+		group_debug.addActor(outillabel);
+		group_debug.addActor(modelabel);
+		group_debug.addActor(savelabel);			
 		
 		//**********************************************************
 		Gdx.app.debug("wirechem-LevelScreen", "Affichage du menu.");

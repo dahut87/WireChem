@@ -97,7 +97,14 @@ public class LevelRenderer {
 				shapeRenderer.rect(1210, 620, 250, AssetLoader.height - 630);
 		}
 		if (!LevelScreen.group_init.isVisible())
-			shapeRenderer.rect(1470, 10, 440, AssetLoader.height - 20);
+			if (!LevelScreen.worlds.isDebug())
+				shapeRenderer.rect(1470, 10, 440, AssetLoader.height - 20);
+			else {
+				shapeRenderer.rect(1470, 10, 440, 140);
+				shapeRenderer.rect(1470, 160, 440, 140);
+				shapeRenderer.rect(1470, 310, 440, 300);
+				shapeRenderer.rect(1470, 620, 440, AssetLoader.height - 630);
+			}
 		shapeRenderer.end();
 		if (LevelScreen.buttonLevels != null)
 			for (int i=0;i<LevelScreen.buttonLevels.size;i++)
