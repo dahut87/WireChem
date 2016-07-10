@@ -134,8 +134,7 @@ public class AssetLoader {
 				new Color(0.294f, 0.466f, 0.615f, 1),
 				new Color(0.478f, 0.192f, 0.098f, 1) };
 		Typenames = new String[13];
-		Typenames = new String[] { "E-", "e-", "Ph", "e0", "E0", "e+", "E+",
-				"K", "L", "M", "N", "n", "p" };
+		Typenames = new String[] { "E-", "e-", "Ph", "e0", "E0", "e+", "E+", "K", "L", "M", "N", "n", "p" };
 		Gdx.app.debug("wirechem-AssetLoader", "Création des tiles...");
 		tileSet = new TiledMapTileSet();
 		Array<TextureAtlas.AtlasRegion> allregions = Atlas_level.getRegions();

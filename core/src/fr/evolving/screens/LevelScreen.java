@@ -65,7 +65,7 @@ public class LevelScreen implements Screen {
 	private Stage stage;
 	private Table table;
 	private WarningDialog dialog;
-	private ImageButton Previous, Next, Exit, logosmall, databaseSave, adder, signer, finisher, deletelinker, deletebutton, addbutton, unlocked, duplicate, moveit, link, script;
+	private ImageButton Previous, Next, Exit, logosmall, databaseSave, adder, signer, finisher, deletelinker, deletebutton, addbutton, unlocked, duplicate, moveit, link, script, creater;
 	public ImageButton modify;
 	private Image MenuSolo, MenuMulti, MenuScenario;
 	private ImageTextButton cout, tech, cycle, temp, rayon, nrj, cycle_orig, temp_orig, rayon_orig, nrj_orig, up_cycle, up_temp, up_rayon, up_nrj, research, up;
@@ -946,6 +946,23 @@ public class LevelScreen implements Screen {
 		savelabel.setPosition(1480, 122);
 		initiallabel = new Label(AssetLoader.language.get("[initiallabel-levelscreen]"),AssetLoader.Skin_ui, "variable");
 		initiallabel.setPosition(1480, 582);
+		creater = new ImageButton(AssetLoader.Skin_level,"Transparent");
+		creater.setBounds(0, 180, 1180, AssetLoader.height-260);
+		creater.addListener(new ClickListener() {
+			@Override
+			public void clicked(InputEvent event, float x, float y) {
+				Level level=new Level(
+						worlds.getWorld(),
+						worlds.getFreeLevel(),
+						"Xenoxanax",
+						"Xenoxanax",
+						"Xx", new int[] { 0, 0, 0, 0, 0, 0 },
+						new int[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, (float)(x/creater.getWidth()*1024),
+						(float)(y/creater.getHeight()*768), 0, 0, new Grid(3, 3), 0, 0, 0, 0, 99999, 99999,
+						99999, 99999, "", false, new int[][] {{}});
+				worlds.addLevel(level);
+				}
+		});
 		temp_orig = new ImageTextButton("", AssetLoader.Skin_level, "temp");
 		temp_orig.setPosition(1665, 360);
 		temp_orig.addListener(new ClickListener() {
@@ -1025,18 +1042,11 @@ public class LevelScreen implements Screen {
 		addbutton.addListener(new ClickListener() {
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
-				Level level=new Level(
-						worlds.getWorld(),
-						worlds.getFreeLevel(),
-						"Xenoxanax",
-						"Xenoxanax",
-						"Xx", new int[] { 0, 0, 0, 0, 0, 0 },
-						new int[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, (float)Math.random() * 1000f,
-						(float)Math.random() * 750f, 0, 0, new Grid(3, 3), 0, 0, 0, 0, 99999, 99999,
-						99999, 99999, "", false, new int[][] {{}});
-				worlds.addLevel(level);
-				}
-			});
+				vertibarmod.setVisible(false);
+				initDragDrop();
+				selectnoone();
+			}
+		});
 		unlocked = new ImageButton(AssetLoader.Skin_level, "unlocked");	
 		unlocked.addListener(new ClickListener() {
 			@Override
@@ -1192,7 +1202,8 @@ public class LevelScreen implements Screen {
 		group_debug.addActor(initiallabel);
 		group_debug.addActor(outillabel);
 		group_debug.addActor(modelabel);
-		group_debug.addActor(savelabel);			
+		group_debug.addActor(savelabel);	
+		group_debug.addActor(creater);			
 		
 		//**********************************************************
 		Gdx.app.debug("wirechem-LevelScreen", "Affichage du menu.");
