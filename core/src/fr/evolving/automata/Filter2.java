@@ -8,9 +8,10 @@ import com.badlogic.gdx.utils.ObjectMap.Values;
 import com.badlogic.gdx.utils.OrderedMap;
 
 import fr.evolving.assets.AssetLoader;
+import fr.evolving.automata.Transmuter.CaseType;
 import fr.evolving.automata.Transmuter.Class;
 
-public class Insufler33 extends Transmuter {
+public class Filter2 extends Transmuter {
 	private static String Name, Desc;
 	private static Class theClass;
 	private static int Price;
@@ -39,20 +40,19 @@ public class Insufler33 extends Transmuter {
 	private static OrderedMap<Vector2, CaseType> Tilestype;
 	private static OrderedMap<Vector2, Integer> Tilesid;
 
-	public Insufler33(Level level) {
+	public Filter2(Level level) {
 		super(level);
-		this.id=">33";
-		this.Name = AssetLoader.language.get("[insufler33-name]");
-		this.Desc = AssetLoader.language.get("[insufler33-desc]");
-		this.theClass = Class.Direction;
-		this.Price = 30;
-		this.Technology = 3;
-		this.Research = 0;
+		this.id="=2";
+		this.Name = AssetLoader.language.get("[filter2-name]");
+		this.Desc = AssetLoader.language.get("[filter2-desc]");
+		this.theClass = Class.Filtrage;
+		this.Price = 275;
+		this.Technology = 8;
+		this.Research = 150;
 		this.Upgrade = null;
 		this.Unlock = new Array<Transmuter>();
-		this.Unlock.add(new Insufler100(null));
-		this.Unlock.add(new Insufler50(null));
-		this.showed = true;
+		this.Unlock.add(new Filter4(level));
+		this.showed = false;
 		this.CanUpgradeTemp = true;
 		this.CanUpgradeCycle = false;
 		this.CanUpgradeRayon = false;
@@ -61,7 +61,7 @@ public class Insufler33 extends Transmuter {
 		this.UpgradedCycle = 1f;
 		this.UpgradedRayon = 1f;
 		this.UpgradedNrj = 1f;
-		this.UsedTemp = 0.1f;
+		this.UsedTemp = 0.2f;
 		this.UsedRayon = 0f;
 		this.UsedNrj = 0f;
 		this.TurnTemp = 0f;
@@ -70,25 +70,13 @@ public class Insufler33 extends Transmuter {
 		this.Activable = false;
 		this.ActivationLevel = 0;
 		this.Tilestype = new OrderedMap<Vector2, CaseType>();
-		this.Tilestype.put(new Vector2(-1, 1), CaseType.Rien);
-		this.Tilestype.put(new Vector2(0, 1), CaseType.Cuivre_seul);
-		this.Tilestype.put(new Vector2(1, 1), CaseType.Cuivre_seul);
-		this.Tilestype.put(new Vector2(-1, 0), CaseType.Cuivre_seul);
-		this.Tilestype.put(new Vector2(0, 0), CaseType.Cuivre_seul);
 		this.Tilestype.put(new Vector2(1, 0), CaseType.Rien);
-		this.Tilestype.put(new Vector2(-1, -1), CaseType.Rien);
-		this.Tilestype.put(new Vector2(0, -1), CaseType.Cuivre_seul);
-		this.Tilestype.put(new Vector2(1, -1), CaseType.Cuivre_seul);
+		this.Tilestype.put(new Vector2(-1, 0), CaseType.Rien);
+		this.Tilestype.put(new Vector2(0, 0), CaseType.Cuivre);
 		this.Tilesid = new OrderedMap<Vector2, Integer>();
-		this.Tilesid.put(new Vector2(-1, 1), 125);
-		this.Tilesid.put(new Vector2(0,1), 126);
-		this.Tilesid.put(new Vector2(1, 1), 127);
-		this.Tilesid.put(new Vector2(-1, 0), 128);
-		this.Tilesid.put(new Vector2(0, 0), 129);
-		this.Tilesid.put(new Vector2(1, 0), 130);
-		this.Tilesid.put(new Vector2(-1, -1), 131);
-		this.Tilesid.put(new Vector2(0, -1), 132);
-		this.Tilesid.put(new Vector2(1, -1), 133);
+		this.Tilesid.put(new Vector2(1, 0), 162);
+		this.Tilesid.put(new Vector2(-1, 0), 161);
+		this.Tilesid.put(new Vector2(0, 0), 156);
 	}
 
 	public String getName() {
@@ -98,7 +86,7 @@ public class Insufler33 extends Transmuter {
 	public String getID() {
 		return this.id;
 	}
-
+	
 	public String getDesc() {
 		return this.Desc;
 	}
@@ -118,7 +106,7 @@ public class Insufler33 extends Transmuter {
 		this.UpgradedNrj = this.temp_UpgradedNrj;
 		this.showed=this.temp_showed;
 	}
-	
+
 	public void ProcessCycle() {
 		this.level.Temp += TurnTemp * UpgradedTemp;
 		this.level.Rayon += TurnRayon * UpgradedRayon;
@@ -132,6 +120,7 @@ public class Insufler33 extends Transmuter {
 		this.level.Rayon += UsedRayon * UpgradedRayon;
 		this.level.Nrj += UsedNrj * UpgradedNrj;
 	}
+
 
 	public void Activate() {
 		if (this.Activable)

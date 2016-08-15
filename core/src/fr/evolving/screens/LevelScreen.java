@@ -328,7 +328,11 @@ public class LevelScreen implements Screen {
 					else
 						selectnoone();
 					if (worlds.getLevelData()==null)
-						selected=buttonLevels.first();
+						if (buttonLevels.size>0)
+							selectone();
+						else 
+							selectnoone();
+	
 					Previous.setVisible(!worlds.isFirstWorld());
 					if (worlds.isDebug())
 						Next.setVisible(!worlds.isRealLastWorld());
@@ -951,6 +955,7 @@ public class LevelScreen implements Screen {
 		creater.addListener(new ClickListener() {
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
+				if (worlds.isDebug() && addbutton.isChecked()) {
 				Level level=new Level(
 						worlds.getWorld(),
 						worlds.getFreeLevel(),
@@ -962,6 +967,7 @@ public class LevelScreen implements Screen {
 						99999, 99999, "", false, new int[][] {{}});
 				worlds.addLevel(level);
 				}
+			}
 		});
 		temp_orig = new ImageTextButton("", AssetLoader.Skin_level, "temp");
 		temp_orig.setPosition(1665, 360);

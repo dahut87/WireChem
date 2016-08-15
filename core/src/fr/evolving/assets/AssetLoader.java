@@ -29,6 +29,11 @@ import com.badlogic.gdx.utils.viewport.ScalingViewport;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.badlogic.gdx.Application;
 
+import fr.evolving.automata.Filter1;
+import fr.evolving.automata.Filter2;
+import fr.evolving.automata.Filter4;
+import fr.evolving.automata.Filter4Activable;
+import fr.evolving.automata.Filter8Activable;
 import fr.evolving.automata.FilterActivable;
 import fr.evolving.automata.FilterBig;
 import fr.evolving.automata.FilterNegative;
@@ -207,6 +212,11 @@ public class AssetLoader {
 		allTransmuter.add(new FilterNegative(null));	
 		allTransmuter.add(new FilterBig(null));	
 		allTransmuter.add(new FilterActivable(null));
+		allTransmuter.add(new Filter1(null));	
+		allTransmuter.add(new Filter2(null));	
+		allTransmuter.add(new Filter4(null));	
+		allTransmuter.add(new Filter4Activable(null));
+		allTransmuter.add(new Filter8Activable(null));	
 		for (Transmuter transmuter : allTransmuter) {
 			Values<Integer> allTiles = transmuter.getTilesid().iterator();
 			while (allTiles.hasNext()) {

@@ -503,6 +503,7 @@ public class Worlds extends Actor {
 	
 	public int getMaxWorlds() {
 		int max = 0;
+		if (levels!=null)
 		for (Level level : levels)
 			if (level != null && level.aWorld > max)
 				max = level.aWorld;
@@ -530,6 +531,7 @@ public class Worlds extends Actor {
 		
 	public int getMaxLevel(int world) {
 		int max = 0;
+		if (levels!=null)
 		for (Level level : levels)
 			if (level != null && level.aWorld == world && level.aLevel>max)
 				max = level.aLevel;
