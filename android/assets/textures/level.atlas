@@ -1515,202 +1515,356 @@ sprite-transmuter
   index: 150
 
 level5.png
-size: 1024,256
+size: 1024,1024
 format: RGBA8888
 filter: Linear,Linear
 repeat: none
 run
   rotate: false
-  xy: 1, 3
+  xy: 521, 651
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: -1
 save
   rotate: false
-  xy: 391, 133
+  xy: 651, 781
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: -1
 screen
   rotate: false
-  xy: 67, 3
+  xy: 781, 911
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: -1
 script
   rotate: false
-  xy: 457, 133
+  xy: 1, 1
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: -1
 settings
   rotate: false
-  xy: 133, 3
+  xy: 131, 131
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: -1
 sound
   rotate: false
-  xy: 523, 133
+  xy: 261, 261
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: -1
 speed
   rotate: false
-  xy: 199, 3
+  xy: 391, 391
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: -1
 sprite-transmuter
   rotate: false
-  xy: 1, 69
+  xy: 1, 847
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
   index: 151
 sprite-transmuter
   rotate: false
-  xy: 131, 69
+  xy: 1, 717
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
   index: 152
 sprite-transmuter
   rotate: false
-  xy: 261, 69
+  xy: 131, 847
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
   index: 153
+sprite-transmuter
+  rotate: false
+  xy: 1, 587
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: 154
+sprite-transmuter
+  rotate: false
+  xy: 131, 717
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: 155
+sprite-transmuter
+  rotate: false
+  xy: 261, 847
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: 156
+sprite-transmuter
+  rotate: false
+  xy: 1, 457
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: 157
+sprite-transmuter
+  rotate: false
+  xy: 131, 587
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: 158
+sprite-transmuter
+  rotate: false
+  xy: 261, 717
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: 159
+sprite-transmuter
+  rotate: false
+  xy: 391, 847
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: 160
+sprite-transmuter
+  rotate: false
+  xy: 1, 327
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: 161
+sprite-transmuter
+  rotate: false
+  xy: 131, 457
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: 162
+sprite-transmuter
+  rotate: false
+  xy: 261, 587
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: 163
+sprite-transmuter
+  rotate: false
+  xy: 391, 717
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: 164
+sprite-transmuter
+  rotate: false
+  xy: 521, 847
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: 165
+sprite-transmuter
+  rotate: false
+  xy: 1, 197
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: 166
+sprite-transmuter
+  rotate: false
+  xy: 131, 327
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: 167
+sprite-transmuter
+  rotate: false
+  xy: 261, 457
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: 168
+sprite-transmuter
+  rotate: false
+  xy: 391, 587
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: 169
+sprite-transmuter
+  rotate: false
+  xy: 521, 717
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: 170
+sprite-transmuter
+  rotate: false
+  xy: 651, 847
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: 171
+sprite-transmuter
+  rotate: false
+  xy: 1, 67
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: 172
+sprite-transmuter
+  rotate: false
+  xy: 131, 197
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: 173
+sprite-transmuter
+  rotate: false
+  xy: 261, 327
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: 174
+sprite-transmuter
+  rotate: false
+  xy: 391, 457
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: 175
 start
   rotate: false
-  xy: 589, 133
+  xy: 521, 585
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: -1
 stat
   rotate: false
-  xy: 265, 3
+  xy: 847, 911
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: -1
 stop
   rotate: false
-  xy: 655, 133
+  xy: 521, 519
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: -1
 sub
   rotate: false
-  xy: 721, 133
+  xy: 913, 911
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: -1
 tech
   rotate: false
-  xy: 787, 133
+  xy: 587, 651
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: -1
 temp
   rotate: false
-  xy: 853, 133
+  xy: 587, 585
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: -1
 tree
   rotate: false
-  xy: 919, 133
+  xy: 587, 519
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: -1
 tuto
   rotate: false
-  xy: 391, 67
+  xy: 717, 781
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: -1
 unlocked
   rotate: false
-  xy: 457, 67
+  xy: 67, 1
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: -1
 up
   rotate: false
-  xy: 523, 67
+  xy: 197, 131
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: -1
 up_cycle
   rotate: false
-  xy: 589, 67
+  xy: 327, 261
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: -1
 up_nrj
   rotate: false
-  xy: 655, 67
+  xy: 457, 391
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: -1
 up_rayon
   rotate: false
-  xy: 721, 67
+  xy: 523, 453
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: -1
 up_temp
   rotate: false
-  xy: 787, 67
+  xy: 589, 453
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: -1
 usa
   rotate: false
-  xy: 853, 67
+  xy: 523, 387
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: -1
 windows
   rotate: false
-  xy: 919, 67
+  xy: 589, 387
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: -1
 zoomm
   rotate: false
-  xy: 331, 1
+  xy: 783, 845
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: -1
 zoomp
   rotate: false
-  xy: 397, 1
+  xy: 849, 845
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
