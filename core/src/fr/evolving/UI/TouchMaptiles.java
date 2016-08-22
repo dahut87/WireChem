@@ -161,6 +161,14 @@ public class TouchMaptiles extends Actor implements GestureListener,InputProcess
 			}
 	}
 
+	//Calques : 
+	// 0 Grille ou Fibres
+	// 1 Cuivre
+	// 2 Transmuteurs
+	// 3 Surtile Transmuteur | Particules
+	// 4 Surtile Fond du transmuteur | Effets 
+	// 5 Verrouillage | Jauge activation
+	// 6 Gratuité	
 	public void redraw() {
 		for (int x = 0; x < level.Grid.sizeX; x++)
 			for (int y = 0; y < level.Grid.sizeY; y++) {

@@ -12,6 +12,8 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Touchable;
+import com.badlogic.gdx.scenes.scene2d.ui.Button;
+import com.badlogic.gdx.scenes.scene2d.ui.ButtonGroup;
 import com.badlogic.gdx.scenes.scene2d.ui.HorizontalGroup;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Tooltip;
@@ -26,6 +28,7 @@ import fr.evolving.screens.GameScreen.calling;
 
 public class HorizBarre extends Actor {
 	private ImageButton[] Barre;
+	private ButtonGroup<Button> Group;
 	private HorizontalGroup table;
 	private java.lang.reflect.Method method;
 	private TextureRegion oneselection;
@@ -62,16 +65,25 @@ public class HorizBarre extends Actor {
 			}
 		};
 		RotateTimer.scheduleAtFixedRate(RotateTask, 0, 30);
-
+		Group=new ButtonGroup<Button>();
+		Group.setMaxCheckCount(1);
+		Group.setMinCheckCount(1);
+		Group.setUncheckLast(true);
 		this.setBounds(0, 0, 1920, 80);
 		Barre = new ImageButton[tocreate.length];
 		int i = 0;
 		Gdx.app.debug("wirechem-HorizBarre", "Barre bas:" + Barre.length + " elements");
 		for (String item : tocreate) {
-			final String itemtocreate=item.replace("#", "");
+			final String itemtocreate=item.replace("#", "").replace("@", "").replace("*", "");
 			Barre[i] = new ImageButton(AssetLoader.Skin_level, itemtocreate);
 			Barre[i].setTouchable(Touchable.enabled);
 			Barre[i].setName(itemtocreate);
+			if (item.contains("@")) {
+				Group.add(Barre[i]);
+			}
+			if (item.contains("*")) {
+				Barre[i].setChecked(true);
+			}
 			if (item.contains("#"))
 			{
 				Barre[i++].addListener(new ClickListener() {

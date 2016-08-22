@@ -1,9 +1,6 @@
 package fr.evolving.screens;
 
 import java.lang.reflect.Method;
-import java.util.Arrays;
-import java.util.Timer;
-import java.util.TimerTask;
 
 import com.badlogic.gdx.Application;
 import com.badlogic.gdx.Application.ApplicationType;
@@ -54,6 +51,8 @@ import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ObjectMap.Entries;
 import com.badlogic.gdx.utils.ObjectMap.Entry;
 import com.badlogic.gdx.utils.OrderedMap;
+import com.badlogic.gdx.utils.Timer;
+import com.badlogic.gdx.utils.Timer.Task;
 
 import fr.evolving.UI.ButtonLevel;
 import fr.evolving.UI.HorizBarre;
@@ -81,8 +80,12 @@ import fr.evolving.renderers.GameRenderer;
 public class GameScreen implements Screen {
 	private InputMultiplexer multiplexer;
 	private Array<InputProcessor> processors;
-
+	private float[] speed;
+	private int speedindex;
+	boolean start;
 	private Stage stage, stage_info, stage_tooltip;
+	private Timer RunTimer;
+	private Task RunTask;
 	private GameRenderer Renderer;
 	private float runTime;
 	public Level level;
@@ -201,16 +204,30 @@ public class GameScreen implements Screen {
 
 	// This is the constructor, not the class declaration
 	public GameScreen(Worlds aworlds) {
+		Gdx.app.debug("wirechem-GameScreen","Préparation du timer");
+		RunTimer = new Timer();
+		RunTask = new Task() {
+			@Override
+			public void run() {
+				Gdx.app.debug("wirechem-GameScreen", "Cycle particule...");
+				worlds.getLevelData().Grid.Cycle();
+			}
+		};
+		start=false;
+		speed=new float[] {4,2,1,0.5f,0.25f,0.125f,0.0625f};
+		speedindex=2;
+		RunTimer.stop();
+		RunTimer.scheduleTask(RunTask, 0, speed[speedindex]);
 		Gdx.app.debug("wirechem-GameScreen","Préparation du screen");
 		this.worlds = aworlds;
 		this.worlds.prepareLevel(false);
 		this.level=worlds.getLevelData();
 		if (worlds.isDebug())
-			tocreate = new String[] { "run", "stop", "speed", "separator", "move#", "zoomp#","zoomm#", "infos#", "separator", "raz", "save", "levels", "tree",	"exits", "separator", "screen", "sound", "tuto", "grid", "settings", "separator", "stat","separator","unlocked","delrow","delcol","addrow","addcol","database" };
+			tocreate = new String[] { "run@", "pause@", "stop@*", "speed", "separator", "move#", "zoomp#","zoomm#", "infos#", "separator", "raz", "save", "levels", "tree",	"exits", "separator", "screen", "sound", "tuto", "grid", "settings", "separator", "stat","separator","delrow","delcol","addrow","addcol","database" };
 		else if (level.Tech<1)
-			tocreate = new String[] { "run", "stop", "speed", "separator", "move#", "zoomp#","zoomm#", "separator", "levels", "exits", "separator", "screen", "sound", "settings" };
+			tocreate = new String[] { "run@", "pause@", "stop@*", "speed", "separator", "move#", "zoomp#","zoomm#", "separator", "levels", "exits", "separator", "screen", "sound", "settings" };
 		else if (level.aWorld<1)
-			tocreate = new String[] { "run", "stop", "speed", "separator", "move#", "zoomp#","zoomm#", "infos#", "separator", "raz", "save", "levels", "exits", "separator", "screen", "sound", "grid", "settings" };
+			tocreate = new String[] { "run@", "pause@", "stop@*", "speed", "separator", "move#", "zoomp#","zoomm#", "infos#", "separator", "raz", "save", "levels", "exits", "separator", "screen", "sound", "grid", "settings" };
 		else
 			tocreate = new String[] { "run", "stop", "speed", "separator", "move#", "zoomp#","zoomm#", "infos#", "separator", "raz", "save", "levels", "tree",	"exits", "separator", "screen", "sound", "tuto", "grid", "settings", "separator", "stat" };
 		Gdx.app.debug("wirechem-GameScreen","Création des Barres verticales & horizontales.");
@@ -582,7 +599,7 @@ public class GameScreen implements Screen {
 						+ level.Grid.GetXY(x, y).Transmuter_movex, y
 						+ level.Grid.GetXY(x, y).Transmuter_movey));
 				map.tempclear();
-				map.tempdraw(x, y, 1069, 0, 0);
+				map.tempdraw(x+level.Grid.GetXY(x, y).Transmuter_movex, y+level.Grid.GetXY(x, y).Transmuter_movey, 1069, 0, 0);
 			}
 		}
 
@@ -840,27 +857,65 @@ public class GameScreen implements Screen {
 		Gdx.input.setInputProcessor(multiplexer);
 		preparemenu(0);
 	}
+	
+	public void run_mode() {
+		if (start==false) {
+			Gdx.app.log("wirechem-GameScreen", "***** Mode run.");
+			worlds.getLevelData().Grid.Initialize();
+			worlds.getLevelData().Grid.tiling_particle();
+		}
+		start=true;
+		RunTimer.start();
+	}
+	
+	public void stop_mode() {
+		Gdx.app.log("wirechem-GameScreen", "***** Mode stop.");
+		worlds.getLevelData().Grid.Initialize();
+		worlds.getLevelData().Grid.tiling_particle();
+		RunTimer.stop();
+		start=false;
+	}
+	
+	public void pause_mode() {
+		Gdx.app.log("wirechem-GameScreen", "***** Mode pause" +
+				".");
+		if (start==false) {
+			run_mode();
+		}
+		RunTimer.stop();
+	}
 
 	public void preparebarre(String caller, int count) {
 		map.tempclear();
 		menu.EraseSurtile();
+		if (caller.contentEquals("run")) {
+			run_mode();
+		} else if (caller.contentEquals("stop")) {
+			stop_mode();
+		} else if (caller.contentEquals("pause")) {
+			pause_mode();
+		} else if (caller.contentEquals("speed")) {
+			speedindex=(speedindex+1)%speed.length;
+			Gdx.app.debug("wirechem-GameScreen", "Reglage de la vitesse."+speed[speedindex]);
+			RunTimer.clear();
+			RunTimer.scheduleTask(RunTask, 0, speed[speedindex]);
+		} 
 		hideInfo();
-		if (caller == "run") {
-		} else if (caller == "stop") {
-		} else if (caller == "speed") {
-		} else if (caller == "move") {
+		
+		
+		if (caller.contentEquals("move")) {
 			if (count >= 2)
 				map.initzoom();
-		} else if (caller == "zoomp") {
+		} else if (caller.contentEquals("zoomp")) {
 			if (count >= 2)
 				map.initzoom();
-		} else if (caller == "zoomm") {
+		} else if (caller.contentEquals("zoomm")) {
 			if (count >= 2)
 				map.initzoom();
-		} else if (caller == "infos") {
+		} else if (caller.contentEquals("infos")) {
 			if (count >= 2)
 				map.initzoom();
-		} else if (caller == "raz") {
+		} else if (caller.contentEquals("raz")) {
 			winOptions.setVisible(false);
 			winSave.setVisible(!winSave.isVisible());
 			if (winSave.isVisible())
@@ -869,15 +924,15 @@ public class GameScreen implements Screen {
 			Gdx.app.debug("wirechem-GameScreen", "Barre | Sauvegarde de la grille.");	
 			worlds.SaveGrid();
 			winSave.refresh();
-		} else if (caller == "levels") {
+		} else if (caller.contentEquals("levels")) {
 			Gdx.app.debug("wirechem-GameScreen", "Barre | Affichage des niveaux.");
 			exit();
 			((Game) Gdx.app.getApplicationListener()).setScreen(new LevelScreen(worlds));
-		} else if (caller == "tree") {
-		} else if (caller == "exits") {
+		} else if (caller.contentEquals("tree")) {
+		} else if (caller.contentEquals("exits")) {
 			exit();
 			Gdx.app.exit();
-		} else if (caller == "screen") {
+		} else if (caller.contentEquals("screen")) {
 			DisplayMode currentMode = Gdx.graphics.getDesktopDisplayMode();
 			if (Gdx.graphics.isFullscreen()) {
 				Gdx.app.debug("wirechem-GameScreen", "Barre | vers fenetre.");
@@ -888,7 +943,7 @@ public class GameScreen implements Screen {
 				Gdx.graphics.setDisplayMode(currentMode.width,
 						currentMode.height, true);
 			}
-		} else if (caller == "sound") {
+		} else if (caller.contentEquals("sound")) {
 			if (AssetLoader.intro.getVolume() > 0) {
 				Gdx.app.debug("wirechem-GameScreen", "Barre | arret son.");
 				AssetLoader.intro.setVolume(0f);
@@ -896,7 +951,7 @@ public class GameScreen implements Screen {
 				Gdx.app.debug("wirechem-GameScreen", "Barre | marche son.");
 				AssetLoader.intro.setVolume(1f);
 			}
-		} else if (caller == "tuto") {
+		} else if (caller.contentEquals("tuto")) {
 			if (AssetLoader.Tooltipmanager.enabled) {
 				Gdx.app.debug("wirechem-GameScreen", "Barre | arret tuto.");
 				AssetLoader.Tooltipmanager.enabled = false;
@@ -904,7 +959,7 @@ public class GameScreen implements Screen {
 				Gdx.app.debug("wirechem-GameScreen", "Barre | marche tuto.");
 				AssetLoader.Tooltipmanager.enabled = true;
 			}
-		} else if (caller=="grid") {
+		} else if (caller.contentEquals("grid")) {
 			if (map.getClearsprite()==53)
 			{
 				map.fillempty(60);
@@ -915,12 +970,12 @@ public class GameScreen implements Screen {
 				map.fillempty(53);
 				map.setClearsprite(53);
 				}
-		} else if (caller == "settings") {
+		} else if (caller.contentEquals("settings")) {
 			winOptions.setVisible(!winOptions.isVisible());
 			winSave.setVisible(false);
 			if (winOptions.isVisible())
 				winOptions.refresh();
-		} else if (caller == "flag") {
+		} else if (caller.contentEquals("flag")) {
 			if (AssetLoader.language.getLocale().getDisplayName()
 					.contains("français")) {
 				Gdx.app.debug("wirechem-GameScreen", "Barre | Langue USA");
@@ -929,23 +984,23 @@ public class GameScreen implements Screen {
 				Gdx.app.debug("wirechem-GameScreen", "Barre | Langue FR");
 				AssetLoader.language = AssetLoader.french;
 			}
-		} else if (caller == "stat") {
-		} else if (caller == "unlocked") {
+		} else if (caller.contentEquals("stat")) {
+		} else if (caller.contentEquals("unlocked")) {
 			level.Locked=false;
 			buttonlevel.setDisabled(false);
 			worlds.unLockLevel();
-		} else if (caller == "database") {
+		} else if (caller.contentEquals("database")) {
 			worlds.origLevel();
-		} else if (caller == "delcol") {
+		} else if (caller.contentEquals("delcol")) {
 			level.Grid=(Grid) level.Grid.clone(level.Grid.sizeX-1, level.Grid.sizeY);
 			map.resize();
-		} else if (caller == "delrow") {
+		} else if (caller.contentEquals("delrow")) {
 			level.Grid=(Grid) level.Grid.clone(level.Grid.sizeX, level.Grid.sizeY-1);
 			map.resize();
-		} else if (caller == "addcol") {
+		} else if (caller.contentEquals("addcol")) {
 			level.Grid=(Grid) level.Grid.clone(level.Grid.sizeX+1, level.Grid.sizeY);
 			map.resize();
-		} else if (caller == "addrow") {
+		} else if (caller.contentEquals("addrow")) {
 			level.Grid=(Grid) level.Grid.clone(level.Grid.sizeX, level.Grid.sizeY+1);
 			map.resize();
 		}
@@ -1004,12 +1059,22 @@ public class GameScreen implements Screen {
 	}
 
 	public void hideInfo() {
+		if (start) {
+			menu.setVisible(false);
+			vertibar.setVisible(false);
+			nextpage.setVisible(false);
+			previouspage.setVisible(false);
+		}
+		else
+		{
+
+			menu.setVisible(true);
+			vertibar.setVisible(true);
+			nextpage.setVisible(true);
+			previouspage.setVisible(true);
+		}
 		info_upgrade.setVisible(false);
 		info_choose.setVisible(false);
-		menu.setVisible(true);
-		vertibar.setVisible(true);
-		nextpage.setVisible(true);
-		previouspage.setVisible(true);
 		unroll = false;
 	}
 

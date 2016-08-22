@@ -5,13 +5,17 @@ import java.util.Iterator;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ObjectMap.Entry;
 
 public class Grid implements Serializable,Cloneable {
-	public Cell[][] Cells;
+	protected Cell[][] Cells;
 	public Integer sizeX, sizeY;
-
+	
+	public transient Array<Particle> particles;
+	
 	public Grid(Integer X, Integer Y) {
+		particles=new Array<Particle>();
 		this.sizeX = X;
 		this.sizeY = Y;
 		this.Cells = new Cell[this.sizeX][this.sizeY];
@@ -21,7 +25,25 @@ public class Grid implements Serializable,Cloneable {
 			}
 		}
 	}
+	
+	//Réalise un cycle de simulation dans la grille
+	public void Cycle() {
+		
+	}
+	
+	//Affiche le cycle en cours à l'écran
+	public void tiling_particle() {
+		for(Particle particle: particles) {
+			
+		}
+	}
+	
+	//Initialise la simulation pour permettre ensuite de faire des cycles
+	public void Initialize() {
+		
+	}
 
+	//Genère des tiles qui correspondent aux transmuteurs sur la grille
 	public int tiling_transmuter() {
 		int result=0;
 		for (int x = 0; x < this.sizeX; x++)
@@ -71,6 +93,7 @@ public class Grid implements Serializable,Cloneable {
 		return result;
 	}
 
+	//
 	public int tiling_copper() {
 		int result=0;
 		for (int x = 0; x < this.sizeX; x++)

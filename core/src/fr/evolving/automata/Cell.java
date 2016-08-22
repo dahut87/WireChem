@@ -8,9 +8,8 @@ public class Cell implements Serializable,Cloneable {
 	public Transmuter Transmuter;
 	public boolean Locked;
 	public boolean Free;
-	
+
 	public transient int Copper_calc;
-	public transient int Fiber_old;
 	public transient int Transmuter_calc;
 	public transient int Transmuter_movex;
 	public transient int Transmuter_movey;
@@ -20,7 +19,6 @@ public class Cell implements Serializable,Cloneable {
 		this.Copper = false;
 		this.Locked = false;
 		this.Free = false;
-		this.Fiber_old = 0;
 		this.Transmuter = null;
 		this.Transmuter_calc = 0;
 		this.Transmuter_movex = 0;

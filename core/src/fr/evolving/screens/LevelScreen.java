@@ -77,7 +77,7 @@ public class LevelScreen implements Screen {
 	private TextArea TextDescriptive;
 	public Worlds worlds;
 	private Objectives Victory;
-	private VerticalGroup vertibarmod;
+	private VerticalGroup vertibarmod, vertibarmod2;
 	private HorizontalGroup vertibar;
 	public ButtonLevel selected;
 	public int addervalue;
@@ -913,6 +913,7 @@ public class LevelScreen implements Screen {
 					group_base.setVisible(false);
 					selectnoone();
 					vertibarmod.setVisible(false);
+					vertibarmod2.setVisible(false);
 					moveit.setChecked(true);
 				}
 				else {
@@ -1022,6 +1023,7 @@ public class LevelScreen implements Screen {
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
 				vertibarmod.setVisible(false);
+				vertibarmod2.setVisible(false);
 				ResetDragDrog();
 				selectnoone();
 			}
@@ -1031,6 +1033,7 @@ public class LevelScreen implements Screen {
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
 				vertibarmod.setVisible(true);
+				vertibarmod2.setVisible(true);
 				ResetDragDrog();
 				selectone();
 			}
@@ -1040,6 +1043,7 @@ public class LevelScreen implements Screen {
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
 				vertibarmod.setVisible(false);
+				vertibarmod2.setVisible(false);
 				initDragDrop();
 				selectnoone();
 			}
@@ -1049,6 +1053,7 @@ public class LevelScreen implements Screen {
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
 				vertibarmod.setVisible(false);
+				vertibarmod2.setVisible(false);
 				initDragDrop();
 				selectnoone();
 			}
@@ -1172,11 +1177,17 @@ public class LevelScreen implements Screen {
 		vertibarmod.space(20f);
 		vertibarmod.addActor(unlocked);
 		vertibarmod.addActor(finisher);
-		vertibarmod.addActor(deletebutton);	
-		vertibarmod.addActor(duplicate);
-		vertibarmod.addActor(deletelinker);
 		vertibarmod.addActor(script);
 		vertibarmod.setVisible(false);
+		
+		vertibarmod2=new VerticalGroup();
+		vertibarmod2.setPosition(1800, AssetLoader.height-100);
+		vertibarmod2.center();
+		vertibarmod2.space(20f);
+		vertibarmod2.addActor(deletebutton);	
+		vertibarmod2.addActor(duplicate);
+		vertibarmod2.addActor(deletelinker);
+		vertibarmod2.setVisible(false);
 		
 		vertibar=new HorizontalGroup();
 		vertibar.setPosition(1565, 215);
@@ -1198,6 +1209,7 @@ public class LevelScreen implements Screen {
 		group_debug=new Group();
 		group_debug.addActor(vertibar);
 		group_debug.addActor(vertibarmod);
+		group_debug.addActor(vertibarmod2);
 		group_debug.addActor(adder);
 		group_debug.addActor(signer);
 		group_debug.addActor(databaseSave);
