@@ -93,8 +93,9 @@
 		points_over: { name: points, color: red },
 		points_disabled: { name: points, color: lowgrey },		
 				
-  		run_down: { name: run, color: veryred },
-        stop_down: { name: stop, color: veryred },
+  		run_checked: { name: run, color: veryred },
+  		pause_checked: { name: pause, color: veryred },
+        stop_checked: { name: stop, color: veryred },
         speed_down: { name: speed, color: veryred }, 
         move_down: { name: move, color: veryred },
         zoomp_down: { name: zoomp, color: veryred },
@@ -174,8 +175,9 @@
         Next: { up: arrows , down: arrows_down, over:arrows_over}
         Previous: { up: arrows2 , down: arrows2_down, over:arrows2_over}
         logosmall: { up: logo2 , down: logo2_down, over:logo2_over,checked:logo2_down}
-        run: { up: run, down:run_down }   
-        stop: { up: stop, down:stop_down }   
+        run: { up: run, checked:run_checked }   
+        pause: { up: pause, checked:pause_checked }  
+        stop: { up: stop, checked:stop_checked }   
         speed: { up: speed,down:speed_down }   
         move: { up: move,down:move_down }   
         zoomp: { up: zoomp,down:zoomp_down }   
