@@ -3,19 +3,20 @@ package fr.evolving.automata;
 import java.io.Serializable;
 
 public class Cell implements Serializable,Cloneable {
-	public int Fiber;
+	public boolean Fiber;
 	public boolean Copper;
 	public Transmuter Transmuter;
 	public boolean Locked;
 	public boolean Free;
 
+	public transient int Fiber_state;
 	public transient int Copper_calc;
 	public transient int Transmuter_calc;
 	public transient int Transmuter_movex;
 	public transient int Transmuter_movey;
 
 	public Cell() {
-		this.Fiber = 0;
+		this.Fiber = false;
 		this.Copper = false;
 		this.Locked = false;
 		this.Free = false;

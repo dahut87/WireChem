@@ -8,6 +8,9 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ObjectMap.Entry;
 
+import fr.evolving.automata.Particle.Orientation;
+import fr.evolving.automata.Particle.Type;
+
 public class Grid implements Serializable,Cloneable {
 	protected Cell[][] Cells;
 	public Integer sizeX, sizeY;
@@ -15,7 +18,7 @@ public class Grid implements Serializable,Cloneable {
 	public transient Array<Particle> particles;
 	
 	public Grid(Integer X, Integer Y) {
-		particles=new Array<Particle>();
+		Reinit();
 		this.sizeX = X;
 		this.sizeY = Y;
 		this.Cells = new Cell[this.sizeX][this.sizeY];
@@ -26,21 +29,48 @@ public class Grid implements Serializable,Cloneable {
 		}
 	}
 	
+	public void Reinit() {
+		if (particles==null)
+			particles=new Array<Particle>();
+	}
+	
 	//Réalise un cycle de simulation dans la grille
 	public void Cycle() {
-		
+		for(Particle particle: particles) {
+			Gdx.app.debug("wirechem-Grid", "Grid Cycle -> Particle "+particle.getType()+"/"+particle.getSize()+ " coords:"+particle.getCoordx()+","+particle.getCoordy()+"/"+particle.getOrientation()+" charge:"+particle.getCharge());
+			if (particle.getType()==Type.Photon) {
+				particle.Next();
+				if (!particle.isAlive()) {
+					Gdx.app.debug("wirechem-Particle", "coords:"+particle.getCoordx()+","+particle.getCoordy()+" killed & removed");
+					particles.removeValue(particle, true);
+				}
+			}
+		}
 	}
 	
 	//Affiche le cycle en cours à l'écran
 	public void tiling_particle() {
+		for (int x = 0; x < this.sizeX; x++)
+			for (int y = 0; y < this.sizeY; y++)
+				if (GetXY(x, y).Fiber)
+					GetXY(x, y).Fiber_state = 0;
 		for(Particle particle: particles) {
-			
+			if (particle.getType()==Type.Photon) {
+				GetXY(particle.getCoordx(), particle.getCoordy()).Fiber_state=Math.floorDiv(29-particle.getLife(),3);
+				Gdx.app.debug("wirechem-Grid", "Grid Tiling -> Photon state :"+GetXY(particle.getCoordx(), particle.getCoordy()).Fiber_state+":"+particle.getCoordx()+","+particle.getCoordy());
+			}
 		}
 	}
 	
 	//Initialise la simulation pour permettre ensuite de faire des cycles
 	public void Initialize() {
-		
+		particles.clear();
+		this.tiling_particle();
+		particles.add(new Particle(this));
+		particles.get(0).setType(Type.Photon);
+		particles.get(0).setCoordx(6);
+		particles.get(0).setCoordy(3);
+		particles.get(0).setOrientation(Orientation.E);
 	}
 
 	//Genère des tiles qui correspondent aux transmuteurs sur la grille
@@ -300,7 +330,7 @@ public class Grid implements Serializable,Cloneable {
 		if (cell == null)
 			return false;
 		else
-			return cell.Fiber > 0;
+			return cell.Fiber;
 	}
 
 	public int getCoppercalc(float X, float Y) {

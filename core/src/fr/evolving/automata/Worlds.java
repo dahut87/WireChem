@@ -20,7 +20,7 @@ public class Worlds extends Actor {
 	private int research;
 	private Level lastchange;
 	
-	public enum State {pause,simulating,notloaded,databasefailed};
+	public enum State {stop,simulating,notloaded,databasefailed};
 	public enum LinkDelMethod {all,in,out,rebase};
 	
 	public Worlds(String campaign) {
@@ -83,7 +83,7 @@ public class Worlds extends Actor {
 		if (Transmuters==null)
 			state=State.notloaded;
 		else
-			state=State.pause;
+			state=State.stop;
 	}
 	
 	public Array<Transmuter> getTransmuters() {
@@ -98,8 +98,11 @@ public class Worlds extends Actor {
 	}
 	
 	public void ReadGrid(int number) {
-		if (usedlevel!=null)
+		if (usedlevel!=null) {
 			usedlevel.Grid = AssetLoader.Datahandler.user().getGrid(0,	usedlevel.id, number);
+			if (usedlevel.Grid!=null)
+				usedlevel.Grid.Reinit();
+		}
 	}
 	
 	public void SaveGrid() {
@@ -108,8 +111,11 @@ public class Worlds extends Actor {
 	}
 	
 	public void ReadLastGrid() {
-		if (usedlevel!=null)
+		if (usedlevel!=null) {
 			usedlevel.Grid = AssetLoader.Datahandler.user().getGrid(0,	usedlevel.id, "LAST");
+			if (usedlevel.Grid!=null)
+				usedlevel.Grid.Reinit();
+		}
 	}
 	
 	public void SaveLastGrid() {
@@ -474,7 +480,7 @@ public class Worlds extends Actor {
 		if (levels==null)
 			state=State.notloaded;
 		else
-			state=State.pause;
+			state=State.stop;
 	}
 	
 	public void create(String campaign) {
@@ -485,7 +491,7 @@ public class Worlds extends Actor {
 			Preference.prefs.flush();
 			name=campaign;
 			AssetLoader.Datahandler.game().setCampaign(levels,name);
-			state=State.pause;
+			state=State.stop;
 			research=0;
 			Transmuters=AssetLoader.allTransmuter;
 			SaveTransmuters();
@@ -562,6 +568,16 @@ public class Worlds extends Actor {
 	
 	public String getName() {
 		return this.name;
+	}
+	
+	public void simulate() {
+		if (this.state==State.stop)
+			this.state=State.simulating;
+	}
+	
+	public void stop() {
+		if (this.state==State.simulating)
+			this.state=State.stop;
 	}
 
 }

@@ -71,6 +71,7 @@ import fr.evolving.automata.Neutraliser_II;
 import fr.evolving.automata.Transmuter;
 import fr.evolving.automata.Transmuter.Angular;
 import fr.evolving.automata.Transmuter.CaseType;
+import fr.evolving.automata.Worlds.State;
 import fr.evolving.automata.Worlds;
 import fr.evolving.dialogs.PrefWindow;
 import fr.evolving.dialogs.SavingWindow;
@@ -82,7 +83,6 @@ public class GameScreen implements Screen {
 	private Array<InputProcessor> processors;
 	private float[] speed;
 	private int speedindex;
-	boolean start;
 	private Stage stage, stage_info, stage_tooltip;
 	private Timer RunTimer;
 	private Task RunTask;
@@ -211,9 +211,10 @@ public class GameScreen implements Screen {
 			public void run() {
 				Gdx.app.debug("wirechem-GameScreen", "Cycle particule...");
 				worlds.getLevelData().Grid.Cycle();
+				worlds.getLevelData().Grid.tiling_particle();
+				map.redraw();
 			}
 		};
-		start=false;
 		speed=new float[] {4,2,1,0.5f,0.25f,0.125f,0.0625f};
 		speedindex=2;
 		RunTimer.stop();
@@ -583,7 +584,7 @@ public class GameScreen implements Screen {
 			Gdx.app.debug("wirechem-GameScreen", "Etat extension:" + unroll);
 			if (level.Grid.GetXY(x, y).Copper)
 				Gdx.app.debug("wirechem-GameScreen", "*** Présence de cuivre");
-			if (level.Grid.GetXY(x, y).Fiber > 0)
+			if (level.Grid.GetXY(x, y).Fiber)
 				Gdx.app.debug("wirechem-GameScreen", "*** Présence de fibre");
 			if (level.Grid.GetXY(x, y).Transmuter_calc > 0) {
 				Gdx.app.debug("wirechem-GameScreen", "transmuter deplacement vers origine:"
@@ -680,7 +681,7 @@ public class GameScreen implements Screen {
 	public void map_fiber_eraser(float realx, float realy, int x, int y,
 			boolean alone, int button, calling call) {
 		if (level.Grid.GetXY(x, y).Transmuter_calc == 0 && !level.Grid.GetXY(x, y).Locked) {
-			level.Grid.GetXY(x, y).Fiber = 0;
+			level.Grid.GetXY(x, y).Fiber = false;
 			if (alone) {
 				level.Cout_copperfiber=level.Grid.tiling_copper();
 				map.redraw();
@@ -693,8 +694,7 @@ public class GameScreen implements Screen {
 		if (!worlds.isDebug() && level.Cout<5)
 			return;
 		if (level.Grid.GetXY(x, y).Transmuter_calc == 0 && !level.Grid.GetXY(x, y).Locked)
-			level.Grid.GetXY(x, y).Fiber = -1 * level.Grid.GetXY(x, y).Fiber
-					+ 1;
+			level.Grid.GetXY(x, y).Fiber = !level.Grid.GetXY(x, y).Fiber;
 		if (alone) {
 			level.Cout_copperfiber=level.Grid.tiling_copper();
 			map.redraw();
@@ -706,7 +706,7 @@ public class GameScreen implements Screen {
 		if (!worlds.isDebug() && level.Cout<5)
 			return;
 		if (level.Grid.GetXY(x, y).Transmuter_calc == 0 && !level.Grid.GetXY(x, y).Locked)
-			level.Grid.GetXY(x, y).Fiber = 1;
+			level.Grid.GetXY(x, y).Fiber = true;
 		if (alone) {
 			level.Cout_copperfiber=level.Grid.tiling_copper();
 			map.redraw();
@@ -859,27 +859,27 @@ public class GameScreen implements Screen {
 	}
 	
 	public void run_mode() {
-		if (start==false) {
+		if (worlds.getState()==State.stop) {
+			worlds.simulate();
 			Gdx.app.log("wirechem-GameScreen", "***** Mode run.");
 			worlds.getLevelData().Grid.Initialize();
 			worlds.getLevelData().Grid.tiling_particle();
+			RunTimer.start();
 		}
-		start=true;
-		RunTimer.start();
 	}
 	
 	public void stop_mode() {
 		Gdx.app.log("wirechem-GameScreen", "***** Mode stop.");
+		worlds.stop();
 		worlds.getLevelData().Grid.Initialize();
 		worlds.getLevelData().Grid.tiling_particle();
 		RunTimer.stop();
-		start=false;
 	}
 	
 	public void pause_mode() {
 		Gdx.app.log("wirechem-GameScreen", "***** Mode pause" +
 				".");
-		if (start==false) {
+		if (worlds.getState()==State.stop) {
 			run_mode();
 		}
 		RunTimer.stop();
@@ -1059,7 +1059,7 @@ public class GameScreen implements Screen {
 	}
 
 	public void hideInfo() {
-		if (start) {
+		if (worlds.getState()==State.simulating) {
 			menu.setVisible(false);
 			vertibar.setVisible(false);
 			nextpage.setVisible(false);

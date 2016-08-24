@@ -6,6 +6,7 @@ import java.util.Arrays;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputProcessor;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.input.GestureDetector.GestureListener;
@@ -27,6 +28,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.ActorGestureListener;
 import fr.evolving.assets.AssetLoader;
 import fr.evolving.automata.Level;
 import fr.evolving.automata.Worlds;
+import fr.evolving.automata.Worlds.State;
 import fr.evolving.screens.GameScreen.calling;
 
 public class TouchMaptiles extends Actor implements GestureListener,InputProcessor {
@@ -169,40 +171,51 @@ public class TouchMaptiles extends Actor implements GestureListener,InputProcess
 	// 4 Surtile Fond du transmuteur | Effets 
 	// 5 Verrouillage | Jauge activation
 	// 6 Gratuité	
+	// 7 Direction du centre
 	public void redraw() {
 		for (int x = 0; x < level.Grid.sizeX; x++)
 			for (int y = 0; y < level.Grid.sizeY; y++) {
-				if (worlds.isDebug()) {
-				if (level.Grid.GetXY(x,y).Locked)
-					((TiledMapTileLayer) map.getLayers().get(5)).getCell((int) x,(int) y).setTile(AssetLoader.tileSet.getTile(90));
-				else
-					((TiledMapTileLayer) map.getLayers().get(5)).getCell((int) x,(int) y).setTile(null);
-				if (level.Grid.GetXY(x,y).Free)
-					((TiledMapTileLayer) map.getLayers().get(6)).getCell((int) x,(int) y).setTile(AssetLoader.tileSet.getTile(89));
-				else
-					((TiledMapTileLayer) map.getLayers().get(6)).getCell((int) x,(int) y).setTile(null);
-				}
-				if (level.Grid.getCopper(x, y))
-					((TiledMapTileLayer) map.getLayers().get(1)).getCell((int) x, (int) y).setTile(AssetLoader.tileSet.getTile(level.Grid.getCoppercalc(x, y)));
-				else
-					((TiledMapTileLayer) map.getLayers().get(1)).getCell((int) x,(int) y).setTile(null);
-				if (level.Grid.getFiber(x, y))
-					((TiledMapTileLayer) map.getLayers().get(0)).getCell((int) x, (int) y).setTile(AssetLoader.tileSet.getTile(61));
-				else
-					((TiledMapTileLayer) map.getLayers().get(0)).getCell((int) x,(int) y).setTile(AssetLoader.tileSet.getTile(this.clearsprite));
-				if (level.Grid.getTransmutercalc(x, y) != 0) {
-					((TiledMapTileLayer) map.getLayers().get(2)).getCell((int) x, (int) y).setTile(AssetLoader.tileSet.getTile(level.Grid.getTransmutercalc(x, y)));
-					((TiledMapTileLayer) map.getLayers().get(2)).getCell((int) x, (int) y).setRotation(level.Grid.getTransmuterrot(x, y));
-					((TiledMapTileLayer) map.getLayers().get(2)).getCell((int) x, (int) y).getTile().getProperties().put("movex",level.Grid.GetXY(x, y).Transmuter_movex);
-					((TiledMapTileLayer) map.getLayers().get(2)).getCell((int) x, (int) y).getTile().getProperties().put("movey",level.Grid.GetXY(x, y).Transmuter_movex);
+				if (worlds.getState()==State.simulating) {
+					if (level.Grid.GetXY(x,y).Fiber)
+						if (level.Grid.GetXY(x,y).Fiber_state==0)
+							((TiledMapTileLayer) map.getLayers().get(0)).getCell((int) x,(int) y).setTile(AssetLoader.tileSet.getTile(61));
+						else {
+							((TiledMapTileLayer) map.getLayers().get(0)).getCell((int) x,(int) y).setTile(AssetLoader.tileSet.getTile(90+level.Grid.GetXY(x,y).Fiber_state));
+						}
 				}
 				else
-					((TiledMapTileLayer) map.getLayers().get(2)).getCell((int) x,(int) y).setTile(null);
-				;
+				{
+					if (worlds.isDebug()) {
+						if (level.Grid.GetXY(x,y).Locked)
+							((TiledMapTileLayer) map.getLayers().get(5)).getCell((int) x,(int) y).setTile(AssetLoader.tileSet.getTile(90));
+						else
+							((TiledMapTileLayer) map.getLayers().get(5)).getCell((int) x,(int) y).setTile(null);
+						if (level.Grid.GetXY(x,y).Free)
+							((TiledMapTileLayer) map.getLayers().get(6)).getCell((int) x,(int) y).setTile(AssetLoader.tileSet.getTile(89));
+						else
+							((TiledMapTileLayer) map.getLayers().get(6)).getCell((int) x,(int) y).setTile(null);
+					}
+					if (level.Grid.getCopper(x, y))
+						((TiledMapTileLayer) map.getLayers().get(1)).getCell((int) x, (int) y).setTile(AssetLoader.tileSet.getTile(level.Grid.getCoppercalc(x, y)));
+					else
+						((TiledMapTileLayer) map.getLayers().get(1)).getCell((int) x,(int) y).setTile(null);
+					if (level.Grid.getFiber(x, y))
+						((TiledMapTileLayer) map.getLayers().get(0)).getCell((int) x, (int) y).setTile(AssetLoader.tileSet.getTile(61));
+					else
+						((TiledMapTileLayer) map.getLayers().get(0)).getCell((int) x,(int) y).setTile(AssetLoader.tileSet.getTile(this.clearsprite));
+					if (level.Grid.getTransmutercalc(x, y) != 0) {
+						((TiledMapTileLayer) map.getLayers().get(2)).getCell((int) x, (int) y).setTile(AssetLoader.tileSet.getTile(level.Grid.getTransmutercalc(x, y)));
+						((TiledMapTileLayer) map.getLayers().get(2)).getCell((int) x, (int) y).setRotation(level.Grid.getTransmuterrot(x, y));
+						((TiledMapTileLayer) map.getLayers().get(2)).getCell((int) x, (int) y).getTile().getProperties().put("movex",level.Grid.GetXY(x, y).Transmuter_movex);
+						((TiledMapTileLayer) map.getLayers().get(2)).getCell((int) x, (int) y).getTile().getProperties().put("movey",level.Grid.GetXY(x, y).Transmuter_movex);
+					}
+					else
+						((TiledMapTileLayer) map.getLayers().get(2)).getCell((int) x,(int) y).setTile(null);
+				((TiledMapTileLayer) map.getLayers().get(0)).getCell((int) 0, (int) 0).setTile(AssetLoader.tileSet.getTile(1010));
+				((TiledMapTileLayer) map.getLayers().get(0)).getCell((int) 1, (int) 0).setTile(AssetLoader.tileSet.getTile(1010));
+				((TiledMapTileLayer) map.getLayers().get(0)).getCell((int) 2, (int) 0).setTile(AssetLoader.tileSet.getTile(1010));
+				}
 			}
-		((TiledMapTileLayer) map.getLayers().get(0)).getCell((int) 0, (int) 0).setTile(AssetLoader.tileSet.getTile(1010));
-		((TiledMapTileLayer) map.getLayers().get(0)).getCell((int) 1, (int) 0).setTile(AssetLoader.tileSet.getTile(1010));
-		((TiledMapTileLayer) map.getLayers().get(0)).getCell((int) 2, (int) 0).setTile(AssetLoader.tileSet.getTile(1010));
 	}
 
 	public void initzoom() {
