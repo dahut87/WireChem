@@ -122,7 +122,11 @@ public class distributor extends Transmuter {
 		this.level.Rayon += UsedRayon * UpgradedRayon;
 		this.level.Nrj += UsedNrj * UpgradedNrj;
 	}
-
+	
+	public void Unactivate() {
+		if (this.Activable)
+			ActivationLevel = 0;
+	}
 
 	public void Activate() {
 		if (this.Activable)
@@ -178,7 +182,7 @@ public class distributor extends Transmuter {
 	}
 
 	public int getMaxActivationLevel() {
-		return ActivationLevel = (int) (10 * this.UpgradedCycle);
+		return (int) (10 * this.UpgradedCycle);
 	}
 
 	public int getActivationLevel() {

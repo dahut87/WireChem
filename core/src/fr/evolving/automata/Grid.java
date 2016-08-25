@@ -58,11 +58,13 @@ public class Grid implements Serializable,Cloneable {
 						Entry<Vector2, Integer> all = iterator.next();
 						CaseType thecase=transmuters.get(i).getTilestype(tiles.keys().toArray().indexOf(all.key, false));
 						Vector2 position=transmuterscoords.get(i);
-						if (GetXY(position.x+ all.key.x, position.y+ all.key.y).Fiber && position.x==particle.getCoordx() && position.y==particle.getCoordy())
-							if (thecase==CaseType.Fibre||thecase==CaseType.Tout||thecase==CaseType.Fibre_seul)
-								Gdx.app.debug("wirechem-Grid", "Grid Cycle -> Activation Photon state :"+GetXY(particle.getCoordx(), particle.getCoordy()).Fiber_state+":"+particle.getCoordx()+","+particle.getCoordy()+"Transmuter:"+transmuters.get(i).getName()+"/"+transmuters.get(i).getActivationLevel());
+						if (GetXY(position.x+all.key.x,position.y+all.key.y).Fiber && position.x+all.key.x==particle.getCoordx() && position.y+all.key.y==particle.getCoordy())
+							if (thecase==CaseType.Fibre||thecase==CaseType.Tout||thecase==CaseType.Fibre_seul) {
+								Gdx.app.debug("wirechem-Grid", "Grid Cycle -> Activation Photon life:"+particle.getLife()+" coords:"+particle.getCoordx()+","+particle.getCoordy()+" Transmuter:"+transmuters.get(i).getName()+" activation:"+transmuters.get(i).getActivationLevel());
 								particle.subLife(transmuters.get(i).getMaxActivationLevel()-transmuters.get(i).getActivationLevel());
 								transmuters.get(i).Activate();
+								Gdx.app.debug("wirechem-Grid", "Grid Cycle -> Activation Photon life:"+particle.getLife()+" coords:"+particle.getCoordx()+","+particle.getCoordy()+" Transmuter:"+transmuters.get(i).getName()+" activation:"+transmuters.get(i).getActivationLevel());
+							}
 					}
 				}
 				if (!particle.isAlive()) {
@@ -106,6 +108,7 @@ public class Grid implements Serializable,Cloneable {
 		for (int x = 0; x < this.sizeX; x++)
 			for (int y = 0; y < this.sizeY; y++)
 				if (GetXY(x, y).Transmuter!=null) {
+					GetXY(x, y).Transmuter.Unactivate();
 					transmuters.add(GetXY(x, y).Transmuter);
 					transmuterscoords.add(new Vector2(x,y));
 				}

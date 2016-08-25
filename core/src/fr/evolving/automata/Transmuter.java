@@ -92,6 +92,9 @@ public abstract class Transmuter implements Cloneable, Serializable {
 
 	public void Activate() {
 	}
+	
+	public void Unactivate() {
+	}
 
 	public void UpgradeTemp() {
 	}

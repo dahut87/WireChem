@@ -59,7 +59,7 @@ public class Particle {
 	}
 	
 	public void subLife(int sub) {
-		this.life=life-sub;
+		this.life-=sub;
 		if (this.life<=0) {
 			this.life=0;
 			this.kill();

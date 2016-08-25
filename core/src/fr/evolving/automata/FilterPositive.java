@@ -119,7 +119,11 @@ public class FilterPositive extends Transmuter {
 		this.level.Nrj += UsedNrj * UpgradedNrj;
 	}
 
-
+	public void Unactivate() {
+		if (this.Activable)
+			ActivationLevel = 0;
+	}
+	
 	public void Activate() {
 		if (this.Activable)
 			ActivationLevel = this.getMaxActivationLevel();
@@ -174,7 +178,7 @@ public class FilterPositive extends Transmuter {
 	}
 
 	public int getMaxActivationLevel() {
-		return ActivationLevel = (int) (10 * this.UpgradedCycle);
+		return (int) (10 * this.UpgradedCycle);
 	}
 
 	public int getActivationLevel() {
