@@ -180,14 +180,15 @@ public class TouchMaptiles extends Actor implements GestureListener,InputProcess
 						if (level.Grid.GetXY(x,y).Fiber_state==0)
 							((TiledMapTileLayer) map.getLayers().get(0)).getCell((int) x,(int) y).setTile(AssetLoader.tileSet.getTile(61));
 						else {
-							((TiledMapTileLayer) map.getLayers().get(0)).getCell((int) x,(int) y).setTile(AssetLoader.tileSet.getTile(90+level.Grid.GetXY(x,y).Fiber_state));
+							((TiledMapTileLayer) map.getLayers().get(0)).getCell((int) x,(int) y).setTile(AssetLoader.tileSet.getTile(89
+									+level.Grid.GetXY(x,y).Fiber_state));
 						}
 				}
 				else
 				{
 					if (worlds.isDebug()) {
 						if (level.Grid.GetXY(x,y).Locked)
-							((TiledMapTileLayer) map.getLayers().get(5)).getCell((int) x,(int) y).setTile(AssetLoader.tileSet.getTile(90));
+							((TiledMapTileLayer) map.getLayers().get(5)).getCell((int) x,(int) y).setTile(AssetLoader.tileSet.getTile(64));
 						else
 							((TiledMapTileLayer) map.getLayers().get(5)).getCell((int) x,(int) y).setTile(null);
 						if (level.Grid.GetXY(x,y).Free)

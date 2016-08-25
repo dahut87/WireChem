@@ -4,18 +4,25 @@ import java.io.Serializable;
 import java.util.Iterator;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.OrderedMap;
+import com.badlogic.gdx.utils.ObjectMap.Entries;
 import com.badlogic.gdx.utils.ObjectMap.Entry;
 
+import fr.evolving.assets.AssetLoader;
 import fr.evolving.automata.Particle.Orientation;
 import fr.evolving.automata.Particle.Type;
+import fr.evolving.automata.Transmuter.CaseType;
 
 public class Grid implements Serializable,Cloneable {
 	protected Cell[][] Cells;
 	public Integer sizeX, sizeY;
 	
-	public transient Array<Particle> particles;
+	private transient Array<Particle> particles;
+	private transient Array<Transmuter> transmuters;
+	private transient Array<Vector2> transmuterscoords;
 	
 	public Grid(Integer X, Integer Y) {
 		Reinit();
@@ -32,6 +39,10 @@ public class Grid implements Serializable,Cloneable {
 	public void Reinit() {
 		if (particles==null)
 			particles=new Array<Particle>();
+		if (transmuters==null)
+			transmuters=new Array<Transmuter>();
+		if (transmuterscoords==null)
+			transmuterscoords=new Array<Vector2>();
 	}
 	
 	//Réalise un cycle de simulation dans la grille
@@ -40,6 +51,20 @@ public class Grid implements Serializable,Cloneable {
 			Gdx.app.debug("wirechem-Grid", "Grid Cycle -> Particle "+particle.getType()+"/"+particle.getSize()+ " coords:"+particle.getCoordx()+","+particle.getCoordy()+"/"+particle.getOrientation()+" charge:"+particle.getCharge());
 			if (particle.getType()==Type.Photon) {
 				particle.Next();
+				for(int i=0;i<transmuters.size;i++) {
+					OrderedMap<Vector2, Integer> tiles = transmuters.get(i).getTilesidrotated();
+					Entries<Vector2, Integer> iterator = tiles.iterator();
+					while (iterator.hasNext()) {
+						Entry<Vector2, Integer> all = iterator.next();
+						CaseType thecase=transmuters.get(i).getTilestype(tiles.keys().toArray().indexOf(all.key, false));
+						Vector2 position=transmuterscoords.get(i);
+						if (GetXY(position.x+ all.key.x, position.y+ all.key.y).Fiber && position.x==particle.getCoordx() && position.y==particle.getCoordy())
+							if (thecase==CaseType.Fibre||thecase==CaseType.Tout||thecase==CaseType.Fibre_seul)
+								Gdx.app.debug("wirechem-Grid", "Grid Cycle -> Activation Photon state :"+GetXY(particle.getCoordx(), particle.getCoordy()).Fiber_state+":"+particle.getCoordx()+","+particle.getCoordy()+"Transmuter:"+transmuters.get(i).getName()+"/"+transmuters.get(i).getActivationLevel());
+								particle.subLife(transmuters.get(i).getMaxActivationLevel()-transmuters.get(i).getActivationLevel());
+								transmuters.get(i).Activate();
+					}
+				}
 				if (!particle.isAlive()) {
 					Gdx.app.debug("wirechem-Particle", "coords:"+particle.getCoordx()+","+particle.getCoordy()+" killed & removed");
 					particles.removeValue(particle, true);
@@ -56,7 +81,7 @@ public class Grid implements Serializable,Cloneable {
 					GetXY(x, y).Fiber_state = 0;
 		for(Particle particle: particles) {
 			if (particle.getType()==Type.Photon) {
-				GetXY(particle.getCoordx(), particle.getCoordy()).Fiber_state=Math.floorDiv(29-particle.getLife(),3);
+				GetXY(particle.getCoordx(), particle.getCoordy()).Fiber_state=1+Math.floorDiv(Particle.PHOTONLIFE-particle.getLife(),Math.floorDiv(Particle.PHOTONLIFE,10));
 				Gdx.app.debug("wirechem-Grid", "Grid Tiling -> Photon state :"+GetXY(particle.getCoordx(), particle.getCoordy()).Fiber_state+":"+particle.getCoordx()+","+particle.getCoordy());
 			}
 		}
@@ -71,6 +96,19 @@ public class Grid implements Serializable,Cloneable {
 		particles.get(0).setCoordx(6);
 		particles.get(0).setCoordy(3);
 		particles.get(0).setOrientation(Orientation.E);
+		particles.add(new Particle(this));
+		particles.get(1).setType(Type.Electron);
+		particles.get(1).setCoordx(7);
+		particles.get(1).setCoordy(13);
+		particles.get(1).setOrientation(Orientation.O);
+		transmuters.clear();
+		transmuterscoords.clear();		
+		for (int x = 0; x < this.sizeX; x++)
+			for (int y = 0; y < this.sizeY; y++)
+				if (GetXY(x, y).Transmuter!=null) {
+					transmuters.add(GetXY(x, y).Transmuter);
+					transmuterscoords.add(new Vector2(x,y));
+				}
 	}
 
 	//Genère des tiles qui correspondent aux transmuteurs sur la grille

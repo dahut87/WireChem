@@ -17,6 +17,8 @@ public class Particle {
 		Positif, Negatif, Neutre
 	};
 	
+	public final static int PHOTONLIFE=200;
+	
 	private Orientation oldorientation;
 	private Orientation orientation;
 	private Size size;
@@ -54,6 +56,14 @@ public class Particle {
 	
 	public void setLife(int life) {
 		this.life=life;
+	}
+	
+	public void subLife(int sub) {
+		this.life=life-sub;
+		if (this.life<=0) {
+			this.life=0;
+			this.kill();
+		}
 	}
 
 	public int getCoordx() {
@@ -168,7 +178,7 @@ public class Particle {
 		Vector2 move=null;
 		Orientation neworientation=this.orientation;
 		if (type==Type.Photon) {
-			if (life>=30) this.kill();
+			if (life>=PHOTONLIFE) this.kill();
 			Orientation[] orientations=get_orientations(this.orientation);
 			Vector2 soluce0=testorientation(orientations[0]);
 			Vector2 soluce1=testorientation(orientations[1]);
@@ -178,8 +188,15 @@ public class Particle {
 				move=soluce0;
 			}
 			else if (soluce1!=null && soluce2!=null)	{
-					neworientation=orientations[1];
-					move=soluce1;
+					if (orientations[1]==oldorientation) {
+						neworientation=orientations[1];
+						move=soluce1;
+					}
+					else
+					{
+						neworientation=orientations[2];
+						move=soluce2;
+					}
 			}
 			else if (soluce1!=null) {
 				neworientation=orientations[1];
