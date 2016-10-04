@@ -39,8 +39,8 @@ public class Negativer_I extends Transmuter {
 	private static OrderedMap<Vector2, CaseType> Tilestype;
 	private static OrderedMap<Vector2, Integer> Tilesid;
 
-	public Negativer_I(Level level) {
-		super(level);
+	public Negativer_I() {
+		super();
 		this.id="-";
 		this.Name = AssetLoader.language.get("[negativeri-name]");
 		this.Desc = AssetLoader.language.get("[negativeri-desc]");
@@ -48,7 +48,7 @@ public class Negativer_I extends Transmuter {
 		this.Price = 50;
 		this.Technology = 4;
 		this.Research = 0;
-		this.Upgrade = new Negativer_II(level);
+		this.Upgrade = new Negativer_II();
 		this.Unlock = null;
 		this.showed = true;
 		this.CanUpgradeTemp = true;
@@ -108,10 +108,10 @@ public class Negativer_I extends Transmuter {
 		this.level.Rayon += TurnRayon * UpgradedRayon;
 		this.level.Nrj += TurnNrj * UpgradedNrj;
 		if (this.Activable)
-			this.ActivationLevel -= 1;
+			if (this.ActivationLevel>0) this.ActivationLevel -= 1;
 	}
 
-	public void Run() {
+	public void Run(Particle particle) {
 		this.level.Temp += UsedTemp * UpgradedTemp;
 		this.level.Rayon += UsedRayon * UpgradedRayon;
 		this.level.Nrj += UsedNrj * UpgradedNrj;
@@ -176,7 +176,7 @@ public class Negativer_I extends Transmuter {
 	}
 
 	public int getMaxActivationLevel() {
-		return (int) (10 * this.UpgradedCycle);
+		return (int) (Transmuter.ACTIVATION_LIFE * this.UpgradedCycle);
 	}
 
 	public int getActivationLevel() {

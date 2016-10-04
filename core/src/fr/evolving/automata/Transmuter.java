@@ -39,10 +39,13 @@ public abstract class Transmuter implements Cloneable, Serializable {
 	public enum Angular {
 		A00, A90, A180, A270
 	};
-
-	protected transient Level level;
-	protected Angular Rotation;
 	
+	final static public int ACTIVATION_LIFE=50;
+
+	protected static transient Level level;
+	
+	protected Cell cell;
+	protected Angular Rotation;
 	protected boolean temp_showed;
 	protected float temp_UpgradedNrj;
 	protected float temp_UpgradedRayon;
@@ -57,8 +60,19 @@ public abstract class Transmuter implements Cloneable, Serializable {
 		this.temp_UpgradedNrj=temp_UpgradedNrj;
 	}
 	
-	public Transmuter(Level level) {
-		this.level = level;
+	public void AttachLevel(Level level) {
+		Transmuter.level=level;
+	}
+	
+	public void SetCell(Cell cell) {
+		this.cell=cell;
+	}
+	
+	public Cell getCell() {
+		return this.cell;
+	}
+	
+	public Transmuter() {
 		this.Rotation = Angular.A00;
 	}
 
@@ -87,7 +101,7 @@ public abstract class Transmuter implements Cloneable, Serializable {
 	public void ProcessCycle() {
 	}
 
-	public void Run() {
+	public void Run(Particle particle) {
 	}
 
 	public void Activate() {
@@ -174,6 +188,13 @@ public abstract class Transmuter implements Cloneable, Serializable {
 		this.SetShowed(false);
 	}
 
+	/**
+	 * Verifie que le transmuteur est bien ameliorable
+	 *
+	 * @param  value Point de recherche donnee pour verifier l'amélioration
+	 * @return      True si l'amelioration est possible
+	 * @see         Transmuter
+	 */
 	public boolean isUpgradable(int value) {
 		Transmuter transmuter=this.getUpgrade();
 		return transmuter!= null && !transmuter.isShowed() && (transmuter.getResearch()<=value || value==-1);

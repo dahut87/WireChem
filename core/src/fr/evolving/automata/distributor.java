@@ -39,8 +39,8 @@ public class distributor extends Transmuter {
 	private static OrderedMap<Vector2, CaseType> Tilestype;
 	private static OrderedMap<Vector2, Integer> Tilesid;
 
-	public distributor(Level level) {
-		super(level);
+	public distributor() {
+		super();
 		this.id="<>";
 		this.Name = AssetLoader.language.get("[distributer-name]");
 		this.Desc = AssetLoader.language.get("[distributer-desc]");
@@ -114,10 +114,10 @@ public class distributor extends Transmuter {
 		this.level.Rayon += TurnRayon * UpgradedRayon;
 		this.level.Nrj += TurnNrj * UpgradedNrj;
 		if (this.Activable)
-			this.ActivationLevel -= 1;
+			if (this.ActivationLevel>0) this.ActivationLevel -= 1;
 	}
 
-	public void Run() {
+	public void Run(Particle particle) {
 		this.level.Temp += UsedTemp * UpgradedTemp;
 		this.level.Rayon += UsedRayon * UpgradedRayon;
 		this.level.Nrj += UsedNrj * UpgradedNrj;
@@ -182,7 +182,7 @@ public class distributor extends Transmuter {
 	}
 
 	public int getMaxActivationLevel() {
-		return (int) (10 * this.UpgradedCycle);
+		return (int) (Transmuter.ACTIVATION_LIFE * this.UpgradedCycle);
 	}
 
 	public int getActivationLevel() {

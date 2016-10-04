@@ -862,18 +862,19 @@ public class GameScreen implements Screen {
 		if (worlds.getState()==State.stop) {
 			worlds.simulate();
 			Gdx.app.log("wirechem-GameScreen", "***** Mode run.");
-			worlds.getLevelData().Grid.Initialize();
+			worlds.getLevelData().Grid.Initialize(worlds.getLevelData());
 			worlds.getLevelData().Grid.tiling_particle();
-			RunTimer.start();
 		}
+		RunTimer.start();
 	}
 	
 	public void stop_mode() {
 		Gdx.app.log("wirechem-GameScreen", "***** Mode stop.");
 		worlds.stop();
-		worlds.getLevelData().Grid.Initialize();
+		worlds.getLevelData().Grid.Initialize(worlds.getLevelData());
 		worlds.getLevelData().Grid.tiling_particle();
 		RunTimer.stop();
+		map.tempclear(new int[]{3,4,5});
 	}
 	
 	public void pause_mode() {

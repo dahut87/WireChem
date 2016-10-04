@@ -12,7 +12,9 @@ import com.badlogic.gdx.utils.ObjectMap.Entries;
 import com.badlogic.gdx.utils.ObjectMap.Entry;
 
 import fr.evolving.assets.AssetLoader;
+import fr.evolving.automata.Particle.Charge;
 import fr.evolving.automata.Particle.Orientation;
+import fr.evolving.automata.Particle.Size;
 import fr.evolving.automata.Particle.Type;
 import fr.evolving.automata.Transmuter.CaseType;
 
@@ -47,6 +49,9 @@ public class Grid implements Serializable,Cloneable {
 	
 	//Réalise un cycle de simulation dans la grille
 	public void Cycle() {
+		for(Transmuter transmuter:transmuters) {
+			transmuter.ProcessCycle();
+		}
 		for(Particle particle: particles) {
 			Gdx.app.debug("wirechem-Grid", "Grid Cycle -> Particle "+particle.getType()+"/"+particle.getSize()+ " coords:"+particle.getCoordx()+","+particle.getCoordy()+"/"+particle.getOrientation()+" charge:"+particle.getCharge());
 			if (particle.getType()==Type.Photon) {
@@ -60,17 +65,28 @@ public class Grid implements Serializable,Cloneable {
 						Vector2 position=transmuterscoords.get(i);
 						if (GetXY(position.x+all.key.x,position.y+all.key.y).Fiber && position.x+all.key.x==particle.getCoordx() && position.y+all.key.y==particle.getCoordy())
 							if (thecase==CaseType.Fibre||thecase==CaseType.Tout||thecase==CaseType.Fibre_seul) {
-								Gdx.app.debug("wirechem-Grid", "Grid Cycle -> Activation Photon life:"+particle.getLife()+" coords:"+particle.getCoordx()+","+particle.getCoordy()+" Transmuter:"+transmuters.get(i).getName()+" activation:"+transmuters.get(i).getActivationLevel());
-								particle.subLife(transmuters.get(i).getMaxActivationLevel()-transmuters.get(i).getActivationLevel());
-								transmuters.get(i).Activate();
-								Gdx.app.debug("wirechem-Grid", "Grid Cycle -> Activation Photon life:"+particle.getLife()+" coords:"+particle.getCoordx()+","+particle.getCoordy()+" Transmuter:"+transmuters.get(i).getName()+" activation:"+transmuters.get(i).getActivationLevel());
+								int needed=transmuters.get(i).getMaxActivationLevel()-transmuters.get(i).getActivationLevel();
+								Gdx.app.debug("wirechem-Grid", "Grid Cycle -> Activation ? Photon life:"+particle.getLife()+" coords:"+particle.getCoordx()+","+particle.getCoordy()+" Transmuter:"+transmuters.get(i).getName()+" activation:"+transmuters.get(i).getActivationLevel()+" necessaire:"+needed);
+								if (needed<=particle.getLife()) {
+									particle.subLife(needed);
+									transmuters.get(i).Activate();
+									Gdx.app.debug("wirechem-Grid", "Grid Cycle -> Activation OUI Photon life:"+particle.getLife()+" coords:"+particle.getCoordx()+","+particle.getCoordy()+" Transmuter:"+transmuters.get(i).getName()+" activation:"+transmuters.get(i).getActivationLevel());
+								}
+								else
+									Gdx.app.debug("wirechem-Grid", "Grid Cycle -> Activation NON Photon life:"+particle.getLife()+" coords:"+particle.getCoordx()+","+particle.getCoordy()+" Transmuter:"+transmuters.get(i).getName()+" activation:"+transmuters.get(i).getActivationLevel());
 							}
 					}
 				}
-				if (!particle.isAlive()) {
-					Gdx.app.debug("wirechem-Particle", "coords:"+particle.getCoordx()+","+particle.getCoordy()+" killed & removed");
-					particles.removeValue(particle, true);
-				}
+			}	
+			else if (particle.getType()==Type.Electron) {
+				particle.Next();
+				Transmuter trans=GetXY(particle.getCoordx(),particle.getCoordy()).Transmuter;
+				if (trans!=null && trans.getActivation())
+					trans.Run(particle);
+			}
+			if (!particle.isAlive()) {
+				Gdx.app.debug("wirechem-Particle", "coords:"+particle.getCoordx()+","+particle.getCoordy()+" killed & removed");
+				particles.removeValue(particle, true);
 			}
 		}
 	}
@@ -79,18 +95,25 @@ public class Grid implements Serializable,Cloneable {
 	public void tiling_particle() {
 		for (int x = 0; x < this.sizeX; x++)
 			for (int y = 0; y < this.sizeY; y++)
-				if (GetXY(x, y).Fiber)
-					GetXY(x, y).Fiber_state = 0;
+				GetXY(x, y).Fiber_state = 0;
 		for(Particle particle: particles) {
 			if (particle.getType()==Type.Photon) {
 				GetXY(particle.getCoordx(), particle.getCoordy()).Fiber_state=1+Math.floorDiv(Particle.PHOTONLIFE-particle.getLife(),Math.floorDiv(Particle.PHOTONLIFE,10));
 				Gdx.app.debug("wirechem-Grid", "Grid Tiling -> Photon state :"+GetXY(particle.getCoordx(), particle.getCoordy()).Fiber_state+":"+particle.getCoordx()+","+particle.getCoordy());
 			}
+			else if (particle.getType()==Type.Electron) {
+				int value=16;
+				if (particle.getCharge()==Charge.Positif) value+=1;
+				if (particle.getCharge()==Charge.Neutre) value+=2;
+				if (particle.getSize()==Size.Petit) value+=3;
+				GetXY(particle.getCoordx(), particle.getCoordy()).Fiber_state+=1000*value;
+				Gdx.app.debug("wirechem-Grid", "Grid Tiling -> Electron state :"+GetXY(particle.getCoordx(), particle.getCoordy()).Fiber_state+":"+particle.getCoordx()+","+particle.getCoordy());
+			}
 		}
 	}
 	
 	//Initialise la simulation pour permettre ensuite de faire des cycles
-	public void Initialize() {
+	public void Initialize(Level level) {
 		particles.clear();
 		this.tiling_particle();
 		particles.add(new Particle(this));
@@ -100,6 +123,8 @@ public class Grid implements Serializable,Cloneable {
 		particles.get(0).setOrientation(Orientation.E);
 		particles.add(new Particle(this));
 		particles.get(1).setType(Type.Electron);
+		particles.get(1).setSize(Size.Gros);
+		particles.get(1).setCharge(Charge.Negatif);
 		particles.get(1).setCoordx(7);
 		particles.get(1).setCoordy(13);
 		particles.get(1).setOrientation(Orientation.O);
@@ -108,10 +133,13 @@ public class Grid implements Serializable,Cloneable {
 		for (int x = 0; x < this.sizeX; x++)
 			for (int y = 0; y < this.sizeY; y++)
 				if (GetXY(x, y).Transmuter!=null) {
-					GetXY(x, y).Transmuter.Unactivate();
 					transmuters.add(GetXY(x, y).Transmuter);
 					transmuterscoords.add(new Vector2(x,y));
 				}
+		for(Transmuter transmuter:transmuters) {
+			transmuter.Unactivate();
+		}
+		if (transmuters.size>0) transmuters.first().AttachLevel(level);
 	}
 
 	//Genère des tiles qui correspondent aux transmuteurs sur la grille

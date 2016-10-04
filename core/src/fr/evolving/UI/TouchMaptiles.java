@@ -162,6 +162,15 @@ public class TouchMaptiles extends Actor implements GestureListener,InputProcess
 						(int) y).setTile(null);
 			}
 	}
+	
+	public void tempclear(int[] layers) {
+		for (int layer: layers)
+		for (int x = 0; x < level.Grid.sizeX; x++)
+			for (int y = 0; y < level.Grid.sizeY; y++) {
+				((TiledMapTileLayer) map.getLayers().get(layer)).getCell((int) x,
+						(int) y).setTile(null);
+			}
+	}
 
 	//Calques : 
 	// 0 Grille ou Fibres
@@ -177,12 +186,20 @@ public class TouchMaptiles extends Actor implements GestureListener,InputProcess
 			for (int y = 0; y < level.Grid.sizeY; y++) {
 				if (worlds.getState()==State.simulating) {
 					if (level.Grid.GetXY(x,y).Fiber)
-						if (level.Grid.GetXY(x,y).Fiber_state==0)
+						if (level.Grid.GetXY(x,y).Fiber_state%1000==0)
 							((TiledMapTileLayer) map.getLayers().get(0)).getCell((int) x,(int) y).setTile(AssetLoader.tileSet.getTile(61));
 						else {
-							((TiledMapTileLayer) map.getLayers().get(0)).getCell((int) x,(int) y).setTile(AssetLoader.tileSet.getTile(89
-									+level.Grid.GetXY(x,y).Fiber_state));
+							((TiledMapTileLayer) map.getLayers().get(0)).getCell((int) x,(int) y).setTile(AssetLoader.tileSet.getTile(100-level.Grid.GetXY(x,y).Fiber_state%1000));
 						}
+					if (level.Grid.GetXY(x,y).Transmuter!=null) {
+						int active=Math.floorDiv(level.Grid.GetXY(x,y).Transmuter.getActivationLevel()*10, level.Grid.GetXY(x,y).Transmuter.getMaxActivationLevel());
+						((TiledMapTileLayer) map.getLayers().get(5)).getCell((int) x,(int) y).setTile(AssetLoader.tileSet.getTile(300+active));
+					}
+					if (level.Grid.GetXY(x,y).Copper)
+						if (level.Grid.GetXY(x,y).Fiber_state>=1000)
+							((TiledMapTileLayer) map.getLayers().get(6)).getCell((int) x,(int) y).setTile(AssetLoader.tileSet.getTile(level.Grid.GetXY(x,y).Fiber_state/1000));
+						else
+							((TiledMapTileLayer) map.getLayers().get(6)).getCell((int) x,(int) y).setTile(null);
 				}
 				else
 				{

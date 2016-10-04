@@ -39,8 +39,8 @@ public class Oneway extends Transmuter {
 	private static OrderedMap<Vector2, CaseType> Tilestype;
 	private static OrderedMap<Vector2, Integer> Tilesid;
 
-	public Oneway(Level level) {
-		super(level);
+	public Oneway() {
+		super();
 		this.id=">";
 		this.Name = AssetLoader.language.get("[oneway-name]");
 		this.Desc = AssetLoader.language.get("[oneway-desc]");
@@ -50,7 +50,7 @@ public class Oneway extends Transmuter {
 		this.Research = 0;
 		this.Upgrade = null;
 		this.Unlock = new Array<Transmuter>();
-		this.Unlock.add(new distributor(level));
+		this.Unlock.add(new distributor());
 		this.showed = true;
 		this.CanUpgradeTemp = true;
 		this.CanUpgradeCycle = false;
@@ -107,10 +107,10 @@ public class Oneway extends Transmuter {
 		this.level.Rayon += TurnRayon * UpgradedRayon;
 		this.level.Nrj += TurnNrj * UpgradedNrj;
 		if (this.Activable)
-			this.ActivationLevel -= 1;
+			if (this.ActivationLevel>0) this.ActivationLevel -= 1;
 	}
 
-	public void Run() {
+	public void Run(Particle particle) {
 		this.level.Temp += UsedTemp * UpgradedTemp;
 		this.level.Rayon += UsedRayon * UpgradedRayon;
 		this.level.Nrj += UsedNrj * UpgradedNrj;
@@ -175,7 +175,7 @@ public class Oneway extends Transmuter {
 	}
 
 	public int getMaxActivationLevel() {
-		return (int) (10 * this.UpgradedCycle);
+		return (int) (Transmuter.ACTIVATION_LIFE * this.UpgradedCycle);
 	}
 
 	public int getActivationLevel() {

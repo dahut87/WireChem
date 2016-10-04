@@ -2,13 +2,14 @@ package fr.evolving.automata;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.utils.Array;
 
 public class Particle {
 	public enum Type {
 		Electron, Photon, Proton, Neutron
 	}
 	public enum Orientation {
-		N, S, E, O, NE, SE, NO, SO
+		N, S, E, O, NE, SE, NO, SO, Fixed, Kill
 	};
 	public enum Size {
 		Gros, Petit
@@ -17,7 +18,7 @@ public class Particle {
 		Positif, Negatif, Neutre
 	};
 	
-	public final static int PHOTONLIFE=200;
+	public final static int PHOTONLIFE=250;
 	
 	private Orientation oldorientation;
 	private Orientation orientation;
@@ -32,6 +33,7 @@ public class Particle {
 	static private Grid grid;
 	
 	public Particle(Grid grid) {
+		this.life=PHOTONLIFE;
 		this.Alive=true;
 		this.type=Type.Electron;
 		this.orientation=Orientation.E;
@@ -141,87 +143,95 @@ public class Particle {
 			this.charge=Charge.Negatif;
 	}
 	
-	private Vector2 testorientation(Orientation orientation) {
+	private Vector2 TestOrientation(Orientation orientation, Type type) {
 		int movex=0,movey=0;
+		if (orientation==Orientation.Kill || orientation==Orientation.Fixed) return new Vector2(movex,movey);
 		if (orientation.toString().contains("N")) movey=+1;
 		if (orientation.toString().contains("S")) movey=-1;
 		if (orientation.toString().contains("E")) movex=+1;
 		if (orientation.toString().contains("O")) movex=-1;
-		if (this.grid.GetXY(this.coordX+movex, this.coordY+movey)!=null && this.grid.GetXY(this.coordX+movex, this.coordY+movey).Fiber)
-			return new Vector2(movex,movey);
+		if (this.grid.GetXY(this.coordX+movex, this.coordY+movey)!=null) {
+			if (type==Type.Photon && !this.grid.GetXY(this.coordX+movex, this.coordY+movey).Fiber)
+				return null;
+			if (type==Type.Electron && (!this.grid.GetXY(this.coordX+movex, this.coordY+movey).Copper))
+				return null;
+		}
+		else
+			return null;
+		return new Vector2(movex,movey);
+	}
+
+	private Orientation[] getOrientations(Orientation orientation, Type type) {
+		if (type==Type.Photon) {
+			switch (orientation) {
+			case E:
+				return new Orientation[]{Orientation.E,Orientation.NE,Orientation.SE, Orientation.Kill};
+			case NE:
+				return new Orientation[]{Orientation.NE,Orientation.N,Orientation.E, Orientation.Kill};
+			case N:
+				return new Orientation[]{Orientation.N,Orientation.NE,Orientation.NO, Orientation.Kill};
+			case NO:
+				return new Orientation[]{Orientation.NO,Orientation.N,Orientation.O, Orientation.Kill};
+			case O:
+				return new Orientation[]{Orientation.O,Orientation.NO,Orientation.SO, Orientation.Kill};
+			case SO:
+				return new Orientation[]{Orientation.SO,Orientation.S,Orientation.O, Orientation.Kill};
+			case S:
+				return new Orientation[]{Orientation.S,Orientation.SE,Orientation.SO, Orientation.Kill};
+			case SE:
+			default:
+				return new Orientation[]{Orientation.SE,Orientation.E,Orientation.S, Orientation.Kill};
+			}
+		}
+		else if (type==Type.Electron) {
+			switch (orientation) {
+			case E:
+				return new Orientation[]{Orientation.E,Orientation.N,Orientation.S,Orientation.O,Orientation.Fixed};
+			case N:
+				return new Orientation[]{Orientation.N,Orientation.O,Orientation.E,Orientation.S,Orientation.Fixed};
+			case S:
+				return new Orientation[]{Orientation.S,Orientation.E,Orientation.O,Orientation.N,Orientation.Fixed};
+			case O:
+				return new Orientation[]{Orientation.O,Orientation.N,Orientation.S,Orientation.E,Orientation.Fixed};
+			case Fixed:
+			default:
+				return new Orientation[]{Orientation.N,Orientation.S,Orientation.E,Orientation.O,Orientation.Fixed};
+			}
+		}
 		else
 			return null;
 	}
 	
-	private Orientation[] get_orientations(Orientation orientation) {
-		if (orientation==Orientation.E)
-			return new Orientation[]{Orientation.E,Orientation.NE,Orientation.SE};
-		if (orientation==Orientation.NE)
-			return new Orientation[]{Orientation.NE,Orientation.N,Orientation.E};
-		if (orientation==Orientation.N)
-			return new Orientation[]{Orientation.N,Orientation.NE,Orientation.NO};
-		if (orientation==Orientation.NO)
-			return new Orientation[]{Orientation.NO,Orientation.N,Orientation.O};
-		if (orientation==Orientation.O)
-			return new Orientation[]{Orientation.O,Orientation.NO,Orientation.SO};
-		if (orientation==Orientation.SO)
-			return new Orientation[]{Orientation.SO,Orientation.S,Orientation.O};
-		if (orientation==Orientation.S)
-			return new Orientation[]{Orientation.S,Orientation.SE,Orientation.SO};
-		if (orientation==Orientation.SE)
-			return new Orientation[]{Orientation.SE,Orientation.E,Orientation.S};
-		return new Orientation[]{Orientation.SE,Orientation.E,Orientation.S};
-	}
-	
 	public void Next() {
-		this.life++;
+		if (this.life>0) this.life--;
+		if (type==Type.Photon && life==0) this.kill();
 		Vector2 move=null;
-		Orientation neworientation=this.orientation;
-		if (type==Type.Photon) {
-			if (life>=PHOTONLIFE) this.kill();
-			Orientation[] orientations=get_orientations(this.orientation);
-			Vector2 soluce0=testorientation(orientations[0]);
-			Vector2 soluce1=testorientation(orientations[1]);
-			Vector2 soluce2=testorientation(orientations[2]);
-			if (soluce0!=null) {
-				neworientation=orientations[0];
-				move=soluce0;
-			}
-			else if (soluce1!=null && soluce2!=null)	{
-					if (orientations[1]==oldorientation) {
-						neworientation=orientations[1];
-						move=soluce1;
+		Orientation[] orientations=getOrientations(this.orientation, type);
+		Array<Orientation> orientations_good=new Array<Orientation>();
+		for(Orientation orientationtest:orientations) 
+			if (TestOrientation(orientationtest,type)!=null)
+				orientations_good.add(orientationtest);
+			if (orientations_good.contains(orientation, true))
+				orientation=orientation;
+			else if (orientations_good.contains(oldorientation, true))
+				orientation=oldorientation;
+			else {
+				for(Orientation orientationtest2:orientations_good) {
+					if (orientationtest2==Orientation.Kill) {
+						Gdx.app.debug("wirechem-Particle", "coords:"+this.coordX+","+this.coordY+" killed no place to go");
+						this.kill();
+						return;
 					}
-					else
-					{
-						neworientation=orientations[2];
-						move=soluce2;
+					else {
+						orientation=orientationtest2;
+						break;
 					}
+				}
 			}
-			else if (soluce1!=null) {
-				neworientation=orientations[1];
-				move=soluce1;
-			}
-			else if (soluce2!=null) {
-				neworientation=orientations[2];
-				move=soluce2;
-			}
-			if (move==null) 
-			{
-				Gdx.app.debug("wirechem-Particle", "coords:"+this.coordX+","+this.coordY+" killed no place to go");
-				this.kill();
-			}
-			else
-			{
-				Gdx.app.debug("wirechem-Particle", "coords:"+this.coordX+","+this.coordY+" move to "+orientation+":"+move.x+","+move.y+" life:"+this.life);
-				if (orientation!=neworientation)
-					oldorientation=orientation;
-				orientation=neworientation;
-				this.coordX+=move.x;
-				this.coordY+=move.y;
-			}
+			move=TestOrientation(orientation,type);
+			Gdx.app.debug("wirechem-Particle", "coords:"+this.coordX+","+this.coordY+" move to "+orientation+":"+move.x+","+move.y+" life:"+this.life);
+			this.coordX+=move.x;
+			this.coordY+=move.y;
 		}
-	}
-	
 	
 }

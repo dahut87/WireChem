@@ -40,8 +40,8 @@ public class Filter4Activable extends Transmuter {
 	private static OrderedMap<Vector2, CaseType> Tilestype;
 	private static OrderedMap<Vector2, Integer> Tilesid;
 
-	public Filter4Activable(Level level) {
-		super(level);
+	public Filter4Activable() {
+		super();
 		this.id="=4a";
 		this.Name = AssetLoader.language.get("[filter4activable-name]");
 		this.Desc = AssetLoader.language.get("[filter4activable-desc]");
@@ -51,7 +51,7 @@ public class Filter4Activable extends Transmuter {
 		this.Research = 0;
 		this.Upgrade = null;
 		this.Unlock = new Array<Transmuter>();
-		this.Unlock.add(new Filter8Activable(level));
+		this.Unlock.add(new Filter8Activable());
 		this.showed = true;
 		this.CanUpgradeTemp = true;
 		this.CanUpgradeCycle = true;
@@ -112,10 +112,10 @@ public class Filter4Activable extends Transmuter {
 		this.level.Rayon += TurnRayon * UpgradedRayon;
 		this.level.Nrj += TurnNrj * UpgradedNrj;
 		if (this.Activable)
-			this.ActivationLevel -= 1;
+			if (this.ActivationLevel>0) this.ActivationLevel -= 1;
 	}
 
-	public void Run() {
+	public void Run(Particle particle) {
 		this.level.Temp += UsedTemp * UpgradedTemp;
 		this.level.Rayon += UsedRayon * UpgradedRayon;
 		this.level.Nrj += UsedNrj * UpgradedNrj;
@@ -180,7 +180,7 @@ public class Filter4Activable extends Transmuter {
 	}
 
 	public int getMaxActivationLevel() {
-		return (int) (10 * this.UpgradedCycle);
+		return (int) (Transmuter.ACTIVATION_LIFE * this.UpgradedCycle);
 	}
 
 	public int getActivationLevel() {
