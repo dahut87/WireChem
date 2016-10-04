@@ -113,6 +113,7 @@ public class Neutraliser_I extends Transmuter {
 		this.level.Temp += UsedTemp * UpgradedTemp;
 		this.level.Rayon += UsedRayon * UpgradedRayon;
 		this.level.Nrj += UsedNrj * UpgradedNrj;
+		particle.ChargeNeutralize();
 	}
 	
 	public void Unactivate() {

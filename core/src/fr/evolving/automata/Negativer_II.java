@@ -115,6 +115,7 @@ public class Negativer_II extends Transmuter {
 		this.level.Temp += UsedTemp * UpgradedTemp;
 		this.level.Rayon += UsedRayon * UpgradedRayon;
 		this.level.Nrj += UsedNrj * UpgradedNrj;
+		particle.ChargeNegative();
 	}
 	
 	public void Unactivate() {

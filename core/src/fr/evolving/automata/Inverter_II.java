@@ -112,6 +112,7 @@ public class Inverter_II extends Transmuter {
 		this.level.Temp += UsedTemp * UpgradedTemp;
 		this.level.Rayon += UsedRayon * UpgradedRayon;
 		this.level.Nrj += UsedNrj * UpgradedNrj;
+		particle.ChargeInvert();
 	}
 	
 	public void Unactivate() {
