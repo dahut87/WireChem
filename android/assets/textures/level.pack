@@ -2039,7 +2039,7 @@ zoomp
   index: -1
 
 level6.png
-size: 512,512
+size: 1024,512
 format: RGBA8888
 filter: Linear,Linear
 repeat: none
@@ -2099,3 +2099,24 @@ sprite-transmuter
   orig: 128, 128
   offset: 0, 0
   index: 176
+sprite-transmuter
+  rotate: false
+  xy: 391, 261
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: 177
+sprite-transmuter
+  rotate: false
+  xy: 261, 1
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: 178
+sprite-transmuter
+  rotate: false
+  xy: 391, 131
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: 179
