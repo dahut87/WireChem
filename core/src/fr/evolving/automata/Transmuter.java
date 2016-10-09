@@ -98,7 +98,8 @@ public abstract class Transmuter implements Cloneable, Serializable {
 	public void restorestatic() {
 	}
 	
-	public void ProcessCycle() {
+	public Particle ProcessCycle() {
+		return null;
 	}
 
 	public void Run(Particle particle) {

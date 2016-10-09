@@ -36,9 +36,9 @@ public class Level implements Serializable,Cloneable {
 	public transient int Cout;	
 	public transient Grid Grid;
 	public transient int Cycle;
-	public transient int Temp;
-	public transient int Rayon;
-	public transient int Nrj;
+	public transient float Temp;
+	public transient float Rayon;
+	public transient float Nrj;
 	
 	public transient boolean Locked;
 

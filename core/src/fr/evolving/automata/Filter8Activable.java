@@ -106,12 +106,13 @@ public class Filter8Activable extends Transmuter {
 		this.showed=this.temp_showed;
 	}
 
-	public void ProcessCycle() {
+	public Particle ProcessCycle() {
 		this.level.Temp += TurnTemp * UpgradedTemp;
 		this.level.Rayon += TurnRayon * UpgradedRayon;
 		this.level.Nrj += TurnNrj * UpgradedNrj;
 		if (this.Activable)
 			if (this.ActivationLevel>0) this.ActivationLevel -= 1;
+		return null;
 	}
 
 	public void Run(Particle particle) {

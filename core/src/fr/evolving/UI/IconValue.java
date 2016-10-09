@@ -56,23 +56,23 @@ public class IconValue extends ImageTextButton{
 		case temp:
 			this.setVisible(worlds.getWorld()>=2 || worlds.isDebug());
 			if (showmaximum)
-				this.setText(String.valueOf(worlds.getLevelData().Temp)+"/"+String.valueOf(worlds.getLevelData().Maxtemp));	
+				this.setText(String.valueOf((int)worlds.getLevelData().Temp)+"/"+String.valueOf(worlds.getLevelData().Maxtemp));	
 			else
-				this.setText(String.valueOf(worlds.getLevelData().Temp));
+				this.setText(String.valueOf((int)worlds.getLevelData().Temp));
 			break;
 		case rayon:
 			this.setVisible(worlds.getWorld()>=3 || worlds.isDebug());
 			if (showmaximum)
-				this.setText(String.valueOf(worlds.getLevelData().Rayon)+"/"+String.valueOf(worlds.getLevelData().Maxrayon));	
+				this.setText(String.valueOf((int)worlds.getLevelData().Rayon)+"/"+String.valueOf(worlds.getLevelData().Maxrayon));	
 			else
-				this.setText(String.valueOf(worlds.getLevelData().Rayon));
+				this.setText(String.valueOf((int)worlds.getLevelData().Rayon));
 			break;
 		case nrj:
 			this.setVisible(worlds.getWorld()>=4 || worlds.isDebug());
 			if (showmaximum)
-				this.setText(String.valueOf(worlds.getLevelData().Nrj)+"/"+String.valueOf(worlds.getLevelData().Maxnrj));	
+				this.setText(String.valueOf((int)worlds.getLevelData().Nrj)+"/"+String.valueOf(worlds.getLevelData().Maxnrj));	
 			else
-				this.setText(String.valueOf(worlds.getLevelData().Nrj));
+				this.setText(String.valueOf((int)worlds.getLevelData().Nrj));
 		break;
 		}
 		

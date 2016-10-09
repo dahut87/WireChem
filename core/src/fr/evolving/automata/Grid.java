@@ -25,7 +25,7 @@ public class Grid implements Serializable,Cloneable {
 	private transient Array<Particle> particles;
 	private transient Array<Transmuter> transmuters;
 	private transient Array<Vector2> transmuterscoords;
-	
+	private transient Level level;
 	public Grid(Integer X, Integer Y) {
 		Reinit();
 		this.sizeX = X;
@@ -49,9 +49,7 @@ public class Grid implements Serializable,Cloneable {
 	
 	//Réalise un cycle de simulation dans la grille
 	public void Cycle() {
-		for(Transmuter transmuter:transmuters) {
-			transmuter.ProcessCycle();
-		}
+		level.Cycle++;
 		for(Particle particle: particles) {
 			Gdx.app.debug("wirechem-Grid", "Grid Cycle -> Particle "+particle.getType()+"/"+particle.getSize()+ " coords:"+particle.getCoordx()+","+particle.getCoordy()+"/"+particle.getOrientation()+" charge:"+particle.getCharge());
 			if (particle.getType()==Type.Photon) {
@@ -89,6 +87,16 @@ public class Grid implements Serializable,Cloneable {
 				particles.removeValue(particle, true);
 			}
 		}
+		for(int i=0;i<transmuters.size;i++) {
+			Particle particle=transmuters.get(i).ProcessCycle();
+			if (particle!=null) {
+				particle.setGrid(this);
+				particle.setCoordx((int) transmuterscoords.get(i).x);
+				particle.setCoordy((int) transmuterscoords.get(i).y);
+				particle.setOrientationfromAngle(transmuters.get(i).getRotation());
+				particles.add(particle);
+			}
+		}
 	}
 	
 	//Affiche le cycle en cours à l'écran
@@ -114,20 +122,9 @@ public class Grid implements Serializable,Cloneable {
 	
 	//Initialise la simulation pour permettre ensuite de faire des cycles
 	public void Initialize(Level level) {
+		this.level=level;
 		particles.clear();
 		this.tiling_particle();
-		particles.add(new Particle(this));
-		particles.get(0).setType(Type.Photon);
-		particles.get(0).setCoordx(6);
-		particles.get(0).setCoordy(3);
-		particles.get(0).setOrientation(Orientation.E);
-		particles.add(new Particle(this));
-		particles.get(1).setType(Type.Electron);
-		particles.get(1).setSize(Size.Gros);
-		particles.get(1).setCharge(Charge.Negatif);
-		particles.get(1).setCoordx(7);
-		particles.get(1).setCoordy(13);
-		particles.get(1).setOrientation(Orientation.O);
 		transmuters.clear();
 		transmuterscoords.clear();		
 		for (int x = 0; x < this.sizeX; x++)

@@ -4,6 +4,8 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
 
+import fr.evolving.automata.Transmuter.Angular;
+
 public class Particle {
 	public enum Type {
 		Electron, Photon, Proton, Neutron
@@ -32,7 +34,7 @@ public class Particle {
 	
 	static private Grid grid;
 	
-	public Particle(Grid grid) {
+	public Particle(Grid thegrid) {
 		this.life=PHOTONLIFE;
 		this.Alive=true;
 		this.type=Type.Electron;
@@ -41,7 +43,8 @@ public class Particle {
 		this.charge=Charge.Neutre;
 		this.coordX=0;
 		this.coordY=0;
-		Particle.grid=grid;
+		if (grid!=null)
+			Particle.grid=thegrid;
 	}
 	
 	public void kill() {
@@ -160,6 +163,19 @@ public class Particle {
 			return null;
 		return new Vector2(movex,movey);
 	}
+	
+	private boolean isOpposite(Orientation orientation, Orientation orientation2) {
+		int movex=0,movey=0;
+		if (orientation.toString().contains("N")) movey=+1;
+		if (orientation.toString().contains("S")) movey=-1;
+		if (orientation.toString().contains("E")) movex=+1;
+		if (orientation.toString().contains("O")) movex=-1;
+		if (orientation2.toString().contains("N")) movey+=+1;
+		if (orientation2.toString().contains("S")) movey+=-1;
+		if (orientation2.toString().contains("E")) movex+=+1;
+		if (orientation2.toString().contains("O")) movex+=-1;		
+		return (movex==0 && movey==0);
+	}
 
 	private Orientation[] getOrientations(Orientation orientation, Type type) {
 		if (type==Type.Photon) {
@@ -208,13 +224,14 @@ public class Particle {
 		Vector2 move=null;
 		Orientation[] orientations=getOrientations(this.orientation, type);
 		Array<Orientation> orientations_good=new Array<Orientation>();
+		Orientation neworientation=Orientation.Fixed;
 		for(Orientation orientationtest:orientations) 
 			if (TestOrientation(orientationtest,type)!=null)
 				orientations_good.add(orientationtest);
 			if (orientations_good.contains(orientation, true))
-				orientation=orientation;
-			else if (orientations_good.contains(oldorientation, true))
-				orientation=oldorientation;
+				neworientation=orientation;
+			else if (orientations_good.contains(oldorientation, true) && !isOpposite(orientation,oldorientation))
+				neworientation=oldorientation;
 			else {
 				for(Orientation orientationtest2:orientations_good) {
 					if (orientationtest2==Orientation.Kill) {
@@ -223,15 +240,41 @@ public class Particle {
 						return;
 					}
 					else {
-						orientation=orientationtest2;
+						neworientation=orientationtest2;
 						break;
 					}
 				}
 			}
-			move=TestOrientation(orientation,type);
+			move=TestOrientation(neworientation,type);
+			if (orientation!=neworientation) {
+				oldorientation=orientation;
+				orientation=neworientation;
+			}
 			Gdx.app.debug("wirechem-Particle", "coords:"+this.coordX+","+this.coordY+" move to "+orientation+":"+move.x+","+move.y+" life:"+this.life);
 			this.coordX+=move.x;
 			this.coordY+=move.y;
 		}
+
+	public void setOrientationfromAngle(Angular rotation) {
+		switch (rotation) {
+		case A00:
+			this.orientation=Orientation.O;
+			break;
+		case A90:
+			this.orientation=Orientation.S;
+			break;
+		case A180:
+			this.orientation=Orientation.E;
+			break;
+		case A270:
+		default:
+			this.orientation=Orientation.N;
+			break;
+		}
+	}
+
+	public void setGrid(Grid grid2) {
+		this.grid=grid2;
+	}
 	
 }
